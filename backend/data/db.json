@@ -550,6 +550,12 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-08T10:27:21.197Z",
       "expiresAt": "2026-08-08T22:27:21.197Z"
+    },
+    {
+      "token": "c91f9c9381faebaaa8c7542a2f1ffe1a791e95818fd88c90682d2e87e554fca7",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T10:42:18.156Z",
+      "expiresAt": "2026-08-08T22:42:18.156Z"
     }
   ],
   "organizations": [
@@ -3123,7 +3129,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_920d121425c1474d",
+          "id": "blk_3cc26b71950c4744",
           "type": "platforms",
           "layout": {
             "x": 0,
@@ -3149,7 +3155,8 @@
                   "pass": "torii@123",
                   "url": ""
                 }
-              ]
+              ],
+              "views": []
             },
             {
               "name": "OwlCoder",
@@ -3165,7 +3172,8 @@
                   "pass": "Torii@1234",
                   "url": ""
                 }
-              ]
+              ],
+              "views": []
             },
             {
               "name": "Torii Minds & JPath",
@@ -3181,11 +3189,12 @@
                   "pass": "Torii@1234",
                   "url": ""
                 }
-              ]
+              ],
+              "views": []
             },
             {
               "name": "AI Engineer LMS",
-              "blurb": "The AI Ready Engineer learning platform, four roles.",
+              "blurb": "The AI Ready Engineer learning platform.",
               "icon": "chip",
               "shot": "ai-engineer-lms",
               "url": "https://aiengineer.toriiminds.com/login",
@@ -3195,13 +3204,13 @@
                   "role": "Student",
                   "user": "abhinallam@gmail.com",
                   "pass": "Abhishek",
-                  "url": "https://aiengineer.toriiminds.com/login"
+                  "url": ""
                 },
                 {
                   "role": "Trainer",
                   "user": "abhishek.n@ncetmail.com",
                   "pass": "Abhishek5090",
-                  "url": "https://aiengineer.toriiminds.com/login"
+                  "url": ""
                 },
                 {
                   "role": "Admin",
@@ -3215,11 +3224,51 @@
                   "pass": "SuperAdmin@LMS",
                   "url": "https://aiengineer.toriiminds.com/admin/login"
                 }
+              ],
+              "views": [
+                {
+                  "label": "Portal",
+                  "shot": "ai-engineer-lms",
+                  "url": "https://aiengineer.toriiminds.com/login",
+                  "logins": [
+                    {
+                      "role": "Student",
+                      "user": "abhinallam@gmail.com",
+                      "pass": "Abhishek",
+                      "url": ""
+                    },
+                    {
+                      "role": "Trainer",
+                      "user": "abhishek.n@ncetmail.com",
+                      "pass": "Abhishek5090",
+                      "url": ""
+                    }
+                  ]
+                },
+                {
+                  "label": "Admin",
+                  "shot": "ai-engineer-lms-admin",
+                  "url": "https://aiengineer.toriiminds.com/admin/login",
+                  "logins": [
+                    {
+                      "role": "Admin",
+                      "user": "NCETAdmin@LMS.com",
+                      "pass": "NCETAdmin@LMS",
+                      "url": ""
+                    },
+                    {
+                      "role": "Super Admin",
+                      "user": "superadmin@lms.com",
+                      "pass": "SuperAdmin@LMS",
+                      "url": ""
+                    }
+                  ]
+                }
               ]
             },
             {
               "name": "TAG",
-              "blurb": "The NCET task and activity system, five roles.",
+              "blurb": "The NCET task and activity system.",
               "icon": "workflow",
               "shot": "tag",
               "url": "https://tag.ncet.co.in/",
@@ -3229,19 +3278,19 @@
                   "role": "Coordinator",
                   "user": "coordinator.ncet@gmail.com",
                   "pass": "Tag@123",
-                  "url": "https://tag.ncet.co.in/"
+                  "url": ""
                 },
                 {
                   "role": "Designer",
                   "user": "designer@gmail.com",
                   "pass": "Tag@123",
-                  "url": "https://tag.ncet.co.in/"
+                  "url": ""
                 },
                 {
                   "role": "Social media",
                   "user": "social@gmail.com",
                   "pass": "Tag@123",
-                  "url": "https://tag.ncet.co.in/"
+                  "url": ""
                 },
                 {
                   "role": "Admin",
@@ -3255,13 +3304,59 @@
                   "pass": "Admin@tag",
                   "url": "https://tag.ncet.co.in/admin/"
                 }
+              ],
+              "views": [
+                {
+                  "label": "Portal",
+                  "shot": "tag",
+                  "url": "https://tag.ncet.co.in/",
+                  "logins": [
+                    {
+                      "role": "Coordinator",
+                      "user": "coordinator.ncet@gmail.com",
+                      "pass": "Tag@123",
+                      "url": ""
+                    },
+                    {
+                      "role": "Designer",
+                      "user": "designer@gmail.com",
+                      "pass": "Tag@123",
+                      "url": ""
+                    },
+                    {
+                      "role": "Social media",
+                      "user": "social@gmail.com",
+                      "pass": "Tag@123",
+                      "url": ""
+                    }
+                  ]
+                },
+                {
+                  "label": "Admin",
+                  "shot": "tag-admin",
+                  "url": "https://tag.ncet.co.in/admin/",
+                  "logins": [
+                    {
+                      "role": "Admin",
+                      "user": "admin@gmail.com",
+                      "pass": "Tag@123",
+                      "url": ""
+                    },
+                    {
+                      "role": "Super Admin",
+                      "user": "development@ncetmail.com",
+                      "pass": "Admin@tag",
+                      "url": ""
+                    }
+                  ]
+                }
               ]
             }
           ]
         }
       ],
       "createdAt": "2026-08-08T09:08:24.918Z",
-      "updatedAt": "2026-08-08T10:27:21.230Z"
+      "updatedAt": "2026-08-08T10:42:18.207Z"
     },
     {
       "id": "sec_6b9961ccab6b4efa",
@@ -3278,7 +3373,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_423c93eedd0042ce",
+          "id": "blk_8ed43159e92f41a3",
           "type": "platforms",
           "layout": {
             "x": 0,
@@ -3304,7 +3399,8 @@
                   "pass": "torii@123",
                   "url": ""
                 }
-              ]
+              ],
+              "views": []
             },
             {
               "name": "OwlCoder",
@@ -3320,7 +3416,8 @@
                   "pass": "Torii@1234",
                   "url": ""
                 }
-              ]
+              ],
+              "views": []
             },
             {
               "name": "Torii Minds & JPath",
@@ -3336,11 +3433,12 @@
                   "pass": "Torii@1234",
                   "url": ""
                 }
-              ]
+              ],
+              "views": []
             },
             {
               "name": "AI Engineer LMS",
-              "blurb": "The AI Ready Engineer learning platform, four roles.",
+              "blurb": "The AI Ready Engineer learning platform.",
               "icon": "chip",
               "shot": "ai-engineer-lms",
               "url": "https://aiengineer.toriiminds.com/login",
@@ -3350,13 +3448,13 @@
                   "role": "Student",
                   "user": "abhinallam@gmail.com",
                   "pass": "Abhishek",
-                  "url": "https://aiengineer.toriiminds.com/login"
+                  "url": ""
                 },
                 {
                   "role": "Trainer",
                   "user": "abhishek.n@ncetmail.com",
                   "pass": "Abhishek5090",
-                  "url": "https://aiengineer.toriiminds.com/login"
+                  "url": ""
                 },
                 {
                   "role": "Admin",
@@ -3370,11 +3468,51 @@
                   "pass": "SuperAdmin@LMS",
                   "url": "https://aiengineer.toriiminds.com/admin/login"
                 }
+              ],
+              "views": [
+                {
+                  "label": "Portal",
+                  "shot": "ai-engineer-lms",
+                  "url": "https://aiengineer.toriiminds.com/login",
+                  "logins": [
+                    {
+                      "role": "Student",
+                      "user": "abhinallam@gmail.com",
+                      "pass": "Abhishek",
+                      "url": ""
+                    },
+                    {
+                      "role": "Trainer",
+                      "user": "abhishek.n@ncetmail.com",
+                      "pass": "Abhishek5090",
+                      "url": ""
+                    }
+                  ]
+                },
+                {
+                  "label": "Admin",
+                  "shot": "ai-engineer-lms-admin",
+                  "url": "https://aiengineer.toriiminds.com/admin/login",
+                  "logins": [
+                    {
+                      "role": "Admin",
+                      "user": "NCETAdmin@LMS.com",
+                      "pass": "NCETAdmin@LMS",
+                      "url": ""
+                    },
+                    {
+                      "role": "Super Admin",
+                      "user": "superadmin@lms.com",
+                      "pass": "SuperAdmin@LMS",
+                      "url": ""
+                    }
+                  ]
+                }
               ]
             },
             {
               "name": "TAG",
-              "blurb": "The NCET task and activity system, five roles.",
+              "blurb": "The NCET task and activity system.",
               "icon": "workflow",
               "shot": "tag",
               "url": "https://tag.ncet.co.in/",
@@ -3384,19 +3522,19 @@
                   "role": "Coordinator",
                   "user": "coordinator.ncet@gmail.com",
                   "pass": "Tag@123",
-                  "url": "https://tag.ncet.co.in/"
+                  "url": ""
                 },
                 {
                   "role": "Designer",
                   "user": "designer@gmail.com",
                   "pass": "Tag@123",
-                  "url": "https://tag.ncet.co.in/"
+                  "url": ""
                 },
                 {
                   "role": "Social media",
                   "user": "social@gmail.com",
                   "pass": "Tag@123",
-                  "url": "https://tag.ncet.co.in/"
+                  "url": ""
                 },
                 {
                   "role": "Admin",
@@ -3410,13 +3548,59 @@
                   "pass": "Admin@tag",
                   "url": "https://tag.ncet.co.in/admin/"
                 }
+              ],
+              "views": [
+                {
+                  "label": "Portal",
+                  "shot": "tag",
+                  "url": "https://tag.ncet.co.in/",
+                  "logins": [
+                    {
+                      "role": "Coordinator",
+                      "user": "coordinator.ncet@gmail.com",
+                      "pass": "Tag@123",
+                      "url": ""
+                    },
+                    {
+                      "role": "Designer",
+                      "user": "designer@gmail.com",
+                      "pass": "Tag@123",
+                      "url": ""
+                    },
+                    {
+                      "role": "Social media",
+                      "user": "social@gmail.com",
+                      "pass": "Tag@123",
+                      "url": ""
+                    }
+                  ]
+                },
+                {
+                  "label": "Admin",
+                  "shot": "tag-admin",
+                  "url": "https://tag.ncet.co.in/admin/",
+                  "logins": [
+                    {
+                      "role": "Admin",
+                      "user": "admin@gmail.com",
+                      "pass": "Tag@123",
+                      "url": ""
+                    },
+                    {
+                      "role": "Super Admin",
+                      "user": "development@ncetmail.com",
+                      "pass": "Admin@tag",
+                      "url": ""
+                    }
+                  ]
+                }
               ]
             }
           ]
         }
       ],
       "createdAt": "2026-08-08T09:08:24.998Z",
-      "updatedAt": "2026-08-08T10:27:21.242Z"
+      "updatedAt": "2026-08-08T10:42:18.226Z"
     }
   ],
   "assets": [

@@ -31,7 +31,7 @@ const SHOT_DIR = '/uploads/platforms';
 const VIDEO_EXT = ['mp4', 'webm'];
 const IMAGE_EXT = ['png', 'jpg', 'jpeg', 'webp'];
 
-const slugOf = (item) => (item.shot || item.slug || item.name || '')
+const slugOf = (o) => (o.shot || o.item?.name || o.name || '')
   .toString().toLowerCase().trim()
   .replace(/&/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -114,30 +114,52 @@ function shotMedia(item, mount, onMissing) {
 
 /* ------------------------------------------------------------------ a window */
 
-function platformWindow(item, index) {
-  const host = hostOf(item.url);
+/**
+ * The views of one platform. Most have a single face; TAG and the AI Ready
+ * Engineer LMS have two, because the people who sign in through the portal and
+ * the people who sign in through /admin are different people looking at a
+ * different product.
+ */
+function viewsOf(item) {
+  if (item.views?.length) {
+    return item.views.map((v) => ({
+      label: v.label || '',
+      url: v.url,
+      shot: v.shot || item.shot,
+      logins: v.logins?.length ? v.logins : [],
+      item,
+    }));
+  }
+  return [{ label: '', url: item.url, shot: item.shot, logins: item.logins || [], item }];
+}
+
+function platformWindow(pane, index) {
+  const { item, label } = pane;
   const shell = h('div', { class: 'pf-win__shell' });
   const fallback = () => shell.appendChild(h('div', { class: 'pf-win__blank' },
     h('span', { class: 'pf-win__mark' }, icon(item.icon || 'grid-4', { class: 'ic' })),
     h('span', { class: 'pf-win__blankname' }, item.name),
     item.blurb ? h('span', { class: 'pf-win__blankblurb' }, item.blurb) : null,
   ));
-  const media = shotMedia(item, shell, fallback);
+  const media = shotMedia(pane, shell, fallback);
 
   const el = h('button', {
     class: 'pf-win',
     type: 'button',
     'data-index': String(index),
-    title: `Open ${item.name}`,
+    title: `Open ${item.name}${label ? ` — ${label}` : ''}`,
   },
     h('span', { class: 'pf-win__bar' },
       h('span', { class: 'pf-win__dots' },
         h('i', {}), h('i', {}), h('i', {})),
-      h('span', { class: 'pf-win__host' }, host),
+      // The view is named once, in the foot. Repeating it here put a solid
+      // accent pill on every window in the fan and the stack read as blobs.
+      h('span', { class: 'pf-win__host' }, hostOf(pane.url)),
     ),
     shell,
     h('span', { class: 'pf-win__foot' },
       h('span', { class: 'pf-win__name' }, item.name),
+      label ? h('span', { class: 'pf-win__sub' }, label) : null,
       h('span', { class: 'pf-win__open' }, 'Open', icon('arrow-up-right', { class: 'ic ic--xs' })),
     ),
   );
@@ -158,7 +180,12 @@ const slotFor = (i, total, dx, dy) => ({
   zIndex: total - i,
 });
 
-function cardSwap(cards, { distance = 46, rise = 50, skew = -6, delay = 4200 } = {}) {
+/* The step shrinks as the deck grows: seven windows at a five-window step runs
+   the tail of the stack off the top of the slide. */
+const stepFor = (n) => (n >= 7 ? { distance: 40, rise: 36 } : { distance: 46, rise: 50 });
+
+function cardSwap(cards, { skew = -6, delay = 4200 } = {}) {
+  const { distance, rise } = stepFor(cards.length);
   const total = cards.length;
   const order = cards.map((_, i) => i);
   let timer = null;
@@ -335,55 +362,79 @@ export function Platforms(block, { editing = false } = {}) {
     swap?.start();
   };
 
+  const switcher = h('div', { class: 'pf-switch', hidden: true });
+
   const stage = h('div', { class: 'pf-stage' },
     h('div', { class: 'pf-stage__bar' },
       h('button', { class: 'pf-stage__back', type: 'button', onclick: close },
         icon('chevron-left', { class: 'ic ic--xs' }), h('span', {}, 'All platforms')),
       h('div', { class: 'pf-stage__id' }, frameTitle, frameUrl),
+      switcher,
       h('div', { class: 'pf-stage__tools' }, keysBtn, openOut, keysPanel),
     ),
     h('div', { class: 'pf-stage__body' }, frame),
   );
 
-  const open = (item) => {
+  const open = (pane) => {
     // Nothing behind the frame should keep decoding video.
     swap?.stop();
     swap?.pauseAll();
-    frameTitle.textContent = item.name;
+    const { item, label } = pane;
+    frameTitle.replaceChildren(
+      item.name,
+      label ? h('em', { class: 'pf-stage__view' }, label) : null,
+    );
     keysPanel.setAttribute('hidden', '');
     keysBtn.classList.remove('is-on');
     keysBtn.setAttribute('aria-expanded', 'false');
 
-    const url = item.url;
+    /* Sibling views of the same platform, so the portal and the admin sign-in
+       are one click apart instead of a trip back to the wall. */
+    const siblings = viewsOf(item);
+    switcher.replaceChildren(...(siblings.length > 1
+      ? siblings.map((v) => h('button', {
+          class: `pf-switch__btn${v.url === pane.url ? ' is-on' : ''}`,
+          type: 'button',
+          onclick: () => { if (v.url !== pane.url) open(v); },
+        }, v.label || 'Portal'))
+      : []));
+    switcher.toggleAttribute('hidden', siblings.length < 2);
+
+    const logins = pane.logins || [];
     keysPanel.replaceChildren(
       h('p', { class: 'pf-keys__head' },
-        `${item.logins.length} login${item.logins.length === 1 ? '' : 's'} for ${item.name}`),
-      ...item.logins.map((login) => loginRow(login, url)),
+        `${logins.length} login${logins.length === 1 ? '' : 's'} — ${item.name}${label ? ` ${label}` : ''}`),
+      ...logins.map((login) => loginRow(login, pane.url)),
       h('p', { class: 'pf-keys__note' },
         'Copy, then paste into the platform’s own form. Nothing is shown on screen.'),
     );
-    goTo(url);
+    goTo(pane.url);
     root.classList.add('is-open');
   };
 
   /* --------------------------------------------------------------- the deck */
-  const cards = items.map((item, i) => {
-    const card = platformWindow(item, i);
-    card.addEventListener('click', () => open(item));
+  /* One window per view, not per platform — the admin side of TAG is a
+     different product to the coordinator's portal and has its own recording. */
+  const panes = items.flatMap(viewsOf);
+
+  const cards = panes.map((pane, i) => {
+    const card = platformWindow(pane, i);
+    card.addEventListener('click', () => open(pane));
     return card;
   });
 
   const deck = h('div', { class: 'pf-deck' }, ...cards);
 
-  const chips = items.map((item, i) => h('button', {
+  const chips = panes.map((pane, i) => h('button', {
     class: 'pf-chip', type: 'button',
     onclick: () => { swap.focus(i); swap.stop(); swap.start(); },
-    ondblclick: () => open(item),
-    title: `Bring ${item.name} to the front`,
+    ondblclick: () => open(pane),
+    title: `Bring ${pane.item.name}${pane.label ? ` ${pane.label}` : ''} to the front`,
   },
-    icon(item.icon || 'grid-4', { class: 'ic ic--xs' }),
-    h('span', {}, item.name),
-    h('em', {}, `${item.logins.length}`),
+    icon(pane.item.icon || 'grid-4', { class: 'ic ic--xs' }),
+    h('span', {}, pane.item.name),
+    pane.label ? h('b', {}, pane.label) : null,
+    h('em', {}, `${(pane.logins || []).length}`),
   ));
 
   const wall = h('div', { class: 'pf-wall' },

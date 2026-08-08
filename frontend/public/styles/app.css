@@ -8790,7 +8790,7 @@ body.is-presenting .milestones__inner {
 }
 /* The fan steps right and up, so the deck origin sits low and left of centre —
    otherwise the tail of the stack runs past the slide edge and gets clipped. */
-.pf-deck { position: absolute; top: 56%; left: 37%; width: 0; height: 0; transform-style: preserve-3d; }
+.pf-deck { position: absolute; top: 58%; left: 37%; width: 0; height: 0; transform-style: preserve-3d; }
 
 .pf-win {
   position: absolute; top: 0; left: 0;
@@ -8844,6 +8844,13 @@ body.is-presenting .milestones__inner {
   padding: 13px 18px; border-top: 1px solid var(--border); background: var(--surface);
 }
 .pf-win__name { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
+/* Which face of the platform this window is — portal or admin. Outlined, not
+   filled: a solid accent pill on all seven windows turned the fan into blobs. */
+.pf-win__sub {
+  margin-right: auto; padding: 2px 9px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--muted);
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+}
 .pf-win__open {
   display: inline-flex; align-items: center; gap: 6px;
   color: var(--nav-accent-ink, var(--accent-ink)); font-size: 12.5px; font-weight: 800;
@@ -8866,6 +8873,29 @@ body.is-presenting .milestones__inner {
 .pf-stage__id { display: grid; min-width: 0; }
 .pf-stage__name { font-size: 14.5px; font-weight: 800; }
 .pf-stage__url { color: var(--muted); font-size: 12px; }
+.pf-stage__view {
+  margin-left: 8px; padding: 2px 8px; border-radius: 999px; font-style: normal;
+  background: var(--nav-accent, var(--brand-accent)); color: #ffffff;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* Portal / Admin — the two faces of the same platform, one click apart. */
+.pf-switch { display: inline-flex; padding: 3px; border: 1px solid var(--border); border-radius: 999px; background: var(--page-bg); }
+.pf-switch[hidden] { display: none; }
+.pf-switch__btn {
+  padding: 6px 15px; border: 0; border-radius: 999px; background: transparent;
+  color: var(--muted); font: inherit; font-size: 12.5px; font-weight: 800; cursor: pointer;
+  transition: background .18s ease, color .18s ease;
+}
+.pf-switch__btn:hover { color: var(--text); }
+.pf-switch__btn.is-on { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+
+.pf-chip b {
+  padding: 2px 7px; border-radius: 999px;
+  background: var(--nav-accent, var(--brand-accent)); color: #ffffff;
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+}
+
 .pf-stage__tools { position: relative; margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .pf-stage__keys.is-on {
   border-color: var(--nav-accent, var(--brand-accent));

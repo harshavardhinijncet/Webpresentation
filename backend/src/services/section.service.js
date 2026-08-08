@@ -517,6 +517,28 @@ function normalizeBlock(raw, index = 0, depth = 0) {
             }))
             .filter((l) => l.user)
             .slice(0, 8),
+          /* A platform can present more than one face: TAG and the AI Ready
+             Engineer LMS each have a portal the students and staff use and a
+             separate admin sign-in, with their own URL, their own roles and
+             their own recording. A platform with one face simply omits this
+             and the item's own url/shot/logins stand as the single view. */
+          views: (Array.isArray(p?.views) ? p.views : [])
+            .map((v) => ({
+              label: text(v?.label, 40),
+              shot: text(v?.shot, 80),
+              url: safeHref(v?.url),
+              logins: (Array.isArray(v?.logins) ? v.logins : [])
+                .map((l) => ({
+                  role: text(l?.role, 40),
+                  user: text(l?.user, 120),
+                  pass: text(l?.pass, 120),
+                  url: safeHref(l?.url),
+                }))
+                .filter((l) => l.user)
+                .slice(0, 8),
+            }))
+            .filter((v) => v.url)
+            .slice(0, 4),
         }))
         .filter((p) => p.name && p.url)
         .slice(0, 12);
