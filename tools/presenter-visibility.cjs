@@ -8,7 +8,6 @@
  * met fifteen blank slides.
  *
  *   node tools/presenter-visibility.js                 # show what a presenter sees
- *   node tools/presenter-visibility.js --auto          # publish what has content, draft the rest
  *   node tools/presenter-visibility.js --show "Leadership Journey" "CEO Profile"
  *   node tools/presenter-visibility.js --hide "Placements"
  *
@@ -45,7 +44,6 @@ const login = async (email, password) => {
   return /op_session=([^;]+)/.exec(r.setCookie)?.[1];
 };
 
-/** A section counts as ready when it, or any of its children, has blocks. */
 (async () => {
   const mode = process.argv[2];
   const names = process.argv.slice(3).map((n) => n.toLowerCase());
@@ -58,8 +56,7 @@ const login = async (email, password) => {
 
     for (const s of all) {
       let next = null;
-      if (mode === '--auto') next = hasContent(s, all);
-      else if (mode === '--show' && names.some((n) => s.title.toLowerCase().includes(n))) next = true;
+      if (mode === '--show' && names.some((n) => s.title.toLowerCase().includes(n))) next = true;
       else if (mode === '--hide' && names.some((n) => s.title.toLowerCase().includes(n))) next = false;
       if (next === null) continue;
 
@@ -81,5 +78,5 @@ const login = async (email, password) => {
     if (blank.length) console.log(`  !! ${blank.length} of those are blank: ${blank.map((b) => b.title).join(', ')}`);
   }
 
-  if (!mode) console.log('\n(read-only — pass --auto, --show or --hide to change anything)');
+  if (!mode) console.log('\n(read-only — pass --show or --hide to change anything)');
 })().catch((e) => { console.error('FAILED:', e.message); process.exit(1); });
