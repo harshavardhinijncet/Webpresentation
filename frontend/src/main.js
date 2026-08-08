@@ -16,6 +16,7 @@ import { LoginPage } from './pages/LoginPage.js';
 import { OrgSelectPage } from './pages/OrgSelectPage.js';
 import { PresentPage } from './pages/PresentPage.js';
 import { toastError } from './components/Toast.js';
+import { startBuildWatch, flushPendingReload } from './utils/buildWatch.js';
 
 const container = document.getElementById('app');
 
@@ -68,6 +69,10 @@ async function onLogout() {
 
 async function route() {
   const target = parseRoute();
+
+  // If a deploy landed while a slide was on screen, this is the safe moment to
+  // pick it up — the presenter has navigated, not been interrupted.
+  flushPendingReload();
 
   // Anything other than the login screen needs a session.
   if (!state.user) {
@@ -130,6 +135,8 @@ async function route() {
     PresentPage(container, { org, section: resolved, onLogout }),
   );
 }
+
+startBuildWatch();
 
 startRouter(() => {
   route().catch((err) => {

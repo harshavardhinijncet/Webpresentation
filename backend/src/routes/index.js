@@ -5,10 +5,15 @@ import { sectionRoutes } from './section.routes.js';
 import { assetRoutes } from './asset.routes.js';
 import { templateRoutes } from './template.routes.js';
 import { sendJson } from '../utils/http.js';
+import { buildId } from '../utils/build-id.js';
 
 export function buildRouter() {
   const router = createRouter();
-  router.get('/api/health', (req, res) => sendJson(res, 200, { ok: true }));
+  // Doubles as the keep-alive target and as the frontend's "am I stale?" probe.
+  router.get('/api/health', async (req, res) => sendJson(res, 200, {
+    ok: true,
+    build: await buildId(),
+  }));
   router.use(authRoutes());
   router.use(orgRoutes());
   router.use(sectionRoutes());

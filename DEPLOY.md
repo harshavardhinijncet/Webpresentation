@@ -94,3 +94,21 @@ to publish in production.
     (PORT is provided by the platform)
 
 Attach a volume at `/app/backend` if you want writes to survive restarts.
+
+## Open tabs pick up a deploy on their own
+
+The portal loads its ES modules once and then navigates by hash, so a tab left
+open across a deploy used to keep running the old code with no sign of it. The
+symptom looked like a broken release: a new section returned its data correctly
+and the old renderer, which had never heard of that block type, drew
+"This section is blank".
+
+`/api/health` now returns a `build` fingerprint — a hash of the contents of every
+frontend file. The page checks it on load, on focus, and once a minute, and
+reloads itself when it changes. The current hash is kept, so it lands back on the
+same slide.
+
+Two things it deliberately will not do: reload while presentation mode is on (the
+reload waits until the presenter leaves it), and reload because a check failed —
+a sleeping free-tier server is not a new build. Identical code always hashes to
+the same id, so an ordinary restart never disturbs anyone.
