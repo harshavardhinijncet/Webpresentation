@@ -3,6 +3,8 @@ import { initials } from '../utils/format.js';
 import { state, isAdmin, visibleSections, deckSections, childSections, sectionById, sectionOrdinal } from '../context/appStore.js';
 import { navigate, refresh } from '../utils/router.js';
 import { icon, iconForTitle, hasIcon } from '../utils/icons.js';
+import { updateSection } from '../services/contentService.js';
+import { toastError, toastSuccess } from './Toast.js';
 import { SectionIconGlyph } from './IconChooser.js';
 
 /**
@@ -12,7 +14,7 @@ import { SectionIconGlyph } from './IconChooser.js';
  * under Assessment Platforms).
  */
 /**
- * Keyed by the section's own , not by its position.
+ * Keyed by the section's own `key`, not by its position.
  *
  * These labels deliberately differ from the stored titles — "Vision, Mission &
  * Values" is presented as "Strategic Foundation" — so they used to be matched
@@ -46,13 +48,51 @@ const NAVIGATION_GROUPS = [
   ['media', 'Media Center', 'images', ['Photo Gallery', 'Video Gallery']],
   ['testimonials', 'Success Stories', 'quote', ['Student Testimonials', 'Alumni Stories', 'Recruiter Testimonials']],
   ['contact', 'Connect With Us', 'mail', ['Contact Information', 'Office Locations', 'Contact Form']],
-  /* A seventeenth group. This list is matched to the org's top-level sections
-     by position, so a section added without an entry here loses its curated
-     label and its icon and falls back to whatever it is called in the store —
-     which is why the flagship programme needed a row of its own here, not just
-     a promotion in the data. */
+   /* A section with no entry here keeps its stored title and a keyword icon,
+     which is a fine fallback — but the flagship programme deserves its own
+     curated name. */
   ['ai-ready-engineer', 'AI Ready Engineer', 'brain', []],
 ];
+
+/**
+ * Releases a section to the presenter, or takes it back.
+ *
+ * Whether a presenter can see a section was only ever settable from a command
+ * line, which meant the person who decides what is finished had to ask someone
+ * else to run it. The rule is unchanged — published and not hidden — this is
+ * simply the switch for it, on the row it belongs to. Admin-only: the server
+ * answers a presenter with 403 either way, this just declines to draw a control
+ * that would fail.
+ */
+function releaseToggle(section) {
+  if (!isAdmin() || !section) return null;
+  const live = section.status === 'published' && !section.hidden;
+  const button = h('button', {
+    class: `snav-release${live ? ' is-live' : ''}`,
+    type: 'button',
+    title: live
+      ? `${section.title} is live for presenters — click to withdraw it`
+      : `${section.title} is hidden from presenters — click to push it live`,
+    'aria-pressed': String(live),
+    onclick: async (event) => {
+      // The row underneath navigates; the toggle must not.
+      event.preventDefault();
+      event.stopPropagation();
+      button.disabled = true;
+      try {
+        await updateSection(section.id, { status: live ? 'draft' : 'published', hidden: false });
+        toastSuccess(live
+          ? `${section.title} withdrawn from presenters`
+          : `${section.title} pushed to presenters`);
+        refresh();
+      } catch (err) {
+        button.disabled = false;
+        toastError(err.message);
+      }
+    },
+  }, icon(live ? 'eye' : 'eye-off', { class: 'ic ic--xs' }));
+  return button;
+}
 
 /** The curated group for a section, or an empty tuple when it has none. */
 const groupFor = (section) => {
@@ -239,6 +279,9 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
       },
       icon('chevron-right', { class: 'nav-tree__child-icon' }),
       h('span', { class: 'nav-tree__child-title' }, row.label),
+      /* Only a row backed by a real page can be released — a curated label with
+         no section behind it has nothing to publish. */
+      row.sectionId ? releaseToggle(sectionById(row.sectionId)) : null,
     );
 
   const groupNode = (section, index, title, iconKey, children) => {
@@ -268,10 +311,14 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
       },
       h('span', { class: 'nav-tree__badge' }, sectionGlyph(section, iconKey)),
       h('span', { class: 'nav-tree__title' }, title),
+      /* The Draft flag said what the state was; the toggle beside it is what
+         changes it. Both stay — the word is readable at a glance down a list of
+         seventeen, the control is what you reach for. */
       admin && section.status !== 'published'
         ? h('span', { class: 'nav-tree__flag', title: 'Draft — presenters cannot see this section' }, 'Draft')
         : null,
       admin && section.hidden ? h('span', { class: 'nav-tree__flag' }, 'Hidden') : null,
+      releaseToggle(section),
       rows.length ? h('span', { class: 'nav-tree__chevron' }, icon('chevron-right', { class: 'ic ic--xs' })) : null,
     );
 

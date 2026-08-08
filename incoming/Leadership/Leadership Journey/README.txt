@@ -20,7 +20,7 @@ THEN RUN THIS
 With the server running (cd backend && node src/server.js), from the project
 root:
 
-    node tools/import-leadership-photos.js
+    node tools/import-leadership-photos.cjs
 
 It uploads each file, points the matching phase at it in BOTH organizations,
 and then fetches every new URL to confirm it returns 200 image/* — which is

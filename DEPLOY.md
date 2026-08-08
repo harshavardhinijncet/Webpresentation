@@ -20,10 +20,10 @@ Check `.gitignore` is not excluding them.
 
 **Set what the presenter is allowed to see** before you hand out the link:
 
-    node tools/presenter-visibility.js            # read-only: what does a presenter get?
-    node tools/presenter-visibility.js --auto     # release everything that has content
-    node tools/presenter-visibility.js --show "Placements"
-    node tools/presenter-visibility.js --hide "Placements"
+    node tools/presenter-visibility.cjs            # read-only: what does a presenter get?
+    node tools/presenter-visibility.cjs --auto     # release everything that has content
+    node tools/presenter-visibility.cjs --show "Placements"
+    node tools/presenter-visibility.cjs --hide "Placements"
 
 Then commit `backend/data/db.json` again — that file *is* the release.
 

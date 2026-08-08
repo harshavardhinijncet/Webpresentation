@@ -46,10 +46,6 @@ const login = async (email, password) => {
 };
 
 /** A section counts as ready when it, or any of its children, has blocks. */
-const hasContent = (section, all) =>
-  (section.blocks || []).length > 0
-  || all.some((c) => c.parentId === section.id && (c.blocks || []).length > 0);
-
 (async () => {
   const mode = process.argv[2];
   const names = process.argv.slice(3).map((n) => n.toLowerCase());

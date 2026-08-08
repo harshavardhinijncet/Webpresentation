@@ -8601,3 +8601,39 @@ body.is-presenting .milestones__inner {
    the middle of the slide was empty; with the bars filling the screen it only
    covers three of them, and each bar already names its own chapter. */
 .lj-root .lj-overlay { display: none; }
+
+/* The push-to-presenter switch on a navigation row. Deliberately quiet: it sits
+   in a list read many times a day and acted on rarely, so it holds its colour
+   only when the section is live. */
+.snav-release {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 6px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.snav-release:hover { border-color: var(--nav-accent, var(--brand-accent)); color: var(--nav-accent-ink, var(--accent-ink)); }
+
+.snav-release.is-live {
+  border-color: var(--nav-accent, var(--brand-accent));
+  background: color-mix(in srgb, var(--nav-accent, var(--brand-accent)) 14%, #ffffff);
+  color: var(--nav-accent-ink, var(--accent-ink));
+}
+
+.snav-release:disabled { opacity: 0.5; cursor: progress; }
+
+.snav-release:focus-visible { outline: 2px solid var(--nav-accent, var(--brand-accent)); outline-offset: 1px; }
+
+/* The rows are buttons; the toggle sits inside one, so it needs its own layer
+   to receive the click rather than the row swallowing it. */
+.nav-tree__parent, .nav-tree__child { position: relative; }
+.snav-release { position: relative; z-index: 2; }
