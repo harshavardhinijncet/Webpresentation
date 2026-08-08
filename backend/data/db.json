@@ -24,30 +24,6 @@
   ],
   "sessions": [
     {
-      "token": "1976d09fefe525ba0c4839637642f4527f670e5bffa4200cf02da6b0e5d5f620",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T06:37:06.476Z",
-      "expiresAt": "2026-08-08T18:37:06.476Z"
-    },
-    {
-      "token": "9d6ed3a2877b0da478c45274272c417a83e4721c27b86e1b75bdb58b66f9db61",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T06:38:10.071Z",
-      "expiresAt": "2026-08-08T18:38:10.071Z"
-    },
-    {
-      "token": "95dc9536bb3ecdd7a9300e6a7ce0365840f2e38ec808366bde7ee0ca50c84a19",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T06:38:51.795Z",
-      "expiresAt": "2026-08-08T18:38:51.795Z"
-    },
-    {
-      "token": "378263a0165bf3b1a99e1cfb8d169e2907c8b5c9df1a46dabb2ae0ab40702efb",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T06:39:29.158Z",
-      "expiresAt": "2026-08-08T18:39:29.158Z"
-    },
-    {
       "token": "34202e52e3ce02fd70c5ada871b6a87856d52a3d26c0e80cbab1616bf06374f0",
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-08T06:50:42.152Z",
@@ -352,6 +328,12 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-08T14:32:15.860Z",
       "expiresAt": "2026-08-09T02:32:15.860Z"
+    },
+    {
+      "token": "cdace50dd68de997a4ad3603d4f0e56f5755f5c76e708a0121d1ab81aecb5c05",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T18:46:41.374Z",
+      "expiresAt": "2026-08-09T06:46:41.374Z"
     }
   ],
   "organizations": [
@@ -447,15 +429,240 @@
       "id": "sec_75dc099019094ab2",
       "orgId": "torii",
       "key": "team",
-      "title": "Team / Trainers",
+      "title": "Centers of Excellence",
       "subtitle": "",
       "icon": "⬢",
       "order": 5,
       "hidden": false,
       "status": "draft",
-      "blocks": [],
+      "blocks": [
+        {
+          "id": "blk_f44eeeaa66ca4716",
+          "type": "coe-wall",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "eyebrow": "Capability & Learning",
+          "title": "Centers of Excellence",
+          "subtitle": "Our accredited academies and partner practices. Select a center to explore its photos and videos.",
+          "centers": [
+            {
+              "key": "claude",
+              "name": "Claude",
+              "mono": "C",
+              "tagline": "Applied AI, agents & assistants",
+              "color": "#D97757",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "gcp",
+              "name": "Google Cloud",
+              "mono": "GC",
+              "tagline": "Cloud infrastructure & data platforms",
+              "color": "#4285F4",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "aws",
+              "name": "AWS Academy",
+              "mono": "AWS",
+              "tagline": "Cloud skills at enterprise scale",
+              "color": "#FF9900",
+              "ink": "#10131A",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "oracle",
+              "name": "Oracle Academy",
+              "mono": "O",
+              "tagline": "Database & enterprise applications",
+              "color": "#C74634",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "redhat",
+              "name": "Red Hat",
+              "mono": "RH",
+              "tagline": "Open source, Linux & OpenShift",
+              "color": "#EE0000",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "snowflake",
+              "name": "Snowflake",
+              "mono": "SF",
+              "tagline": "Data cloud & analytics",
+              "color": "#29B5E8",
+              "ink": "#06222E",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "pega",
+              "name": "Pega",
+              "mono": "P",
+              "tagline": "Low-code process automation",
+              "color": "#2D7FF9",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "servicenow",
+              "name": "ServiceNow",
+              "mono": "SN",
+              "tagline": "IT service & workflow platform",
+              "color": "#62D84E",
+              "ink": "#06210F",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "mongodb",
+              "name": "MongoDB",
+              "mono": "M",
+              "tagline": "Modern application databases",
+              "color": "#00ED64",
+              "ink": "#052915",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "github",
+              "name": "GitHub",
+              "mono": "GH",
+              "tagline": "DevOps, source & collaboration",
+              "color": "#8B7ED8",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "paloalto",
+              "name": "Palo Alto",
+              "mono": "PA",
+              "tagline": "Network & cloud security",
+              "color": "#FA582D",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "hubspot",
+              "name": "HubSpot",
+              "mono": "HS",
+              "tagline": "CRM & marketing operations",
+              "color": "#FF7A59",
+              "ink": "#2A0F08",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "openai",
+              "name": "OpenAI",
+              "mono": "AI",
+              "tagline": "Generative AI & LLMs",
+              "color": "#10A37F",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "aa",
+              "name": "Automation Anywhere",
+              "mono": "AA",
+              "tagline": "Intelligent automation & RPA",
+              "color": "#FB4E0B",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "splunk",
+              "name": "Splunk",
+              "mono": "SP",
+              "tagline": "Observability & security analytics",
+              "color": "#F99D1C",
+              "ink": "#2A1C04",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "cisco",
+              "name": "Cisco Networking Academy",
+              "mono": "CN",
+              "tagline": "Networking & infrastructure",
+              "color": "#1BA0D7",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "cadence",
+              "name": "Cadence",
+              "mono": "CD",
+              "tagline": "Electronic design automation",
+              "color": "#009B77",
+              "ink": "#04231B",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "mile2",
+              "name": "Mile2",
+              "mono": "M2",
+              "tagline": "Cybersecurity certifications",
+              "color": "#C8102E",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "microsoft",
+              "name": "Microsoft",
+              "mono": "MS",
+              "tagline": "Cloud, data & productivity",
+              "color": "#00A4EF",
+              "ink": "#061E2B",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            }
+          ]
+        }
+      ],
       "createdAt": "2026-07-30T05:29:37.913Z",
-      "updatedAt": "2026-08-08T07:03:52.020Z"
+      "updatedAt": "2026-08-08T18:46:41.432Z"
     },
     {
       "id": "sec_f0ee6d93897f4d51",
@@ -643,15 +850,240 @@
       "id": "sec_bddf4b1b0ee64631",
       "orgId": "technical-hub",
       "key": "team",
-      "title": "Team / Trainers",
+      "title": "Centers of Excellence",
       "subtitle": "",
       "icon": "⬢",
       "order": 5,
       "hidden": false,
       "status": "draft",
-      "blocks": [],
+      "blocks": [
+        {
+          "id": "blk_1561c20291e04cfd",
+          "type": "coe-wall",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "eyebrow": "Capability & Learning",
+          "title": "Centers of Excellence",
+          "subtitle": "Our accredited academies and partner practices. Select a center to explore its photos and videos.",
+          "centers": [
+            {
+              "key": "claude",
+              "name": "Claude",
+              "mono": "C",
+              "tagline": "Applied AI, agents & assistants",
+              "color": "#D97757",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "gcp",
+              "name": "Google Cloud",
+              "mono": "GC",
+              "tagline": "Cloud infrastructure & data platforms",
+              "color": "#4285F4",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "aws",
+              "name": "AWS Academy",
+              "mono": "AWS",
+              "tagline": "Cloud skills at enterprise scale",
+              "color": "#FF9900",
+              "ink": "#10131A",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "oracle",
+              "name": "Oracle Academy",
+              "mono": "O",
+              "tagline": "Database & enterprise applications",
+              "color": "#C74634",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "redhat",
+              "name": "Red Hat",
+              "mono": "RH",
+              "tagline": "Open source, Linux & OpenShift",
+              "color": "#EE0000",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "snowflake",
+              "name": "Snowflake",
+              "mono": "SF",
+              "tagline": "Data cloud & analytics",
+              "color": "#29B5E8",
+              "ink": "#06222E",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "pega",
+              "name": "Pega",
+              "mono": "P",
+              "tagline": "Low-code process automation",
+              "color": "#2D7FF9",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "servicenow",
+              "name": "ServiceNow",
+              "mono": "SN",
+              "tagline": "IT service & workflow platform",
+              "color": "#62D84E",
+              "ink": "#06210F",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "mongodb",
+              "name": "MongoDB",
+              "mono": "M",
+              "tagline": "Modern application databases",
+              "color": "#00ED64",
+              "ink": "#052915",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "github",
+              "name": "GitHub",
+              "mono": "GH",
+              "tagline": "DevOps, source & collaboration",
+              "color": "#8B7ED8",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "paloalto",
+              "name": "Palo Alto",
+              "mono": "PA",
+              "tagline": "Network & cloud security",
+              "color": "#FA582D",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "hubspot",
+              "name": "HubSpot",
+              "mono": "HS",
+              "tagline": "CRM & marketing operations",
+              "color": "#FF7A59",
+              "ink": "#2A0F08",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "openai",
+              "name": "OpenAI",
+              "mono": "AI",
+              "tagline": "Generative AI & LLMs",
+              "color": "#10A37F",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "aa",
+              "name": "Automation Anywhere",
+              "mono": "AA",
+              "tagline": "Intelligent automation & RPA",
+              "color": "#FB4E0B",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "splunk",
+              "name": "Splunk",
+              "mono": "SP",
+              "tagline": "Observability & security analytics",
+              "color": "#F99D1C",
+              "ink": "#2A1C04",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "cisco",
+              "name": "Cisco Networking Academy",
+              "mono": "CN",
+              "tagline": "Networking & infrastructure",
+              "color": "#1BA0D7",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "cadence",
+              "name": "Cadence",
+              "mono": "CD",
+              "tagline": "Electronic design automation",
+              "color": "#009B77",
+              "ink": "#04231B",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "mile2",
+              "name": "Mile2",
+              "mono": "M2",
+              "tagline": "Cybersecurity certifications",
+              "color": "#C8102E",
+              "ink": "#FFFFFF",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            },
+            {
+              "key": "microsoft",
+              "name": "Microsoft",
+              "mono": "MS",
+              "tagline": "Cloud, data & productivity",
+              "color": "#00A4EF",
+              "ink": "#061E2B",
+              "logo": "",
+              "logoFull": "",
+              "media": []
+            }
+          ]
+        }
+      ],
       "createdAt": "2026-07-30T05:29:38.066Z",
-      "updatedAt": "2026-08-08T07:03:51.703Z"
+      "updatedAt": "2026-08-08T18:46:41.414Z"
     },
     {
       "id": "sec_e43351a97e7643f0",

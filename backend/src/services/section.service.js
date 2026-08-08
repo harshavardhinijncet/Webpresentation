@@ -35,6 +35,7 @@ export const BLOCK_TYPES = [
   'course-deck',
   'drift-wall',
   'platforms',
+  'coe-wall',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -542,6 +543,36 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         }))
         .filter((p) => p.name && p.url)
         .slice(0, 12);
+      break;
+
+    case 'coe-wall':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 120);
+      block.subtitle = text(raw.subtitle, 240);
+      block.centers = (Array.isArray(raw.centers) ? raw.centers : [])
+        .map((c) => ({
+          key: text(c?.key, 40),
+          name: text(c?.name, 80),
+          mono: text(c?.mono, 4),
+          tagline: text(c?.tagline, 160),
+          color: hexColor(c?.color) || '#161821',
+          ink: hexColor(c?.ink) || '#ffffff',
+          /* Filenames, resolved at publish time by scanning the folders. The
+             page cannot list a directory itself, and a manifest keeps the
+             gallery working with no network and no extra endpoint. */
+          logo: text(c?.logo, 120),
+          logoFull: text(c?.logoFull, 120),
+          media: (Array.isArray(c?.media) ? c.media : [])
+            .map((m) => ({
+              src: text(m?.src, 200),
+              kind: oneOf(m?.kind, ['image', 'video'], 'image'),
+              label: text(m?.label, 120),
+            }))
+            .filter((m) => m.src)
+            .slice(0, 40),
+        }))
+        .filter((c) => c.key && c.name)
+        .slice(0, 40);
       break;
 
     case 'box':
