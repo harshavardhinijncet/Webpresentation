@@ -1,0 +1,58 @@
+# Single ignore file covering both frontend/ and backend/
+
+# ---- Dependencies ----
+node_modules/
+.pnp/
+.pnp.js
+
+# ---- Build output ----
+dist/
+build/
+out/
+.next/
+
+# ---- Environment files ----
+.env
+.env.*
+# keep the documented templates tracked
+!.env.example
+!.env.*.example
+
+# ---- Logs ----
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- Test coverage ----
+coverage/
+.nyc_output/
+*.lcov
+
+# ---- Uploads & temp dirs ----
+uploads/
+tmp/
+temp/
+*.tmp
+
+# ---- Tool caches ----
+.cache/
+.vite/
+.eslintcache
+.parcel-cache/
+*.tsbuildinfo
+
+# ---- Editor & OS files ----
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- App runtime state (content + uploads live here) ----
+backend/data/
+backend/uploads/
