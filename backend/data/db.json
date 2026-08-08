@@ -24,48 +24,6 @@
   ],
   "sessions": [
     {
-      "token": "da5e7595ec8e385038a1fe51ae0a52edc839a0b85098d25ca9c2705368a76402",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T05:11:52.926Z",
-      "expiresAt": "2026-08-08T17:11:52.926Z"
-    },
-    {
-      "token": "db7c4021a8f8d5ce0d75ee499d41d8a496faa4b1e8152569f4eda21f8aa02152",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T05:12:51.937Z",
-      "expiresAt": "2026-08-08T17:12:51.938Z"
-    },
-    {
-      "token": "533180f1651d75816acafc8477a58f770115b7914b34954f96cd7c26c89ead54",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T05:15:40.297Z",
-      "expiresAt": "2026-08-08T17:15:40.297Z"
-    },
-    {
-      "token": "6005ae89e3ce470300fc0edefc0dab2bfb86fca18bcb021f5801ebe9c57c1116",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T05:15:40.614Z",
-      "expiresAt": "2026-08-08T17:15:40.614Z"
-    },
-    {
-      "token": "daf6262f41c5cf11865607b0015e7aeac75c1fa7165798a6da2f9252a70dc4c6",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T05:16:01.590Z",
-      "expiresAt": "2026-08-08T17:16:01.590Z"
-    },
-    {
-      "token": "08f615eff83338cf60f34a3f8a6961d54b495522672aca02eb0988835989381d",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T05:29:52.535Z",
-      "expiresAt": "2026-08-08T17:29:52.535Z"
-    },
-    {
-      "token": "20a201047b46a429df84fe1dd12d160f53c1465128c9aef7bbfb0e4d145daa87",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T05:30:09.816Z",
-      "expiresAt": "2026-08-08T17:30:09.816Z"
-    },
-    {
       "token": "a698a4a14d5081db0f20edf4022817178d4ca6f7b2f1228e24e787c8546c987a",
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-08T05:44:23.549Z",

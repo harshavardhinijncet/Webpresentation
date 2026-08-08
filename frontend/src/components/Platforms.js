@@ -176,7 +176,7 @@ function platformWindow(pane, index) {
 const slotFor = (i, total, dx, dy) => ({
   x: i * dx,
   y: -i * dy,
-  z: -i * dx * 1.6,
+  z: -i * dx * 0.5,
   zIndex: total - i,
 });
 
@@ -184,13 +184,13 @@ const slotFor = (i, total, dx, dy) => ({
    the tail of the stack off the top of the slide. Rise and distance are close
    together on purpose — the windows behind should show along the top edge just
    as much as they do down the right. */
-const stepFor = (n) => (n >= 7 ? { distance: 24, rise: 18 } : { distance: 46, rise: 46 });
+const stepFor = (n) => (n >= 7 ? { distance: 30, rise: 36 } : { distance: 46, rise: 46 });
 
 /* A rotation about the vertical axis, not a shear. skewY drags one side of the
    card down and the horizontal edges run diagonally across the slide; rotateY
    turns the window like a door, so its vertical edges stay upright and only
    perspective narrows the far side. */
-function cardSwap(cards, { tilt = -13, delay = 4200 } = {}) {
+function cardSwap(cards, { tilt = -9, delay = 4200 } = {}) {
   const { distance, rise } = stepFor(cards.length);
   const total = cards.length;
   const order = cards.map((_, i) => i);

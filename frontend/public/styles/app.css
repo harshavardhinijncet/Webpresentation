@@ -8805,7 +8805,7 @@ body.is-presenting .milestones__inner {
 .pf-win {
   position: absolute; top: 0; left: 0;
   display: flex; flex-direction: column;
-  width: 1080px; height: 650px;
+  width: 980px; height: 566px;
   padding: 0; margin: 0;
   border: 1px solid var(--border); border-radius: 16px;
   background: var(--surface);
@@ -8819,17 +8819,17 @@ body.is-presenting .milestones__inner {
 
 .pf-win__bar {
   display: flex; align-items: center; gap: 12px; flex: 0 0 auto;
-  padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--page-bg);
+  padding: 7px 14px; border-bottom: 1px solid var(--border); background: var(--page-bg);
 }
 .pf-win__dots { display: inline-flex; gap: 6px; }
-.pf-win__dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
+.pf-win__dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
 .pf-win__dots i:first-child { background: #ff5f57; }
 .pf-win__dots i:nth-child(2) { background: #febc2e; }
 .pf-win__dots i:nth-child(3) { background: #28c840; }
 .pf-win__host {
   flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  padding: 3px 12px; border-radius: 999px; background: var(--surface);
-  color: var(--muted); font-size: 12px; font-weight: 600; text-align: center;
+  padding: 1px 10px; border-radius: 999px; background: var(--surface);
+  color: var(--muted); font-size: 11px; line-height: 1.5; font-weight: 600; text-align: center;
 }
 
 .pf-win__shell { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background: var(--page-bg); }
