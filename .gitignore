@@ -53,6 +53,15 @@ temp/
 Thumbs.db
 desktop.ini
 
-# ---- App runtime state (content + uploads live here) ----
-backend/data/
-backend/uploads/
+# ---- App content ----
+# The store and the media ARE the deck. They were ignored as "runtime state",
+# which is true only while the app is a local tool: the moment it is deployed,
+# a checkout without them is a portal with no sections and no pictures. They
+# are committed, and publishing a change means committing db.json again.
+#
+# Genuinely derived files stay out: `originals/` holds the pre-transcode video
+# and other source material the app never serves.
+backend/uploads/originals/
+
+# Sessions are runtime state and do not belong in the repo, but they live
+# inside db.json, so they are simply short-lived — a deploy signs people out.
