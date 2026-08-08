@@ -8676,3 +8676,36 @@ body.is-presenting .milestones__inner {
 }
 
 .snav-release { margin-left: 0; }
+
+/* --- sidebar: nothing scrolls sideways ------------------------------------
+   The rows were wider than the pane, so the whole sidebar carried a horizontal
+   scrollbar along the bottom. Every row now lives inside the pane's width and
+   the title is what gives way, by ellipsis. */
+.nav-tree,
+.nav-tree__group { min-width: 0; max-width: 100%; overflow-x: clip; }
+
+.nav-tree__parent,
+.nav-tree__child {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* The chevron on a group with no subsections was still taking its column. */
+.nav-tree__parent .nav-tree__chevron { margin-left: 0; }
+
+/* The subsection list was 4px wider than the group holding it — enough to put
+   a scrollbar under the entire sidebar. The 34px left indent was being added
+   to a full-width box rather than taken out of it. */
+.nav-tree__children,
+.nav-tree__children-inner {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+.nav-tree__children-inner { padding-right: 10px; }
+
+.nav-tree__child { max-width: 100%; }

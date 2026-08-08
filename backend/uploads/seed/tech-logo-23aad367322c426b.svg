@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" width="720" height="200" role="img" aria-label="Technical Hub">
-  <rect width="720" height="200" rx="26" fill="#008638"/>
-  <rect x="46" y="48" width="16" height="104" fill="#FFBB00"/>
-  <rect x="78" y="48" width="16" height="104" fill="#FFBB00" opacity="0.6"/>
-  <text x="126" y="122" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="62" font-weight="700" fill="#FFFFFF">Technical Hub</text>
-</svg>

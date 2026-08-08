@@ -318,13 +318,10 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
       },
       h('span', { class: 'nav-tree__badge' }, sectionGlyph(section, iconKey)),
       h('span', { class: 'nav-tree__title' }, title),
-      /* The Draft flag said what the state was; the toggle beside it is what
-         changes it. Both stay — the word is readable at a glance down a list of
-         seventeen, the control is what you reach for. */
-      admin && section.status !== 'published'
-        ? h('span', { class: 'nav-tree__flag', title: 'Draft — presenters cannot see this section' }, 'Draft')
-        : null,
-      admin && section.hidden ? h('span', { class: 'nav-tree__flag' }, 'Hidden') : null,
+      /* No "DRAFT" chip. The switch beside it already says the same thing —
+         a closed eye is exactly "presenters cannot see this" — and the word was
+         wide enough to push the row past the pane and raise a horizontal
+         scrollbar under the whole sidebar. One mark, not two. */
       releaseToggle(section),
       rows.length ? h('span', { class: 'nav-tree__chevron' }, icon('chevron-right', { class: 'ic ic--xs' })) : null,
     );
