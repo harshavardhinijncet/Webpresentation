@@ -43,6 +43,21 @@ const isShown = (section) => isAdmin() || (section.status === 'published' && !se
  * The navigation groups — top-level sections only. Subsections are their own
  * pages, reached through their parent, and are returned by `childSections`.
  */
+/**
+ * Where a top-level section sits in the organization's own running order,
+ * regardless of who is looking.
+ *
+ * The curated navigation labels are matched to sections by position, and they
+ * deliberately differ from the stored titles — "Vision, Mission & Values" is
+ * presented as "Strategic Foundation". That only works against the complete
+ * list. A presenter is shown a filtered subset, so indexing the labels by
+ * position in *their* list slid every name up: with three sections released,
+ * AI Ready Engineer was being announced as Strategic Foundation.
+ */
+export function sectionOrdinal(id) {
+  return state.sections.filter((s) => !s.parentId).findIndex((s) => s.id === id);
+}
+
 export function visibleSections() {
   return state.sections.filter((s) => !s.parentId && isShown(s));
 }

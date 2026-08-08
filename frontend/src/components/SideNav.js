@@ -1,6 +1,6 @@
 import { h, render, clear } from '../utils/dom.js';
 import { initials } from '../utils/format.js';
-import { state, isAdmin, visibleSections, deckSections, childSections, sectionById } from '../context/appStore.js';
+import { state, isAdmin, visibleSections, deckSections, childSections, sectionById, sectionOrdinal } from '../context/appStore.js';
 import { navigate, refresh } from '../utils/router.js';
 import { icon, iconForTitle, hasIcon } from '../utils/icons.js';
 import { SectionIconGlyph } from './IconChooser.js';
@@ -11,38 +11,54 @@ import { SectionIconGlyph } from './IconChooser.js';
  * the content actually has (six coder programs under Coding; three platforms
  * under Assessment Platforms).
  */
+/**
+ * Keyed by the section's own , not by its position.
+ *
+ * These labels deliberately differ from the stored titles — "Vision, Mission &
+ * Values" is presented as "Strategic Foundation" — so they used to be matched
+ * by index. That breaks the moment the list is filtered, and the server filters
+ * it for a presenter: with three sections released, AI Ready Engineer was being
+ * announced as Strategic Foundation. A presenter never receives the full list,
+ * so position cannot identify a section for them. The key can.
+ */
 const NAVIGATION_GROUPS = [
-  ['Organization Overview', 'layers', ['Executive Summary', 'Organization Snapshot', 'History & Milestones']],
-  ['Leadership', 'users', ['CEO Profile', 'Leadership Journey', 'Success Stories', 'CEO Vision']],
-  ['Strategic Foundation', 'compass', ['Vision', 'Mission', 'Core Values']],
-  ['Strategic Initiatives', 'sparkles', ['T-Connect', 'Get Ready Connect', 'Drive Ready Connect', 'AI Innovations']],
+  ['company-profile', 'Organization Overview', 'layers', ['Executive Summary', 'Organization Snapshot', 'History & Milestones']],
+  ['ceo-message', 'Leadership', 'users', ['CEO Profile', 'Leadership Journey', 'Success Stories', 'CEO Vision']],
+  ['vision-mission', 'Strategic Foundation', 'compass', ['Vision', 'Mission', 'Core Values']],
+  ['best-practices', 'Strategic Initiatives', 'sparkles', ['T-Connect', 'Get Ready Connect', 'Drive Ready Connect', 'AI Innovations']],
   // One page, not a tree. Ignite Coder, Moon Coder, SkillUp, Become, Bamboo,
   // Owl, Drive Ready and PEGA are all programmes and belong on the Programs
   // page together — as eight nav rows they made the reader open eight pages to
   // read one catalogue. AI Ready Engineer has left for a section of its own.
-  ['Programs & Learning', 'book', []],
-  ['Centers of Excellence', 'beaker', ['AI & Data Science', 'Microsoft Technologies', 'Enterprise Technologies', 'Industry Partners']],
-  ['Operational Excellence', 'workflow', [
+  ['programs', 'Programs & Learning', 'book', []],
+  ['team', 'Centers of Excellence', 'beaker', ['AI & Data Science', 'Microsoft Technologies', 'Enterprise Technologies', 'Industry Partners']],
+  ['initiatives', 'Operational Excellence', 'workflow', [
     'Learning Pathways',
     'Industry Integration',
     { label: 'Assessment Platforms', children: ['MYNA', 'HOOT', 'ATS'] },
   ]],
-  ['Talent Acquisition', 'user-check', ['Entrance Test', 'Interview & Screening']],
-  ['Certifications & Credentials', 'certificate', ['Global Certifications', 'Student Certifications']],
-  ['Strategic Partnerships', 'partners', ['Academic Partners', 'Industry Partners', 'Global Collaborations']],
-  ['Career Outcomes', 'trend-up', ['Placement Readiness', 'Placement Statistics', 'Success Stories']],
-  ['Recognition & Achievements', 'trophy', ['Institutional Awards', 'Student Achievements', 'Faculty Recognition']],
-  ['Events & Milestones', 'calendar', ['Events', 'Workshops', 'Project Arena']],
-  ['Media Center', 'images', ['Photo Gallery', 'Video Gallery']],
-  ['Success Stories', 'quote', ['Student Testimonials', 'Alumni Stories', 'Recruiter Testimonials']],
-  ['Connect With Us', 'mail', ['Contact Information', 'Office Locations', 'Contact Form']],
+  ['certifications', 'Talent Acquisition', 'user-check', ['Entrance Test', 'Interview & Screening']],
+  ['placements', 'Certifications & Credentials', 'certificate', ['Global Certifications', 'Student Certifications']],
+  ['coe', 'Strategic Partnerships', 'partners', ['Academic Partners', 'Industry Partners', 'Global Collaborations']],
+  ['mous', 'Career Outcomes', 'trend-up', ['Placement Readiness', 'Placement Statistics', 'Success Stories']],
+  ['moments', 'Recognition & Achievements', 'trophy', ['Institutional Awards', 'Student Achievements', 'Faculty Recognition']],
+  ['achievements', 'Events & Milestones', 'calendar', ['Events', 'Workshops', 'Project Arena']],
+  ['media', 'Media Center', 'images', ['Photo Gallery', 'Video Gallery']],
+  ['testimonials', 'Success Stories', 'quote', ['Student Testimonials', 'Alumni Stories', 'Recruiter Testimonials']],
+  ['contact', 'Connect With Us', 'mail', ['Contact Information', 'Office Locations', 'Contact Form']],
   /* A seventeenth group. This list is matched to the org's top-level sections
      by position, so a section added without an entry here loses its curated
      label and its icon and falls back to whatever it is called in the store —
      which is why the flagship programme needed a row of its own here, not just
      a promotion in the data. */
-  ['AI Ready Engineer', 'brain', []],
+  ['ai-ready-engineer', 'AI Ready Engineer', 'brain', []],
 ];
+
+/** The curated group for a section, or an empty tuple when it has none. */
+const groupFor = (section) => {
+  const row = NAVIGATION_GROUPS.find((g) => g[0] === section?.key);
+  return row ? [row[1], row[2], row[3]] : [];
+};
 
 /**
  * One flat list of rows to draw, so the pane and the rail flyout agree.
@@ -286,8 +302,13 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
     return group;
   };
 
-  const tree = sections.map((section, index) => {
-    const [title, iconKey, curated] = NAVIGATION_GROUPS[index] || [];
+  const tree = sections.map((section, position) => {
+    // Curated labels are keyed to the section's place in the organization's
+    // full running order, not to where it happens to land in this viewer's
+    // filtered list. `position` is still needed for the open/closed state,
+    // which is per-rendered-row.
+    const index = position;
+    const [title, iconKey, curated] = groupFor(section);
     // A curated label is replaced by its own page once that page exists; the
     // rest of the group's story stays put until its pages are built too.
     const built = childSections(section.id);
@@ -497,7 +518,7 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
     'div',
     { class: 'snav-rail__list' },
     ...sections.map((section, index) => {
-      const [title, iconKey, curated] = NAVIGATION_GROUPS[index] || [];
+      const [title, iconKey, curated] = groupFor(section);
       const label = title || section.title;
       // The rail flyout was reading the curated list raw, so it never offered a
       // page that had actually been built. Same merge as the pane — the two are
