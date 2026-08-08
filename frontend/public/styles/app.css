@@ -8709,3 +8709,18 @@ body.is-presenting .milestones__inner {
 .nav-tree__children-inner { padding-right: 10px; }
 
 .nav-tree__child { max-width: 100%; }
+
+/* The guide scrolls, it just does not advertise it. A track down the side of a
+   sixteen-row list is a permanent piece of furniture for something the wheel
+   already does; the list still scrolls exactly as before. */
+.sidenav__scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+
+.sidenav__scroll::-webkit-scrollbar { width: 0; height: 0; }
+
+/* The switch reads as a line icon rather than a hairline: at 14px the default
+   1.7 stroke thinned out against the row's text. */
+.snav-release .ic { width: 15px; height: 15px; }

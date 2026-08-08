@@ -97,7 +97,7 @@ function releaseToggle(section) {
         toastError(err.message);
       }
     },
-  }, icon(live ? 'eye' : 'eye-off', { class: 'ic ic--xs' }));
+  }, icon(live ? 'eye' : 'eye-off', { class: 'ic ic--xs', strokeWidth: 1.9 }));
   return button;
 }
 
@@ -313,7 +313,14 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
             return;
           }
           setExpanded(true);
-          navigate(`/o/${org.id}/${section.id}`);
+          /* A group with no content of its own is a heading, not a page.
+             Leadership holds nothing and CEO Profile is the first thing under
+             it, so opening Leadership showed an empty slide and the presenter
+             had to click twice to reach the same place. Go straight to the
+             first subsection that has something on it. */
+          const own = (section.blocks || []).length;
+          const firstPage = own ? null : childSections(section.id).find((c) => (c.blocks || []).length);
+          navigate(`/o/${org.id}/${firstPage ? firstPage.id : section.id}`);
         },
       },
       h('span', { class: 'nav-tree__badge' }, sectionGlyph(section, iconKey)),
