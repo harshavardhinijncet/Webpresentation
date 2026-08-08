@@ -502,6 +502,10 @@ function normalizeBlock(raw, index = 0, depth = 0) {
           name: text(p?.name, 80),
           blurb: text(p?.blurb, 240),
           icon: iconKey(p?.icon),
+          // The screenshot's filename under /uploads/platforms, without the
+          // extension. Named explicitly rather than derived from the title, so
+          // renaming a platform on screen never breaks its image.
+          shot: text(p?.shot, 80),
           url: safeHref(p?.url),
           adminUrl: safeHref(p?.adminUrl),
           logins: (Array.isArray(p?.logins) ? p.logins : [])

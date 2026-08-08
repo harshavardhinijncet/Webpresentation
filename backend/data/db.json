@@ -538,6 +538,18 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-08T09:43:58.890Z",
       "expiresAt": "2026-08-08T21:43:58.891Z"
+    },
+    {
+      "token": "dc9cf83a388e611059854ff3550e0f9e78a36332f496856df0f537be2a2a24b7",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T10:26:36.740Z",
+      "expiresAt": "2026-08-08T22:26:36.740Z"
+    },
+    {
+      "token": "abbf2839f80b112704485db8b712e6017479d2a9087a1a34a3617fe0a776dfcb",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T10:27:21.197Z",
+      "expiresAt": "2026-08-08T22:27:21.197Z"
     }
   ],
   "organizations": [
@@ -3111,7 +3123,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_797a2dc8caa04d3c",
+          "id": "blk_920d121425c1474d",
           "type": "platforms",
           "layout": {
             "x": 0,
@@ -3127,6 +3139,7 @@
               "name": "MYNA",
               "blurb": "The learner portal.",
               "icon": "brain",
+              "shot": "myna",
               "url": "https://myna.toriiminds.com/",
               "adminUrl": "",
               "logins": [
@@ -3142,6 +3155,7 @@
               "name": "OwlCoder",
               "blurb": "Coding practice and assessment.",
               "icon": "owl",
+              "shot": "owlcoder",
               "url": "https://owlcoder.technicalhub.io/",
               "adminUrl": "",
               "logins": [
@@ -3157,6 +3171,7 @@
               "name": "Torii Minds & JPath",
               "blurb": "The Torii learning platform and the JPath journey.",
               "icon": "route",
+              "shot": "torii-minds",
               "url": "https://toriiminds.com/",
               "adminUrl": "",
               "logins": [
@@ -3172,6 +3187,7 @@
               "name": "AI Engineer LMS",
               "blurb": "The AI Ready Engineer learning platform, four roles.",
               "icon": "chip",
+              "shot": "ai-engineer-lms",
               "url": "https://aiengineer.toriiminds.com/login",
               "adminUrl": "https://aiengineer.toriiminds.com/admin/login",
               "logins": [
@@ -3205,6 +3221,7 @@
               "name": "TAG",
               "blurb": "The NCET task and activity system, five roles.",
               "icon": "workflow",
+              "shot": "tag",
               "url": "https://tag.ncet.co.in/",
               "adminUrl": "https://tag.ncet.co.in/admin/",
               "logins": [
@@ -3244,7 +3261,7 @@
         }
       ],
       "createdAt": "2026-08-08T09:08:24.918Z",
-      "updatedAt": "2026-08-08T09:29:50.311Z"
+      "updatedAt": "2026-08-08T10:27:21.230Z"
     },
     {
       "id": "sec_6b9961ccab6b4efa",
@@ -3261,7 +3278,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_aa8dc37f8528436b",
+          "id": "blk_423c93eedd0042ce",
           "type": "platforms",
           "layout": {
             "x": 0,
@@ -3277,6 +3294,7 @@
               "name": "MYNA",
               "blurb": "The learner portal.",
               "icon": "brain",
+              "shot": "myna",
               "url": "https://myna.toriiminds.com/",
               "adminUrl": "",
               "logins": [
@@ -3292,6 +3310,7 @@
               "name": "OwlCoder",
               "blurb": "Coding practice and assessment.",
               "icon": "owl",
+              "shot": "owlcoder",
               "url": "https://owlcoder.technicalhub.io/",
               "adminUrl": "",
               "logins": [
@@ -3307,6 +3326,7 @@
               "name": "Torii Minds & JPath",
               "blurb": "The Torii learning platform and the JPath journey.",
               "icon": "route",
+              "shot": "torii-minds",
               "url": "https://toriiminds.com/",
               "adminUrl": "",
               "logins": [
@@ -3322,6 +3342,7 @@
               "name": "AI Engineer LMS",
               "blurb": "The AI Ready Engineer learning platform, four roles.",
               "icon": "chip",
+              "shot": "ai-engineer-lms",
               "url": "https://aiengineer.toriiminds.com/login",
               "adminUrl": "https://aiengineer.toriiminds.com/admin/login",
               "logins": [
@@ -3355,6 +3376,7 @@
               "name": "TAG",
               "blurb": "The NCET task and activity system, five roles.",
               "icon": "workflow",
+              "shot": "tag",
               "url": "https://tag.ncet.co.in/",
               "adminUrl": "https://tag.ncet.co.in/admin/",
               "logins": [
@@ -3394,7 +3416,7 @@
         }
       ],
       "createdAt": "2026-08-08T09:08:24.998Z",
-      "updatedAt": "2026-08-08T09:08:25.033Z"
+      "updatedAt": "2026-08-08T10:27:21.242Z"
     }
   ],
   "assets": [
