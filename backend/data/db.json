@@ -556,6 +556,12 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-08T10:42:18.156Z",
       "expiresAt": "2026-08-08T22:42:18.156Z"
+    },
+    {
+      "token": "9116e45f8f0e20ade2184fd9f231bfdc027fbd97b4be240fd69268a9d74fe697",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T14:32:15.860Z",
+      "expiresAt": "2026-08-09T02:32:15.860Z"
     }
   ],
   "organizations": [

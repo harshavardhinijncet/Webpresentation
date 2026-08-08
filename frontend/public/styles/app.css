@@ -8748,10 +8748,15 @@ body.is-presenting .milestones__inner {
 /* ------------------------------------------------------------- the wall ---- */
 .pf-wall {
   display: grid;
-  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1.58fr);
+  /* Absolute, not height:100%. The root's height comes from its min-height, so
+     its computed `height` is auto and a percentage height on a child never
+     resolves — the wall collapsed to its content and left a band of dead slide
+     under the deck. Pinning to the root's box is the only reliable fill. */
+  position: absolute;
+  inset: 0;
+  grid-template-columns: minmax(260px, 0.36fr) minmax(0, 1.64fr);
   align-items: center;
   gap: 16px;
-  height: 100%;
   padding: 40px 16px 40px 40px;
 }
 .pf-root.is-open .pf-wall { display: none; }
@@ -8795,12 +8800,12 @@ body.is-presenting .milestones__inner {
    guessed: at 990x570 with a 32/20 step, and allowing for the ±35px of vertical
    extent the 4deg skew adds to a 990px-wide card, the stack spans 1182x759 of
    the 1207x780 the column gives it. */
-.pf-deck { position: absolute; top: 55%; left: 42%; width: 0; height: 0; transform-style: preserve-3d; }
+.pf-deck { position: absolute; top: 50%; left: 50%; width: 0; height: 0; transform-style: preserve-3d; }
 
 .pf-win {
   position: absolute; top: 0; left: 0;
   display: flex; flex-direction: column;
-  width: 1080px; height: 600px;
+  width: 1120px; height: 671px;
   padding: 0; margin: 0;
   border: 1px solid var(--border); border-radius: 16px;
   background: var(--surface);
