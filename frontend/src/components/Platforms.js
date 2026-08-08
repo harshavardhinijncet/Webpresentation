@@ -181,10 +181,16 @@ const slotFor = (i, total, dx, dy) => ({
 });
 
 /* The step shrinks as the deck grows: seven windows at a five-window step runs
-   the tail of the stack off the top of the slide. */
-const stepFor = (n) => (n >= 7 ? { distance: 18, rise: 12 } : { distance: 46, rise: 46 });
+   the tail of the stack off the top of the slide. Rise and distance are close
+   together on purpose — the windows behind should show along the top edge just
+   as much as they do down the right. */
+const stepFor = (n) => (n >= 7 ? { distance: 24, rise: 18 } : { distance: 46, rise: 46 });
 
-function cardSwap(cards, { skew = 0, delay = 4200 } = {}) {
+/* A rotation about the vertical axis, not a shear. skewY drags one side of the
+   card down and the horizontal edges run diagonally across the slide; rotateY
+   turns the window like a door, so its vertical edges stay upright and only
+   perspective narrows the far side. */
+function cardSwap(cards, { tilt = -13, delay = 4200 } = {}) {
   const { distance, rise } = stepFor(cards.length);
   const total = cards.length;
   const order = cards.map((_, i) => i);
@@ -202,7 +208,7 @@ function cardSwap(cards, { skew = 0, delay = 4200 } = {}) {
   const place = (el, slot, dropped = false) => {
     el.style.zIndex = String(slot.zIndex);
     el.style.transform = `translate(-50%, -50%) translate3d(${slot.x - originX}px, ${
-      (dropped ? slot.y + 460 : slot.y) + originY}px, ${slot.z}px) skewY(${skew}deg)`;
+      (dropped ? slot.y + 460 : slot.y) + originY}px, ${slot.z}px) rotateY(${tilt}deg)`;
     el.style.opacity = dropped ? '0.15' : '1';
   };
 
@@ -298,9 +304,9 @@ function cardSwap(cards, { skew = 0, delay = 4200 } = {}) {
       el.style.transition = 'none';
       el.style.zIndex = String(slot.zIndex);
       el.style.opacity = '0';
-      // Parked off the bottom-right corner, small and steeply skewed, so the
-      // arc into place reads as the window flying up onto the deck.
-      el.style.transform = `translate(-50%, -50%) translate3d(${slot.x - originX + 720}px, ${slot.y + originY + 560}px, ${slot.z - 420}px) skewY(${skew}deg)`;
+      // Parked off the bottom-right corner and further away, so the arc into
+      // place reads as the window flying up onto the deck.
+      el.style.transform = `translate(-50%, -50%) translate3d(${slot.x - originX + 720}px, ${slot.y + originY + 560}px, ${slot.z - 420}px) rotateY(${tilt}deg)`;
     });
 
     // Deepest card first: index total-1 back to 0.
