@@ -8748,11 +8748,11 @@ body.is-presenting .milestones__inner {
 /* ------------------------------------------------------------- the wall ---- */
 .pf-wall {
   display: grid;
-  grid-template-columns: minmax(300px, 0.66fr) minmax(0, 1.34fr);
+  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1.58fr);
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   height: 100%;
-  padding: 48px 12px 48px 60px;
+  padding: 40px 16px 40px 40px;
 }
 .pf-root.is-open .pf-wall { display: none; }
 
@@ -8761,8 +8761,8 @@ body.is-presenting .milestones__inner {
   margin: 0 0 12px; color: var(--nav-accent-ink, var(--accent-ink));
   font-size: 11.5px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
 }
-.pf-title { margin: 0; font-size: 54px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.04; }
-.pf-sub { margin: 16px 0 0; color: var(--muted); font-size: 18px; line-height: 1.55; }
+.pf-title { margin: 0; font-size: 46px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.04; }
+.pf-sub { margin: 14px 0 0; color: var(--muted); font-size: 16.5px; line-height: 1.55; }
 
 .pf-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
 .pf-chip {
@@ -8790,12 +8790,17 @@ body.is-presenting .milestones__inner {
 }
 /* The fan steps right and up, so the deck origin sits low and left of centre —
    otherwise the tail of the stack runs past the slide edge and gets clipped. */
-.pf-deck { position: absolute; top: 58%; left: 37%; width: 0; height: 0; transform-style: preserve-3d; }
+/* Origin chosen so the fan — which steps right and up — sits inside the slide
+   at the largest window size that still clears both edges. Measured, not
+   guessed: at 990x570 with a 32/20 step, and allowing for the ±35px of vertical
+   extent the 4deg skew adds to a 990px-wide card, the stack spans 1182x759 of
+   the 1207x780 the column gives it. */
+.pf-deck { position: absolute; top: 55%; left: 42%; width: 0; height: 0; transform-style: preserve-3d; }
 
 .pf-win {
   position: absolute; top: 0; left: 0;
   display: flex; flex-direction: column;
-  width: 640px; height: 400px;
+  width: 1080px; height: 600px;
   padding: 0; margin: 0;
   border: 1px solid var(--border); border-radius: 16px;
   background: var(--surface);

@@ -182,9 +182,9 @@ const slotFor = (i, total, dx, dy) => ({
 
 /* The step shrinks as the deck grows: seven windows at a five-window step runs
    the tail of the stack off the top of the slide. */
-const stepFor = (n) => (n >= 7 ? { distance: 40, rise: 36 } : { distance: 46, rise: 50 });
+const stepFor = (n) => (n >= 7 ? { distance: 34, rise: 14 } : { distance: 46, rise: 46 });
 
-function cardSwap(cards, { skew = -6, delay = 4200 } = {}) {
+function cardSwap(cards, { skew = -4, delay = 4200 } = {}) {
   const { distance, rise } = stepFor(cards.length);
   const total = cards.length;
   const order = cards.map((_, i) => i);
@@ -216,6 +216,10 @@ function cardSwap(cards, { skew = -6, delay = 4200 } = {}) {
   const swap = () => {
     if (total < 2) return;
     clearSteps();
+    /* The window that is about to fall is the one that was playing. Decoding
+       video through a 460px drop is the single most expensive frame in the
+       cycle; the new front picks playback up at the promote step instead. */
+    pauseAll();
     const front = order[0];
     const rest = order.slice(1);
     const frontEl = cards[front];
@@ -268,23 +272,57 @@ function cardSwap(cards, { skew = -6, delay = 4200 } = {}) {
     timer = setInterval(swap, delay);
   };
 
-  /* Entrance: the windows fall into the stack in reading order. */
-  cards.forEach((el, i) => {
-    const slot = slotFor(i, total, distance, rise);
-    el.style.transition = 'none';
-    el.style.zIndex = String(slot.zIndex);
-    el.style.opacity = '0';
-    el.style.transform = `translate(-50%, -50%) translate3d(${slot.x}px, ${slot.y - 260}px, ${slot.z}px) skewY(${skew}deg)`;
-    const land = () => {
-      el.style.transition = 'transform .9s cubic-bezier(.22,1,.36,1), opacity .5s ease';
-      place(el, slot);
-    };
-    if (REDUCED?.matches) { el.style.opacity = '1'; place(el, slot); }
-    else setTimeout(() => requestAnimationFrame(land), 90 + i * 110);
-  });
-  setTimeout(promoteMedia, 700);
+  /**
+   * Entrance: the windows fly in one at a time from off the bottom-right and
+   * settle into the fan, deepest first, so the stack visibly builds towards
+   * the viewer and the front window is the last thing to land.
+   *
+   * Nothing plays and nothing rotates until the last one is home. Decoding
+   * video while seven cards are still moving is exactly the moment the frame
+   * budget is thinnest, and it is what made the recordings stutter.
+   */
+  const STAGGER = 230;
+  const ENTER_MS = 900;
 
-  return { start, stop, focus, pauseAll, order: () => order[0] };
+  const enter = () => {
+    cards.forEach((el, i) => {
+      const slot = slotFor(i, total, distance, rise);
+      el.style.transition = 'none';
+      el.style.zIndex = String(slot.zIndex);
+      el.style.opacity = '0';
+      // Parked off the bottom-right corner, small and steeply skewed, so the
+      // arc into place reads as the window flying up onto the deck.
+      el.style.transform = `translate(-50%, -50%) translate3d(${slot.x + 720}px, ${slot.y + 560}px, ${slot.z - 420}px) skewY(${skew - 4}deg)`;
+    });
+
+    // Deepest card first: index total-1 back to 0.
+    cards.forEach((el, i) => {
+      const slot = slotFor(i, total, distance, rise);
+      const step = (total - 1 - i);
+      setTimeout(() => requestAnimationFrame(() => {
+        el.style.transition = `transform ${ENTER_MS}ms cubic-bezier(.16,.84,.34,1), opacity 420ms ease`;
+        place(el, slot);
+      }), 140 + step * STAGGER);
+    });
+
+    return 140 + (total - 1) * STAGGER + ENTER_MS;
+  };
+
+  let entering = 0;
+  if (REDUCED?.matches) {
+    cards.forEach((el, i) => { el.style.transition = 'none'; el.style.opacity = '1'; place(el, slotFor(i, total, distance, rise)); });
+  } else {
+    entering = enter();
+  }
+
+  /** The rotation only begins once the deck has finished assembling itself. */
+  const begin = () => {
+    if (!entering) { start(); return () => {}; }
+    const handle = setTimeout(start, entering + 260);
+    return () => clearTimeout(handle);
+  };
+
+  return { start, stop, focus, pauseAll, begin, order: () => order[0] };
 }
 
 /* ------------------------------------------------------------------- exports */
@@ -448,8 +486,8 @@ export function Platforms(block, { editing = false } = {}) {
     h('div', { class: 'pf-stagearea' }, deck),
   );
 
-  const swap = cardSwap(cards, { delay: 4200 });
-  swap.start();
+  const swap = cardSwap(cards, { delay: 5200 });
+  swap.begin();
 
   root.appendChild(wall);
   root.appendChild(stage);
