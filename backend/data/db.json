@@ -324,12 +324,6 @@
       "expiresAt": "2026-08-08T19:59:00.584Z"
     },
     {
-      "token": "d99f860936b8bf489c26aa9781bdb3f129b510f26ac561f4be6990846ee79475",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:07:53.355Z",
-      "expiresAt": "2026-08-08T20:07:53.355Z"
-    },
-    {
       "token": "5e06a6eb0d068da4566148cab693095377bf20cc6249043a0d0091017974ff4a",
       "userId": "usr_26e9b0c6f1cb4ed1",
       "createdAt": "2026-08-08T08:13:59.077Z",
@@ -448,6 +442,42 @@
       "userId": "usr_26e9b0c6f1cb4ed1",
       "createdAt": "2026-08-08T08:16:24.887Z",
       "expiresAt": "2026-08-08T20:16:24.887Z"
+    },
+    {
+      "token": "d7e7d376f3299663e7a3013e4bab171c2c046339db9a060d00b3ca48e2c1e2be",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T08:22:03.558Z",
+      "expiresAt": "2026-08-08T20:22:03.558Z"
+    },
+    {
+      "token": "98f78294217bcda63d6511392a9589e348e01b3042fbcf107fe9d3a59e08ac37",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T08:27:34.101Z",
+      "expiresAt": "2026-08-08T20:27:34.101Z"
+    },
+    {
+      "token": "9c15ada81bf769b4d252173fa836cd8ad128897ad7203bd9d5c4e43e522e0a98",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T08:28:13.825Z",
+      "expiresAt": "2026-08-08T20:28:13.825Z"
+    },
+    {
+      "token": "5ffc8b26ab3815bb6b9d3c3d2652bfc90867976c6bfef7b4509002405ee71213",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T08:28:54.262Z",
+      "expiresAt": "2026-08-08T20:28:54.262Z"
+    },
+    {
+      "token": "b148f697eba343e47f3d14566928caf7fad92316eb43ed0edd1fe26d27f65d26",
+      "userId": "usr_26e9b0c6f1cb4ed1",
+      "createdAt": "2026-08-08T08:28:54.429Z",
+      "expiresAt": "2026-08-08T20:28:54.429Z"
+    },
+    {
+      "token": "d573b2e0003ee71a6f030599d23b3f10d7c675df64e0d7956372de68b8a6b9c9",
+      "userId": "usr_26e9b0c6f1cb4ed1",
+      "createdAt": "2026-08-08T08:28:54.562Z",
+      "expiresAt": "2026-08-08T20:28:54.562Z"
     }
   ],
   "organizations": [
@@ -510,20 +540,6 @@
       "blocks": [],
       "createdAt": "2026-07-30T05:29:37.882Z",
       "updatedAt": "2026-08-06T11:15:47.853Z"
-    },
-    {
-      "id": "sec_dfad712330074df5",
-      "orgId": "torii",
-      "key": "vision-mission",
-      "title": "Vision, Mission & Values",
-      "subtitle": "",
-      "icon": "★",
-      "order": 2,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:37.891Z",
-      "updatedAt": "2026-08-08T07:03:51.990Z"
     },
     {
       "id": "sec_a9115967d9e24791",
@@ -719,21 +735,7 @@
       "status": "published",
       "blocks": [],
       "createdAt": "2026-07-30T05:29:38.036Z",
-      "updatedAt": "2026-08-06T10:50:46.544Z"
-    },
-    {
-      "id": "sec_32c5f24b6811464b",
-      "orgId": "technical-hub",
-      "key": "vision-mission",
-      "title": "Vision, Mission & Values",
-      "subtitle": "",
-      "icon": "★",
-      "order": 2,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.044Z",
-      "updatedAt": "2026-08-08T07:03:51.667Z"
+      "updatedAt": "2026-08-08T08:21:50.374Z"
     },
     {
       "id": "sec_99c30560f78a44f2",
@@ -887,7 +889,7 @@
       "status": "draft",
       "blocks": [],
       "createdAt": "2026-07-30T05:29:38.123Z",
-      "updatedAt": "2026-08-08T07:03:51.785Z"
+      "updatedAt": "2026-08-08T08:28:21.327Z"
     },
     {
       "id": "sec_36db91d0532440aa",
@@ -950,7 +952,7 @@
         }
       ],
       "createdAt": "2026-07-31T06:22:26.936Z",
-      "updatedAt": "2026-08-06T05:16:03.524Z",
+      "updatedAt": "2026-08-08T08:21:46.892Z",
       "iconKey": "",
       "iconAssetId": null
     },

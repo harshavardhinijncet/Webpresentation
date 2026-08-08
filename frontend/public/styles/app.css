@@ -8637,3 +8637,42 @@ body.is-presenting .milestones__inner {
    to receive the click rather than the row swallowing it. */
 .nav-tree__parent, .nav-tree__child { position: relative; }
 .snav-release { position: relative; z-index: 2; }
+
+/* --- navigation rows: keep them one line tall ------------------------------
+   The Draft flag and the release switch were wrapping onto a second line, so
+   every unreleased row stood twice as tall as a released one and the list of
+   seventeen no longer fitted the pane. Both are trailing marks on the same
+   line; the title takes the space that is left. */
+.nav-tree__parent,
+.nav-tree__child {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-height: 0;
+}
+
+.nav-tree__title,
+.nav-tree__child-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-tree__badge,
+.nav-tree__child-icon,
+.nav-tree__chevron,
+.nav-tree__flag,
+.snav-release { flex: none; }
+
+/* "DRAFT" beside a 24px switch was as wide as some of the titles. It is a
+   state marker, not a label — the switch already says the same thing. */
+.nav-tree__flag {
+  padding: 2px 6px;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+}
+
+.snav-release { margin-left: 0; }

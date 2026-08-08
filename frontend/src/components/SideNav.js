@@ -1,6 +1,6 @@
 import { h, render, clear } from '../utils/dom.js';
 import { initials } from '../utils/format.js';
-import { state, isAdmin, visibleSections, deckSections, childSections, sectionById, sectionOrdinal } from '../context/appStore.js';
+import { state, isAdmin, visibleSections, deckSections, childSections, sectionById, sectionOrdinal, setSections } from '../context/appStore.js';
 import { navigate, refresh } from '../utils/router.js';
 import { icon, iconForTitle, hasIcon } from '../utils/icons.js';
 import { updateSection } from '../services/contentService.js';
@@ -26,7 +26,6 @@ import { SectionIconGlyph } from './IconChooser.js';
 const NAVIGATION_GROUPS = [
   ['company-profile', 'Organization Overview', 'layers', ['Executive Summary', 'Organization Snapshot', 'History & Milestones']],
   ['ceo-message', 'Leadership', 'users', ['CEO Profile', 'Leadership Journey', 'Success Stories', 'CEO Vision']],
-  ['vision-mission', 'Strategic Foundation', 'compass', ['Vision', 'Mission', 'Core Values']],
   ['best-practices', 'Strategic Initiatives', 'sparkles', ['T-Connect', 'Get Ready Connect', 'Drive Ready Connect', 'AI Innovations']],
   // One page, not a tree. Ignite Coder, Moon Coder, SkillUp, Become, Bamboo,
   // Owl, Drive Ready and PEGA are all programmes and belong on the Programs
@@ -80,7 +79,15 @@ function releaseToggle(section) {
       event.stopPropagation();
       button.disabled = true;
       try {
-        await updateSection(section.id, { status: live ? 'draft' : 'published', hidden: false });
+        const saved = await updateSection(section.id, {
+          status: live ? 'draft' : 'published',
+          hidden: false,
+        });
+        /* Put the answer back in the store before re-rendering. `refresh()`
+           redraws from `state.sections`, which the PATCH does not touch — so
+           the row came back exactly as it went in and the switch looked stuck
+           until the next sign-in refilled the store from the server. */
+        setSections(state.sections.map((s) => (s.id === saved.id ? { ...s, ...saved } : s)));
         toastSuccess(live
           ? `${section.title} withdrawn from presenters`
           : `${section.title} pushed to presenters`);
