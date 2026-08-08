@@ -41,6 +41,7 @@ export const DEFAULT_SIZE = {
   'gallery-wall': { w: 12, h: 15 },
   'course-deck': { w: 12, h: 15 },
   'drift-wall': { w: 12, h: 15 },
+  'platforms': { w: 12, h: 15 },
 };
 
 /** Layout boxes may nest, but not without end — the server enforces the same. */

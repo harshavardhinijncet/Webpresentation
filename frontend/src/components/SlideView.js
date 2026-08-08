@@ -20,7 +20,7 @@ export function SlideView(section, org, { showStatus = false } = {}) {
   // section head above it would title the page twice.
   const hasHero = section.blocks?.length > 0
     && ['hero', 'leader-hero', 'milestone-timeline', 'leadership-panels', 'gallery-wall',
-      'ai-ready-engineer', 'course-deck', 'drift-wall'].includes(section.blocks[0].type);
+      'ai-ready-engineer', 'course-deck', 'drift-wall', 'platforms'].includes(section.blocks[0].type);
   const canvas = BlockCanvas(section.blocks || [], { editing: false });
 
   const emptyState = h(

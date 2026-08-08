@@ -34,6 +34,7 @@ export const BLOCK_TYPES = [
   'gallery-wall',
   'course-deck',
   'drift-wall',
+  'platforms',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -71,6 +72,7 @@ const DEFAULT_SIZE = {
   'gallery-wall': { w: 12, h: 15 },
   'course-deck': { w: 12, h: 15 },
   'drift-wall': { w: 12, h: 15 },
+  'platforms': { w: 12, h: 15 },
 };
 
 const oneOf = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
@@ -486,6 +488,34 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         }))
         .filter((i) => i.assetId)
         .slice(0, 200);
+      break;
+
+    /* A wall of platform cards; opening one runs it inside the slide.
+       Credentials are stored as given — the user was told they end up in the
+       store, in git and on the deployed server, and chose that. */
+    case 'platforms':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 120);
+      block.subtitle = text(raw.subtitle, 240);
+      block.items = (Array.isArray(raw.items) ? raw.items : [])
+        .map((p) => ({
+          name: text(p?.name, 80),
+          blurb: text(p?.blurb, 240),
+          icon: iconKey(p?.icon),
+          url: safeHref(p?.url),
+          adminUrl: safeHref(p?.adminUrl),
+          logins: (Array.isArray(p?.logins) ? p.logins : [])
+            .map((l) => ({
+              role: text(l?.role, 40),
+              user: text(l?.user, 120),
+              pass: text(l?.pass, 120),
+              url: safeHref(l?.url),
+            }))
+            .filter((l) => l.user)
+            .slice(0, 8),
+        }))
+        .filter((p) => p.name && p.url)
+        .slice(0, 12);
       break;
 
     case 'box':

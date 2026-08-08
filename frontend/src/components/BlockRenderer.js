@@ -11,6 +11,7 @@ import { LeadershipPanels } from './LeadershipPanels.js';
 import { GalleryWall } from './GalleryWall.js';
 import { CourseDeck } from './CourseDeck.js';
 import { DriftWall } from './DriftWall.js';
+import { Platforms } from './Platforms.js';
 import { AiReadyEngineer } from './AiReadyEngineer.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
@@ -108,6 +109,9 @@ export function renderBlock(block, options = {}) {
 
     case 'drift-wall':
       return DriftWall(block, options);
+
+    case 'platforms':
+      return Platforms(block, options);
 
     case 'ai-ready-engineer':
       return AiReadyEngineer(block, options);

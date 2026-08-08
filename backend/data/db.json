@@ -520,6 +520,18 @@
       "userId": "usr_26e9b0c6f1cb4ed1",
       "createdAt": "2026-08-08T08:53:24.009Z",
       "expiresAt": "2026-08-08T20:53:24.009Z"
+    },
+    {
+      "token": "428fff590f22c2a0cd7bc7f88e1ba1a8aa1b210025450130b83c0c5c09a0f72c",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T09:08:24.817Z",
+      "expiresAt": "2026-08-08T21:08:24.817Z"
+    },
+    {
+      "token": "d7592459c568238a2c981ae9ee519dd75880c2713595f9bc58269968fb8cd9ca",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T09:08:54.393Z",
+      "expiresAt": "2026-08-08T21:08:54.393Z"
     }
   ],
   "organizations": [
@@ -3077,6 +3089,306 @@
       ],
       "createdAt": "2026-08-07T14:45:25.145Z",
       "updatedAt": "2026-08-08T04:26:06.752Z"
+    },
+    {
+      "id": "sec_40a34fb614164fad",
+      "orgId": "technical-hub",
+      "parentId": null,
+      "key": "platforms",
+      "title": "Platforms",
+      "subtitle": "Live product demonstrations",
+      "icon": "",
+      "iconKey": "",
+      "iconAssetId": null,
+      "order": 17,
+      "hidden": false,
+      "status": "draft",
+      "blocks": [
+        {
+          "id": "blk_797a2dc8caa04d3c",
+          "type": "platforms",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "eyebrow": "Live platforms",
+          "title": "Try it in the room",
+          "subtitle": "Open a platform inside this slide, copy a login, and demonstrate it live.",
+          "items": [
+            {
+              "name": "MYNA",
+              "blurb": "The learner portal.",
+              "icon": "brain",
+              "url": "https://myna.toriiminds.com/",
+              "adminUrl": "",
+              "logins": [
+                {
+                  "role": "Demo user",
+                  "user": "demo2@demo.com",
+                  "pass": "torii@123",
+                  "url": ""
+                }
+              ]
+            },
+            {
+              "name": "OwlCoder",
+              "blurb": "Coding practice and assessment.",
+              "icon": "owl",
+              "url": "https://owlcoder.technicalhub.io/",
+              "adminUrl": "",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "2000000018",
+                  "pass": "Torii@1234",
+                  "url": ""
+                }
+              ]
+            },
+            {
+              "name": "Torii Minds & JPath",
+              "blurb": "The Torii learning platform and the JPath journey.",
+              "icon": "route",
+              "url": "https://toriiminds.com/",
+              "adminUrl": "",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "2000000018",
+                  "pass": "Torii@1234",
+                  "url": ""
+                }
+              ]
+            },
+            {
+              "name": "AI Engineer LMS",
+              "blurb": "The AI Ready Engineer learning platform, four roles.",
+              "icon": "chip",
+              "url": "https://aiengineer.toriiminds.com/login",
+              "adminUrl": "https://aiengineer.toriiminds.com/admin/login",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "abhinallam@gmail.com",
+                  "pass": "Abhishek",
+                  "url": "https://aiengineer.toriiminds.com/login"
+                },
+                {
+                  "role": "Trainer",
+                  "user": "abhishek.n@ncetmail.com",
+                  "pass": "Abhishek5090",
+                  "url": "https://aiengineer.toriiminds.com/login"
+                },
+                {
+                  "role": "Admin",
+                  "user": "NCETAdmin@LMS.com",
+                  "pass": "NCETAdmin@LMS",
+                  "url": "https://aiengineer.toriiminds.com/admin/login"
+                },
+                {
+                  "role": "Super Admin",
+                  "user": "superadmin@lms.com",
+                  "pass": "SuperAdmin@LMS",
+                  "url": "https://aiengineer.toriiminds.com/admin/login"
+                }
+              ]
+            },
+            {
+              "name": "TAG",
+              "blurb": "The NCET task and activity system, five roles.",
+              "icon": "workflow",
+              "url": "https://tag.ncet.co.in/",
+              "adminUrl": "https://tag.ncet.co.in/admin/",
+              "logins": [
+                {
+                  "role": "Coordinator",
+                  "user": "coordinator.ncet@gmail.com",
+                  "pass": "Tag@123",
+                  "url": "https://tag.ncet.co.in/"
+                },
+                {
+                  "role": "Designer",
+                  "user": "designer@gmail.com",
+                  "pass": "Tag@123",
+                  "url": "https://tag.ncet.co.in/"
+                },
+                {
+                  "role": "Social media",
+                  "user": "social@gmail.com",
+                  "pass": "Tag@123",
+                  "url": "https://tag.ncet.co.in/"
+                },
+                {
+                  "role": "Admin",
+                  "user": "admin@gmail.com",
+                  "pass": "Tag@123",
+                  "url": "https://tag.ncet.co.in/admin/"
+                },
+                {
+                  "role": "Super Admin",
+                  "user": "development@ncetmail.com",
+                  "pass": "Admin@tag",
+                  "url": "https://tag.ncet.co.in/admin/"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-08-08T09:08:24.918Z",
+      "updatedAt": "2026-08-08T09:08:24.958Z"
+    },
+    {
+      "id": "sec_6b9961ccab6b4efa",
+      "orgId": "torii",
+      "parentId": null,
+      "key": "platforms",
+      "title": "Platforms",
+      "subtitle": "Live product demonstrations",
+      "icon": "",
+      "iconKey": "",
+      "iconAssetId": null,
+      "order": 17,
+      "hidden": false,
+      "status": "draft",
+      "blocks": [
+        {
+          "id": "blk_aa8dc37f8528436b",
+          "type": "platforms",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "eyebrow": "Live platforms",
+          "title": "Try it in the room",
+          "subtitle": "Open a platform inside this slide, copy a login, and demonstrate it live.",
+          "items": [
+            {
+              "name": "MYNA",
+              "blurb": "The learner portal.",
+              "icon": "brain",
+              "url": "https://myna.toriiminds.com/",
+              "adminUrl": "",
+              "logins": [
+                {
+                  "role": "Demo user",
+                  "user": "demo2@demo.com",
+                  "pass": "torii@123",
+                  "url": ""
+                }
+              ]
+            },
+            {
+              "name": "OwlCoder",
+              "blurb": "Coding practice and assessment.",
+              "icon": "owl",
+              "url": "https://owlcoder.technicalhub.io/",
+              "adminUrl": "",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "2000000018",
+                  "pass": "Torii@1234",
+                  "url": ""
+                }
+              ]
+            },
+            {
+              "name": "Torii Minds & JPath",
+              "blurb": "The Torii learning platform and the JPath journey.",
+              "icon": "route",
+              "url": "https://toriiminds.com/",
+              "adminUrl": "",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "2000000018",
+                  "pass": "Torii@1234",
+                  "url": ""
+                }
+              ]
+            },
+            {
+              "name": "AI Engineer LMS",
+              "blurb": "The AI Ready Engineer learning platform, four roles.",
+              "icon": "chip",
+              "url": "https://aiengineer.toriiminds.com/login",
+              "adminUrl": "https://aiengineer.toriiminds.com/admin/login",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "abhinallam@gmail.com",
+                  "pass": "Abhishek",
+                  "url": "https://aiengineer.toriiminds.com/login"
+                },
+                {
+                  "role": "Trainer",
+                  "user": "abhishek.n@ncetmail.com",
+                  "pass": "Abhishek5090",
+                  "url": "https://aiengineer.toriiminds.com/login"
+                },
+                {
+                  "role": "Admin",
+                  "user": "NCETAdmin@LMS.com",
+                  "pass": "NCETAdmin@LMS",
+                  "url": "https://aiengineer.toriiminds.com/admin/login"
+                },
+                {
+                  "role": "Super Admin",
+                  "user": "superadmin@lms.com",
+                  "pass": "SuperAdmin@LMS",
+                  "url": "https://aiengineer.toriiminds.com/admin/login"
+                }
+              ]
+            },
+            {
+              "name": "TAG",
+              "blurb": "The NCET task and activity system, five roles.",
+              "icon": "workflow",
+              "url": "https://tag.ncet.co.in/",
+              "adminUrl": "https://tag.ncet.co.in/admin/",
+              "logins": [
+                {
+                  "role": "Coordinator",
+                  "user": "coordinator.ncet@gmail.com",
+                  "pass": "Tag@123",
+                  "url": "https://tag.ncet.co.in/"
+                },
+                {
+                  "role": "Designer",
+                  "user": "designer@gmail.com",
+                  "pass": "Tag@123",
+                  "url": "https://tag.ncet.co.in/"
+                },
+                {
+                  "role": "Social media",
+                  "user": "social@gmail.com",
+                  "pass": "Tag@123",
+                  "url": "https://tag.ncet.co.in/"
+                },
+                {
+                  "role": "Admin",
+                  "user": "admin@gmail.com",
+                  "pass": "Tag@123",
+                  "url": "https://tag.ncet.co.in/admin/"
+                },
+                {
+                  "role": "Super Admin",
+                  "user": "development@ncetmail.com",
+                  "pass": "Admin@tag",
+                  "url": "https://tag.ncet.co.in/admin/"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-08-08T09:08:24.998Z",
+      "updatedAt": "2026-08-08T09:08:25.033Z"
     }
   ],
   "assets": [
