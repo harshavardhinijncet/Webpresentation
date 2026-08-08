@@ -23,11 +23,13 @@ import { toastSuccess, toastError } from './Toast.js';
  * any site reading your bank's login form.
  */
 
-/* Screenshots live at /uploads/platforms/<slug>.<ext> and are served straight
-   from backend/uploads. A card with no screenshot yet is not broken — it falls
-   back to a designed panel, so the section works before the images arrive. */
+/* Media lives at /uploads/platforms/<shot>.<ext>, served straight from
+   backend/uploads. A screen recording is tried first and a still second; a
+   platform with neither is not broken, it falls back to a designed panel, so
+   the section works before the files arrive. */
 const SHOT_DIR = '/uploads/platforms';
-const SHOT_EXT = ['png', 'jpg', 'jpeg', 'webp'];
+const VIDEO_EXT = ['mp4', 'webm'];
+const IMAGE_EXT = ['png', 'jpg', 'jpeg', 'webp'];
 
 const slugOf = (item) => (item.shot || item.slug || item.name || '')
   .toString().toLowerCase().trim()
@@ -56,26 +58,58 @@ async function copy(value, label) {
 }
 
 /**
- * An <img> that tries each extension in turn and hands over to a fallback
- * rather than leaving a broken-image glyph on a projector.
+ * The media for one window: a screen recording if there is one, a still if
+ * there is not, and nothing at all rather than a broken-image glyph on a
+ * projector.
+ *
+ * Only the window at the front of the stack ever plays. Five recordings
+ * running at once is 33MB of video decoding behind cards nobody can read, and
+ * on the hosted copy it is 33MB downloaded before the slide settles — so each
+ * one loads the first time it reaches the front and pauses when it leaves.
  */
-function shotImage(item, onMissing) {
+function shotMedia(item, mount, onMissing) {
   const slug = slugOf(item);
-  if (!slug) { onMissing(); return null; }
-  let attempt = 0;
-  const img = h('img', {
-    class: 'pf-win__img',
-    alt: '',
-    loading: 'lazy',
-    decoding: 'async',
-    src: `${SHOT_DIR}/${slug}.${SHOT_EXT[0]}`,
-  });
-  img.addEventListener('error', () => {
-    attempt += 1;
-    if (attempt < SHOT_EXT.length) img.src = `${SHOT_DIR}/${slug}.${SHOT_EXT[attempt]}`;
-    else { img.remove(); onMissing(); }
-  });
-  return img;
+  if (!slug) { onMissing(); return { play() {}, pause() {} }; }
+
+  const still = () => {
+    let at = 0;
+    const img = h('img', {
+      class: 'pf-win__img', alt: '', loading: 'lazy', decoding: 'async',
+      src: `${SHOT_DIR}/${slug}.${IMAGE_EXT[0]}`,
+    });
+    img.addEventListener('error', () => {
+      at += 1;
+      if (at < IMAGE_EXT.length) img.src = `${SHOT_DIR}/${slug}.${IMAGE_EXT[at]}`;
+      else { img.remove(); onMissing(); }
+    });
+    mount.appendChild(img);
+  };
+
+  const video = h('video', {
+    class: 'pf-win__img pf-win__video',
+    // 'metadata', not 'none': it costs a few KB per file and settles whether
+    // the recording exists at load time. With 'none' a missing file only fails
+    // when its window reaches the front, so the fallback appears on screen
+    // mid-rotation instead of never being seen at all.
+    muted: true, loop: true, playsinline: true, preload: 'metadata',
+    tabindex: '-1', 'aria-hidden': 'true',
+  }, ...VIDEO_EXT.map((ext) => h('source', {
+    src: `${SHOT_DIR}/${slug}.${ext}`, type: `video/${ext}`,
+  })));
+  video.muted = true; // The attribute alone does not satisfy autoplay policy.
+
+  let usable = true;
+  video.addEventListener('error', () => { usable = false; video.remove(); still(); }, true);
+  mount.appendChild(video);
+
+  return {
+    play() {
+      if (!usable) return;
+      const go = video.play();
+      if (go?.catch) go.catch(() => { /* autoplay refused: the poster frame stands in */ });
+    },
+    pause() { if (usable) video.pause(); },
+  };
 }
 
 /* ------------------------------------------------------------------ a window */
@@ -88,10 +122,9 @@ function platformWindow(item, index) {
     h('span', { class: 'pf-win__blankname' }, item.name),
     item.blurb ? h('span', { class: 'pf-win__blankblurb' }, item.blurb) : null,
   ));
-  const img = shotImage(item, fallback);
-  if (img) shell.appendChild(img);
+  const media = shotMedia(item, shell, fallback);
 
-  return h('button', {
+  const el = h('button', {
     class: 'pf-win',
     type: 'button',
     'data-index': String(index),
@@ -108,6 +141,8 @@ function platformWindow(item, index) {
       h('span', { class: 'pf-win__open' }, 'Open', icon('arrow-up-right', { class: 'ic ic--xs' })),
     ),
   );
+  el.media = media;
+  return el;
 }
 
 /* ------------------------------------------------------------- the card swap */
@@ -143,6 +178,14 @@ function cardSwap(cards, { distance = 46, rise = 50, skew = -6, delay = 4200 } =
 
   const clearSteps = () => { steps.forEach(clearTimeout); steps = []; };
 
+  /* Only the readable window plays; the rest are pinned frames behind it. */
+  const promoteMedia = () => cards.forEach((el, i) => {
+    if (i === order[0]) el.media?.play();
+    else el.media?.pause();
+  });
+
+  const pauseAll = () => cards.forEach((el) => el.media?.pause());
+
   const swap = () => {
     if (total < 2) return;
     clearSteps();
@@ -157,6 +200,7 @@ function cardSwap(cards, { distance = 46, rise = 50, skew = -6, delay = 4200 } =
 
     // 2. the stack promotes forward, each a beat after the one in front
     steps.push(setTimeout(() => {
+      promoteMedia();
       rest.forEach((idx, i) => {
         const el = cards[idx];
         const slot = slotFor(i, total, distance, rise);
@@ -186,11 +230,13 @@ function cardSwap(cards, { distance = 46, rise = 50, skew = -6, delay = 4200 } =
     order.splice(at, 1);
     order.unshift(index);
     settle();
+    promoteMedia();
   };
 
   const stop = () => { clearInterval(timer); timer = null; clearSteps(); };
   const start = () => {
     stop();
+    promoteMedia();
     if (REDUCED?.matches) return;
     timer = setInterval(swap, delay);
   };
@@ -209,8 +255,9 @@ function cardSwap(cards, { distance = 46, rise = 50, skew = -6, delay = 4200 } =
     if (REDUCED?.matches) { el.style.opacity = '1'; place(el, slot); }
     else setTimeout(() => requestAnimationFrame(land), 90 + i * 110);
   });
+  setTimeout(promoteMedia, 700);
 
-  return { start, stop, focus, order: () => order[0] };
+  return { start, stop, focus, pauseAll, order: () => order[0] };
 }
 
 /* ------------------------------------------------------------------- exports */
@@ -299,7 +346,9 @@ export function Platforms(block, { editing = false } = {}) {
   );
 
   const open = (item) => {
+    // Nothing behind the frame should keep decoding video.
     swap?.stop();
+    swap?.pauseAll();
     frameTitle.textContent = item.name;
     keysPanel.setAttribute('hidden', '');
     keysBtn.classList.remove('is-on');
