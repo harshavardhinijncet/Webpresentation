@@ -81,7 +81,16 @@ export function deckSections() {
 
   return state.sections
     .filter((s) => !s.parentId && shown(s))
-    .flatMap((parent) => [parent, ...children(parent.id)]);
+    .flatMap((parent) => {
+      const pages = children(parent.id);
+      /* A group with no content of its own is a heading, not a slide. Leadership
+         holds nothing and CEO Profile is the first page under it, so the deck
+         was dealing a blank card before every group and the presenter had to
+         press past it. Clicking the group in the nav already skips to the first
+         page; Prev/Next now does the same. */
+      const ownContent = (parent.blocks || []).length > 0;
+      return ownContent || !pages.length ? [parent, ...pages] : pages;
+    });
 }
 
 export function sectionById(id) {

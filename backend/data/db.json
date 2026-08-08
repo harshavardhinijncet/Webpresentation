@@ -508,6 +508,18 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-08T08:44:01.638Z",
       "expiresAt": "2026-08-08T20:44:01.638Z"
+    },
+    {
+      "token": "114214a0f61d784e0002a4a85e14e15831243e967b99b1805b43172c98a96995",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-08T08:51:34.837Z",
+      "expiresAt": "2026-08-08T20:51:34.837Z"
+    },
+    {
+      "token": "04215df7699fa4ec6059e72d909fdc39750e3ed9bc67df90e3818f7646ac4328",
+      "userId": "usr_26e9b0c6f1cb4ed1",
+      "createdAt": "2026-08-08T08:53:24.009Z",
+      "expiresAt": "2026-08-08T20:53:24.009Z"
     }
   ],
   "organizations": [
@@ -996,7 +1008,7 @@
       "icon": "",
       "iconKey": "user-badge",
       "iconAssetId": null,
-      "order": 16,
+      "order": 0,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1016,7 +1028,7 @@
           "watermark": "Neelam",
           "tagline": "Building skilled careers. Creating better tomorrows.",
           "body": "Every engineer has a story. Mine runs from a small town in Andhra Pradesh, across three continents, and back home again — to build the bridge between campus and industry.",
-          "assetId": "ast_8089f55c901b4bf3",
+          "assetId": "ast_a83bc7208977485d",
           "alt": "Babji Neelam, Founder & CEO of Technical Hub and Torii",
           "tags": [
             {
@@ -1070,7 +1082,7 @@
         }
       ],
       "createdAt": "2026-08-06T10:50:26.888Z",
-      "updatedAt": "2026-08-08T08:40:38.327Z"
+      "updatedAt": "2026-08-08T08:51:35.126Z"
     },
     {
       "id": "sec_d2646548cb65432d",
@@ -1082,7 +1094,7 @@
       "icon": "",
       "iconKey": "route",
       "iconAssetId": null,
-      "order": 17,
+      "order": 1,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1181,7 +1193,7 @@
         }
       ],
       "createdAt": "2026-08-06T10:50:26.898Z",
-      "updatedAt": "2026-08-08T06:25:59.374Z"
+      "updatedAt": "2026-08-08T08:51:35.143Z"
     },
     {
       "id": "sec_28488e9d069c46e5",
@@ -1193,7 +1205,7 @@
       "icon": "",
       "iconKey": "trophy",
       "iconAssetId": null,
-      "order": 18,
+      "order": 2,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1278,7 +1290,7 @@
         }
       ],
       "createdAt": "2026-08-06T10:50:26.912Z",
-      "updatedAt": "2026-08-06T10:55:31.074Z"
+      "updatedAt": "2026-08-08T08:51:35.156Z"
     },
     {
       "id": "sec_6adc52eaddfa4292",
@@ -1290,7 +1302,7 @@
       "icon": "",
       "iconKey": "eye",
       "iconAssetId": null,
-      "order": 19,
+      "order": 3,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1365,7 +1377,7 @@
         }
       ],
       "createdAt": "2026-08-06T10:50:26.923Z",
-      "updatedAt": "2026-08-06T10:55:31.085Z"
+      "updatedAt": "2026-08-08T08:51:35.168Z"
     },
     {
       "id": "sec_0fbb02d2a502433f",
@@ -1377,7 +1389,7 @@
       "icon": "",
       "iconKey": "user-badge",
       "iconAssetId": null,
-      "order": 16,
+      "order": 0,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1397,7 +1409,7 @@
           "watermark": "Neelam",
           "tagline": "Building skilled careers. Creating better tomorrows.",
           "body": "Every engineer has a story. Mine runs from a small town in Andhra Pradesh, across three continents, and back home again — to build the bridge between campus and industry.",
-          "assetId": "ast_8089f55c901b4bf3",
+          "assetId": "ast_a83bc7208977485d",
           "alt": "Babji Neelam, Founder & CEO of Technical Hub and Torii",
           "tags": [
             {
@@ -1451,7 +1463,7 @@
         }
       ],
       "createdAt": "2026-08-06T11:15:47.864Z",
-      "updatedAt": "2026-08-06T11:15:47.864Z"
+      "updatedAt": "2026-08-08T08:51:35.216Z"
     },
     {
       "id": "sec_2939db9227084dae",
@@ -1463,7 +1475,7 @@
       "icon": "",
       "iconKey": "route",
       "iconAssetId": null,
-      "order": 17,
+      "order": 1,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1562,7 +1574,7 @@
         }
       ],
       "createdAt": "2026-08-06T11:15:47.877Z",
-      "updatedAt": "2026-08-08T06:25:59.382Z"
+      "updatedAt": "2026-08-08T08:51:35.229Z"
     },
     {
       "id": "sec_d4e08727d7284f44",
@@ -1574,7 +1586,7 @@
       "icon": "",
       "iconKey": "trophy",
       "iconAssetId": null,
-      "order": 18,
+      "order": 2,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1644,7 +1656,7 @@
         }
       ],
       "createdAt": "2026-08-06T11:15:47.890Z",
-      "updatedAt": "2026-08-06T11:15:47.890Z"
+      "updatedAt": "2026-08-08T08:51:35.247Z"
     },
     {
       "id": "sec_2596b1524381464d",
@@ -1656,7 +1668,7 @@
       "icon": "",
       "iconKey": "eye",
       "iconAssetId": null,
-      "order": 19,
+      "order": 3,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1731,7 +1743,7 @@
         }
       ],
       "createdAt": "2026-08-06T11:15:47.903Z",
-      "updatedAt": "2026-08-06T11:15:47.903Z"
+      "updatedAt": "2026-08-08T08:51:35.261Z"
     },
     {
       "id": "sec_526bd46b99ec4733",
@@ -1743,7 +1755,7 @@
       "icon": "",
       "iconKey": "",
       "iconAssetId": null,
-      "order": 20,
+      "order": 2,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1759,7 +1771,7 @@
           "kicker": "History & Milestones",
           "title": "Ten years of building skilled careers",
           "theme": "dark",
-          "assetId": "ast_4fb0d6e4cec54235",
+          "assetId": null,
           "alt": "Technical Hub trainees filling the campus ground",
           "sky": true,
           "stops": [
@@ -1892,7 +1904,7 @@
         }
       ],
       "createdAt": "2026-08-07T07:06:22.018Z",
-      "updatedAt": "2026-08-07T09:11:20.681Z"
+      "updatedAt": "2026-08-08T08:51:35.082Z"
     },
     {
       "id": "sec_faaadebee0d94c63",
@@ -1904,7 +1916,7 @@
       "icon": "",
       "iconKey": "",
       "iconAssetId": null,
-      "order": 21,
+      "order": 1,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1947,7 +1959,7 @@
               "category": "Projects"
             },
             {
-              "assetId": "ast_8089f55c901b4bf3",
+              "assetId": "ast_a83bc7208977485d",
               "title": "Our Team",
               "tag": "Our Team",
               "category": "Community"
@@ -1957,18 +1969,6 @@
               "title": "Since 2016",
               "tag": "Since 2016",
               "category": "Achievements"
-            },
-            {
-              "assetId": "ast_515a8c06a7a44ad1",
-              "title": "App Apt",
-              "tag": "App Apt",
-              "category": "Community"
-            },
-            {
-              "assetId": "ast_c0329509769b4374",
-              "title": "App Dashboard",
-              "tag": "App Dashboard",
-              "category": "Community"
             },
             {
               "assetId": "ast_0e48175a778c4999",
@@ -2403,7 +2403,7 @@
               "category": "Community"
             },
             {
-              "assetId": "ast_2b4eb6cbb00843c5",
+              "assetId": "ast_cb5e64ce369c434d",
               "title": "Facade Day",
               "tag": "Facade Day",
               "category": "Campus"
@@ -2421,7 +2421,7 @@
               "category": "Community"
             },
             {
-              "assetId": "ast_1c47a5af6ea844bc",
+              "assetId": "ast_eb2709559b6042e8",
               "title": "Crowd Believe",
               "tag": "Crowd Believe",
               "category": "Community"
@@ -2433,52 +2433,34 @@
               "category": "Community"
             },
             {
-              "assetId": "ast_3c276210ff084d80",
+              "assetId": "ast_new_babji_balancing_rocks",
               "title": "Ceo Room",
               "tag": "Ceo Room",
               "category": "Community"
             },
             {
-              "assetId": "ast_a1b63b2c87294ed0",
+              "assetId": "ast_new_babji_balancing_rocks",
               "title": "Ceo Room",
               "tag": "Ceo Room",
               "category": "Community"
             },
             {
-              "assetId": "ast_a49c04442b914551",
+              "assetId": "ast_new_babji_balancing_rocks",
               "title": "Ceo Room",
               "tag": "Ceo Room",
               "category": "Community"
             },
             {
-              "assetId": "ast_d821bd8ab4604843",
+              "assetId": "ast_new_babji_balancing_rocks",
               "title": "Ceo Room",
               "tag": "Ceo Room",
-              "category": "Community"
-            },
-            {
-              "assetId": "ast_7b2a22d17ebb48ed",
-              "title": "Milestones Crowd Bg",
-              "tag": "Milestones Crowd Bg",
-              "category": "Community"
-            },
-            {
-              "assetId": "ast_4fb0d6e4cec54235",
-              "title": "Milestones Crowd Bg",
-              "tag": "Milestones Crowd Bg",
-              "category": "Community"
-            },
-            {
-              "assetId": "ast_new_maya_modules",
-              "title": "New Maya Modules",
-              "tag": "New Maya Modules",
               "category": "Community"
             }
           ]
         }
       ],
       "createdAt": "2026-08-07T11:28:07.400Z",
-      "updatedAt": "2026-08-08T04:45:47.783Z"
+      "updatedAt": "2026-08-08T08:51:35.101Z"
     },
     {
       "id": "sec_ai_ready_engineer_th",
@@ -4773,6 +4755,17 @@
       "size": 33617,
       "createdAt": "2026-08-08T06:25:59.365Z",
       "url": "/uploads/technical-foundation-ibm-537267b8a0974fbd.jpg"
+    },
+    {
+      "id": "ast_a83bc7208977485d",
+      "name": "babji_hero_crop.png",
+      "kind": "image",
+      "mime": "image/png",
+      "size": 734469,
+      "createdAt": "2026-08-08T08:51:34.970Z",
+      "url": "/uploads/babji-hero-crop-a83bc7208977485d.png",
+      "width": 746,
+      "height": 839
     }
   ],
   "templates": []
