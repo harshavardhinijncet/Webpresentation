@@ -32,7 +32,10 @@ const NAVIGATION_GROUPS = [
   // page together — as eight nav rows they made the reader open eight pages to
   // read one catalogue. AI Ready Engineer has left for a section of its own.
   ['programs', 'Programs & Learning', 'book', []],
-  ['team', 'Centers of Excellence', 'beaker', ['AI & Data Science', 'Microsoft Technologies', 'Enterprise Technologies', 'Industry Partners']],
+  // One page, like Programs. The four strands read as one story about where
+  // the centres invest, and splitting them across four nav rows made the
+  // reader open four pages to see a single picture.
+  ['team', 'Centers of Excellence', 'beaker', []],
   ['initiatives', 'Operational Excellence', 'workflow', [
     'Learning Pathways',
     'Industry Integration',
