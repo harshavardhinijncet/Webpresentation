@@ -18,7 +18,10 @@ import { icon } from '../utils/icons.js';
  * reserved for the one card you are pointing at.
  */
 
-const MEDIA_DIR = '/uploads/coe';
+const LOGO_DIR = '/uploads/coe';
+/* Gallery paths are stored relative to /uploads, so the manifest names the
+   folder it came from and this file does not care which one that was. */
+const UPLOADS = '/uploads';
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
 /** #rrggbb -> rgba(), for the one-card-deep tint and shadow. */
@@ -46,7 +49,7 @@ function brandMark(center, { full = false } = {}) {
   const holder = h('span', { class: full ? 'coe-logo coe-logo--lg' : 'coe-logo' });
   const img = h('img', {
     // The drop uses spaces in filenames, so the path has to be encoded.
-    src: `${MEDIA_DIR}/${encodeURI(src)}`,
+    src: `${LOGO_DIR}/${encodeURI(src)}`,
     alt: center.name,
     loading: 'lazy',
     decoding: 'async',
@@ -87,7 +90,7 @@ function centerCard(center, index, onOpen) {
 /* ------------------------------------------------------------- the detail */
 
 function mediaTile(item, center) {
-  const src = `${MEDIA_DIR}/${center.key}/${encodeURI(item.src)}`;
+  const src = `${UPLOADS}/${encodeURI(item.src)}`;
   if (item.kind === 'video') {
     const video = h('video', {
       class: 'coe-tile__media',
@@ -165,7 +168,7 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
       media.length
         ? h('div', { class: 'coe-gal' }, ...media.map((m) => mediaTile(m, center)))
         : h('p', { class: 'coe-gal__none' },
-            `Drop photos or videos into backend/uploads/coe/${center.key}/ and they appear here.`),
+            `Drop photos or videos into backend/uploads/coepics/${center.key}/ and they appear here.`),
     );
     root.classList.add('is-open');
     detail.scrollTop = 0;
