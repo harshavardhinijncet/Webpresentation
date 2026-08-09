@@ -9025,7 +9025,8 @@ body.is-presenting .milestones__inner {
 }
 
 .coe-card {
-  position: relative; display: flex; flex-direction: column; gap: 9px;
+  position: relative; display: flex; flex-direction: column; gap: 8px;
+  min-height: 0; overflow: hidden;
   padding: 14px 14px 11px; border: 1px solid var(--border); border-radius: 16px;
   background: var(--surface); color: inherit; font: inherit; text-align: left; cursor: pointer;
   box-shadow: 0 1px 3px rgba(20, 25, 35, 0.05);
@@ -9064,7 +9065,15 @@ body.is-presenting .milestones__inner {
   font-size: 16px; font-weight: 800; letter-spacing: -0.02em;
 }
 .coe-card__name { font-size: 15px; font-weight: 700; line-height: 1.2; }
-.coe-card__tag { color: var(--muted); font-size: 11.5px; line-height: 1.38; }
+/* Two lines at most, and allowed to shrink. A 1fr grid row does not stop a
+   card growing past it — the card spills, and on a short display that spill
+   went under the deck controls. Clamping the one elastic line is what makes
+   the row height mean something. */
+.coe-card__tag {
+  color: var(--muted); font-size: 11.5px; line-height: 1.38;
+  min-height: 0; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
 .coe-card__foot {
   display: flex; align-items: center; gap: 10px; margin-top: auto; padding-top: 12px;
   border-top: 1px solid var(--border); color: var(--muted); font-size: 11.5px;
@@ -9081,7 +9090,13 @@ body.is-presenting .milestones__inner {
 .coe-card__go .ic { color: var(--coe-color); }
 
 /* ------------------------------------------------------------- the detail */
-.coe-detail { position: absolute; inset: 0; display: none; overflow: auto; padding: 32px 52px 56px; background: var(--surface); }
+.coe-detail {
+  position: absolute; inset: 0; display: none; overflow-y: auto; overflow-x: hidden;
+  padding: 32px 52px 40px; background: var(--surface);
+  scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none;
+  overscroll-behavior: contain;
+}
+.coe-detail::-webkit-scrollbar { width: 0; height: 0; display: none; }
 .coe-root.is-open .coe-detail { display: block; }
 
 .coe-back {
@@ -9269,3 +9284,13 @@ body.is-presenting .milestones__inner {
   .coe-shine { animation: none !important; }
   .coe-ring__path { animation: none !important; opacity: .26 !important; }
 }
+
+/* --- Centers of Excellence: clear the deck controls -----------------------
+   The Prev / count / Exit pill is fixed 22px off the bottom of the viewport
+   and stands about 50px tall, so the last row of cards was running underneath
+   it. These paddings are in slide units and the slide is scaled to the
+   display, so 96 here is ~82px on a 1366-wide screen and ~115px on a 1920 —
+   comfortably clear at both ends without stealing height when not presenting. */
+body.is-presenting .coe-wall,
+body.is-presenting .coe-detail,
+body.is-presenting .coe-orbit { bottom: 104px; }

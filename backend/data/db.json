@@ -24,12 +24,6 @@
   ],
   "sessions": [
     {
-      "token": "cdace50dd68de997a4ad3603d4f0e56f5755f5c76e708a0121d1ab81aecb5c05",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T18:46:41.374Z",
-      "expiresAt": "2026-08-09T06:46:41.374Z"
-    },
-    {
       "token": "bc438afaa24f108ede6b24e62d088494f9d5c04d77c6ece8a2558dd24115ee97",
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-09T02:36:04.939Z",
@@ -82,6 +76,108 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-09T03:44:15.217Z",
       "expiresAt": "2026-08-09T15:44:15.217Z"
+    },
+    {
+      "token": "db583374bc413e68b192a3606ea3f48398701fe71fc8b946a2a6d1bd40f0dce6",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:45:29.032Z",
+      "expiresAt": "2026-08-09T23:45:29.032Z"
+    },
+    {
+      "token": "5e0d2214f35b08f847c7d63d42aa06a3645a214076954a233dce4fe6f1bfc000",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:48:27.619Z",
+      "expiresAt": "2026-08-09T23:48:27.619Z"
+    },
+    {
+      "token": "557e3c24056c7cfdb3cd21885450f1373c7f5465c377e47b19fa56d594f2fc28",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:49:19.782Z",
+      "expiresAt": "2026-08-09T23:49:19.782Z"
+    },
+    {
+      "token": "25093a1883cc367bd5152c09076fe9dca4629dda17273ee42dc4442689e10fb4",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:49:57.409Z",
+      "expiresAt": "2026-08-09T23:49:57.409Z"
+    },
+    {
+      "token": "3a1b69eebab46d43fcefe6baaf9d4a8115e0a8f9729fc5683c4a810298bc9799",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:50:49.440Z",
+      "expiresAt": "2026-08-09T23:50:49.440Z"
+    },
+    {
+      "token": "5d13790f9bc6355582e8ebfb66fecb901cc104f3366608ad4a35e41dd3c179a0",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:51:11.628Z",
+      "expiresAt": "2026-08-09T23:51:11.628Z"
+    },
+    {
+      "token": "ed2c72c5afb3c6a3dacda7d63137c670be7f4c09038484d7969425cbb871f8f5",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:51:32.982Z",
+      "expiresAt": "2026-08-09T23:51:32.982Z"
+    },
+    {
+      "token": "202f019b0abd6f3842fc19cae4a6b3491a5ddef3edd77bb8f700518c27855266",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:52:00.594Z",
+      "expiresAt": "2026-08-09T23:52:00.594Z"
+    },
+    {
+      "token": "587675391a537071dd9ad93135da41aa5995a77942ddcfb652cacf34ba6e671a",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:53:10.921Z",
+      "expiresAt": "2026-08-09T23:53:10.921Z"
+    },
+    {
+      "token": "feefc9004838bd2a1bdff171bddabc9cbb120d26c5db6ca51569b3d3f81a664b",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:53:47.617Z",
+      "expiresAt": "2026-08-09T23:53:47.617Z"
+    },
+    {
+      "token": "ccd2b216aa35d672c3df1138522209237b99f94d7ecf2684ab543305581aa289",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:54:31.595Z",
+      "expiresAt": "2026-08-09T23:54:31.595Z"
+    },
+    {
+      "token": "442675be124709044701b248ffdc6df0b82afc423102bf72fb9755822caa3202",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:55:10.892Z",
+      "expiresAt": "2026-08-09T23:55:10.892Z"
+    },
+    {
+      "token": "c6e659466fc85faea62e06a285c47a53cbc81dd56f4bf4925f7477b185019213",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:56:21.144Z",
+      "expiresAt": "2026-08-09T23:56:21.144Z"
+    },
+    {
+      "token": "03a28b3a923fce5dbbb0549806f7aba87b168f32c2534a5daaa03971836798d5",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:56:43.234Z",
+      "expiresAt": "2026-08-09T23:56:43.234Z"
+    },
+    {
+      "token": "9fa74bba88bdc761a875758904f86c08a9106851e6cbff55d84132c5ddd7ae99",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:57:53.389Z",
+      "expiresAt": "2026-08-09T23:57:53.389Z"
+    },
+    {
+      "token": "2dfbb0fab82f33cd7bc003fb5845813c1607e069dc7e8128b06cdf52624ec530",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:58:26.233Z",
+      "expiresAt": "2026-08-09T23:58:26.233Z"
+    },
+    {
+      "token": "dfdf97a135e96d46d477d11a20a406b2f3cbbd5a6709fc776e4f75b89ca9ae67",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T11:59:36.351Z",
+      "expiresAt": "2026-08-09T23:59:36.351Z"
     }
   ],
   "organizations": [
@@ -185,7 +281,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_9be838b750b14e17",
+          "id": "blk_d758107d44434bf6",
           "type": "coe-wall",
           "layout": {
             "x": 0,
@@ -230,7 +326,18 @@
               "ink": "#10131A",
               "logo": "aws.png",
               "logoFull": "aws full.png",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/aws/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "oracle",
@@ -241,7 +348,18 @@
               "ink": "#FFFFFF",
               "logo": "oracle.png",
               "logoFull": "oracle full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/oracle/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/oracle/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "redhat",
@@ -252,7 +370,78 @@
               "ink": "#FFFFFF",
               "logo": "redhat.png",
               "logoFull": "redhat full.png",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/redhat/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/3.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/4.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/5.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/6.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/7.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/8.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/9.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/10.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/11.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/13.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/Redhat Academey Challenge.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/Redhat Challenge 1.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "snowflake",
@@ -300,7 +489,43 @@
               "ink": "#FFFFFF",
               "logo": "pega.png",
               "logoFull": "pega full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/pega/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/3.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/4.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/5.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/6.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/8.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "servicenow",
@@ -377,7 +602,33 @@
               "ink": "#FFFFFF",
               "logo": "automation anywhere.png",
               "logoFull": "automation anywhere full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/aa/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/3.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/4.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/5.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "splunk",
@@ -449,7 +700,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:37.913Z",
-      "updatedAt": "2026-08-09T03:44:15.274Z"
+      "updatedAt": "2026-08-09T11:59:36.360Z"
     },
     {
       "id": "sec_f0ee6d93897f4d51",
@@ -645,7 +896,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_2b37f8f181ee4425",
+          "id": "blk_4aeabae7384c4942",
           "type": "coe-wall",
           "layout": {
             "x": 0,
@@ -690,7 +941,18 @@
               "ink": "#10131A",
               "logo": "aws.png",
               "logoFull": "aws full.png",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/aws/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "oracle",
@@ -701,7 +963,18 @@
               "ink": "#FFFFFF",
               "logo": "oracle.png",
               "logoFull": "oracle full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/oracle/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/oracle/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "redhat",
@@ -712,7 +985,78 @@
               "ink": "#FFFFFF",
               "logo": "redhat.png",
               "logoFull": "redhat full.png",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/redhat/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/3.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/4.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/5.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/6.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/7.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/8.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/9.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/10.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/11.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/13.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/Redhat Academey Challenge.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/Redhat Challenge 1.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "snowflake",
@@ -760,7 +1104,43 @@
               "ink": "#FFFFFF",
               "logo": "pega.png",
               "logoFull": "pega full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/pega/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/3.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/4.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/5.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/6.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/8.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "servicenow",
@@ -837,7 +1217,33 @@
               "ink": "#FFFFFF",
               "logo": "automation anywhere.png",
               "logoFull": "automation anywhere full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/aa/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/3.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/4.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/5.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "splunk",
@@ -909,7 +1315,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:38.066Z",
-      "updatedAt": "2026-08-09T03:44:15.258Z"
+      "updatedAt": "2026-08-09T11:59:36.357Z"
     },
     {
       "id": "sec_e43351a97e7643f0",
