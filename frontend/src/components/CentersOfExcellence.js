@@ -187,15 +187,11 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
   });
 
   root.appendChild(h('div', { class: 'coe-wall' },
+    /* One line, and nothing else. The eyebrow, the standfirst and the
+       counters were four competing pieces of furniture above a wall that
+       already says what it is — twenty marks a room recognises on sight. */
     h('div', { class: 'coe-head' },
-      block.eyebrow ? h('p', { class: 'coe-eyebrow' }, block.eyebrow) : null,
       block.title ? h('h2', { class: 'coe-title' }, block.title) : null,
-      block.subtitle ? h('p', { class: 'coe-sub' }, block.subtitle) : null,
-      h('div', { class: 'coe-stats' },
-        h('div', {}, h('b', {}, String(centers.length)), h('span', {}, 'Centers')),
-        h('i', {}),
-        h('div', {}, h('b', {}, 'Global'), h('span', {}, 'Partner network')),
-      ),
     ),
     grid,
   ));

@@ -8978,15 +8978,33 @@ body.is-presenting .milestones__inner {
 }
 .coe-root--empty { display: grid; place-items: center; color: var(--muted); font-size: 13px; }
 
-.coe-wall { position: absolute; inset: 0; overflow: hidden; padding: 32px 46px 30px; }
+/* The scrollbar is gone, not the scrolling. A grey trough down the edge of a
+   projected slide is furniture the room does not need; the rows still move,
+   smoothly, and each one animates in as it arrives. */
+.coe-wall {
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+  padding: 34px 46px 30px;
+  scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none;
+  overscroll-behavior: contain;
+}
+.coe-wall::-webkit-scrollbar { width: 0; height: 0; display: none; }
 .coe-root.is-open .coe-wall { display: none; }
 
-.coe-head { margin-bottom: 18px; }
+.coe-head { margin-bottom: 22px; }
 .coe-eyebrow {
   margin: 0 0 10px; color: var(--nav-accent-ink, var(--accent-ink));
   font-size: 11.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
 }
-.coe-title { margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.04; }
+/* The deck's own display face, self-hosted, so it survives being presented
+   with no internet — the source design asked for Space Grotesk from Google
+   Fonts, which would simply not arrive. Agency FB is condensed, so it carries
+   a longer line at a larger size without wrapping. */
+.coe-title {
+  margin: 0;
+  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-size: 58px; font-weight: 700; letter-spacing: 0.005em; line-height: 1.02;
+  text-transform: uppercase;
+}
 .coe-sub { margin: 9px 0 0; max-width: 62ch; color: var(--muted); font-size: 16.5px; line-height: 1.55; }
 
 .coe-stats { display: flex; align-items: stretch; gap: 22px; margin-top: 12px; }
@@ -8997,7 +9015,7 @@ body.is-presenting .milestones__inner {
 
 /* auto-fit, never auto-fill: auto-fill leaves a phantom column and the last
    row of centres ends up floating in dead space. */
-.coe-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(186px, 1fr)); gap: 12px; }
+.coe-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
 
 .coe-card {
   position: relative; display: flex; flex-direction: column; gap: 9px;
