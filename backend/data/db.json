@@ -70,6 +70,12 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-09T03:18:25.834Z",
       "expiresAt": "2026-08-09T15:18:25.834Z"
+    },
+    {
+      "token": "c363f9cdb925308a46f1adb5f617b50b33a63434e92371228a10a52d3811bf18",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T03:25:05.548Z",
+      "expiresAt": "2026-08-09T15:25:05.548Z"
     }
   ],
   "organizations": [
@@ -173,7 +179,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_74d483e8c0044ea1",
+          "id": "blk_15ee2088c12f4bd8",
           "type": "coe-wall",
           "layout": {
             "x": 0,
@@ -184,6 +190,8 @@
           "eyebrow": "",
           "title": "The platforms industry runs on, taught on your campus",
           "subtitle": "",
+          "hubLogo": "/uploads/torii-mark-6071cbddcc7648ed.jpg",
+          "hubName": "Torii",
           "centers": [
             {
               "key": "claude",
@@ -409,7 +417,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:37.913Z",
-      "updatedAt": "2026-08-09T03:18:25.928Z"
+      "updatedAt": "2026-08-09T03:25:05.612Z"
     },
     {
       "id": "sec_f0ee6d93897f4d51",
@@ -605,7 +613,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_96140ca74c6b4abc",
+          "id": "blk_f126c7bd1d444bd8",
           "type": "coe-wall",
           "layout": {
             "x": 0,
@@ -616,6 +624,8 @@
           "eyebrow": "",
           "title": "The platforms industry runs on, taught on your campus",
           "subtitle": "",
+          "hubLogo": "/uploads/technical-hub-mark-7fb50de468ee4814.png",
+          "hubName": "Technical Hub",
           "centers": [
             {
               "key": "claude",
@@ -841,7 +851,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:38.066Z",
-      "updatedAt": "2026-08-09T03:18:25.895Z"
+      "updatedAt": "2026-08-09T03:25:05.593Z"
     },
     {
       "id": "sec_e43351a97e7643f0",

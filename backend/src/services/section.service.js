@@ -549,6 +549,11 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 120);
       block.subtitle = text(raw.subtitle, 240);
+      /* The organization's own mark, which sits at the centre of the orbit the
+         page opens on. Written in at publish time so the block carries its own
+         art and the renderer never has to reach for the active org. */
+      block.hubLogo = text(raw.hubLogo, 200);
+      block.hubName = text(raw.hubName, 80);
       block.centers = (Array.isArray(raw.centers) ? raw.centers : [])
         .map((c) => ({
           key: text(c?.key, 40),

@@ -59,6 +59,76 @@ function brandMark(center, { full = false } = {}) {
   return holder;
 }
 
+/* -------------------------------------------------------------- the orbit */
+
+/**
+ * The page opens on the twenty centres circling the organization's own mark,
+ * then collapses into the wall on a click.
+ *
+ * Each ring spins as one element and every logo counter-spins at the same rate,
+ * so the marks stay upright while the ring turns. Doing it the other way — one
+ * animation per logo around a shared origin — is twenty animations fighting for
+ * the same frame; this is two.
+ */
+function orbitStage(centers, block, onEnter) {
+  const stage = h('div', { class: 'coe-orbit', role: 'button', tabindex: '0',
+    title: 'Click to see every center' });
+
+  // The inner ring is the shorter one, so it takes the smaller share.
+  const inner = centers.slice(0, 8);
+  const outer = centers.slice(8);
+
+  const ring = (list, radius, seconds, reverse) => {
+    const wheel = h('div', {
+      class: `coe-ring${reverse ? ' coe-ring--rev' : ''}`,
+      style: { width: `${radius * 2}px`, height: `${radius * 2}px`, 'animation-duration': `${seconds}s` },
+    });
+    wheel.appendChild(h('span', { class: 'coe-ring__path' }));
+    list.forEach((center, i) => {
+      const angle = (360 / list.length) * i;
+      /* Three nested transforms, and they have to be three. The seat places
+         the mark on the ring; the fix undoes that placement angle so the mark
+         is upright at rest; the spin undoes the ring's rotation frame by frame.
+         Folding the fix into the spin does not work — a running animation
+         overrides the inline transform, and every mark ends up tilted by its
+         own seat angle. */
+      const seat = h('span', {
+        class: 'coe-seat',
+        style: { transform: `rotate(${angle}deg) translateY(-${radius}px)` },
+      },
+        h('span', { class: 'coe-seat__fix', style: { transform: `rotate(${-angle}deg)` } },
+          h('span', {
+            class: `coe-seat__spin${reverse ? ' coe-seat__spin--rev' : ''}`,
+            style: { 'animation-duration': `${seconds}s` },
+          }, brandMark(center)),
+        ),
+      );
+      wheel.appendChild(seat);
+    });
+    return wheel;
+  };
+
+  stage.appendChild(h('div', { class: 'coe-orbit__field' },
+    ring(outer, 300, 64, false),
+    ring(inner, 180, 46, true),
+    h('span', { class: 'coe-hub' },
+      block.hubLogo
+        ? h('img', { src: block.hubLogo, alt: block.hubName || '', loading: 'eager' })
+        : h('b', {}, (block.hubName || 'Hub').slice(0, 2).toUpperCase()),
+    ),
+  ));
+
+  stage.appendChild(h('p', { class: 'coe-orbit__cue' },
+    block.title || 'Click anywhere to explore every center'));
+
+  const go = () => onEnter();
+  stage.addEventListener('click', go);
+  stage.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+  });
+  return stage;
+}
+
 /* --------------------------------------------------------------- the wall */
 
 function centerCard(center, index, onOpen) {
@@ -189,7 +259,10 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
     grid.appendChild(card);
   });
 
-  root.appendChild(h('div', { class: 'coe-wall' },
+  /* Three states, not three pages: orbit -> wall -> a centre. Back from a
+     centre lands on the wall, so a presenter can open one after another
+     without the wheel replaying between each. */
+  const wall = h('div', { class: 'coe-wall' },
     /* One line, and nothing else. The eyebrow, the standfirst and the
        counters were four competing pieces of furniture above a wall that
        already says what it is — twenty marks a room recognises on sight. */
@@ -197,33 +270,46 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
       block.title ? h('h2', { class: 'coe-title' }, block.title) : null,
     ),
     grid,
-  ));
+  );
+
+  /**
+   * Leaving the orbit: the rings draw in towards the mark and fade, and the
+   * wall is only revealed once they have gone — so the cards look like they
+   * settled out of the wheel rather than replacing it.
+   */
+  let entered = false;
+  const enterWall = () => {
+    if (entered) return;
+    entered = true;
+    root.classList.add('is-collapsing');
+    setTimeout(() => {
+      root.classList.remove('is-collapsing');
+      root.classList.add('is-wall');
+      revealCards();
+    }, REDUCED?.matches ? 0 : 620);
+  };
+
+  const orbit = orbitStage(centers, block, enterWall);
+  root.appendChild(orbit);
+  root.appendChild(wall);
   root.appendChild(detail);
 
-  /* Entrance: the wall assembles itself in reading order rather than appearing
-     all at once. Cards that start below the fold wait until they are actually
-     scrolled to, so nothing animates where nobody is looking. */
-  if (!REDUCED?.matches) {
-    cards.forEach((el) => el.classList.add('is-waiting'));
-    const reveal = (el, delay) => setTimeout(() => el.classList.remove('is-waiting'), delay);
-    if (typeof IntersectionObserver === 'function') {
-      let seen = 0;
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          reveal(entry.target, Math.min(seen * 34, 500));
-          seen += 1;
-          io.unobserve(entry.target);
-        });
-      }, { root: null, threshold: 0.1 });
-      cards.forEach((el) => io.observe(el));
-      // A safety net: if the observer never fires (block rendered detached, or
-      // the slide is scaled out of view) the wall must not stay invisible.
-      setTimeout(() => cards.forEach((el) => el.classList.remove('is-waiting')), 1800);
-    } else {
-      cards.forEach((el, i) => reveal(el, Math.min(i * 34, 500)));
+  /**
+   * The wall assembles itself in reading order rather than appearing all at
+   * once. This runs when the orbit hands over, not on mount — the cards are
+   * behind the wheel until then and animating them there would spend the whole
+   * effect on nobody.
+   */
+  cards.forEach((el) => el.classList.add('is-waiting'));
+  const revealCards = () => {
+    if (REDUCED?.matches) {
+      cards.forEach((el) => el.classList.remove('is-waiting'));
+      return;
     }
-  }
+    cards.forEach((el, i) => {
+      setTimeout(() => el.classList.remove('is-waiting'), 40 + Math.min(i * 32, 620));
+    });
+  };
 
   // Escape returns to the wall, matching every other overlay in the deck.
   root.addEventListener('keydown', (event) => {
