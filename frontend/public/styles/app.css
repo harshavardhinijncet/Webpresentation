@@ -9015,7 +9015,14 @@ body.is-presenting .milestones__inner {
 
 /* auto-fit, never auto-fill: auto-fill leaves a phantom column and the last
    row of centres ends up floating in dead space. */
-.coe-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+/* Four equal rows that share whatever height is left, rather than rows sized
+   by their content with the remainder pooling at the bottom of the slide. */
+.coe-grid {
+  display: grid; flex: 1 1 auto;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
 
 .coe-card {
   position: relative; display: flex; flex-direction: column; gap: 9px;
@@ -9153,7 +9160,7 @@ body.is-presenting .milestones__inner {
    the space that is left after the line has taken what it needs. */
 .coe-orbit {
   position: absolute; inset: 0;
-  display: grid; grid-template-rows: minmax(0, 1fr) auto; justify-items: center;
+  display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center;
   padding: 26px 20px 30px; cursor: pointer; background: var(--surface);
 }
 .coe-root.is-wall .coe-orbit, .coe-root.is-open .coe-orbit { display: none; }
@@ -9167,21 +9174,30 @@ body.is-presenting .milestones__inner {
   animation: coeSpin linear infinite;
 }
 .coe-ring--rev { animation-direction: reverse; }
+/* Still a hairline — the glow comes from the shadow, not from thickening the
+   stroke. Tinted by the organization's accent through currentColor, so Torii
+   lights orange and Technical Hub green without a second rule. */
 .coe-ring__path {
   position: absolute; inset: 0; border-radius: 50%;
-  border: 1px solid var(--border);
+  color: var(--nav-accent, var(--brand-accent));
+  border: 1px solid currentColor;
+  box-shadow: 0 0 18px 0 currentColor, inset 0 0 22px 0 currentColor;
+  opacity: .26;
+  animation: coeRingGlow 5.5s ease-in-out infinite;
 }
+.coe-ring--rev .coe-ring__path { animation-delay: -2.75s; }
+@keyframes coeRingGlow { 0%, 100% { opacity: .16; } 50% { opacity: .42; } }
 .coe-seat { position: absolute; top: 50%; left: 50%; width: 0; height: 0; }
 .coe-seat__fix { position: absolute; top: 0; left: 0; width: 0; height: 0; }
+/* No tile behind the mark. A white chip on a white page is a rectangle the
+   eye has to ignore twenty times over; the logos sit on the page. */
 .coe-seat__spin {
   position: absolute; top: 50%; left: 50%; display: grid; place-items: center;
-  width: 92px; height: 62px; margin: -31px 0 0 -46px;
-  border-radius: 16px; background: var(--surface);
-  box-shadow: 0 8px 24px -12px rgba(15, 23, 42, 0.30);
+  width: 104px; height: 66px; margin: -33px 0 0 -52px;
   animation: coeSpinSeat linear infinite;
 }
 .coe-seat__spin--rev { animation-direction: reverse; }
-.coe-seat__spin .coe-logo { width: 76px; height: 46px; }
+.coe-seat__spin .coe-logo { width: 92px; height: 52px; }
 
 .coe-hub {
   position: relative; z-index: 2; display: grid; place-items: center;
@@ -9195,7 +9211,7 @@ body.is-presenting .milestones__inner {
 }
 
 .coe-orbit__cue {
-  margin: 0; padding-top: 6px; text-align: center; max-width: none; white-space: nowrap;
+  margin: 0; padding-bottom: 4px; text-align: center; max-width: none; white-space: nowrap;
   font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
   font-size: 36px; font-weight: 700; letter-spacing: 0.012em; text-transform: uppercase;
   color: var(--text);
@@ -9212,11 +9228,44 @@ body.is-presenting .milestones__inner {
 
 /* The wall waits behind the wheel until it is handed over. */
 .coe-wall { display: none; }
-.coe-root.is-wall .coe-wall { display: block; }
+.coe-root.is-wall .coe-wall { display: flex; flex-direction: column; }
 .coe-root.is-open .coe-wall { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .coe-ring, .coe-seat__spin { animation: none !important; }
   .coe-root.is-collapsing .coe-orbit__field,
   .coe-root.is-collapsing .coe-orbit__cue { animation: none !important; }
+}
+
+/* --- Centers of Excellence: the headline ---------------------------------
+   Not black. The organization's readable accent carries it, with a light
+   sweeping across the letters.
+
+   This is the one place the deck's no-gradient rule is set aside, and only
+   inside the glyphs: the sweep is the effect, and it was asked for by name.
+   The base colour is set on `color` as well, so if background-clip ever fails
+   the headline is still a readable line rather than an invisible one. */
+.coe-shine {
+  color: var(--nav-accent-ink, var(--accent-ink));
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .coe-shine {
+    background-image: linear-gradient(
+      100deg,
+      var(--nav-accent-ink, var(--accent-ink)) 0 42%,
+      color-mix(in srgb, var(--nav-accent-ink, var(--accent-ink)) 32%, #ffffff) 50%,
+      var(--nav-accent-ink, var(--accent-ink)) 58% 100%);
+    background-size: 260% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: coeShine 6.5s linear infinite;
+  }
+}
+@keyframes coeShine { from { background-position: 130% 0; } to { background-position: -130% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .coe-shine { animation: none !important; }
+  .coe-ring__path { animation: none !important; opacity: .26 !important; }
 }

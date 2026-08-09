@@ -108,6 +108,10 @@ function orbitStage(centers, block, onEnter) {
     return wheel;
   };
 
+  // The line leads, the wheel follows — it reads as a headline, not a caption.
+  stage.appendChild(h('p', { class: 'coe-orbit__cue coe-shine' },
+    block.title || 'Click anywhere to explore every center'));
+
   stage.appendChild(h('div', { class: 'coe-orbit__field' },
     ring(outer, 300, 64, false),
     ring(inner, 180, 46, true),
@@ -117,9 +121,6 @@ function orbitStage(centers, block, onEnter) {
         : h('b', {}, (block.hubName || 'Hub').slice(0, 2).toUpperCase()),
     ),
   ));
-
-  stage.appendChild(h('p', { class: 'coe-orbit__cue' },
-    block.title || 'Click anywhere to explore every center'));
 
   const go = () => onEnter();
   stage.addEventListener('click', go);
@@ -267,7 +268,7 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
        counters were four competing pieces of furniture above a wall that
        already says what it is — twenty marks a room recognises on sight. */
     h('div', { class: 'coe-head' },
-      block.title ? h('h2', { class: 'coe-title' }, block.title) : null,
+      block.title ? h('h2', { class: 'coe-title coe-shine' }, block.title) : null,
     ),
     grid,
   );

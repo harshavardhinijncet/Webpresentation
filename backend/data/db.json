@@ -76,6 +76,12 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-09T03:25:05.548Z",
       "expiresAt": "2026-08-09T15:25:05.548Z"
+    },
+    {
+      "token": "d841c50765955b4e3d09f2de988ffe063af0af15154c373f6f245333f459cfb9",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T03:44:15.217Z",
+      "expiresAt": "2026-08-09T15:44:15.217Z"
     }
   ],
   "organizations": [
@@ -179,7 +185,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_15ee2088c12f4bd8",
+          "id": "blk_9be838b750b14e17",
           "type": "coe-wall",
           "layout": {
             "x": 0,
@@ -188,7 +194,7 @@
             "h": 15
           },
           "eyebrow": "",
-          "title": "The platforms industry runs on, taught on your campus",
+          "title": "The platforms industry runs on, and we are tied up with them",
           "subtitle": "",
           "hubLogo": "/uploads/torii-mark-6071cbddcc7648ed.jpg",
           "hubName": "Torii",
@@ -257,7 +263,33 @@
               "ink": "#06222E",
               "logo": "snowflake.png",
               "logoFull": "snowflake full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/snowflake/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/3.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/4.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/5.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "pega",
@@ -417,7 +449,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:37.913Z",
-      "updatedAt": "2026-08-09T03:25:05.612Z"
+      "updatedAt": "2026-08-09T03:44:15.274Z"
     },
     {
       "id": "sec_f0ee6d93897f4d51",
@@ -613,7 +645,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_f126c7bd1d444bd8",
+          "id": "blk_2b37f8f181ee4425",
           "type": "coe-wall",
           "layout": {
             "x": 0,
@@ -622,7 +654,7 @@
             "h": 15
           },
           "eyebrow": "",
-          "title": "The platforms industry runs on, taught on your campus",
+          "title": "The platforms industry runs on, and we are tied up with them",
           "subtitle": "",
           "hubLogo": "/uploads/technical-hub-mark-7fb50de468ee4814.png",
           "hubName": "Technical Hub",
@@ -691,7 +723,33 @@
               "ink": "#06222E",
               "logo": "snowflake.png",
               "logoFull": "snowflake full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/snowflake/1.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/2.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/3.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/4.jpg",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/5.jpg",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "pega",
@@ -851,7 +909,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:38.066Z",
-      "updatedAt": "2026-08-09T03:25:05.593Z"
+      "updatedAt": "2026-08-09T03:44:15.258Z"
     },
     {
       "id": "sec_e43351a97e7643f0",
