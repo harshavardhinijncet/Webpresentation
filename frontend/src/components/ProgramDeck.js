@@ -2,141 +2,62 @@ import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 
 /**
- * Programs: a rotating stack of programme marks, each opening a gallery of its
- * films, each film opening full-bleed with a way back.
+ * Programs: one card that opens into the whole set, each of those into its
+ * films, each film into the screen.
  *
- * Three states on one slide — deck, gallery, player — for the same reason the
- * Platforms stage works that way: the deck is a fixed set of sections, and nine
- * programmes as nine pages would bury the catalogue.
+ * Four states on one slide — cover, row, gallery, player.
  *
- * On the YouTube films: the embed is asked for no chrome (controls=0 takes the
- * title bar with it, rel=0 keeps the end screen to this channel, and
- * youtube-nocookie is used so nothing is written until something plays). What
- * no parameter can do is make them work without a network. Films served from
- * /uploads play offline; these do not, and that is worth knowing before a room
- * full of people is watching.
+ * The fan-out is a FLIP. The row is the cards' real layout; the stack is a
+ * transform measured off it, so opening is just releasing every card back to
+ * where it already was. Animating toward a position you have not measured is
+ * how you get cards that land a few pixels out and jitter on the way.
+ *
+ * On the films: the embed is only ever created already playing. YouTube's
+ * title, channel and "Watch on YouTube" all belong to the *unstarted* state —
+ * no parameter removes them, but a player that starts in motion never shows
+ * that state at all. controls=0 keeps the bar from returning on hover.
+ *
+ * What none of this can do is work without a network. Films served from
+ * /uploads play offline; these do not.
  */
 
 const UPLOADS = '/uploads';
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
-/* No title bar, no related grid from other channels, no annotations, no
-   keyboard surprises. Autoplay stays off: browsers block it with sound, and a
-   muted film is not what anyone came to watch. */
-const YT = 'controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&disablekb=1';
+const YT = 'autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3'
+  + '&playsinline=1&disablekb=1&fs=0&color=white';
 const ytEmbed = (id) => `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?${YT}`;
-const ytPoster = (id) => `https://i.ytimg.com/vi/${encodeURIComponent(id)}/hqdefault.jpg`;
+const ytPoster = (id) => `https://i.ytimg.com/vi/${encodeURIComponent(id)}/maxresdefault.jpg`;
 
-const slotFor = (i, total, dx, dy) => ({
-  x: i * dx, y: -i * dy, z: -i * dx * 0.9, zIndex: total - i,
-});
-
-/** The rotating stack, rebuilt on transitions — GSAP is not available offline. */
-function deckSwap(cards, { distance = 26, rise = 22, delay = 4400 } = {}) {
-  const total = cards.length;
-  const order = cards.map((_, i) => i);
-  let timer = null;
-  let steps = [];
-  const originX = ((total - 1) * distance) / 2;
-  const originY = ((total - 1) * rise) / 2;
-
-  const place = (el, slot, dropped = false) => {
-    el.style.zIndex = String(slot.zIndex);
-    el.style.transform = `translate(-50%, -50%) translate3d(${slot.x - originX}px, ${
-      (dropped ? slot.y + 420 : slot.y) + originY}px, ${slot.z}px)`;
-    el.style.opacity = dropped ? '0.12' : '1';
-  };
-
-  const settle = () => order.forEach((idx, i) => {
-    cards[idx].style.transition = 'transform .8s cubic-bezier(.22,1,.36,1), opacity .5s ease';
-    place(cards[idx], slotFor(i, total, distance, rise));
-  });
-
-  const clearSteps = () => { steps.forEach(clearTimeout); steps = []; };
-
-  const swap = () => {
-    if (total < 2) return;
-    clearSteps();
-    const front = order[0];
-    const rest = order.slice(1);
-    const frontEl = cards[front];
-    const back = slotFor(total - 1, total, distance, rise);
-
-    frontEl.style.transition = 'transform .6s cubic-bezier(.55,.06,.68,.19), opacity .6s ease';
-    place(frontEl, slotFor(0, total, distance, rise), true);
-
-    steps.push(setTimeout(() => {
-      rest.forEach((idx, i) => {
-        const el = cards[idx];
-        const slot = slotFor(i, total, distance, rise);
-        el.style.zIndex = String(slot.zIndex);
-        el.style.transitionDelay = `${i * 60}ms`;
-        el.style.transition = 'transform .78s cubic-bezier(.22,1,.36,1), opacity .4s ease';
-        place(el, slot);
-        setTimeout(() => { el.style.transitionDelay = '0ms'; }, 900);
-      });
-    }, 250));
-
-    steps.push(setTimeout(() => {
-      frontEl.style.zIndex = String(back.zIndex);
-      frontEl.style.transition = 'transform .82s cubic-bezier(.22,1,.36,1), opacity .5s ease';
-      place(frontEl, back);
-    }, 410));
-
-    order.push(order.shift());
-  };
-
-  const focus = (index) => {
-    const at = order.indexOf(index);
-    if (at <= 0) return;
-    clearSteps();
-    order.splice(at, 1);
-    order.unshift(index);
-    settle();
-  };
-
-  const stop = () => { clearInterval(timer); timer = null; clearSteps(); };
-  const start = () => { stop(); if (!REDUCED?.matches) timer = setInterval(swap, delay); };
-
-  /* Entrance: the marks fly up from below and stack, deepest first. */
-  cards.forEach((el, i) => {
-    const slot = slotFor(i, total, distance, rise);
-    el.style.transition = 'none';
-    el.style.zIndex = String(slot.zIndex);
-    el.style.opacity = '0';
-    el.style.transform = `translate(-50%, -50%) translate3d(${slot.x - originX}px, ${slot.y + originY + 420}px, ${slot.z - 300}px)`;
-    if (REDUCED?.matches) { el.style.opacity = '1'; place(el, slot); return; }
-    setTimeout(() => requestAnimationFrame(() => {
-      el.style.transition = 'transform .85s cubic-bezier(.16,.84,.34,1), opacity .4s ease';
-      place(el, slot);
-    }), 120 + (total - 1 - i) * 150);
-  });
-
-  return { start, stop, focus, settleDelay: 120 + (total - 1) * 150 + 850 };
+/** Columns that let N films fill the screen rather than sit in a strip. */
+function galleryShape(n) {
+  if (n <= 1) return 1;
+  if (n <= 3) return n;
+  if (n === 4) return 2;
+  return 3;
 }
 
 export function ProgramDeck(block, { editing = false } = {}) {
   const programs = (block.programs || []).filter((p) => p.key && p.name);
-  const root = h('div', { class: 'pg-root ph-root' });
   if (!programs.length) {
     return h('div', { class: 'pg-root pg-root--empty ph-root' }, 'No programmes yet.');
   }
+  const root = h('div', { class: 'pg-root ph-root' });
 
   /* ------------------------------------------------------------ the player */
   const frame = h('div', { class: 'pg-player__frame' });
   const playerTitle = h('span', { class: 'pg-player__title' });
-  let backToGallery = () => {};
 
   const closePlayer = () => {
-    frame.replaceChildren();          // stops playback; nothing keeps running behind
+    // Unmount, don't hide — a hidden iframe keeps playing behind the gallery.
+    frame.replaceChildren();
     root.classList.remove('is-playing');
-    backToGallery();
   };
 
   const player = h('div', { class: 'pg-player' },
     h('div', { class: 'pg-bar' },
       h('button', { class: 'pg-back', type: 'button', onclick: closePlayer },
-        icon('chevron-left', { class: 'ic ic--xs' }), h('span', {}, 'Back')),
+        icon('chevron-left', { class: 'ic ic--xs' }), h('span', {}, 'Back to films')),
       playerTitle,
     ),
     frame,
@@ -147,7 +68,8 @@ export function ProgramDeck(block, { editing = false } = {}) {
     frame.replaceChildren(video.youtube
       ? h('iframe', {
           class: 'pg-player__yt', src: ytEmbed(video.youtube),
-          title: video.title || 'Video', allow: 'autoplay; encrypted-media; fullscreen; picture-in-picture',
+          title: video.title || 'Video',
+          allow: 'autoplay; encrypted-media; fullscreen; picture-in-picture',
           referrerpolicy: 'strict-origin-when-cross-origin', allowfullscreen: true,
         })
       : h('video', {
@@ -161,11 +83,7 @@ export function ProgramDeck(block, { editing = false } = {}) {
   const galleryTitle = h('h3', { class: 'pg-gal__title' });
   const galleryGrid = h('div', { class: 'pg-gal__grid' });
 
-  const closeGallery = () => {
-    root.classList.remove('is-gallery');
-    swap.start();
-  };
-  backToGallery = () => { /* the gallery is still mounted underneath */ };
+  const closeGallery = () => root.classList.remove('is-gallery');
 
   const gallery = h('div', { class: 'pg-gallery' },
     h('div', { class: 'pg-bar' },
@@ -177,66 +95,86 @@ export function ProgramDeck(block, { editing = false } = {}) {
   );
 
   const openGallery = (program) => {
-    swap.stop();
     galleryTitle.textContent = program.name;
     const videos = program.videos || [];
+    galleryGrid.style.setProperty('--pg-cols', String(galleryShape(videos.length)));
     galleryGrid.replaceChildren(...(videos.length
       ? videos.map((v) => {
           const shot = h('span', { class: 'pg-shot' });
           if (v.youtube) {
             const img = h('img', { src: ytPoster(v.youtube), alt: '', loading: 'lazy' });
-            // Offline the poster never arrives; the tile stands on its own.
             img.addEventListener('error', () => img.remove());
             shot.appendChild(img);
           }
           shot.appendChild(h('span', { class: 'pg-shot__play' }, icon('play-circle', { class: 'ic' })));
-          return h('button', { class: 'pg-vid', type: 'button', onclick: () => play(v) },
-            shot,
-            h('span', { class: 'pg-vid__name' }, v.title || program.name),
-          );
+          shot.appendChild(h('span', { class: 'pg-shot__name' }, v.title || program.name));
+          return h('button', { class: 'pg-vid', type: 'button', onclick: () => play(v) }, shot);
         })
       : [h('p', { class: 'pg-gal__none' }, `No films for ${program.name} yet.`)]));
     root.classList.add('is-gallery');
   };
 
-  /* -------------------------------------------------------------- the deck */
-  const cards = programs.map((p, i) => {
+  /* -------------------------------------------------------------- the row */
+  const cards = programs.map((p) => {
     const card = h('button', { class: 'pg-card', type: 'button', title: p.name },
       h('span', { class: 'pg-card__mark' }, p.logo
         ? h('img', { src: `${UPLOADS}/${encodeURI(p.logo)}`, alt: p.name })
         : h('b', {}, p.name.slice(0, 2).toUpperCase())),
       h('span', { class: 'pg-card__name' }, p.name),
-      h('span', { class: 'pg-card__foot' },
-        h('span', {}, (p.videos || []).length
-          ? `${p.videos.length} film${p.videos.length === 1 ? '' : 's'}`
-          : 'Coming soon'),
-        h('span', { class: 'pg-card__go' }, 'Open', icon('arrow-right', { class: 'ic ic--xs' })),
-      ),
+      h('span', { class: 'pg-card__count' }, (p.videos || []).length
+        ? `${p.videos.length} film${p.videos.length === 1 ? '' : 's'}`
+        : '—'),
     );
-    card.addEventListener('click', () => openGallery(p));
+    card.addEventListener('click', () => {
+      if (root.classList.contains('is-fanned')) openGallery(p);
+    });
     return card;
   });
 
-  const deck = h('div', { class: 'pg-deck' }, ...cards);
-  const swap = deckSwap(cards);
-  setTimeout(() => swap.start(), swap.settleDelay);
+  const row = h('div', { class: 'pg-row' }, ...cards);
 
-  const chips = programs.map((p, i) => h('button', {
-    class: 'pg-chip', type: 'button',
-    onclick: () => { swap.focus(i); swap.stop(); swap.start(); },
-    ondblclick: () => openGallery(p),
-  }, p.name, (p.videos || []).length ? h('em', {}, String(p.videos.length)) : null));
+  /**
+   * Collapse every card onto the middle of the row. Measured, not guessed: the
+   * row is the cards' natural layout and this is the offset back to the centre,
+   * so releasing the transform lands each one exactly where it belongs.
+   */
+  const stack = () => {
+    const rect = row.getBoundingClientRect();
+    const mid = rect.left + rect.width / 2;
+    cards.forEach((el, i) => {
+      const b = el.getBoundingClientRect();
+      const dx = Math.round(mid - (b.left + b.width / 2));
+      el.style.transition = 'none';
+      el.style.transform = `translate3d(${dx}px, 0, 0) rotate(${(i - (cards.length - 1) / 2) * 0.9}deg)`;
+      el.style.opacity = i === 0 ? '1' : '0';
+      el.style.zIndex = String(cards.length - i);
+    });
+  };
 
-  root.appendChild(h('div', { class: 'pg-wall' },
-    h('div', { class: 'pg-intro' },
-      h('h2', { class: 'pg-title' }, block.title || 'Programs'),
-      h('div', { class: 'pg-chips' }, ...chips),
-      h('p', { class: 'pg-hint' }, 'Pick a programme to see its films.'),
-    ),
-    h('div', { class: 'pg-stage' }, deck),
-  ));
+  const fan = () => {
+    if (root.classList.contains('is-fanned')) return;
+    root.classList.add('is-fanned');
+    cards.forEach((el, i) => {
+      el.style.transition = REDUCED?.matches ? 'none'
+        : `transform .7s cubic-bezier(.22,1,.36,1) ${i * 45}ms, opacity .4s ease ${i * 45}ms`;
+      el.style.transform = 'none';
+      el.style.opacity = '1';
+    });
+  };
+
+  const cover = h('button', { class: 'pg-cover', type: 'button', onclick: fan },
+    h('span', { class: 'pg-cover__eyebrow' }, block.eyebrow || 'Programs'),
+    h('h2', { class: 'pg-cover__title' }, block.title || 'Programs of Technical Hub'),
+    h('span', { class: 'pg-cover__count' }, `${programs.length} programmes`),
+    h('span', { class: 'pg-cover__go' }, 'Open', icon('arrow-right', { class: 'ic ic--xs' })),
+  );
+
+  root.appendChild(h('div', { class: 'pg-wall' }, cover, row));
   root.appendChild(gallery);
   root.appendChild(player);
+
+  // Measure after the row has a layout, or every offset is zero.
+  requestAnimationFrame(() => requestAnimationFrame(stack));
 
   root.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
