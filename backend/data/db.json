@@ -24,316 +24,22 @@
   ],
   "sessions": [
     {
-      "token": "34202e52e3ce02fd70c5ada871b6a87856d52a3d26c0e80cbab1616bf06374f0",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T06:50:42.152Z",
-      "expiresAt": "2026-08-08T18:50:42.152Z"
-    },
-    {
-      "token": "1cfc1d333d7245d4ef230b787ab31dffe685c992c6c91c902ef604b24e2d45de",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T06:56:25.518Z",
-      "expiresAt": "2026-08-08T18:56:25.518Z"
-    },
-    {
-      "token": "acbccb0f9d9c12da0532d3ba82d742986c44811604cd5cee50fbdaa21577a5e5",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T07:03:51.639Z",
-      "expiresAt": "2026-08-08T19:03:51.639Z"
-    },
-    {
-      "token": "627a12c0433578af20c98c8c07ecdbea81fe952bd526205de2bff3f48494ff8e",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T07:03:51.961Z",
-      "expiresAt": "2026-08-08T19:03:51.961Z"
-    },
-    {
-      "token": "7dc57175341cec3cc11604e45c609e7eec2694fcc1d88419acc5eabf5285db4b",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T07:03:52.273Z",
-      "expiresAt": "2026-08-08T19:03:52.273Z"
-    },
-    {
-      "token": "8ceadc9a45216850f171d602df40a71cbe71cc356f85f9ec05320a2bed367249",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T07:04:15.218Z",
-      "expiresAt": "2026-08-08T19:04:15.218Z"
-    },
-    {
-      "token": "69584d1719ea499aeb3f374ffa218b15d0a3353c81de22b8174c4f606d71695c",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T07:04:15.272Z",
-      "expiresAt": "2026-08-08T19:04:15.272Z"
-    },
-    {
-      "token": "4fa37ca6348b6f332bf95aa576f91f53b93eaf5be508ecc135bbd04d9d3182a3",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T07:56:50.106Z",
-      "expiresAt": "2026-08-08T19:56:50.106Z"
-    },
-    {
-      "token": "3fd5f68c8d0ebc0d008c895d20864a35565b85dd1d9a6397e1805f2650701184",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T07:56:55.223Z",
-      "expiresAt": "2026-08-08T19:56:55.223Z"
-    },
-    {
-      "token": "4ad837a3996c2d5df74d1e7858534cbbd17c98f9321ef10a60a7a02190089ef3",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T07:58:55.511Z",
-      "expiresAt": "2026-08-08T19:58:55.511Z"
-    },
-    {
-      "token": "01162b7e0df4b73e318d603cae4b43097a08e332e49018aa0edda2df446288ed",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T07:59:00.584Z",
-      "expiresAt": "2026-08-08T19:59:00.584Z"
-    },
-    {
-      "token": "5e06a6eb0d068da4566148cab693095377bf20cc6249043a0d0091017974ff4a",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:13:59.077Z",
-      "expiresAt": "2026-08-08T20:13:59.077Z"
-    },
-    {
-      "token": "ea7bb0542f8511f4e9f0f4ed1606d760ca865a215851351c4af572fa104c5c21",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:14:04.172Z",
-      "expiresAt": "2026-08-08T20:14:04.172Z"
-    },
-    {
-      "token": "38020154d39329d9d35a71b7271334de5ca96bf93a6ad46432843adb6ca9a1d9",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:14:53.934Z",
-      "expiresAt": "2026-08-08T20:14:53.934Z"
-    },
-    {
-      "token": "8ae43c6e7c7ef09fe80f05d8a9f64a8e3e48a912a24c2375b7987f81ecd6b817",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:14:54.198Z",
-      "expiresAt": "2026-08-08T20:14:54.198Z"
-    },
-    {
-      "token": "72cca1d79931c10dcaf6631d0003d8f2a1c49b1f8d6ee62dbb1d31a28529a44d",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:14:54.449Z",
-      "expiresAt": "2026-08-08T20:14:54.449Z"
-    },
-    {
-      "token": "de2c565901fde16146ad2ab8f44805b4414d4ddad934dab7a679bf54d0bf377a",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:15:09.275Z",
-      "expiresAt": "2026-08-08T20:15:09.275Z"
-    },
-    {
-      "token": "25a93cd0b70a13bc84817bca043da5c0471fa0cb6f8b33c3c08d7bb5db4dfe95",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:15:09.541Z",
-      "expiresAt": "2026-08-08T20:15:09.541Z"
-    },
-    {
-      "token": "3a18d3cddb8c2865f676cfc34c2efeaee55dcf580a1a3c23d6e09fcec4c8242e",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:15:09.804Z",
-      "expiresAt": "2026-08-08T20:15:09.804Z"
-    },
-    {
-      "token": "afabe3a5ae7f04a9322c1b0b5a0d67612fd28eb3f52e55fd66a539b03a291c8d",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:15:10.238Z",
-      "expiresAt": "2026-08-08T20:15:10.238Z"
-    },
-    {
-      "token": "1da4c61d772fce8fa2b51004a6769613e24cacab887923c2ae707c5a23967161",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:15:10.519Z",
-      "expiresAt": "2026-08-08T20:15:10.519Z"
-    },
-    {
-      "token": "5f2addb00484284dfd26e3b4d4717df3c0dbf16bef8d1c5ca4c960be9d3a6189",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:15:10.782Z",
-      "expiresAt": "2026-08-08T20:15:10.782Z"
-    },
-    {
-      "token": "1a355e536087ac5ef33693c2fd7ed027e75c23334ac2d6d7c8076514081c20db",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:15:41.197Z",
-      "expiresAt": "2026-08-08T20:15:41.197Z"
-    },
-    {
-      "token": "274e86fc4fc2f01da595e9399436f4c04a2e15e6f0bf7bc603114fcde758f837",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:15:41.467Z",
-      "expiresAt": "2026-08-08T20:15:41.467Z"
-    },
-    {
-      "token": "7a739f9dbe379f55d13b1c4c8c6439a2be2e3e29d942ab49998cda2fb5749c2b",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:15:41.738Z",
-      "expiresAt": "2026-08-08T20:15:41.738Z"
-    },
-    {
-      "token": "46b1b2849639c9281c977b84d2bf715462fc4d5b79ba13361fafb07233364c91",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:16:07.757Z",
-      "expiresAt": "2026-08-08T20:16:07.758Z"
-    },
-    {
-      "token": "8042ce1e9608226cc826cec510ee1ab9f7bc62d2228f48ad772069291b08f840",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:16:08.027Z",
-      "expiresAt": "2026-08-08T20:16:08.027Z"
-    },
-    {
-      "token": "d863b5225dcda30af63e4df4189145bccfc1eaa49732cc8302754c28a835b5c4",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:16:08.295Z",
-      "expiresAt": "2026-08-08T20:16:08.295Z"
-    },
-    {
-      "token": "6477efbd912e0171473c146070ff78a834059ced6485bc30a8da63ebad5de363",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:16:24.356Z",
-      "expiresAt": "2026-08-08T20:16:24.356Z"
-    },
-    {
-      "token": "29e6fab61a5b83d1a2563cae0ea468478c96698f018aba4a920c0601f012b52a",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:16:24.620Z",
-      "expiresAt": "2026-08-08T20:16:24.621Z"
-    },
-    {
-      "token": "380a94169878a41aac598d0e9d59d1b474f426af2a0c9a214d56fbc95f364cc5",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:16:24.887Z",
-      "expiresAt": "2026-08-08T20:16:24.887Z"
-    },
-    {
-      "token": "98f78294217bcda63d6511392a9589e348e01b3042fbcf107fe9d3a59e08ac37",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:27:34.101Z",
-      "expiresAt": "2026-08-08T20:27:34.101Z"
-    },
-    {
-      "token": "9c15ada81bf769b4d252173fa836cd8ad128897ad7203bd9d5c4e43e522e0a98",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:28:13.825Z",
-      "expiresAt": "2026-08-08T20:28:13.825Z"
-    },
-    {
-      "token": "5ffc8b26ab3815bb6b9d3c3d2652bfc90867976c6bfef7b4509002405ee71213",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:28:54.262Z",
-      "expiresAt": "2026-08-08T20:28:54.262Z"
-    },
-    {
-      "token": "b148f697eba343e47f3d14566928caf7fad92316eb43ed0edd1fe26d27f65d26",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:28:54.429Z",
-      "expiresAt": "2026-08-08T20:28:54.429Z"
-    },
-    {
-      "token": "d573b2e0003ee71a6f030599d23b3f10d7c675df64e0d7956372de68b8a6b9c9",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:28:54.562Z",
-      "expiresAt": "2026-08-08T20:28:54.562Z"
-    },
-    {
-      "token": "74b030e98dcda401f8ead3a9be039c35cd86ef2c5768a09e9679c6066358882d",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:35:02.505Z",
-      "expiresAt": "2026-08-08T20:35:02.505Z"
-    },
-    {
-      "token": "4d639e63d4de7cbfea27c6db65b28209b38e2dd8bb5b235ce767471261e2bc9d",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:35:31.452Z",
-      "expiresAt": "2026-08-08T20:35:31.452Z"
-    },
-    {
-      "token": "f9293c7f9eed06fa4e56a763c8846260c1da3a2afa4822107fb9be702f296221",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:36:09.916Z",
-      "expiresAt": "2026-08-08T20:36:09.916Z"
-    },
-    {
-      "token": "9c345410bfeed0b81f58acd27e751d4c125d2e97301ddc3509c971ec66ae851f",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:40:24.171Z",
-      "expiresAt": "2026-08-08T20:40:24.171Z"
-    },
-    {
-      "token": "f2047051a30237e2c7099601aeb5c8dcfe50daae9afcd0f0e88542f454f7473b",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:43:54.443Z",
-      "expiresAt": "2026-08-08T20:43:54.444Z"
-    },
-    {
-      "token": "99e8ef7e1f2978cbf782505338eee386aac7801c959815f7f4764d541f85e7aa",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:44:01.638Z",
-      "expiresAt": "2026-08-08T20:44:01.638Z"
-    },
-    {
-      "token": "114214a0f61d784e0002a4a85e14e15831243e967b99b1805b43172c98a96995",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T08:51:34.837Z",
-      "expiresAt": "2026-08-08T20:51:34.837Z"
-    },
-    {
-      "token": "04215df7699fa4ec6059e72d909fdc39750e3ed9bc67df90e3818f7646ac4328",
-      "userId": "usr_26e9b0c6f1cb4ed1",
-      "createdAt": "2026-08-08T08:53:24.009Z",
-      "expiresAt": "2026-08-08T20:53:24.009Z"
-    },
-    {
-      "token": "428fff590f22c2a0cd7bc7f88e1ba1a8aa1b210025450130b83c0c5c09a0f72c",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T09:08:24.817Z",
-      "expiresAt": "2026-08-08T21:08:24.817Z"
-    },
-    {
-      "token": "d7592459c568238a2c981ae9ee519dd75880c2713595f9bc58269968fb8cd9ca",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T09:08:54.393Z",
-      "expiresAt": "2026-08-08T21:08:54.393Z"
-    },
-    {
-      "token": "bdeb9e85cc93686fa71c50c9e1ba695ca4136c22c6199830c20e14a2a3a0d987",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T09:43:58.890Z",
-      "expiresAt": "2026-08-08T21:43:58.891Z"
-    },
-    {
-      "token": "dc9cf83a388e611059854ff3550e0f9e78a36332f496856df0f537be2a2a24b7",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T10:26:36.740Z",
-      "expiresAt": "2026-08-08T22:26:36.740Z"
-    },
-    {
-      "token": "abbf2839f80b112704485db8b712e6017479d2a9087a1a34a3617fe0a776dfcb",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T10:27:21.197Z",
-      "expiresAt": "2026-08-08T22:27:21.197Z"
-    },
-    {
-      "token": "c91f9c9381faebaaa8c7542a2f1ffe1a791e95818fd88c90682d2e87e554fca7",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T10:42:18.156Z",
-      "expiresAt": "2026-08-08T22:42:18.156Z"
-    },
-    {
-      "token": "9116e45f8f0e20ade2184fd9f231bfdc027fbd97b4be240fd69268a9d74fe697",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-08T14:32:15.860Z",
-      "expiresAt": "2026-08-09T02:32:15.860Z"
-    },
-    {
       "token": "cdace50dd68de997a4ad3603d4f0e56f5755f5c76e708a0121d1ab81aecb5c05",
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-08T18:46:41.374Z",
       "expiresAt": "2026-08-09T06:46:41.374Z"
+    },
+    {
+      "token": "bc438afaa24f108ede6b24e62d088494f9d5c04d77c6ece8a2558dd24115ee97",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T02:36:04.939Z",
+      "expiresAt": "2026-08-09T14:36:04.939Z"
+    },
+    {
+      "token": "8a21956b63639ff66832159782d644817bfdbbebe5b3a3083428a50cea78dc0a",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T02:36:42.481Z",
+      "expiresAt": "2026-08-09T14:36:42.481Z"
     }
   ],
   "organizations": [
@@ -437,7 +143,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_f44eeeaa66ca4716",
+          "id": "blk_ed38bc64856c4245",
           "type": "coe-wall",
           "layout": {
             "x": 0,
@@ -456,8 +162,8 @@
               "tagline": "Applied AI, agents & assistants",
               "color": "#D97757",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "claude.webp",
+              "logoFull": "claude full.png",
               "media": []
             },
             {
@@ -467,8 +173,8 @@
               "tagline": "Cloud infrastructure & data platforms",
               "color": "#4285F4",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "google.webp",
+              "logoFull": "google full.png",
               "media": []
             },
             {
@@ -478,8 +184,8 @@
               "tagline": "Cloud skills at enterprise scale",
               "color": "#FF9900",
               "ink": "#10131A",
-              "logo": "",
-              "logoFull": "",
+              "logo": "aws.png",
+              "logoFull": "aws full.png",
               "media": []
             },
             {
@@ -489,8 +195,8 @@
               "tagline": "Database & enterprise applications",
               "color": "#C74634",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "oracle.png",
+              "logoFull": "oracle full.webp",
               "media": []
             },
             {
@@ -500,8 +206,8 @@
               "tagline": "Open source, Linux & OpenShift",
               "color": "#EE0000",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "redhat.png",
+              "logoFull": "redhat full.png",
               "media": []
             },
             {
@@ -511,8 +217,8 @@
               "tagline": "Data cloud & analytics",
               "color": "#29B5E8",
               "ink": "#06222E",
-              "logo": "",
-              "logoFull": "",
+              "logo": "snowflake.png",
+              "logoFull": "snowflake full.webp",
               "media": []
             },
             {
@@ -522,8 +228,8 @@
               "tagline": "Low-code process automation",
               "color": "#2D7FF9",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "pega.png",
+              "logoFull": "pega full.webp",
               "media": []
             },
             {
@@ -533,8 +239,8 @@
               "tagline": "IT service & workflow platform",
               "color": "#62D84E",
               "ink": "#06210F",
-              "logo": "",
-              "logoFull": "",
+              "logo": "servicenow.png",
+              "logoFull": "servicenow full.png",
               "media": []
             },
             {
@@ -544,8 +250,8 @@
               "tagline": "Modern application databases",
               "color": "#00ED64",
               "ink": "#052915",
-              "logo": "",
-              "logoFull": "",
+              "logo": "mongo.webp",
+              "logoFull": "mongo full.webp",
               "media": []
             },
             {
@@ -555,8 +261,8 @@
               "tagline": "DevOps, source & collaboration",
               "color": "#8B7ED8",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "github.png",
+              "logoFull": "github full.png",
               "media": []
             },
             {
@@ -566,8 +272,8 @@
               "tagline": "Network & cloud security",
               "color": "#FA582D",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "paloalto.png",
+              "logoFull": "paloalto full.webp",
               "media": []
             },
             {
@@ -577,8 +283,8 @@
               "tagline": "CRM & marketing operations",
               "color": "#FF7A59",
               "ink": "#2A0F08",
-              "logo": "",
-              "logoFull": "",
+              "logo": "hubspot.png",
+              "logoFull": "hubspot full.png",
               "media": []
             },
             {
@@ -588,8 +294,8 @@
               "tagline": "Generative AI & LLMs",
               "color": "#10A37F",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "openai.webp",
+              "logoFull": "opneai full.png",
               "media": []
             },
             {
@@ -599,8 +305,8 @@
               "tagline": "Intelligent automation & RPA",
               "color": "#FB4E0B",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "automation anywhere.png",
+              "logoFull": "automation anywhere full.webp",
               "media": []
             },
             {
@@ -610,8 +316,8 @@
               "tagline": "Observability & security analytics",
               "color": "#F99D1C",
               "ink": "#2A1C04",
-              "logo": "",
-              "logoFull": "",
+              "logo": "splunk.png",
+              "logoFull": "splunk full.png",
               "media": []
             },
             {
@@ -621,8 +327,8 @@
               "tagline": "Networking & infrastructure",
               "color": "#1BA0D7",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "cisco.webp",
+              "logoFull": "cisco full.png",
               "media": []
             },
             {
@@ -632,8 +338,8 @@
               "tagline": "Electronic design automation",
               "color": "#009B77",
               "ink": "#04231B",
-              "logo": "",
-              "logoFull": "",
+              "logo": "cadence.png",
+              "logoFull": "cadence full.png",
               "media": []
             },
             {
@@ -643,8 +349,8 @@
               "tagline": "Cybersecurity certifications",
               "color": "#C8102E",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "mile2 full.webp",
+              "logoFull": "mile2 full.webp",
               "media": []
             },
             {
@@ -654,15 +360,15 @@
               "tagline": "Cloud, data & productivity",
               "color": "#00A4EF",
               "ink": "#061E2B",
-              "logo": "",
-              "logoFull": "",
+              "logo": "microsoft.webp",
+              "logoFull": "microsoft full.webp",
               "media": []
             }
           ]
         }
       ],
       "createdAt": "2026-07-30T05:29:37.913Z",
-      "updatedAt": "2026-08-08T18:46:41.432Z"
+      "updatedAt": "2026-08-09T02:36:05.003Z"
     },
     {
       "id": "sec_f0ee6d93897f4d51",
@@ -858,7 +564,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_1561c20291e04cfd",
+          "id": "blk_6e1c44268b4644a0",
           "type": "coe-wall",
           "layout": {
             "x": 0,
@@ -877,8 +583,8 @@
               "tagline": "Applied AI, agents & assistants",
               "color": "#D97757",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "claude.webp",
+              "logoFull": "claude full.png",
               "media": []
             },
             {
@@ -888,8 +594,8 @@
               "tagline": "Cloud infrastructure & data platforms",
               "color": "#4285F4",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "google.webp",
+              "logoFull": "google full.png",
               "media": []
             },
             {
@@ -899,8 +605,8 @@
               "tagline": "Cloud skills at enterprise scale",
               "color": "#FF9900",
               "ink": "#10131A",
-              "logo": "",
-              "logoFull": "",
+              "logo": "aws.png",
+              "logoFull": "aws full.png",
               "media": []
             },
             {
@@ -910,8 +616,8 @@
               "tagline": "Database & enterprise applications",
               "color": "#C74634",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "oracle.png",
+              "logoFull": "oracle full.webp",
               "media": []
             },
             {
@@ -921,8 +627,8 @@
               "tagline": "Open source, Linux & OpenShift",
               "color": "#EE0000",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "redhat.png",
+              "logoFull": "redhat full.png",
               "media": []
             },
             {
@@ -932,8 +638,8 @@
               "tagline": "Data cloud & analytics",
               "color": "#29B5E8",
               "ink": "#06222E",
-              "logo": "",
-              "logoFull": "",
+              "logo": "snowflake.png",
+              "logoFull": "snowflake full.webp",
               "media": []
             },
             {
@@ -943,8 +649,8 @@
               "tagline": "Low-code process automation",
               "color": "#2D7FF9",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "pega.png",
+              "logoFull": "pega full.webp",
               "media": []
             },
             {
@@ -954,8 +660,8 @@
               "tagline": "IT service & workflow platform",
               "color": "#62D84E",
               "ink": "#06210F",
-              "logo": "",
-              "logoFull": "",
+              "logo": "servicenow.png",
+              "logoFull": "servicenow full.png",
               "media": []
             },
             {
@@ -965,8 +671,8 @@
               "tagline": "Modern application databases",
               "color": "#00ED64",
               "ink": "#052915",
-              "logo": "",
-              "logoFull": "",
+              "logo": "mongo.webp",
+              "logoFull": "mongo full.webp",
               "media": []
             },
             {
@@ -976,8 +682,8 @@
               "tagline": "DevOps, source & collaboration",
               "color": "#8B7ED8",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "github.png",
+              "logoFull": "github full.png",
               "media": []
             },
             {
@@ -987,8 +693,8 @@
               "tagline": "Network & cloud security",
               "color": "#FA582D",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "paloalto.png",
+              "logoFull": "paloalto full.webp",
               "media": []
             },
             {
@@ -998,8 +704,8 @@
               "tagline": "CRM & marketing operations",
               "color": "#FF7A59",
               "ink": "#2A0F08",
-              "logo": "",
-              "logoFull": "",
+              "logo": "hubspot.png",
+              "logoFull": "hubspot full.png",
               "media": []
             },
             {
@@ -1009,8 +715,8 @@
               "tagline": "Generative AI & LLMs",
               "color": "#10A37F",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "openai.webp",
+              "logoFull": "opneai full.png",
               "media": []
             },
             {
@@ -1020,8 +726,8 @@
               "tagline": "Intelligent automation & RPA",
               "color": "#FB4E0B",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "automation anywhere.png",
+              "logoFull": "automation anywhere full.webp",
               "media": []
             },
             {
@@ -1031,8 +737,8 @@
               "tagline": "Observability & security analytics",
               "color": "#F99D1C",
               "ink": "#2A1C04",
-              "logo": "",
-              "logoFull": "",
+              "logo": "splunk.png",
+              "logoFull": "splunk full.png",
               "media": []
             },
             {
@@ -1042,8 +748,8 @@
               "tagline": "Networking & infrastructure",
               "color": "#1BA0D7",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "cisco.webp",
+              "logoFull": "cisco full.png",
               "media": []
             },
             {
@@ -1053,8 +759,8 @@
               "tagline": "Electronic design automation",
               "color": "#009B77",
               "ink": "#04231B",
-              "logo": "",
-              "logoFull": "",
+              "logo": "cadence.png",
+              "logoFull": "cadence full.png",
               "media": []
             },
             {
@@ -1064,8 +770,8 @@
               "tagline": "Cybersecurity certifications",
               "color": "#C8102E",
               "ink": "#FFFFFF",
-              "logo": "",
-              "logoFull": "",
+              "logo": "mile2 full.webp",
+              "logoFull": "mile2 full.webp",
               "media": []
             },
             {
@@ -1075,15 +781,15 @@
               "tagline": "Cloud, data & productivity",
               "color": "#00A4EF",
               "ink": "#061E2B",
-              "logo": "",
-              "logoFull": "",
+              "logo": "microsoft.webp",
+              "logoFull": "microsoft full.webp",
               "media": []
             }
           ]
         }
       ],
       "createdAt": "2026-07-30T05:29:38.066Z",
-      "updatedAt": "2026-08-08T18:46:41.414Z"
+      "updatedAt": "2026-08-09T02:36:04.984Z"
     },
     {
       "id": "sec_e43351a97e7643f0",

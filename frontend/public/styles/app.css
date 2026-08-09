@@ -9020,11 +9020,20 @@ body.is-presenting .milestones__inner {
 .coe-card > * { position: relative; }
 
 .coe-card__top { display: flex; align-items: center; }
-.coe-logo {
-  display: grid; place-items: center; width: 46px; height: 46px;
-  border: 1px solid var(--border); border-radius: 14px; background: var(--surface); padding: 6px;
-}
-.coe-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+/* Several of the supplied "square" files are actually wordmarks. A fixed 46px
+   box shrank them to a smudge, so the mark holds a constant height and takes
+   whatever width its artwork needs, up to a limit the card can carry. */
+.coe-logo { display: block; width: 130px; height: 44px; padding: 0; }
+/* An explicit height, not max-height: the supplied files vary from 40px to
+   800px intrinsic, and a cap alone left the small ones as specks. Height is
+   fixed so every mark reads at the same optical weight; width follows the
+   artwork. */
+/* One box, contain, left-aligned. Neither a fixed height nor a fixed width
+   works alone: the supplied artwork runs from 1.00 aspect (Microsoft and
+   Splunk are square canvases with the mark floating in padding) to 4.66
+   (Claude). A constant box lets each one take the dimension it needs and
+   keeps every card's mark on the same baseline. */
+.coe-logo img { width: 100%; height: 100%; object-fit: contain; object-position: left center; }
 .coe-mono {
   display: grid; place-items: center; width: 46px; height: 46px; border-radius: 13px;
   font-size: 16px; font-weight: 800; letter-spacing: -0.02em;
@@ -9059,11 +9068,8 @@ body.is-presenting .milestones__inner {
 .coe-back:hover { border-color: var(--nav-accent, var(--brand-accent)); transform: translateX(-3px); }
 
 .coe-hero { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; margin: 30px 0 0; }
-.coe-logo--lg {
-  width: auto; min-width: 160px; max-width: 340px; height: 96px; padding: 0;
-  border: 0; background: none; justify-items: start;
-}
-.coe-logo--lg img { max-height: 96px; }
+.coe-logo--lg { display: block; width: 320px; height: 128px; padding: 0; border: 0; background: none; }
+.coe-logo--lg img { width: 100%; height: 100%; }
 .coe-mono--lg { width: 96px; height: 96px; border-radius: 24px; font-size: 34px; }
 .coe-hero__name { margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.02em; }
 .coe-hero__tag { margin: 6px 0 0; color: var(--muted); font-size: 16px; }
@@ -9094,4 +9100,29 @@ body.is-presenting .milestones__inner {
 
 @media (prefers-reduced-motion: reduce) {
   .coe-card { transition: none !important; }
+}
+
+/* --- Centers of Excellence: motion ---------------------------------------
+   Cards arrive in reading order, scatter out of the way when one is opened,
+   and the detail rises into the space they leave. All of it is off under
+   prefers-reduced-motion, where the component skips the sequence entirely. */
+.coe-card.is-waiting { opacity: 0; transform: translateY(20px) scale(.97); }
+.coe-card { transition: transform .42s cubic-bezier(.2,.8,.2,1), opacity .34s ease, box-shadow .32s ease, border-color .32s ease; }
+
+.coe-detail { animation: coeDetailIn .5s cubic-bezier(.2,.8,.2,1) both; }
+.coe-hero { animation: coeRise .45s .06s cubic-bezier(.2,.8,.2,1) both; }
+.coe-rule { animation: coeRule .5s .16s cubic-bezier(.2,.8,.2,1) both; transform-origin: left center; }
+.coe-gal__head { animation: coeRise .45s .18s cubic-bezier(.2,.8,.2,1) both; }
+.coe-gal, .coe-gal__none { animation: coeRise .5s .24s cubic-bezier(.2,.8,.2,1) both; }
+.coe-logo--lg, .coe-mono--lg { animation: coeMark .55s .1s cubic-bezier(.2,.9,.2,1) both; }
+
+@keyframes coeDetailIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes coeRise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes coeRule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes coeMark { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .coe-card, .coe-card.is-waiting { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .coe-detail, .coe-hero, .coe-rule, .coe-gal__head, .coe-gal, .coe-gal__none,
+  .coe-logo--lg, .coe-mono--lg { animation: none !important; }
 }

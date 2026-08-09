@@ -32,8 +32,10 @@ function tint(hex, alpha) {
  * The brand mark, or the centre's initials in its own colour when no file has
  * been supplied. Never a drawn approximation of someone else's logo.
  */
-function brandMark(center, { size, full = false }) {
-  const src = full ? (center.logoFull || center.logo) : center.logo;
+function brandMark(center, { full = false } = {}) {
+  // Whichever file exists serves both places; a centre that only supplied a
+  // wide wordmark still gets a mark on its card, and vice versa.
+  const src = full ? (center.logoFull || center.logo) : (center.logo || center.logoFull);
   const chip = () => h('span', {
     class: full ? 'coe-mono coe-mono--lg' : 'coe-mono',
     style: { background: center.color, color: center.ink },
@@ -43,7 +45,8 @@ function brandMark(center, { size, full = false }) {
 
   const holder = h('span', { class: full ? 'coe-logo coe-logo--lg' : 'coe-logo' });
   const img = h('img', {
-    src: `${MEDIA_DIR}/logos/${src}`,
+    // The drop uses spaces in filenames, so the path has to be encoded.
+    src: `${MEDIA_DIR}/${encodeURI(src)}`,
     alt: center.name,
     loading: 'lazy',
     decoding: 'async',
@@ -84,7 +87,7 @@ function centerCard(center, index, onOpen) {
 /* ------------------------------------------------------------- the detail */
 
 function mediaTile(item, center) {
-  const src = `${MEDIA_DIR}/${center.key}/${item.src}`;
+  const src = `${MEDIA_DIR}/${center.key}/${encodeURI(item.src)}`;
   if (item.kind === 'video') {
     const video = h('video', {
       class: 'coe-tile__media',
@@ -112,13 +115,35 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
   const grid = h('div', { class: 'coe-grid' });
   const detail = h('div', { class: 'coe-detail' });
 
+  const cards = [];
+  const OPEN_MS = REDUCED?.matches ? 0 : 460;
+
+  /**
+   * Opening a centre is not a cut. The card you pressed scales up and fades
+   * through, everything else drops back a little, nearest first, and the
+   * detail rises into the space they left. Closing runs it backwards.
+   */
+  const settleCards = () => cards.forEach((el) => {
+    el.style.transitionDelay = '0ms';
+    el.style.transform = '';
+    el.style.opacity = '';
+  });
+
+  const scatterFrom = (index) => cards.forEach((el, i) => {
+    const gap = Math.abs(i - index);
+    el.style.transitionDelay = `${Math.min(gap * 20, 220)}ms`;
+    el.style.transform = i === index ? 'scale(1.14)' : 'translateY(26px) scale(.94)';
+    el.style.opacity = '0';
+  });
+
   const close = () => {
     root.classList.remove('is-open');
     detail.replaceChildren();
     root.querySelector('.coe-wall')?.scrollTo({ top: 0, behavior: 'auto' });
+    requestAnimationFrame(settleCards);
   };
 
-  const open = (center) => {
+  const paintDetail = (center) => {
     const media = center.media || [];
     detail.replaceChildren(
       h('button', { class: 'coe-back', type: 'button', onclick: close },
@@ -146,7 +171,20 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
     detail.scrollTop = 0;
   };
 
-  centers.forEach((c, i) => grid.appendChild(centerCard(c, i, open)));
+  let opening = false;
+  const open = (center, index) => {
+    if (opening || root.classList.contains('is-open')) return;
+    if (!OPEN_MS) { paintDetail(center); return; }
+    opening = true;
+    scatterFrom(index);
+    setTimeout(() => { paintDetail(center); opening = false; }, OPEN_MS);
+  };
+
+  centers.forEach((c, i) => {
+    const card = centerCard(c, i, () => open(c, i));
+    cards.push(card);
+    grid.appendChild(card);
+  });
 
   root.appendChild(h('div', { class: 'coe-wall' },
     h('div', { class: 'coe-head' },
@@ -162,6 +200,31 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
     grid,
   ));
   root.appendChild(detail);
+
+  /* Entrance: the wall assembles itself in reading order rather than appearing
+     all at once. Cards that start below the fold wait until they are actually
+     scrolled to, so nothing animates where nobody is looking. */
+  if (!REDUCED?.matches) {
+    cards.forEach((el) => el.classList.add('is-waiting'));
+    const reveal = (el, delay) => setTimeout(() => el.classList.remove('is-waiting'), delay);
+    if (typeof IntersectionObserver === 'function') {
+      let seen = 0;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          reveal(entry.target, Math.min(seen * 34, 500));
+          seen += 1;
+          io.unobserve(entry.target);
+        });
+      }, { root: null, threshold: 0.1 });
+      cards.forEach((el) => io.observe(el));
+      // A safety net: if the observer never fires (block rendered detached, or
+      // the slide is scaled out of view) the wall must not stay invisible.
+      setTimeout(() => cards.forEach((el) => el.classList.remove('is-waiting')), 1800);
+    } else {
+      cards.forEach((el, i) => reveal(el, Math.min(i * 34, 500)));
+    }
+  }
 
   // Escape returns to the wall, matching every other overlay in the deck.
   root.addEventListener('keydown', (event) => {
