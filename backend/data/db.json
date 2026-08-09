@@ -178,6 +178,24 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-09T11:59:36.351Z",
       "expiresAt": "2026-08-09T23:59:36.351Z"
+    },
+    {
+      "token": "abf0317f477d868f51991ea40674e787a024d8805bbe9abdc6f43220ea2357db",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T12:04:49.925Z",
+      "expiresAt": "2026-08-10T00:04:49.925Z"
+    },
+    {
+      "token": "d68f9a73e9dc12d806630dd0375c8d95726e5e2bc995755b3cac4d3403eb2fb7",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T13:07:39.802Z",
+      "expiresAt": "2026-08-10T01:07:39.802Z"
+    },
+    {
+      "token": "767508fd19900f1aa32cc21b007f2b0a3c2bf9caab9a592af2f1d4ec0f5caad9",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T13:14:20.968Z",
+      "expiresAt": "2026-08-10T01:14:20.968Z"
     }
   ],
   "organizations": [
@@ -1706,87 +1724,22 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_3c4fe790d7e24d70",
-          "type": "text",
+          "id": "blk_cdd9c7ce1b18456e",
+          "type": "story-wall",
           "layout": {
             "x": 0,
             "y": 0,
             "w": 12,
-            "h": 3
+            "h": 15
           },
-          "heading": "What the bridge carries",
-          "level": 2,
-          "body": "Partnerships, infrastructure and placements that turn skilling into outcomes.",
-          "items": [],
-          "align": "left"
-        },
-        {
-          "id": "blk_2388e90480cf45ae",
-          "type": "cards",
-          "layout": {
-            "x": 0,
-            "y": 3,
-            "w": 12,
-            "h": 8
-          },
-          "variant": "plain",
-          "items": [
-            {
-              "id": "crd_fcbc1a21edf6494f",
-              "title": "Official Anthropic · Claude partner",
-              "subtitle": "Global partnership",
-              "meta": "",
-              "body": "900+ students through Anthropic courses · 10 Claude Certified Architects in-house.",
-              "imageAssetId": null,
-              "tags": []
-            },
-            {
-              "id": "crd_afe4c30ea4ba4bd7",
-              "title": "NVIDIA DGX Spark on campus",
-              "subtitle": "AI infrastructure",
-              "meta": "",
-              "body": "200B-parameter models, run and fine-tuned locally.",
-              "imageAssetId": null,
-              "tags": []
-            },
-            {
-              "id": "crd_933eb9f16c154039",
-              "title": "Project Space · Season 8",
-              "subtitle": "Events",
-              "meta": "",
-              "body": "A standing programme of student-built, AI-driven innovation projects.",
-              "imageAssetId": null,
-              "tags": []
-            },
-            {
-              "id": "crd_d1c1a0af0adf4c52",
-              "title": "Cognizant · 2026 batch",
-              "subtitle": "Placements",
-              "meta": "",
-              "body": "Offers landing from the placement practice built into the programme.",
-              "imageAssetId": null,
-              "tags": []
-            }
-          ]
-        },
-        {
-          "id": "blk_02d1dad669894fdb",
-          "type": "text",
-          "layout": {
-            "x": 0,
-            "y": 11,
-            "w": 12,
-            "h": 3
-          },
-          "heading": "",
-          "level": 3,
-          "body": "Individual success stories open as their own pages — the navigation pane stays in place, so a story is one click away and so is the way back.",
-          "items": [],
-          "align": "left"
+          "eyebrow": "Success Stories",
+          "title": "The people the programme put to work",
+          "subtitle": "Every face here finished a track and walked into a job. Pick one.",
+          "stories": []
         }
       ],
       "createdAt": "2026-08-06T10:50:26.912Z",
-      "updatedAt": "2026-08-08T08:51:35.156Z"
+      "updatedAt": "2026-08-09T13:14:20.975Z"
     },
     {
       "id": "sec_6adc52eaddfa4292",
@@ -2087,72 +2040,22 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_31832a9c8da34b59",
-          "type": "text",
+          "id": "blk_b94f16a0b7da453a",
+          "type": "story-wall",
           "layout": {
             "x": 0,
             "y": 0,
             "w": 12,
-            "h": 3
+            "h": 15
           },
-          "heading": "What the bridge carries",
-          "level": 2,
-          "body": "Partnerships, infrastructure and placements that turn skilling into outcomes.",
-          "items": [],
-          "align": "left"
-        },
-        {
-          "id": "blk_d75db2fb191b41e6",
-          "type": "cards",
-          "layout": {
-            "x": 0,
-            "y": 3,
-            "w": 12,
-            "h": 8
-          },
-          "variant": "plain",
-          "items": [
-            {
-              "id": "crd_2e2d32f83df24615",
-              "title": "Official Anthropic · Claude partner",
-              "subtitle": "Global partnership",
-              "meta": "",
-              "body": "900+ students through Anthropic courses · 10 Claude Certified Architects in-house.",
-              "imageAssetId": null,
-              "tags": []
-            },
-            {
-              "id": "crd_967cd4c1f83c4979",
-              "title": "NVIDIA DGX Spark on campus",
-              "subtitle": "AI infrastructure",
-              "meta": "",
-              "body": "200B-parameter models, run and fine-tuned locally.",
-              "imageAssetId": null,
-              "tags": []
-            },
-            {
-              "id": "crd_9cb00bc6ec704cfd",
-              "title": "Project Space · Season 8",
-              "subtitle": "Events",
-              "meta": "",
-              "body": "A standing programme of student-built, AI-driven innovation projects.",
-              "imageAssetId": null,
-              "tags": []
-            },
-            {
-              "id": "crd_980d94bc46ef4493",
-              "title": "Cognizant · 2026 batch",
-              "subtitle": "Placements",
-              "meta": "",
-              "body": "Offers landing from the placement practice built into the programme.",
-              "imageAssetId": null,
-              "tags": []
-            }
-          ]
+          "eyebrow": "Success Stories",
+          "title": "The people the programme put to work",
+          "subtitle": "Every face here finished a track and walked into a job. Pick one.",
+          "stories": []
         }
       ],
       "createdAt": "2026-08-06T11:15:47.890Z",
-      "updatedAt": "2026-08-08T08:51:35.247Z"
+      "updatedAt": "2026-08-09T13:14:20.981Z"
     },
     {
       "id": "sec_2596b1524381464d",

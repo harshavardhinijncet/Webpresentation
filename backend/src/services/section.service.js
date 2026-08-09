@@ -36,6 +36,7 @@ export const BLOCK_TYPES = [
   'drift-wall',
   'platforms',
   'coe-wall',
+  'story-wall',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -543,6 +544,22 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         }))
         .filter((p) => p.name && p.url)
         .slice(0, 12);
+      break;
+
+    case 'story-wall':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.subtitle = text(raw.subtitle, 300);
+      block.stories = (Array.isArray(raw.stories) ? raw.stories : [])
+        .map((s) => ({
+          photo: text(s?.photo, 200),
+          name: text(s?.name, 80),
+          role: text(s?.role, 120),
+          body: text(s?.body, 900),
+          quote: text(s?.quote, 600),
+        }))
+        .filter((s) => s.photo)
+        .slice(0, 80);
       break;
 
     case 'coe-wall':

@@ -9121,12 +9121,22 @@ body.is-presenting .milestones__inner {
 .coe-gal__head span { color: var(--muted); font-size: 12.5px; }
 .coe-gal__none { color: var(--muted); font-size: 13.5px; }
 
-.coe-gal { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+/* A masonry, not a grid of boxes. Every photo here arrives at a different
+   shape — a wide event banner, a portrait of a handshake, a square poster —
+   and a fixed-height cell with object-fit: cover simply cut them: the Oracle
+   poster showed one strip of a bullet list. Columns let each image keep its
+   own proportions and take the height it needs, so nothing is cropped and
+   nothing is stretched. */
+.coe-gal { column-gap: 14px; column-fill: balance; }
 .coe-tile {
-  position: relative; margin: 0; height: 210px; overflow: hidden;
-  border: 1px solid var(--border); border-radius: 16px; background: var(--page-bg);
+  position: relative; margin: 0 0 14px; overflow: hidden;
+  break-inside: avoid; -webkit-column-break-inside: avoid;
+  border: 1px solid var(--border); border-radius: 14px; background: var(--page-bg);
 }
-.coe-tile__media { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Width-constrained, height free. With height:auto the intrinsic ratio does
+   the work and object-fit never comes into it — the browser draws the picture
+   the shape it actually is. */
+.coe-tile__media { display: block; width: 100%; height: auto; }
 .coe-tile figcaption {
   position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 12px;
   background: rgba(9, 12, 20, 0.72); color: #ffffff; font-size: 12px; font-weight: 600;
@@ -9271,7 +9281,10 @@ body.is-presenting .milestones__inner {
       color-mix(in srgb, var(--nav-accent-ink, var(--accent-ink)) 32%, #ffffff) 50%,
       var(--nav-accent-ink, var(--accent-ink)) 58% 100%);
     background-size: 260% 100%;
-    background-repeat: no-repeat;
+    /* repeat, not no-repeat. The gradient is wider than the box and its
+       position animates past both edges; with no-repeat the uncovered part of
+       a multi-line heading painted as nothing at all and words vanished. */
+    background-repeat: repeat;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -9294,3 +9307,134 @@ body.is-presenting .milestones__inner {
 body.is-presenting .coe-wall,
 body.is-presenting .coe-detail,
 body.is-presenting .coe-orbit { bottom: 104px; }
+
+/* ==========================================================================
+   Success Stories — a wall of faces that keeps moving, and any one of them
+   opens into the story beside it.
+
+   The wall is columns, not a grid: each sits on an arc so the run reads as a
+   wave, and each rises and falls on its own clock like the bars of an
+   equaliser. The arc lives on the column and the bobbing on a wrapper inside
+   it, because two transforms on one element means the animation wins and the
+   wave flattens the moment it starts playing.
+   ========================================================================== */
+/* max-height, not just min-height. height:100% here resolves against a parent
+   with no definite height, so it computes to auto and the flex children are
+   free to grow — the portrait grew the stage, the stage grew the root to
+   1625px, and the wall was pushed off the bottom of the slide. A definite
+   ceiling is what lets flex shrink the stage instead. */
+.sw-root {
+  position: relative; height: 100%; min-height: 860px; max-height: 860px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  border-radius: var(--radius-lg); background: var(--surface);
+}
+.sw-empty { display: grid; place-items: center; align-content: center; gap: 12px; height: 100%; color: var(--muted); text-align: center; }
+
+/* -------------------------------------------------------------- the intro */
+.sw-intro { flex: 0 0 auto; padding: 40px 56px 0; }
+.sw-root.is-open .sw-intro { display: none; }
+.sw-eyebrow {
+  margin: 0 0 10px; color: var(--nav-accent-ink, var(--accent-ink));
+  font-size: 11.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.sw-title {
+  margin: 0; max-width: 22ch;
+  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-size: 62px; font-weight: 700; line-height: 1.02; letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+.sw-sub { margin: 14px 0 0; max-width: 56ch; color: var(--muted); font-size: 17px; line-height: 1.55; }
+
+/* -------------------------------------------------------------- the stage */
+.sw-stage {
+  flex: 1 1 auto; min-height: 0; display: none;
+/* 80/20 of the content box, not of the slide — the padding and the gap come
+   off first. Measured: this puts the portrait at 75% of the full slide width,
+   which is what was asked for. */
+  grid-template-columns: 80fr 20fr;
+  /* The row has to be told it may not exceed the stage. Left to itself it is
+     auto-sized, so a tall portrait grew the row, the row grew the stage, and
+     the wall was pushed off the bottom of the slide. */
+  grid-template-rows: minmax(0, 1fr);
+  gap: 26px; padding: 32px 32px 0;
+}
+.sw-root.is-open .sw-stage { display: grid; }
+.sw-stage__shot {
+  min-height: 0; overflow: hidden; border-radius: 18px;
+  border: 1px solid var(--border); background: var(--page-bg);
+  animation: swStageIn .45s cubic-bezier(.2,.8,.2,1) both;
+}
+.sw-stage__img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.sw-stage__side {
+  min-width: 0; display: flex; flex-direction: column; gap: 10px; overflow: auto;
+  scrollbar-width: none; animation: swSideIn .45s .08s cubic-bezier(.2,.8,.2,1) both;
+}
+.sw-stage__side::-webkit-scrollbar { width: 0; display: none; }
+.sw-close {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--page-bg); color: var(--text);
+  font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;
+}
+.sw-close:hover { border-color: var(--nav-accent, var(--brand-accent)); }
+.sw-stage__name { margin: 8px 0 0; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.sw-stage__role { margin: 0; color: var(--nav-accent-ink, var(--accent-ink)); font-size: 14px; font-weight: 700; }
+.sw-stage__quote {
+  margin: 10px 0 0; padding-left: 14px; border-left: 3px solid var(--nav-accent, var(--brand-accent));
+  font-size: 17px; line-height: 1.5; font-style: italic;
+}
+.sw-stage__body { margin: 8px 0 0; color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+
+/* --------------------------------------------------------------- the wall */
+.sw-wallwrap { flex: 0 0 auto; margin-top: auto; overflow: hidden; padding: 26px 0 22px; }
+.sw-root.is-open .sw-wallwrap { padding-top: 18px; }
+.sw-wall {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 10px; padding: 44px 24px 14px;
+}
+.sw-col { display: block; will-change: transform; }
+.sw-col__bob {
+  display: flex; flex-direction: column; gap: 10px;
+  animation-name: swBob; animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; animation-direction: alternate;
+  will-change: transform;
+}
+@keyframes swBob { from { transform: translateY(-11px); } to { transform: translateY(11px); } }
+@keyframes swStageIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes swSideIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+
+.sw-tile {
+  position: relative; display: block; padding: 0; overflow: hidden; cursor: pointer;
+  width: 104px; height: 138px;
+  border: 0; border-radius: 12px; background: var(--page-bg);
+  box-shadow: 0 10px 26px -14px rgba(15, 23, 42, 0.4);
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease, outline-color .2s ease;
+  outline: 2px solid transparent; outline-offset: 2px;
+}
+.sw-tile img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sw-tile:hover { transform: scale(1.07); box-shadow: 0 18px 36px -16px rgba(15, 23, 42, 0.5); }
+.sw-tile.is-active { outline-color: var(--nav-accent, var(--brand-accent)); transform: scale(1.07); }
+.sw-tile__name {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 6px 5px;
+  background: linear-gradient(transparent, rgba(9, 12, 20, 0.78));
+  color: #ffffff; font-size: 10px; font-weight: 700; text-align: center;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Smaller wall once a story is open — the portrait is the subject then. */
+.sw-root.is-open .sw-tile { width: 76px; height: 101px; }
+.sw-root.is-open .sw-tile__name { display: none; }
+
+.canvas-block--story-wall {
+  min-height: 860px !important; max-height: 860px !important; height: 100% !important; flex: 1 1 auto !important;
+  display: flex !important; flex-direction: column !important; grid-row: 1 / -1 !important;
+}
+.slide--hero .sw-root { min-height: 860px !important; max-height: 860px !important; height: 100% !important; flex: 1 1 auto !important; border-radius: 0 !important; }
+
+body.is-presenting .sw-wallwrap { padding-bottom: 78px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-col__bob { animation: none !important; }
+  .sw-stage__shot, .sw-stage__side { animation: none !important; }
+  .sw-tile { transition: none !important; }
+}

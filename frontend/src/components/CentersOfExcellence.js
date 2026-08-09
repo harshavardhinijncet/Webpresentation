@@ -237,7 +237,13 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
           : 'Nothing here yet'),
       ),
       media.length
-        ? h('div', { class: 'coe-gal' }, ...media.map((m) => mediaTile(m, center)))
+        ? h('div', {
+            class: 'coe-gal',
+            /* Column count follows the number of photos. Four columns is right
+               for a wall of fourteen and absurd for two — it would draw them a
+               quarter of the width and leave the rest of the slide empty. */
+            style: { 'column-count': String(media.length <= 2 ? 2 : media.length <= 6 ? 3 : 4) },
+          }, ...media.map((m) => mediaTile(m, center)))
         : h('p', { class: 'coe-gal__none' },
             `Drop photos or videos into backend/uploads/coepics/${center.key}/ and they appear here.`),
     );
