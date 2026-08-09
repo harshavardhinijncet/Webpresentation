@@ -14,6 +14,7 @@ import { DriftWall } from './DriftWall.js';
 import { Platforms } from './Platforms.js';
 import { CentersOfExcellence } from './CentersOfExcellence.js';
 import { StoryWall } from './StoryWall.js';
+import { ProgramDeck } from './ProgramDeck.js';
 import { AiReadyEngineer } from './AiReadyEngineer.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
@@ -120,6 +121,9 @@ export function renderBlock(block, options = {}) {
 
     case 'story-wall':
       return StoryWall(block, options);
+
+    case 'program-deck':
+      return ProgramDeck(block, options);
 
     case 'ai-ready-engineer':
       return AiReadyEngineer(block, options);

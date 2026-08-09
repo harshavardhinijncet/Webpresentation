@@ -9441,3 +9441,126 @@ body.is-presenting .sw-wallwrap { padding-bottom: 78px; }
   .sw-stage__shot, .sw-stage__side { animation: none !important; }
   .sw-tile { transition: none !important; }
 }
+
+/* ==========================================================================
+   Programs — a rotating stack of programme marks; one opens its films, one of
+   those opens full-bleed with a way back.
+   ========================================================================== */
+.pg-root {
+  position: relative; height: 100%; min-height: 860px; max-height: 860px;
+  overflow: hidden; border-radius: var(--radius-lg); background: var(--surface);
+}
+.pg-root--empty { display: grid; place-items: center; color: var(--muted); font-size: 13px; }
+
+.pg-wall {
+  position: absolute; inset: 0; display: grid;
+  grid-template-columns: minmax(300px, 0.62fr) minmax(0, 1.38fr);
+  align-items: center; gap: 20px; padding: 44px 40px;
+}
+.pg-root.is-gallery .pg-wall, .pg-root.is-playing .pg-wall { display: none; }
+
+.pg-title {
+  margin: 0; font-family: 'Agency FB', 'Oswald', 'Saira Condensed', sans-serif;
+  font-size: 58px; font-weight: 700; line-height: 1.02; text-transform: uppercase;
+  color: var(--nav-accent-ink, var(--accent-ink));
+}
+.pg-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.pg-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 13px; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--surface); color: var(--text);
+  font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: border-color .18s ease, transform .18s ease;
+}
+.pg-chip:hover { border-color: var(--nav-accent, var(--brand-accent)); transform: translateY(-1px); }
+.pg-chip em {
+  font-style: normal; font-size: 10px; font-weight: 800; color: #ffffff;
+  padding: 2px 6px; border-radius: 999px; background: var(--nav-accent, var(--brand-accent));
+}
+.pg-hint { margin: 20px 0 0; color: var(--muted); font-size: 13px; }
+
+.pg-stage { position: relative; height: 100%; min-height: 520px; perspective: 1500px; }
+.pg-deck { position: absolute; top: 52%; left: 46%; width: 0; height: 0; transform-style: preserve-3d; }
+.pg-card {
+  position: absolute; top: 0; left: 0;
+  display: flex; flex-direction: column; gap: 14px;
+  width: 430px; height: 430px; padding: 26px 24px 20px;
+  border: 1px solid var(--border); border-radius: 22px; background: var(--surface);
+  box-shadow: 0 28px 64px -26px rgba(15, 23, 42, 0.28);
+  cursor: pointer; font: inherit; text-align: left; color: inherit;
+  backface-visibility: hidden; will-change: transform;
+}
+.pg-card:hover { border-color: var(--nav-accent, var(--brand-accent)); }
+.pg-card__mark { display: grid; place-items: center; flex: 1 1 auto; min-height: 0; }
+.pg-card__mark img { max-width: 88%; max-height: 210px; object-fit: contain; }
+.pg-card__mark b { font-size: 64px; font-weight: 800; color: var(--nav-accent-ink, var(--accent-ink)); }
+.pg-card__name { flex: 0 0 auto; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.pg-card__foot {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
+  padding-top: 12px; border-top: 1px solid var(--border);
+  color: var(--muted); font-size: 12.5px;
+}
+.pg-card__go {
+  display: inline-flex; align-items: center; gap: 6px; margin-left: auto;
+  color: var(--text); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 11.5px;
+}
+
+/* ------------------------------------------------------------ the gallery */
+.pg-gallery, .pg-player { position: absolute; inset: 0; display: none; grid-template-rows: auto minmax(0, 1fr); background: var(--surface); }
+.pg-root.is-gallery .pg-gallery { display: grid; }
+.pg-root.is-playing .pg-gallery { display: none; }
+.pg-root.is-playing .pg-player { display: grid; }
+
+.pg-bar { display: flex; align-items: center; gap: 16px; padding: 16px 40px; border-bottom: 1px solid var(--border); }
+.pg-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--page-bg); color: var(--text);
+  font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer;
+}
+.pg-back:hover { border-color: var(--nav-accent, var(--brand-accent)); }
+.pg-gal__title, .pg-player__title { font-size: 19px; font-weight: 800; }
+
+.pg-gal__grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-content: start; gap: 18px; padding: 26px 40px 34px; overflow: auto;
+  scrollbar-width: none;
+}
+.pg-gal__grid::-webkit-scrollbar { width: 0; display: none; }
+.pg-gal__none { color: var(--muted); font-size: 14px; }
+
+.pg-vid {
+  display: flex; flex-direction: column; gap: 10px; padding: 0;
+  border: 0; background: none; cursor: pointer; font: inherit; text-align: left; color: inherit;
+}
+.pg-shot {
+  position: relative; display: grid; place-items: center;
+  min-height: 158px; overflow: hidden;
+  border: 1px solid var(--border); border-radius: 14px; background: var(--page-bg);
+  transition: transform .25s ease, border-color .25s ease;
+}
+.pg-shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pg-shot__play {
+  position: relative; display: grid; place-items: center;
+  width: 54px; height: 54px; border-radius: 50%;
+  background: rgba(9, 12, 20, 0.62); color: #ffffff;
+}
+.pg-vid:hover .pg-shot { transform: translateY(-3px); border-color: var(--nav-accent, var(--brand-accent)); }
+.pg-vid__name { font-size: 14.5px; font-weight: 700; line-height: 1.35; }
+
+/* ------------------------------------------------------------- the player */
+.pg-player__frame { display: grid; min-height: 0; background: #000000; }
+.pg-player__yt, .pg-player__file { width: 100%; height: 100%; border: 0; display: block; }
+
+.canvas-block--program-deck {
+  min-height: 860px !important; max-height: 860px !important; height: 100% !important;
+  flex: 1 1 auto !important; display: flex !important; flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+.slide--hero .pg-root { min-height: 860px !important; max-height: 860px !important; height: 100% !important; flex: 1 1 auto !important; border-radius: 0 !important; }
+
+body.is-presenting .pg-gal__grid { padding-bottom: 104px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-card, .pg-shot, .pg-chip { transition: none !important; }
+}

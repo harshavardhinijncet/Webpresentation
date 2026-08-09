@@ -208,6 +208,18 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-09T13:22:17.822Z",
       "expiresAt": "2026-08-10T01:22:17.822Z"
+    },
+    {
+      "token": "5ff861f6489b641a083ba84ab9cff7992fe11df932765b27893a90968ea9c6da",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T14:33:13.485Z",
+      "expiresAt": "2026-08-10T02:33:13.485Z"
+    },
+    {
+      "token": "3ad4d76c16b068649e16662cbb06c28bc6b9550554cd0b6feb7e8cbf849b73bb",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T14:34:05.572Z",
+      "expiresAt": "2026-08-10T02:34:05.572Z"
     }
   ],
   "organizations": [
@@ -289,15 +301,177 @@
       "id": "sec_419a181042734ede",
       "orgId": "torii",
       "key": "programs",
-      "title": "Programs / Courses",
+      "title": "Programs & Learning",
       "subtitle": "",
       "icon": "▤",
       "order": 4,
       "hidden": false,
       "status": "draft",
-      "blocks": [],
+      "blocks": [
+        {
+          "id": "blk_adade23a5655458e",
+          "type": "program-deck",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "eyebrow": "",
+          "title": "Programs",
+          "programs": [
+            {
+              "key": "ignite",
+              "name": "Ignite Coder",
+              "blurb": "",
+              "logo": "Programs/ignite.png",
+              "videos": []
+            },
+            {
+              "key": "moon",
+              "name": "Moon Coder",
+              "blurb": "",
+              "logo": "Programs/moon.png",
+              "videos": [
+                {
+                  "title": "Moon Coders",
+                  "youtube": "W95j8i1LnbA",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "skillup",
+              "name": "SkillUp Coder",
+              "blurb": "",
+              "logo": "Programs/skill.png",
+              "videos": [
+                {
+                  "title": "SkillUp Coder",
+                  "youtube": "dh9pHFS-y24",
+                  "src": ""
+                },
+                {
+                  "title": "SkillUp",
+                  "youtube": "",
+                  "src": "Programs Videos/SkillUp.mp4"
+                }
+              ]
+            },
+            {
+              "key": "bamboo",
+              "name": "Bamboo Coder",
+              "blurb": "",
+              "logo": "",
+              "videos": []
+            },
+            {
+              "key": "become",
+              "name": "Become Coder",
+              "blurb": "",
+              "logo": "",
+              "videos": []
+            },
+            {
+              "key": "owl",
+              "name": "Owl Coder",
+              "blurb": "",
+              "logo": "Programs/owl.png",
+              "videos": [
+                {
+                  "title": "Owl Coder",
+                  "youtube": "5xUzKes5Pcs",
+                  "src": ""
+                },
+                {
+                  "title": "Owl Coder Placements",
+                  "youtube": "Q0O3zrzOoEc",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "driveready",
+              "name": "Drive Ready",
+              "blurb": "",
+              "logo": "Programs/Drive Ready.png",
+              "videos": [
+                {
+                  "title": "Drive Ready 7.0",
+                  "youtube": "J7rIcZ-YoRg",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "projectspace",
+              "name": "Project Space",
+              "blurb": "",
+              "logo": "Programs/Project Space.png",
+              "videos": [
+                {
+                  "title": "Project Space",
+                  "youtube": "Zknym0jiol4",
+                  "src": ""
+                },
+                {
+                  "title": "Season 8",
+                  "youtube": "E7mvZ0yTDss",
+                  "src": ""
+                },
+                {
+                  "title": "Season 7",
+                  "youtube": "2YpciZnl2h8",
+                  "src": ""
+                },
+                {
+                  "title": "Project Space · Pega",
+                  "youtube": "ljYucKe7ZEc",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "grow",
+              "name": "Grow",
+              "blurb": "",
+              "logo": "Programs/grow.png",
+              "videos": [
+                {
+                  "title": "Grow",
+                  "youtube": "WBINrie9mzc",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "tconnect",
+              "name": "T-Connect",
+              "blurb": "",
+              "logo": "Programs/T-Connect.png",
+              "videos": [
+                {
+                  "title": "T-Connect",
+                  "youtube": "i7jvz_EU6WU",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect · 2",
+                  "youtube": "dPhRj5cTzyo",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect · 3",
+                  "youtube": "awFS-mJR9q0",
+                  "src": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
       "createdAt": "2026-07-30T05:29:37.905Z",
-      "updatedAt": "2026-08-08T07:03:52.010Z"
+      "updatedAt": "2026-08-09T14:34:05.614Z"
     },
     {
       "id": "sec_75dc099019094ab2",
@@ -904,15 +1078,177 @@
       "id": "sec_2ce27ff81ff0481d",
       "orgId": "technical-hub",
       "key": "programs",
-      "title": "Programs / Courses",
+      "title": "Programs & Learning",
       "subtitle": "",
       "icon": "▤",
       "order": 4,
       "hidden": false,
       "status": "draft",
-      "blocks": [],
+      "blocks": [
+        {
+          "id": "blk_564616ca3c09466f",
+          "type": "program-deck",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "eyebrow": "",
+          "title": "Programs",
+          "programs": [
+            {
+              "key": "ignite",
+              "name": "Ignite Coder",
+              "blurb": "",
+              "logo": "Programs/ignite.png",
+              "videos": []
+            },
+            {
+              "key": "moon",
+              "name": "Moon Coder",
+              "blurb": "",
+              "logo": "Programs/moon.png",
+              "videos": [
+                {
+                  "title": "Moon Coders",
+                  "youtube": "W95j8i1LnbA",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "skillup",
+              "name": "SkillUp Coder",
+              "blurb": "",
+              "logo": "Programs/skill.png",
+              "videos": [
+                {
+                  "title": "SkillUp Coder",
+                  "youtube": "dh9pHFS-y24",
+                  "src": ""
+                },
+                {
+                  "title": "SkillUp",
+                  "youtube": "",
+                  "src": "Programs Videos/SkillUp.mp4"
+                }
+              ]
+            },
+            {
+              "key": "bamboo",
+              "name": "Bamboo Coder",
+              "blurb": "",
+              "logo": "",
+              "videos": []
+            },
+            {
+              "key": "become",
+              "name": "Become Coder",
+              "blurb": "",
+              "logo": "",
+              "videos": []
+            },
+            {
+              "key": "owl",
+              "name": "Owl Coder",
+              "blurb": "",
+              "logo": "Programs/owl.png",
+              "videos": [
+                {
+                  "title": "Owl Coder",
+                  "youtube": "5xUzKes5Pcs",
+                  "src": ""
+                },
+                {
+                  "title": "Owl Coder Placements",
+                  "youtube": "Q0O3zrzOoEc",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "driveready",
+              "name": "Drive Ready",
+              "blurb": "",
+              "logo": "Programs/Drive Ready.png",
+              "videos": [
+                {
+                  "title": "Drive Ready 7.0",
+                  "youtube": "J7rIcZ-YoRg",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "projectspace",
+              "name": "Project Space",
+              "blurb": "",
+              "logo": "Programs/Project Space.png",
+              "videos": [
+                {
+                  "title": "Project Space",
+                  "youtube": "Zknym0jiol4",
+                  "src": ""
+                },
+                {
+                  "title": "Season 8",
+                  "youtube": "E7mvZ0yTDss",
+                  "src": ""
+                },
+                {
+                  "title": "Season 7",
+                  "youtube": "2YpciZnl2h8",
+                  "src": ""
+                },
+                {
+                  "title": "Project Space · Pega",
+                  "youtube": "ljYucKe7ZEc",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "grow",
+              "name": "Grow",
+              "blurb": "",
+              "logo": "Programs/grow.png",
+              "videos": [
+                {
+                  "title": "Grow",
+                  "youtube": "WBINrie9mzc",
+                  "src": ""
+                }
+              ]
+            },
+            {
+              "key": "tconnect",
+              "name": "T-Connect",
+              "blurb": "",
+              "logo": "Programs/T-Connect.png",
+              "videos": [
+                {
+                  "title": "T-Connect",
+                  "youtube": "i7jvz_EU6WU",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect · 2",
+                  "youtube": "dPhRj5cTzyo",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect · 3",
+                  "youtube": "awFS-mJR9q0",
+                  "src": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
       "createdAt": "2026-07-30T05:29:38.059Z",
-      "updatedAt": "2026-08-08T07:03:51.692Z"
+      "updatedAt": "2026-08-09T14:34:05.597Z"
     },
     {
       "id": "sec_bddf4b1b0ee64631",

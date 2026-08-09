@@ -37,6 +37,7 @@ export const BLOCK_TYPES = [
   'platforms',
   'coe-wall',
   'story-wall',
+  'program-deck',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -544,6 +545,29 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         }))
         .filter((p) => p.name && p.url)
         .slice(0, 12);
+      break;
+
+    case 'program-deck':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.programs = (Array.isArray(raw.programs) ? raw.programs : [])
+        .map((p) => ({
+          key: text(p?.key, 40),
+          name: text(p?.name, 80),
+          blurb: text(p?.blurb, 200),
+          logo: text(p?.logo, 200),
+          videos: (Array.isArray(p?.videos) ? p.videos : [])
+            .map((v) => ({
+              title: text(v?.title, 120),
+              // A YouTube id, or a file under /uploads — never both.
+              youtube: text(v?.youtube, 24),
+              src: text(v?.src, 200),
+            }))
+            .filter((v) => v.youtube || v.src)
+            .slice(0, 12),
+        }))
+        .filter((p) => p.key && p.name)
+        .slice(0, 24);
       break;
 
     case 'story-wall':
