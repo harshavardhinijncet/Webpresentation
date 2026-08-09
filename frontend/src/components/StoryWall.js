@@ -21,25 +21,30 @@ import { icon } from '../utils/icons.js';
 const UPLOADS = '/uploads';
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
-/* How the wave sits. A single period across the run, lifted at the ends and
-   dipping through the middle, which is what makes it read as a crowd rather
-   than a chart. */
-const arcFor = (i, n) => (n < 2 ? 0 : Math.round(-26 * Math.cos((i / (n - 1)) * Math.PI * 2)));
+/* The wave only ever lifts. A curve centred on zero puts half the columns
+   below the baseline, and the baseline is the floor of the slide — three of
+   them hung 15px off the bottom edge. Riding from 0 upwards keeps the run
+   sitting on the floor while still reading as a crowd. */
+const arcFor = (i, n) => (n < 2 ? 0
+  : -Math.round(24 * (1 - Math.cos((i / (n - 1)) * Math.PI * 2.4))));
 
-/** Portraits per column, cycled so the run never looks mechanical. */
-const COLUMN_SHAPE = [3, 2, 3, 2, 2, 3, 2, 3, 2, 2];
+/* The slide is a fixed 1600 nominal canvas, so the run can be made to reach
+   both edges exactly rather than sitting in the middle of it: choose a column
+   count, then let the tile width fall out of the arithmetic. */
+const CANVAS = 1600;
+const GAP = 10;
 
-function columnsFrom(stories) {
-  const cols = [];
-  let i = 0;
-  let s = 0;
-  while (i < stories.length) {
-    const take = COLUMN_SHAPE[s % COLUMN_SHAPE.length];
-    cols.push(stories.slice(i, i + take));
-    i += take;
-    s += 1;
-  }
-  return cols;
+function layoutFor(count) {
+  const cols = Math.max(6, Math.min(16, Math.round(count / 2)));
+  const tile = Math.round((CANVAS - (cols - 1) * GAP) / cols);
+  return { cols, tile, shot: Math.round(tile * 1.33) };
+}
+
+/** Round-robin, so no column stands more than one portrait taller than another. */
+function columnsFrom(stories, cols) {
+  const out = Array.from({ length: cols }, () => []);
+  stories.forEach((s, i) => out[i % cols].push(s));
+  return out.filter((c) => c.length);
 }
 
 export function StoryWall(block, { editing = false } = {}) {
@@ -52,8 +57,7 @@ export function StoryWall(block, { editing = false } = {}) {
        fill is a note for whoever is building the deck, not something to put on
        a wall in front of a college. */
     root.appendChild(h('div', { class: 'sw-empty' },
-      h('h2', { class: 'sw-title coe-shine' }, block.title || 'Success Stories'),
-      block.subtitle ? h('p', { class: 'sw-sub' }, block.subtitle) : null,
+      h('h2', { class: 'sw-title' }, block.title || 'Success Stories'),
       editing
         ? h('p', { class: 'sw-hint' },
             'Drop the portraits into backend/uploads/stories/ and re-run the publish step.')
@@ -85,9 +89,7 @@ export function StoryWall(block, { editing = false } = {}) {
 
   /* --------------------------------------------------------- the intro copy */
   const intro = h('div', { class: 'sw-intro' },
-    block.eyebrow ? h('p', { class: 'sw-eyebrow' }, block.eyebrow) : null,
-    h('h2', { class: 'sw-title coe-shine' }, block.title || 'Success Stories'),
-    block.subtitle ? h('p', { class: 'sw-sub' }, block.subtitle) : null,
+    h('h2', { class: 'sw-title' }, block.title || 'Success Stories'),
   );
 
   /* ------------------------------------------------------------- the wall */
@@ -109,8 +111,12 @@ export function StoryWall(block, { editing = false } = {}) {
     root.classList.add('is-open');
   };
 
-  const cols = columnsFrom(stories);
-  const wall = h('div', { class: 'sw-wall' });
+  const { cols: colCount, tile: tileW, shot: shotH } = layoutFor(stories.length);
+  const cols = columnsFrom(stories, colCount);
+  const wall = h('div', {
+    class: 'sw-wall',
+    style: { '--sw-tile': `${tileW}px`, '--sw-shot': `${shotH}px`, gap: `${GAP}px` },
+  });
 
   cols.forEach((group, ci) => {
     const column = h('div', {

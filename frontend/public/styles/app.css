@@ -9332,7 +9332,7 @@ body.is-presenting .coe-orbit { bottom: 104px; }
 .sw-empty { display: grid; place-items: center; align-content: center; gap: 12px; height: 100%; color: var(--muted); text-align: center; }
 
 /* -------------------------------------------------------------- the intro */
-.sw-intro { flex: 0 0 auto; padding: 40px 56px 0; }
+.sw-intro { flex: 0 0 auto; padding: 44px 56px 0; }
 .sw-root.is-open .sw-intro { display: none; }
 .sw-eyebrow {
   margin: 0 0 10px; color: var(--nav-accent-ink, var(--accent-ink));
@@ -9387,11 +9387,14 @@ body.is-presenting .coe-orbit { bottom: 104px; }
 .sw-stage__body { margin: 8px 0 0; color: var(--muted); font-size: 14.5px; line-height: 1.6; }
 
 /* --------------------------------------------------------------- the wall */
-.sw-wallwrap { flex: 0 0 auto; margin-top: auto; overflow: hidden; padding: 26px 0 22px; }
+/* Flush to the floor of the slide, and to both edges. The columns rise from
+   here rather than rocking about a midpoint, so their resting position is the
+   bottom of the screen and nothing needs clearance underneath to bob into. */
+.sw-wallwrap { flex: 0 0 auto; margin-top: auto; overflow: hidden; padding: 26px 0 0; }
 .sw-root.is-open .sw-wallwrap { padding-top: 18px; }
 .sw-wall {
   display: flex; align-items: flex-end; justify-content: center;
-  gap: 10px; padding: 44px 24px 14px;
+  padding: 44px 0 0;
 }
 .sw-col { display: block; will-change: transform; }
 .sw-col__bob {
@@ -9400,13 +9403,13 @@ body.is-presenting .coe-orbit { bottom: 104px; }
   animation-iteration-count: infinite; animation-direction: alternate;
   will-change: transform;
 }
-@keyframes swBob { from { transform: translateY(-11px); } to { transform: translateY(11px); } }
+@keyframes swBob { from { transform: translateY(0); } to { transform: translateY(-19px); } }
 @keyframes swStageIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
 @keyframes swSideIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
 
 .sw-tile {
   position: relative; display: block; padding: 0; overflow: hidden; cursor: pointer;
-  width: 104px; height: 138px;
+  width: var(--sw-tile, 104px); height: var(--sw-shot, 138px);
   border: 0; border-radius: 12px; background: var(--page-bg);
   box-shadow: 0 10px 26px -14px rgba(15, 23, 42, 0.4);
   transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease, outline-color .2s ease;
@@ -9422,7 +9425,7 @@ body.is-presenting .coe-orbit { bottom: 104px; }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 /* Smaller wall once a story is open — the portrait is the subject then. */
-.sw-root.is-open .sw-tile { width: 76px; height: 101px; }
+.sw-root.is-open .sw-tile { width: calc(var(--sw-tile, 104px) * 0.62); height: calc(var(--sw-shot, 138px) * 0.62); }
 .sw-root.is-open .sw-tile__name { display: none; }
 
 .canvas-block--story-wall {
