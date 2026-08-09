@@ -24,30 +24,6 @@
   ],
   "sessions": [
     {
-      "token": "bc438afaa24f108ede6b24e62d088494f9d5c04d77c6ece8a2558dd24115ee97",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-09T02:36:04.939Z",
-      "expiresAt": "2026-08-09T14:36:04.939Z"
-    },
-    {
-      "token": "8a21956b63639ff66832159782d644817bfdbbebe5b3a3083428a50cea78dc0a",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-09T02:36:42.481Z",
-      "expiresAt": "2026-08-09T14:36:42.481Z"
-    },
-    {
-      "token": "290e78329dcc34ffd9c8e48461976248b27e76f37bca5b3d8c91c736d42fff97",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-09T02:43:53.005Z",
-      "expiresAt": "2026-08-09T14:43:53.005Z"
-    },
-    {
-      "token": "55f3c693af9c2d0f2758677a9e14d923ad64b65fd0c62661724bef37b4d78bde",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-09T02:45:03.154Z",
-      "expiresAt": "2026-08-09T14:45:03.154Z"
-    },
-    {
       "token": "64f0da1ce9feda263aa4e05024d6921215f776afde4e10155dbe5bfa1f5d5335",
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-09T03:10:56.252Z",
@@ -232,6 +208,12 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-09T14:43:52.554Z",
       "expiresAt": "2026-08-10T02:43:52.554Z"
+    },
+    {
+      "token": "7979f1698aa6590662233a425e6c82d72f694d84de3dbfc3af0d711aa1e11caf",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-09T14:52:30.788Z",
+      "expiresAt": "2026-08-10T02:52:30.788Z"
     }
   ],
   "organizations": [
@@ -321,7 +303,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_60bb53b341814980",
+          "id": "blk_a26e72e111ab4708",
           "type": "program-deck",
           "layout": {
             "x": 0,
@@ -369,20 +351,6 @@
                   "src": "Programs Videos/SkillUp.mp4"
                 }
               ]
-            },
-            {
-              "key": "bamboo",
-              "name": "Bamboo Coder",
-              "blurb": "",
-              "logo": "",
-              "videos": []
-            },
-            {
-              "key": "become",
-              "name": "Become Coder",
-              "blurb": "",
-              "logo": "",
-              "videos": []
             },
             {
               "key": "owl",
@@ -483,7 +451,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:37.905Z",
-      "updatedAt": "2026-08-09T14:43:52.588Z"
+      "updatedAt": "2026-08-09T14:52:30.857Z"
     },
     {
       "id": "sec_75dc099019094ab2",
@@ -1098,7 +1066,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_76a6653e782a4747",
+          "id": "blk_43d279d977494ca3",
           "type": "program-deck",
           "layout": {
             "x": 0,
@@ -1146,20 +1114,6 @@
                   "src": "Programs Videos/SkillUp.mp4"
                 }
               ]
-            },
-            {
-              "key": "bamboo",
-              "name": "Bamboo Coder",
-              "blurb": "",
-              "logo": "",
-              "videos": []
-            },
-            {
-              "key": "become",
-              "name": "Become Coder",
-              "blurb": "",
-              "logo": "",
-              "videos": []
             },
             {
               "key": "owl",
@@ -1260,7 +1214,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:38.059Z",
-      "updatedAt": "2026-08-09T14:43:52.574Z"
+      "updatedAt": "2026-08-09T14:52:30.836Z"
     },
     {
       "id": "sec_bddf4b1b0ee64631",

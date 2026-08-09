@@ -145,8 +145,11 @@ export function ProgramDeck(block, { editing = false } = {}) {
       const b = el.getBoundingClientRect();
       const dx = Math.round(mid - (b.left + b.width / 2));
       el.style.transition = 'none';
-      el.style.transform = `translate3d(${dx}px, 0, 0) rotate(${(i - (cards.length - 1) / 2) * 0.9}deg)`;
-      el.style.opacity = i === 0 ? '1' : '0';
+      el.style.transform = `translate3d(${dx}px, 0, 0) scale(.9)`;
+      /* All of them hidden, not just the ones behind the front. A full-height
+         card standing behind a short cover pokes out above and below it, which
+         reads as a mistake rather than a stack — the cover draws its own. */
+      el.style.opacity = '0';
       el.style.zIndex = String(cards.length - i);
     });
   };

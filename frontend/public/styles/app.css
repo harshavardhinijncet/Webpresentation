@@ -9465,7 +9465,25 @@ body.is-presenting .sw-wallwrap { padding-bottom: 78px; }
   cursor: pointer; font: inherit; text-align: left; color: inherit;
   transition: transform .55s cubic-bezier(.5,0,.75,0), opacity .4s ease;
 }
-.pg-cover:hover { border-color: var(--nav-accent, var(--brand-accent)); }
+/* The stack is drawn by the cover, not by the real cards standing behind it —
+   a full-height card behind a short cover pokes out top and bottom. Two leaves,
+   tucked and rotated, and they lean out a little further on hover. */
+.pg-cover::before, .pg-cover::after {
+  content: ''; position: absolute; inset: 14px 0 auto; z-index: -1;
+  height: 100%; border: 1px solid var(--border); border-radius: 26px;
+  background: var(--surface); box-shadow: 0 22px 50px -30px rgba(15, 23, 42, 0.3);
+  transition: transform .45s cubic-bezier(.22,1,.36,1);
+}
+.pg-cover::before { transform: translateY(16px) rotate(-2.4deg) scale(.965); }
+.pg-cover::after { transform: translateY(9px) rotate(1.7deg) scale(.985); }
+.pg-cover:hover::before { transform: translateY(22px) rotate(-4deg) scale(.955); }
+.pg-cover:hover::after { transform: translateY(13px) rotate(3deg) scale(.978); }
+.pg-cover {
+  isolation: isolate;
+}
+.pg-cover:hover { border-color: var(--nav-accent, var(--brand-accent)); transform: translateY(-4px); }
+.pg-cover:hover .pg-cover__go { transform: translateX(4px); }
+.pg-cover__go { transition: transform .3s cubic-bezier(.22,1,.36,1); }
 .pg-root.is-fanned .pg-cover { transform: scale(.86) translateY(-26px); opacity: 0; pointer-events: none; }
 .pg-cover__eyebrow {
   color: var(--nav-accent-ink, var(--accent-ink));
@@ -9486,11 +9504,11 @@ body.is-presenting .sw-wallwrap { padding-bottom: 78px; }
 
 /* ----------------------------------------------------------------- the row */
 .pg-row {
-  display: flex; align-items: stretch; justify-content: center;
-  gap: 12px; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; width: 100%; height: 100%; max-height: 620px;
 }
 .pg-card {
-  flex: 1 1 0; min-width: 0; max-width: 190px;
+  flex: 1 1 0; min-width: 0; max-width: 190px; height: 100%; max-height: 560px;
   display: flex; flex-direction: column; align-items: center; gap: 12px;
   padding: 22px 12px 18px;
   border: 1px solid var(--border); border-radius: 18px; background: var(--surface);
@@ -9499,7 +9517,24 @@ body.is-presenting .sw-wallwrap { padding-bottom: 78px; }
   will-change: transform;
 }
 .pg-root:not(.is-fanned) .pg-card { pointer-events: none; }
-.pg-card:hover { border-color: var(--nav-accent, var(--brand-accent)); }
+/* The cards answer the pointer: the whole card lifts, its mark grows a little,
+   and the film count turns to the accent. Cheap transforms only — ten of these
+   animating at once on a projector is not the place for anything else. */
+.pg-card {
+  transition: transform .34s cubic-bezier(.22,1,.36,1), box-shadow .34s ease, border-color .3s ease;
+}
+.pg-root.is-fanned .pg-card:hover {
+  transform: translateY(-14px) scale(1.04) !important;
+  border-color: var(--nav-accent, var(--brand-accent));
+  box-shadow: 0 34px 60px -26px rgba(15, 23, 42, 0.4);
+  z-index: 5;
+}
+.pg-card__mark img, .pg-card__mark b { transition: transform .34s cubic-bezier(.22,1,.36,1); }
+.pg-root.is-fanned .pg-card:hover .pg-card__mark img,
+.pg-root.is-fanned .pg-card:hover .pg-card__mark b { transform: scale(1.1); }
+.pg-root.is-fanned .pg-card:hover .pg-card__count { color: var(--nav-accent-ink, var(--accent-ink)); }
+.pg-card__count { transition: color .3s ease; }
+.pg-card:focus-visible { outline: 3px solid var(--nav-accent, var(--brand-accent)); outline-offset: 3px; }
 .pg-card__mark { display: grid; place-items: center; flex: 1 1 auto; min-height: 0; width: 100%; }
 .pg-card__mark img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .pg-card__mark b { font-size: 40px; font-weight: 800; color: var(--nav-accent-ink, var(--accent-ink)); }
