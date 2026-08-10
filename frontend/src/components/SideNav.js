@@ -48,7 +48,10 @@ const NAVIGATION_GROUPS = [
   ['moments', 'Recognition & Achievements', 'trophy', ['Institutional Awards', 'Student Achievements', 'Faculty Recognition']],
   ['achievements', 'Events & Milestones', 'calendar', ['Events', 'Workshops', 'Project Arena']],
   ['media', 'Media Center', 'images', ['Photo Gallery', 'Video Gallery']],
-  ['testimonials', 'Success Stories', 'quote', ['Student Testimonials', 'Alumni Stories', 'Recruiter Testimonials']],
+  /* One page, and its own name. The three labels under it were placeholders
+     for pages nobody built, and calling it Success Stories put a second row
+     of that name in the nav while Leadership already owned one. */
+  ['testimonials', 'Testimonials', 'quote', []],
   ['contact', 'Connect With Us', 'mail', ['Contact Information', 'Office Locations', 'Contact Form']],
    /* A section with no entry here keeps its stored title and a keyword icon,
      which is a fine fallback — but the flagship programme deserves its own

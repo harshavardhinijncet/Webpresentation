@@ -9610,3 +9610,120 @@ body.is-presenting .pg-wall { padding-bottom: 96px; }
 @media (prefers-reduced-motion: reduce) {
   .pg-card, .pg-shot, .pg-cover { transition: none !important; }
 }
+
+/* ==========================================================================
+   Testimonials — a row of arched portraits; a student plays across the screen.
+
+   The arch is the shape from the reference: a tall rounded top on a straight
+   base. Each sits on its own flat wash, light enough that the face stays the
+   brightest thing in the frame.
+   ========================================================================== */
+.tw-root {
+  position: relative; height: 100%; min-height: 860px; max-height: 860px;
+  overflow: hidden; border-radius: var(--radius-lg); background: var(--surface);
+}
+.tw-root--empty { display: grid; place-items: center; color: var(--muted); font-size: 13px; }
+
+.tw-wall {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  padding: 44px 40px 40px;
+}
+.tw-root.is-playing .tw-wall { display: none; }
+
+.tw-head { flex: 0 0 auto; }
+.tw-eyebrow {
+  margin: 0 0 10px; color: var(--nav-accent-ink, var(--accent-ink));
+  font-size: 11.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.tw-title {
+  margin: 0; font-family: 'Agency FB', 'Oswald', 'Saira Condensed', sans-serif;
+  font-size: 58px; font-weight: 700; line-height: 1.02; text-transform: uppercase;
+  color: var(--nav-accent-ink, var(--accent-ink));
+}
+
+/* The row fills what is left and every arch shares it equally. */
+.tw-row {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; align-items: stretch; justify-content: center; gap: 18px;
+  padding-top: 26px;
+}
+
+.tw-card {
+  flex: 1 1 0; min-width: 0; max-width: 260px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; color: inherit; text-align: center;
+  transition: transform .34s cubic-bezier(.22,1,.36,1);
+  animation: twRise .6s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes twRise { from { opacity: 0; transform: translateY(34px) scale(.96); } to { opacity: 1; transform: none; } }
+
+.tw-arch {
+  position: relative; flex: 1 1 auto; min-height: 0; width: 100%; overflow: hidden;
+  /* A tall dome on a straight base — the reference shape. */
+  border-radius: 999px 999px 18px 18px;
+  transition: transform .34s cubic-bezier(.22,1,.36,1), box-shadow .34s ease;
+}
+.tw-arch__initials {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', sans-serif;
+  font-size: 96px; font-weight: 700; letter-spacing: 0.02em;
+  color: rgba(15, 23, 42, 0.28);
+}
+.tw-arch img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+}
+.tw-card:hover { transform: translateY(-10px); }
+.tw-card:hover .tw-arch { box-shadow: 0 28px 54px -22px rgba(15, 23, 42, 0.42); transform: scale(1.02); }
+.tw-card:focus-visible .tw-arch { outline: 3px solid var(--nav-accent, var(--brand-accent)); outline-offset: 3px; }
+
+.tw-card__name { flex: 0 0 auto; font-size: 17px; font-weight: 800; letter-spacing: -0.01em; }
+.tw-card__note { flex: 0 0 auto; color: var(--muted); font-size: 12.5px; }
+
+.tw-card__play {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(.86);
+  display: grid; place-items: center; width: 66px; height: 66px; border-radius: 50%;
+  background: rgba(9, 12, 20, 0.52); color: #ffffff;
+  opacity: 0; transition: opacity .28s ease, transform .28s cubic-bezier(.22,1,.36,1);
+  pointer-events: none;
+}
+.tw-card { position: relative; }
+.tw-card:hover .tw-card__play, .tw-card:focus-visible .tw-card__play {
+  opacity: 1; transform: translate(-50%, -50%) scale(1);
+}
+.tw-card.is-active .tw-arch { outline: 3px solid var(--nav-accent, var(--brand-accent)); outline-offset: 3px; }
+
+/* ------------------------------------------------------------- the player */
+.tw-player {
+  position: absolute; inset: 0; display: none;
+  grid-template-rows: auto minmax(0, 1fr); background: var(--surface);
+}
+.tw-root.is-playing .tw-player { display: grid; animation: twFade .35s ease both; }
+@keyframes twFade { from { opacity: 0; } to { opacity: 1; } }
+
+.tw-bar { display: flex; align-items: center; gap: 16px; padding: 14px 28px; border-bottom: 1px solid var(--border); }
+.tw-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--page-bg); color: var(--text);
+  font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer;
+}
+.tw-back:hover { border-color: var(--nav-accent, var(--brand-accent)); }
+.tw-player__name { font-size: 19px; font-weight: 800; }
+.tw-player__frame { display: grid; min-height: 0; background: #000000; }
+.tw-player__yt, .tw-player__file { width: 100%; height: 100%; border: 0; display: block; }
+
+.canvas-block--testimonial-wall {
+  min-height: 860px !important; max-height: 860px !important; height: 100% !important;
+  flex: 1 1 auto !important; display: flex !important; flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+.slide--hero .tw-root { min-height: 860px !important; max-height: 860px !important; height: 100% !important; flex: 1 1 auto !important; border-radius: 0 !important; }
+
+body.is-presenting .tw-wall { padding-bottom: 104px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tw-card, .tw-arch, .tw-card__play { animation: none !important; transition: none !important; }
+  .tw-card { opacity: 1 !important; transform: none !important; }
+}

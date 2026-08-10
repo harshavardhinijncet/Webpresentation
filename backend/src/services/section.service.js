@@ -38,6 +38,7 @@ export const BLOCK_TYPES = [
   'coe-wall',
   'story-wall',
   'program-deck',
+  'testimonial-wall',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -545,6 +546,22 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         }))
         .filter((p) => p.name && p.url)
         .slice(0, 12);
+      break;
+
+    case 'testimonial-wall':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.people = (Array.isArray(raw.people) ? raw.people : [])
+        .map((p) => ({
+          name: text(p?.name, 80),
+          note: text(p?.note, 160),
+          // A local portrait, pulled from the film so it survives offline.
+          photo: text(p?.photo, 200),
+          youtube: text(p?.youtube, 24),
+          src: text(p?.src, 200),
+        }))
+        .filter((p) => p.name && (p.youtube || p.src))
+        .slice(0, 24);
       break;
 
     case 'program-deck':
