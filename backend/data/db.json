@@ -112,6 +112,12 @@
       "userId": "usr_4d7c41e246a842a5",
       "createdAt": "2026-08-10T09:30:52.050Z",
       "expiresAt": "2026-08-10T21:30:52.051Z"
+    },
+    {
+      "token": "dbfb1874f291e70c2cc272f4a0b68ed7cff82616e94d14c8e76a3eddf5897911",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-10T10:56:06.850Z",
+      "expiresAt": "2026-08-10T22:56:06.850Z"
     }
   ],
   "organizations": [
@@ -2050,7 +2056,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_80e560786383445c",
+          "id": "blk_89a11d718b3a4cfd",
           "type": "story-wall",
           "layout": {
             "x": 0,
@@ -2061,11 +2067,187 @@
           "eyebrow": "",
           "title": "The Legacy — Babji Neelam",
           "subtitle": "",
-          "stories": []
+          "stories": [
+            {
+              "photo": "stories/10 Year Glory.jpg",
+              "name": "10 Year Glory",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/AI Center Excellence.jpg",
+              "name": "AI Center Excellence",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/AI Hub.jpg",
+              "name": "AI Hub",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/AI Lab.jpg",
+              "name": "AI Lab",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Association with RedHat.jpg",
+              "name": "Association with RedHat",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Association with Snowflake.jpg",
+              "name": "Association with Snowflake",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/ATC of the year award.jpg",
+              "name": "ATC of the year award",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Encouaging Young Talent.jpg",
+              "name": "Encouaging Young Talent",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Guiding the Next Gen Engineers.jpg",
+              "name": "Guiding the Next Gen Engineers",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Intiatives in RedHat.jpg",
+              "name": "Intiatives in RedHat",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/LaunchingNew Programs.jpg",
+              "name": "LaunchingNew Programs",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Mobile Application.jpg",
+              "name": "Mobile Application",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/O9 Placement.jpg",
+              "name": "O9 Placement",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Offered 3000+ Internships.jpg",
+              "name": "Offered 3000+ Internships",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Oracle Story.jpg",
+              "name": "Oracle Story",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Oracle Sucess Stories.png",
+              "name": "Oracle Sucess Stories",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Parent Interaction.jpg",
+              "name": "Parent Interaction",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Pega and TCS Association.jpg",
+              "name": "Pega and TCS Association",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Pega Gen AI Bootcamp.jpg",
+              "name": "Pega Gen AI Bootcamp",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Project Space.jpg",
+              "name": "Project Space",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Real Talk with Talent.jpg",
+              "name": "Real Talk with Talent",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Scinova.jpg",
+              "name": "Scinova",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Skillers Day.jpg",
+              "name": "Skillers Day",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Spreading Wings.jpg",
+              "name": "Spreading Wings",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Trainees Onborder.jpg",
+              "name": "Trainees Onborder",
+              "role": "",
+              "body": "",
+              "quote": ""
+            }
+          ]
         }
       ],
       "createdAt": "2026-08-06T10:50:26.912Z",
-      "updatedAt": "2026-08-09T13:22:17.830Z"
+      "updatedAt": "2026-08-10T10:56:06.879Z"
     },
     {
       "id": "sec_6adc52eaddfa4292",
@@ -2366,7 +2548,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_bfb8b38fb01c4453",
+          "id": "blk_114eb683d4d647b8",
           "type": "story-wall",
           "layout": {
             "x": 0,
@@ -2377,11 +2559,187 @@
           "eyebrow": "",
           "title": "The Legacy — Babji Neelam",
           "subtitle": "",
-          "stories": []
+          "stories": [
+            {
+              "photo": "stories/10 Year Glory.jpg",
+              "name": "10 Year Glory",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/AI Center Excellence.jpg",
+              "name": "AI Center Excellence",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/AI Hub.jpg",
+              "name": "AI Hub",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/AI Lab.jpg",
+              "name": "AI Lab",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Association with RedHat.jpg",
+              "name": "Association with RedHat",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Association with Snowflake.jpg",
+              "name": "Association with Snowflake",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/ATC of the year award.jpg",
+              "name": "ATC of the year award",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Encouaging Young Talent.jpg",
+              "name": "Encouaging Young Talent",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Guiding the Next Gen Engineers.jpg",
+              "name": "Guiding the Next Gen Engineers",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Intiatives in RedHat.jpg",
+              "name": "Intiatives in RedHat",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/LaunchingNew Programs.jpg",
+              "name": "LaunchingNew Programs",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Mobile Application.jpg",
+              "name": "Mobile Application",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/O9 Placement.jpg",
+              "name": "O9 Placement",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Offered 3000+ Internships.jpg",
+              "name": "Offered 3000+ Internships",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Oracle Story.jpg",
+              "name": "Oracle Story",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Oracle Sucess Stories.png",
+              "name": "Oracle Sucess Stories",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Parent Interaction.jpg",
+              "name": "Parent Interaction",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Pega and TCS Association.jpg",
+              "name": "Pega and TCS Association",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Pega Gen AI Bootcamp.jpg",
+              "name": "Pega Gen AI Bootcamp",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Project Space.jpg",
+              "name": "Project Space",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Real Talk with Talent.jpg",
+              "name": "Real Talk with Talent",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Scinova.jpg",
+              "name": "Scinova",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Skillers Day.jpg",
+              "name": "Skillers Day",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Spreading Wings.jpg",
+              "name": "Spreading Wings",
+              "role": "",
+              "body": "",
+              "quote": ""
+            },
+            {
+              "photo": "stories/Trainees Onborder.jpg",
+              "name": "Trainees Onborder",
+              "role": "",
+              "body": "",
+              "quote": ""
+            }
+          ]
         }
       ],
       "createdAt": "2026-08-06T11:15:47.890Z",
-      "updatedAt": "2026-08-09T13:22:17.837Z"
+      "updatedAt": "2026-08-10T10:56:06.893Z"
     },
     {
       "id": "sec_2596b1524381464d",
