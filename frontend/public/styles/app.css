@@ -9773,3 +9773,25 @@ body.is-presenting .tw-wall { padding-bottom: 104px; }
 }
 /* Files are ours and are not letterboxed, so they cover honestly. */
 .pg-player__file, .tw-player__file { width: 100%; height: 100%; object-fit: cover; }
+
+/* --- A playing film owns the whole display --------------------------------
+   The block's canvas is 860 tall inside a 900 slide, so a player pinned to the
+   section stopped 40px short and left a white band with the deck controls
+   floating in it. While presenting the player leaves the section's box and
+   pins to the viewport instead: nothing is between it and the edges.
+
+   z-index 30 sits under the deck bar's 40, so Prev / Next / Exit stay on top
+   and clickable rather than being buried by the film. */
+/* position:fixed does not help: FitSlide scales the slide with a transform, and
+   a transformed ancestor becomes the containing block for fixed descendants —
+   fixed and absolute resolve to the same 860px box. The gap is the box itself,
+   so while presenting the section takes the slide's full 900 instead. */
+body.is-presenting .canvas-block--testimonial-wall,
+body.is-presenting .canvas-block--program-deck,
+body.is-presenting .tw-root,
+body.is-presenting .pg-root {
+  min-height: 900px !important;
+  max-height: 900px !important;
+}
+body.is-presenting .tw-player,
+body.is-presenting .pg-player { z-index: 30; }
