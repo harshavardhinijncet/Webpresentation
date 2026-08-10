@@ -9419,7 +9419,9 @@ body.is-presenting .coe-orbit { bottom: 104px; }
    left edge and the last to the right whatever size they are. */
 .sw-wall {
   display: flex; align-items: flex-end; justify-content: space-between;
-  width: 100%; padding: 44px 3px 0;
+  /* box-sizing means the padding comes out of the 100%, so the end tiles sit
+     inside it rather than being pushed past the edge. */
+  box-sizing: border-box; width: 100%; padding: 44px 10px 0;
 }
 .sw-col { display: block; will-change: transform; }
 .sw-col__bob {
