@@ -51,6 +51,8 @@ export function ProgramDeck(block, { editing = false } = {}) {
   const closePlayer = () => {
     // Unmount, don't hide — a hidden iframe keeps playing behind the gallery.
     frame.replaceChildren();
+    player.classList.remove('is-portal');
+    if (player.parentNode !== root) root.appendChild(player);
     root.classList.remove('is-playing');
   };
 
@@ -76,6 +78,15 @@ export function ProgramDeck(block, { editing = false } = {}) {
           class: 'pg-player__file', src: `${UPLOADS}/${encodeURI(video.src)}`,
           controls: true, autoplay: true, playsinline: true,
         }));
+    /* Out of the slide entirely while it plays. FitSlide scales the slide with
+       a transform, which becomes the containing block for anything fixed inside
+       it — so a player that lives in the section can only ever fill the slide,
+       and when the window is not 16:9 the slide itself is letterboxed. Moved to
+       the body it answers to the viewport and covers the display. The deck bar
+       is fixed in the body too, at a higher z-index, so Prev / Next / Exit stay
+       on top and clickable. */
+    if (player.parentNode !== document.body) document.body.appendChild(player);
+    player.classList.add('is-portal');
     root.classList.add('is-playing');
   };
 

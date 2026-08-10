@@ -9795,3 +9795,23 @@ body.is-presenting .pg-root {
 }
 body.is-presenting .tw-player,
 body.is-presenting .pg-player { z-index: 30; }
+
+/* --- A playing film covers the display, not just the slide -----------------
+   The player is moved to <body> while it plays, so it is outside FitSlide's
+   transform and answers to the viewport. `display` has to be set here: the
+   `.is-playing .tw-player` rule stops matching the moment the element leaves
+   the section.
+
+   z-index 35 keeps it under the deck bar's 40, so Prev / Next / Exit stay on
+   top of the film and clickable — the film may cover them, the controls still
+   win the click. */
+.tw-player.is-portal,
+.pg-player.is-portal {
+  display: block !important;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 35;
+  background: #000000;
+}
