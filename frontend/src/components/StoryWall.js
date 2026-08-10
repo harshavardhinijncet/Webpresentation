@@ -33,10 +33,16 @@ const arcFor = (i, n) => (n < 2 ? 0
    count, then let the tile width fall out of the arithmetic. */
 const CANVAS = 1600;
 const GAP = 10;
+/* Must match the side padding on .sw-wall. The tile width is derived from the
+   space actually available, and leaving the padding out of the sum is what
+   pushed the end tiles past the slide edge: 13 tiles plus 12 gaps plus 20px of
+   padding came to 1622 in a 1600 canvas. */
+const EDGE = 10;
 
 function layoutFor(count) {
   const cols = Math.max(6, Math.min(16, Math.round(count / 2)));
-  const tile = Math.round((CANVAS - (cols - 1) * GAP) / cols);
+  const usable = CANVAS - EDGE * 2 - (cols - 1) * GAP;
+  const tile = Math.floor(usable / cols);
   return { cols, tile, shot: Math.round(tile * 1.33) };
 }
 
