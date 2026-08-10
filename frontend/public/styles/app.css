@@ -9764,13 +9764,30 @@ body.is-presenting .tw-wall { padding-bottom: 104px; }
 
    1.34 is 2.39 divided by 1.78: exactly the zoom that takes a 2.39:1 picture
    letterboxed in a 16:9 player and makes its height fill the frame. */
+/* The iframe must BE 16:9 and be sized to cover, not stretched to the window.
+   Stretch it to a window that is not 16:9 and YouTube letterboxes the film
+   inside the box you gave it — then zooming to hide those bars crops the
+   picture, which is exactly what went wrong: bars still showing and the speaker
+   cut off at the edge.
+
+   max() gives the smallest 16:9 box that still covers the viewport, so the film
+   fills it with no letterbox and only the necessary overflow is cropped. The
+   1.04 is for the hairline the encode leaves at the very top and bottom. */
 .pg-player__yt, .tw-player__yt {
   position: absolute !important;
   top: 50% !important; left: 50% !important;
-  width: 100% !important; height: 100% !important;
-  transform: translate(-50%, -50%) scale(1.34) !important;
+  width: max(100%, calc(100% * 16 / 9)) !important;
+  height: max(100%, calc(100% * 9 / 16)) !important;
+  transform: translate(-50%, -50%) scale(1.04) !important;
   border: 0 !important;
 }
+/* Portalled, the box is the window, so the sums are in viewport units. */
+.tw-player.is-portal .tw-player__yt,
+.pg-player.is-portal .pg-player__yt {
+  width: max(100vw, calc(100vh * 16 / 9)) !important;
+  height: max(100vh, calc(100vw * 9 / 16)) !important;
+}
+.tw-player.is-portal, .pg-player.is-portal { overflow: hidden; }
 /* Files are ours and are not letterboxed, so they cover honestly. */
 .pg-player__file, .tw-player__file { width: 100%; height: 100%; object-fit: cover; }
 
