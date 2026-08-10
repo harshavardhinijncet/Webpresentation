@@ -9755,3 +9755,21 @@ body.is-presenting .tw-wall { padding-bottom: 104px; }
   .tw-card, .tw-arch, .tw-card__play { animation: none !important; transition: none !important; }
   .tw-card { opacity: 1 !important; transform: none !important; }
 }
+
+/* --- Films fill the frame, the way the Executive Summary hero does ----------
+   A 16:9 embed showing a 2.39:1 master letterboxes it — the bars are YouTube's,
+   inside the player, so sizing the iframe to the box cannot remove them. The
+   hero solves it by over-sizing the iframe and centring it, so the film's own
+   picture covers the frame and the bars fall outside it. Same numbers here.
+
+   1.34 is 2.39 divided by 1.78: exactly the zoom that takes a 2.39:1 picture
+   letterboxed in a 16:9 player and makes its height fill the frame. */
+.pg-player__yt, .tw-player__yt {
+  position: absolute !important;
+  top: 50% !important; left: 50% !important;
+  width: 100% !important; height: 100% !important;
+  transform: translate(-50%, -50%) scale(1.34) !important;
+  border: 0 !important;
+}
+/* Files are ours and are not letterboxed, so they cover honestly. */
+.pg-player__file, .tw-player__file { width: 100%; height: 100%; object-fit: cover; }
