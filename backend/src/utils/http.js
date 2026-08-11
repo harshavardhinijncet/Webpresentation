@@ -1,3 +1,4 @@
+import { env } from '../config/env.js';
 export class HttpError extends Error {
   constructor(status, message, details = null) {
     super(message);
@@ -67,7 +68,7 @@ export function setCookie(res, name, value, { maxAgeSeconds } = {}) {
   ];
   // Render and Railway terminate TLS in front of the app, so the session
   // cookie can be marked Secure there. Off locally, where the deck is http.
-  if (process.env.COOKIE_SECURE === '1') parts.push('Secure');
+  if (env.cookieSecure) parts.push('Secure');
   if (maxAgeSeconds) parts.push(`Max-Age=${Math.floor(maxAgeSeconds)}`);
   appendHeader(res, 'Set-Cookie', parts.join('; '));
 }

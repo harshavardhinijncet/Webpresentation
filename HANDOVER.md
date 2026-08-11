@@ -94,11 +94,17 @@ panel, which is better, because then they are not on disk at all.
 | --- | --- | --- |
 | `PORT` | Port to listen on | `4173` |
 | `HOST` | `0.0.0.0` in a container | `127.0.0.1` |
-| `SESSION_SECRET` | Signs session cookies | **a random one is generated per boot, so every restart signs everyone out** — set it |
+| `SESSION_TTL_HOURS` | How long a sign-in lasts | `12` |
 | `COOKIE_SECURE` | `1` behind HTTPS | off |
 | `MEDIA_BASE_URL` | CDN prefix (section 3) | serves from disk |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Seeds the admin account | the documented defaults |
 | `PRESENTER_EMAIL` / `PRESENTER_PASSWORD` | Seeds the presenter account | the documented defaults |
+
+There is deliberately no `SESSION_SECRET`. Sessions are random tokens held in
+`db.json` rather than signed cookies, so there is nothing to sign — an earlier
+draft of these notes claimed otherwise and was wrong. Sessions do end at a
+redeploy, because `db.json` is restored from the repository; that is the
+datastore, not a missing secret.
 
 **Change the two seeded passwords.** `Admin@123` and `Present@123` are in this
 repository's README and in every commit of it. On a public URL they are not a
@@ -189,7 +195,6 @@ Things to do:
 - [ ] Delete the leaked AWS key (section 1)
 - [ ] Change the five platform passwords (section 2)
 - [ ] Change `ADMIN_PASSWORD` and `PRESENTER_PASSWORD` (section 4)
-- [ ] Set `SESSION_SECRET` (section 4)
 - [ ] Set `COOKIE_SECURE=1` — the domain will be HTTPS
 - [ ] Decide whether the repository should be private. It carries the deck's
       content and, until section 2 is done, live credentials.

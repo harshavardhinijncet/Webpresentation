@@ -51,6 +51,10 @@ export const env = {
   maxVideoBytes: Number(read('MAX_VIDEO_MB', 400)) * 1024 * 1024,
   ffmpegPath: read('FFMPEG_PATH', null),
   showLoginHint: readBool('SHOW_LOGIN_HINT', true),
+  /* Read here, not from process.env at the point of use: http.js was checking
+     process.env directly, so COOKIE_SECURE=1 in a .env file was silently
+     ignored and the cookie went out without Secure on an HTTPS deployment. */
+  cookieSecure: readBool('COOKIE_SECURE', false),
   seedUsers: {
     admin: {
       email: read('ADMIN_EMAIL', 'admin@org.local'),
