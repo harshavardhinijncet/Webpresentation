@@ -16,6 +16,7 @@ import { CentersOfExcellence } from './CentersOfExcellence.js';
 import { StoryWall } from './StoryWall.js';
 import { ProgramDeck } from './ProgramDeck.js';
 import { TestimonialWall } from './TestimonialWall.js';
+import { PlacementWall } from './PlacementWall.js';
 import { AiReadyEngineer } from './AiReadyEngineer.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
@@ -128,6 +129,8 @@ export function renderBlock(block, options = {}) {
 
     case 'testimonial-wall':
       return TestimonialWall(block, options);
+    case 'placement-wall':
+      return PlacementWall(block, options);
 
     case 'ai-ready-engineer':
       return AiReadyEngineer(block, options);

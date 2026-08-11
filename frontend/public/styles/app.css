@@ -9867,3 +9867,170 @@ body.is-presenting .pg-player { z-index: 30; }
   z-index: 35;
   background: #000000;
 }
+
+/* ==========================================================================
+   Placements — justified-row galleries that never crop or stretch a source
+   ========================================================================== */
+
+.pw-root {
+  display: flex;
+  flex-direction: column;
+  /* A fixed minimum rather than a percentage. The root's height comes from this
+     min-height, so its computed height is `auto` and any percentage height on a
+     child resolves to auto too — the trap that left a dead band under the
+     Platforms wall. Flex gives the stage the leftover space without one. */
+  min-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.pw-empty { display: grid; place-items: center; min-height: 400px; gap: 10px; text-align: center; }
+.pw-hint { margin: 0; color: var(--muted); font-size: 13px; }
+
+/* --------------------------------------------------------------- the head -- */
+.pw-head { flex: 0 0 auto; padding: 26px 30px 0; }
+.pw-head__top {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 40px; margin-bottom: 20px;
+}
+.pw-eyebrow {
+  margin: 0 0 9px; color: var(--nav-accent-ink, var(--accent-ink));
+  font-size: 11.5px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+}
+.pw-title { margin: 0; font-size: 40px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; }
+.pw-rule {
+  display: block; height: 3px; width: 64px; margin-top: 14px; border-radius: 2px;
+  background: var(--nav-accent-ink, var(--accent-ink));
+  transform-origin: left center; animation: pw-rule 620ms cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes pw-rule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.pw-lead {
+  margin: 0; max-width: 560px; color: var(--muted);
+  font-size: 15px; line-height: 1.6; text-align: right;
+}
+
+/* ------------------------------------------------------- the chapter rail -- */
+.pw-rail { display: flex; gap: 10px; flex-wrap: wrap; }
+.pw-tab {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px; border: 1px solid var(--line, #e5e7eb);
+  border-radius: var(--radius); background: var(--surface);
+  font: inherit; color: var(--ink, #111827); text-align: left; cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  animation: pw-tab-in 480ms cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes pw-tab-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.pw-tab:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgb(0 0 0 / 0.08); }
+.pw-tab .ic { color: var(--muted); flex: 0 0 auto; transition: color 160ms ease; }
+.pw-tab__name { font-size: 14.5px; font-weight: 700; }
+.pw-tab__n { color: var(--muted); font-size: 12px; font-weight: 600; }
+.pw-tab.is-on {
+  border-color: var(--nav-accent-ink, var(--accent-ink));
+  box-shadow: inset 0 0 0 1px var(--nav-accent-ink, var(--accent-ink));
+}
+.pw-tab.is-on .ic, .pw-tab.is-on .pw-tab__name { color: var(--nav-accent-ink, var(--accent-ink)); }
+
+/* ------------------------------------------------------ the company chips -- */
+.pw-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.pw-chips[hidden] { display: none; }
+.pw-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 12px; border: 1px solid var(--line, #e5e7eb); border-radius: 999px;
+  background: var(--surface); font: inherit; font-size: 12.5px; font-weight: 650;
+  color: var(--muted); cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+.pw-chip em { font-style: normal; font-size: 11px; opacity: 0.7; }
+.pw-chip:hover { color: var(--ink, #111827); border-color: #d1d5db; }
+.pw-chip.is-on {
+  color: #fff; border-color: var(--nav-accent-ink, var(--accent-ink));
+  background: var(--nav-accent-ink, var(--accent-ink));
+}
+
+/* ------------------------------------------------------------- the stage -- */
+.pw-stage {
+  flex: 1 1 auto;
+  /* Without min-height:0 a flex child refuses to shrink below its content and
+     scrolls the whole slide instead of itself. */
+  min-height: 0;
+  padding: 18px 20px 22px;
+  overflow-y: auto; overflow-x: hidden;
+  scrollbar-width: none;                 /* the reveal is the scroll cue */
+  scroll-behavior: smooth;
+}
+.pw-stage::-webkit-scrollbar { width: 0; height: 0; }
+
+.pw-row { display: flex; align-items: stretch; margin-bottom: 12px; }
+/* A row the solver could not fill — three tall infographics, or a short tail.
+   Centred, because a half-width row flush left reads as a mistake. */
+.pw-row--short { justify-content: center; }
+
+.pw-tile {
+  position: relative; flex: 0 0 auto; padding: 0;
+  border: 0; border-radius: var(--radius-sm); overflow: hidden;
+  background: #f3f4f6; cursor: zoom-in;
+  opacity: 0; transform: translateY(16px) scale(0.985);
+  transition: opacity 520ms cubic-bezier(.2,.7,.3,1),
+              transform 520ms cubic-bezier(.2,.7,.3,1),
+              box-shadow 200ms ease;
+}
+.pw-tile.is-in { opacity: 1; transform: none; }
+.pw-tile:hover { box-shadow: 0 12px 30px rgb(0 0 0 / 0.16); z-index: 2; }
+.pw-tile img {
+  display: block; width: 100%; height: 100%;
+  /* The box was solved from this image's own width and height, so cover has
+     nothing to crop beyond a rounding hairline — and unlike `contain` it cannot
+     leave a letterbox line where the rounding fell the other way. */
+  object-fit: cover;
+  transition: transform 420ms cubic-bezier(.2,.7,.3,1);
+}
+.pw-tile:hover img { transform: scale(1.035); }
+.pw-tile__tag {
+  position: absolute; inset: auto 0 0 0; padding: 16px 10px 8px;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.72), transparent);
+  color: #fff; font-size: 11.5px; font-weight: 700; letter-spacing: 0.01em;
+  text-align: left; opacity: 0; transition: opacity 200ms ease;
+}
+.pw-tile:hover .pw-tile__tag, .pw-tile:focus-visible .pw-tile__tag { opacity: 1; }
+
+/* ---------------------------------------------------------- the lightbox -- */
+/* On the body, never inside the slide: FitSlide's transform would otherwise be
+   the containing block and `inset: 0` would mean the slide, not the screen. */
+.pw-light {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center; padding: 3vh 3vw;
+  background: rgb(9 11 14 / 0.9);
+  opacity: 0; transition: opacity 220ms ease;
+}
+.pw-light.is-on { opacity: 1; }
+.pw-light[hidden] { display: none; }
+.pw-light__frame {
+  margin: 0; display: flex; flex-direction: column; gap: 12px;
+  max-width: 100%; max-height: 100%;
+  transform: scale(0.97); transition: transform 260ms cubic-bezier(.2,.7,.3,1);
+}
+.pw-light.is-on .pw-light__frame { transform: none; }
+.pw-light__img {
+  /* Bounded by the viewport and nothing else, so the file is shown at its own
+     resolution wherever it fits. */
+  display: block; max-width: 100%; max-height: calc(100vh - 12vh);
+  width: auto; height: auto; object-fit: contain;
+  border-radius: var(--radius); background: #111;
+}
+.pw-light__foot { display: flex; align-items: baseline; gap: 12px; color: #e5e7eb; }
+.pw-light__cap { margin: 0; font-size: 15px; font-weight: 700; }
+.pw-light__meta { color: #9ca3af; font-size: 12px; font-variant-numeric: tabular-nums; }
+.pw-light__close {
+  position: absolute; top: 18px; right: 20px;
+  display: grid; place-items: center; width: 40px; height: 40px;
+  border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.12);
+  color: #fff; cursor: pointer; transition: background 160ms ease;
+}
+.pw-light__close:hover { background: rgb(255 255 255 / 0.22); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-rule, .pw-tab { animation: none; }
+  .pw-tile { opacity: 1; transform: none; transition: none; }
+  .pw-tile:hover img { transform: none; }
+  .pw-light, .pw-light__frame { transition: none; }
+}

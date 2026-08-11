@@ -42,7 +42,7 @@ const NAVIGATION_GROUPS = [
     { label: 'Assessment Platforms', children: ['MYNA', 'HOOT', 'ATS'] },
   ]],
   ['certifications', 'Talent Acquisition', 'user-check', ['Entrance Test', 'Interview & Screening']],
-  ['placements', 'Certifications & Credentials', 'certificate', ['Global Certifications', 'Student Certifications']],
+  ['placements', 'Placements', 'trend-up', []],
   ['coe', 'Strategic Partnerships', 'partners', ['Academic Partners', 'Industry Partners', 'Global Collaborations']],
   ['mous', 'Career Outcomes', 'trend-up', ['Placement Readiness', 'Placement Statistics', 'Success Stories']],
   ['moments', 'Recognition & Achievements', 'trophy', ['Institutional Awards', 'Student Achievements', 'Faculty Recognition']],

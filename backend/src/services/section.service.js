@@ -39,6 +39,7 @@ export const BLOCK_TYPES = [
   'story-wall',
   'program-deck',
   'testimonial-wall',
+  'placement-wall',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -562,6 +563,46 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         }))
         .filter((p) => p.name && (p.youtube || p.src))
         .slice(0, 24);
+      break;
+
+    /* Placements. Every image carries its true pixel dimensions, and that is
+       the point of the type rather than an optimisation: the gallery packs
+       justified rows whose heights come from the real aspect ratios, so nothing
+       is ever cropped to a uniform tile or stretched to fill one. Without w/h
+       arriving with the data the layout could only be computed after every
+       image had loaded, which means a page that visibly reflows. */
+    case 'placement-wall':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.lead = text(raw.lead, 400);
+      block.chapters = (Array.isArray(raw.chapters) ? raw.chapters : [])
+        .map((c) => ({
+          key: text(c?.key, 40),
+          name: text(c?.name, 80),
+          blurb: text(c?.blurb, 240),
+          // 'poster' is a designed card that must never be cropped; 'photo' is
+          // a photograph; 'journey' is a tall infographic read on its own.
+          kind: oneOf(text(c?.kind, 12), ['poster', 'photo', 'journey'], 'photo'),
+          icon: iconKey(c?.icon),
+          groups: (Array.isArray(c?.groups) ? c.groups : [])
+            .map((g) => ({
+              name: text(g?.name, 80),
+              images: (Array.isArray(g?.images) ? g.images : [])
+                .map((im) => ({
+                  src: text(im?.src, 240),
+                  label: text(im?.label, 80),
+                  w: clampInt(im?.w, 1, 20000, 0),
+                  h: clampInt(im?.h, 1, 20000, 0),
+                }))
+                // No dimensions means no row height can be computed for it.
+                .filter((im) => im.src && im.w && im.h)
+                .slice(0, 120),
+            }))
+            .filter((g) => g.images.length)
+            .slice(0, 40),
+        }))
+        .filter((c) => c.key && c.groups.length)
+        .slice(0, 8);
       break;
 
     case 'program-deck':
