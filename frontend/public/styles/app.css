@@ -9683,14 +9683,17 @@ body.is-presenting .pg-wall { padding-bottom: 96px; }
 }
 
 /* The row fills what is left and every arch shares it equally. */
+/* box-sizing so the padding comes out of the width rather than being added to
+   it — without it the last arch was pushed past the edge of the slide. */
 .tw-row {
   flex: 1 1 auto; min-height: 0;
-  display: flex; align-items: stretch; justify-content: center; gap: 18px;
-  padding-top: 26px;
+  box-sizing: border-box; width: 100%;
+  display: flex; align-items: stretch; justify-content: space-between; gap: 16px;
+  padding: 26px 4px 0;
 }
 
 .tw-card {
-  flex: 1 1 0; min-width: 0; max-width: 260px;
+  flex: 1 1 0; min-width: 0; max-width: 240px;
   display: flex; flex-direction: column; align-items: center; gap: 12px;
   padding: 0; border: 0; background: none; cursor: pointer;
   font: inherit; color: inherit; text-align: center;
@@ -9713,9 +9716,10 @@ body.is-presenting .pg-wall { padding-bottom: 96px; }
 }
 .tw-arch img {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  /* Every one of these films frames the speaker right of centre, so the arch
-     looks there rather than at the middle of an empty studio wall. */
-  object-fit: cover; object-position: 66% top;
+  /* The crop is already centred on the speaker, so the arch looks straight at
+     the middle of it. Pulling to 66% was compensating for a wide letterboxed
+     frame that no longer exists. */
+  object-fit: cover; object-position: 50% 22%;
 }
 .tw-card:hover { transform: translateY(-10px); }
 .tw-card:hover .tw-arch { box-shadow: 0 28px 54px -22px rgba(15, 23, 42, 0.42); transform: scale(1.02); }

@@ -24,100 +24,22 @@
   ],
   "sessions": [
     {
-      "token": "67a30a0c362a9fa4c21f475a7eae1d1a309ff7a4b24a83ce1c4112eeb090a9cc",
+      "token": "9c9878dbde7424a29b9cae4cbd191369762473bb92419b9dbe75035d417025aa",
       "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T06:18:52.731Z",
-      "expiresAt": "2026-08-10T18:18:52.731Z"
+      "createdAt": "2026-08-11T04:31:36.905Z",
+      "expiresAt": "2026-08-11T16:31:36.905Z"
     },
     {
-      "token": "a2bff0713de87f80cba06558b28b103887a4efed02d8521579f361052aa628bf",
+      "token": "59fded2c1181e6b2dff76a8439b787faeee3b1ae8d74b2d092d79641f19da886",
       "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T08:20:45.013Z",
-      "expiresAt": "2026-08-10T20:20:45.013Z"
+      "createdAt": "2026-08-11T04:48:51.286Z",
+      "expiresAt": "2026-08-11T16:48:51.286Z"
     },
     {
-      "token": "0c9bd793e2843b714ec023bee737e5a4a08441deefa3e09e387029b1734ef16e",
+      "token": "ad0fe3946d4e1ae9d891ed7057d706088deb789bc9413099aba8e7c5933e816a",
       "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T08:21:56.539Z",
-      "expiresAt": "2026-08-10T20:21:56.539Z"
-    },
-    {
-      "token": "81b6e910a2d8788f3c4c0bf82efbca579ad2eaa5e82fd7448e6c5d9f5f6bf444",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T08:26:09.883Z",
-      "expiresAt": "2026-08-10T20:26:09.883Z"
-    },
-    {
-      "token": "e1d5f2f986813cfd59b262d7e304321fd4afb9c1708216843ce321e5a12d5417",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T08:39:52.084Z",
-      "expiresAt": "2026-08-10T20:39:52.084Z"
-    },
-    {
-      "token": "7e348cd8841ca61bbe9e4d131389d108aaa49c624f39e30e707687b1acc39b11",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:09:21.313Z",
-      "expiresAt": "2026-08-10T21:09:21.313Z"
-    },
-    {
-      "token": "77f0cf167ea2a17c4c944816a0bf2d846062d4a1312b541859c0679eaabcc7ec",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:09:43.812Z",
-      "expiresAt": "2026-08-10T21:09:43.812Z"
-    },
-    {
-      "token": "953d28ed2afd2fd305eec92438aab6c16dc143aa0a4a2d5760d3e8eebd0af8a7",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:10:24.165Z",
-      "expiresAt": "2026-08-10T21:10:24.165Z"
-    },
-    {
-      "token": "d4f11b45eeab3684faa59e75d6b0a123ad10af00d8199ece61e7cdd9426c8179",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:10:46.714Z",
-      "expiresAt": "2026-08-10T21:10:46.714Z"
-    },
-    {
-      "token": "1a472b36f2ec06992f26e7776342191fbbc8f202935fb1115bcade722ad5ec9b",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:17:11.582Z",
-      "expiresAt": "2026-08-10T21:17:11.582Z"
-    },
-    {
-      "token": "b05b28d75e7bdd6d3dbf40748d86d683b3c729e2719a26f4f20749e77605a567",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:18:18.757Z",
-      "expiresAt": "2026-08-10T21:18:18.757Z"
-    },
-    {
-      "token": "2be0a1307ac5d9d4724889987bb9c26c2bb8505ed6855ddfe3531d2eb5761ddb",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:28:14.457Z",
-      "expiresAt": "2026-08-10T21:28:14.457Z"
-    },
-    {
-      "token": "e69aef2fe8935089e1364872708d30841092efd71c597c80228eef0c5f460153",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:29:22.551Z",
-      "expiresAt": "2026-08-10T21:29:22.551Z"
-    },
-    {
-      "token": "d78d6822a94dddd2a82d1b2d595aee1c6e076b0a1a14c73480fcbc8ca7047993",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:29:44.056Z",
-      "expiresAt": "2026-08-10T21:29:44.056Z"
-    },
-    {
-      "token": "6f72a2c47c5d7cbd05ec254da5b38e346c41dfb4d306f077561633e6c98b33c1",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T09:30:52.050Z",
-      "expiresAt": "2026-08-10T21:30:52.051Z"
-    },
-    {
-      "token": "dbfb1874f291e70c2cc272f4a0b68ed7cff82616e94d14c8e76a3eddf5897911",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-10T10:56:06.850Z",
-      "expiresAt": "2026-08-10T22:56:06.850Z"
+      "createdAt": "2026-08-11T04:52:49.518Z",
+      "expiresAt": "2026-08-11T16:52:49.518Z"
     }
   ],
   "organizations": [
