@@ -89,11 +89,17 @@ export function TestimonialWall(block, { editing = false } = {}) {
        thumbnails were tried and rejected: every one is a designed title card
        with the student's name burned across it, which is exactly the raw poster
        this deck is not allowed to place — the page's own type carries the name. */
-    arch.appendChild(h('span', { class: 'tw-arch__initials' },
-      p.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()));
+    const initials = h('span', { class: 'tw-arch__initials' },
+      p.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase());
+    arch.appendChild(initials);
     if (p.photo) {
       const img = h('img', { src: `${UPLOADS}/${encodeURI(p.photo)}`, alt: p.name, loading: 'eager' });
       img.addEventListener('error', () => img.remove());
+      /* The frame is shown whole, so the card is taller than the picture and
+         the wash shows above and below it. The initials are the stand-in for a
+         missing photograph — once one arrives they have to go, or they sit in
+         that band looking like a caption nobody wrote. */
+      img.addEventListener('load', () => initials.remove());
       arch.appendChild(img);
     }
     const card = h('button', {

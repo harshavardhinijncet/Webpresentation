@@ -9683,48 +9683,41 @@ body.is-presenting .pg-wall { padding-bottom: 96px; }
 }
 
 /* The row fills what is left and every arch shares it equally. */
-/* box-sizing so the padding comes out of the width rather than being added to
-   it — without it the last arch was pushed past the edge of the slide. */
+/* Three across, two down, and every card shows the whole frame.
+
+   The arch was the wrong container for this material. These are wide studio
+   frames and each student stands somewhere different in theirs, so filling a
+   tall shape meant cropping to a guessed window — which landed on empty wall
+   for half of them, twice. A card at the frame's own proportions needs no
+   guess: the picture is shown as it was shot. */
 .tw-row {
   flex: 1 1 auto; min-height: 0;
   box-sizing: border-box; width: 100%;
-  display: flex; align-items: stretch; justify-content: space-between; gap: 16px;
-  padding: 26px 4px 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 18px 20px; padding: 26px 0 0;
 }
-
 .tw-card {
-  flex: 1 1 0; min-width: 0; max-width: 240px;
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  position: relative; min-width: 0; min-height: 0;
+  display: flex; flex-direction: column; gap: 10px;
   padding: 0; border: 0; background: none; cursor: pointer;
   font: inherit; color: inherit; text-align: center;
-  transition: transform .34s cubic-bezier(.22,1,.36,1);
+  transition: transform .3s cubic-bezier(.22,1,.36,1);
   animation: twRise .6s cubic-bezier(.22,1,.36,1) both;
 }
-@keyframes twRise { from { opacity: 0; transform: translateY(34px) scale(.96); } to { opacity: 1; transform: none; } }
-
 .tw-arch {
   position: relative; flex: 1 1 auto; min-height: 0; width: 100%; overflow: hidden;
-  /* A tall dome on a straight base — the reference shape. */
-  border-radius: 999px 999px 18px 18px;
-  transition: transform .34s cubic-bezier(.22,1,.36,1), box-shadow .34s ease;
-}
-.tw-arch__initials {
-  position: absolute; inset: 0; display: grid; place-items: center;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', sans-serif;
-  font-size: 96px; font-weight: 700; letter-spacing: 0.02em;
-  color: rgba(15, 23, 42, 0.28);
+  border-radius: 18px;
+  transition: box-shadow .3s ease, transform .3s cubic-bezier(.22,1,.36,1);
 }
 .tw-arch img {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  /* The crop is already centred on the speaker, so the arch looks straight at
-     the middle of it. Pulling to 66% was compensating for a wide letterboxed
-     frame that no longer exists. */
-  object-fit: cover; object-position: 50% 22%;
+  /* contain, not cover: the whole frame, never a slice of it. */
+  object-fit: contain; object-position: center;
 }
-.tw-card:hover { transform: translateY(-10px); }
-.tw-card:hover .tw-arch { box-shadow: 0 28px 54px -22px rgba(15, 23, 42, 0.42); transform: scale(1.02); }
+.tw-card:hover { transform: translateY(-6px); }
+.tw-card:hover .tw-arch { box-shadow: 0 26px 50px -24px rgba(15, 23, 42, 0.4); }
 .tw-card:focus-visible .tw-arch { outline: 3px solid var(--nav-accent, var(--brand-accent)); outline-offset: 3px; }
-
 .tw-card__name { flex: 0 0 auto; font-size: 17px; font-weight: 800; letter-spacing: -0.01em; }
 .tw-card__note { flex: 0 0 auto; color: var(--muted); font-size: 12.5px; }
 
