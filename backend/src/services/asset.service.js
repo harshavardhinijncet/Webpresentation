@@ -59,17 +59,24 @@ const EXT_FALLBACK = {
   '3gp': 'video/3gpp',
 };
 
+/* Stored paths stay relative — "/uploads/x.jpg" — and are prefixed on the way
+   out. Rewriting the store would make the content depend on where it happens to
+   be hosted, and would have to be undone to work offline again. */
+const mediaUrl = (u) => (u && env.mediaBaseUrl && u.startsWith('/uploads/')
+  ? env.mediaBaseUrl + u
+  : u);
+
 export function publicAsset(asset) {
   if (!asset) return null;
   return {
     id: asset.id,
-    url: asset.url,
+    url: mediaUrl(asset.url),
     name: asset.name,
     mime: asset.mime,
     kind: asset.kind || 'image',
     width: asset.width ?? null,
     height: asset.height ?? null,
-    posterUrl: asset.posterUrl || null,
+    posterUrl: mediaUrl(asset.posterUrl) || null,
     originalUrl: asset.originalUrl || null,
     converted: Boolean(asset.converted),
     note: asset.note || null,

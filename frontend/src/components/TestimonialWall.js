@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { media } from '../utils/media.js';
 
 /**
  * Testimonials: a row of arched portraits, and clicking a student plays their
@@ -66,7 +67,7 @@ export function TestimonialWall(block, { editing = false } = {}) {
           referrerpolicy: 'strict-origin-when-cross-origin', allowfullscreen: true,
         })
       : h('video', {
-          class: 'tw-player__file', src: `${UPLOADS}/${encodeURI(person.src)}`,
+          class: 'tw-player__file', src: media(`/uploads/${encodeURI(person.src)}`),
           controls: true, autoplay: true, playsinline: true,
         }));
     cards.forEach((c) => c.classList.toggle('is-active', c === card));
@@ -93,7 +94,7 @@ export function TestimonialWall(block, { editing = false } = {}) {
       p.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase());
     arch.appendChild(initials);
     if (p.photo) {
-      const img = h('img', { src: `${UPLOADS}/${encodeURI(p.photo)}`, alt: p.name, loading: 'eager' });
+      const img = h('img', { src: media(`/uploads/${encodeURI(p.photo)}`), alt: p.name, loading: 'eager' });
       img.addEventListener('error', () => img.remove());
       /* The frame is shown whole, so the card is taller than the picture and
          the wash shows above and below it. The initials are the stand-in for a

@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { media } from '../utils/media.js';
 
 /**
  * Success Stories: a wall of faces that never stops moving, and any one of them
@@ -101,7 +102,7 @@ export function StoryWall(block, { editing = false } = {}) {
   /* ------------------------------------------------------------- the wall */
   const tiles = [];
   const open = (story, tile) => {
-    stageImg.src = `${UPLOADS}/${encodeURI(story.photo)}`;
+    stageImg.src = media(`/uploads/${encodeURI(story.photo)}`);
     stageImg.alt = story.name || '';
     stageName.textContent = story.name || '';
     stageRole.textContent = story.role || '';
@@ -145,7 +146,7 @@ export function StoryWall(block, { editing = false } = {}) {
         onclick: () => open(story, tile),
       },
         h('img', {
-          src: `${UPLOADS}/${encodeURI(story.photo)}`,
+          src: media(`/uploads/${encodeURI(story.photo)}`),
           alt: story.name || '', loading: 'lazy', decoding: 'async',
         }),
         story.name ? h('span', { class: 'sw-tile__name' }, story.name) : null,

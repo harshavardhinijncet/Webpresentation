@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { media } from '../utils/media.js';
 
 /**
  * Centers of Excellence: a wall of accredited academies and partner practices,
@@ -49,7 +50,7 @@ function brandMark(center, { full = false } = {}) {
   const holder = h('span', { class: full ? 'coe-logo coe-logo--lg' : 'coe-logo' });
   const img = h('img', {
     // The drop uses spaces in filenames, so the path has to be encoded.
-    src: `${LOGO_DIR}/${encodeURI(src)}`,
+    src: media(`/uploads/coe/${encodeURI(src)}`),
     alt: center.name,
     loading: 'lazy',
     decoding: 'async',
@@ -117,7 +118,7 @@ function orbitStage(centers, block, onEnter) {
     ring(inner, 180, 46, true),
     h('span', { class: 'coe-hub' },
       block.hubLogo
-        ? h('img', { src: block.hubLogo, alt: block.hubName || '', loading: 'eager' })
+        ? h('img', { src: media(block.hubLogo), alt: block.hubName || '', loading: 'eager' })
         : h('b', {}, (block.hubName || 'Hub').slice(0, 2).toUpperCase()),
     ),
   ));
@@ -161,7 +162,7 @@ function centerCard(center, index, onOpen) {
 /* ------------------------------------------------------------- the detail */
 
 function mediaTile(item, center) {
-  const src = `${UPLOADS}/${encodeURI(item.src)}`;
+  const src = media(`/uploads/${encodeURI(item.src)}`);
   if (item.kind === 'video') {
     const video = h('video', {
       class: 'coe-tile__media',

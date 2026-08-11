@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { media } from '../utils/media.js';
 
 /**
  * Programs: one card that opens into the whole set, each of those into its
@@ -75,7 +76,7 @@ export function ProgramDeck(block, { editing = false } = {}) {
           referrerpolicy: 'strict-origin-when-cross-origin', allowfullscreen: true,
         })
       : h('video', {
-          class: 'pg-player__file', src: `${UPLOADS}/${encodeURI(video.src)}`,
+          class: 'pg-player__file', src: media(`/uploads/${encodeURI(video.src)}`),
           controls: true, autoplay: true, playsinline: true,
         }));
     /* Out of the slide entirely while it plays. FitSlide scales the slide with
@@ -129,7 +130,7 @@ export function ProgramDeck(block, { editing = false } = {}) {
   const cards = programs.map((p) => {
     const card = h('button', { class: 'pg-card', type: 'button', title: p.name },
       h('span', { class: 'pg-card__mark' }, p.logo
-        ? h('img', { src: `${UPLOADS}/${encodeURI(p.logo)}`, alt: p.name })
+        ? h('img', { src: media(`/uploads/${encodeURI(p.logo)}`), alt: p.name })
         : h('b', {}, p.name.slice(0, 2).toUpperCase())),
       h('span', { class: 'pg-card__name' }, p.name),
       h('span', { class: 'pg-card__count' }, (p.videos || []).length

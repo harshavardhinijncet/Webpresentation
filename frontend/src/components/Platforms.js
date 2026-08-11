@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { media as mediaUrl } from '../utils/media.js';
 import { toastSuccess, toastError } from './Toast.js';
 
 /**
@@ -75,11 +76,11 @@ function shotMedia(item, mount, onMissing) {
     let at = 0;
     const img = h('img', {
       class: 'pf-win__img', alt: '', loading: 'lazy', decoding: 'async',
-      src: `${SHOT_DIR}/${slug}.${IMAGE_EXT[0]}`,
+      src: mediaUrl(`${SHOT_DIR}/${slug}.${IMAGE_EXT[0]}`),
     });
     img.addEventListener('error', () => {
       at += 1;
-      if (at < IMAGE_EXT.length) img.src = `${SHOT_DIR}/${slug}.${IMAGE_EXT[at]}`;
+      if (at < IMAGE_EXT.length) img.src = mediaUrl(`${SHOT_DIR}/${slug}.${IMAGE_EXT[at]}`);
       else { img.remove(); onMissing(); }
     });
     mount.appendChild(img);
@@ -94,7 +95,7 @@ function shotMedia(item, mount, onMissing) {
     muted: true, loop: true, playsinline: true, preload: 'metadata',
     tabindex: '-1', 'aria-hidden': 'true',
   }, ...VIDEO_EXT.map((ext) => h('source', {
-    src: `${SHOT_DIR}/${slug}.${ext}`, type: `video/${ext}`,
+    src: mediaUrl(`${SHOT_DIR}/${slug}.${ext}`), type: `video/${ext}`,
   })));
   video.muted = true; // The attribute alone does not satisfy autoplay policy.
 

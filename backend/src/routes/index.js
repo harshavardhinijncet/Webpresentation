@@ -6,6 +6,7 @@ import { assetRoutes } from './asset.routes.js';
 import { templateRoutes } from './template.routes.js';
 import { sendJson } from '../utils/http.js';
 import { buildId } from '../utils/build-id.js';
+import { env } from '../config/env.js';
 
 export function buildRouter() {
   const router = createRouter();
@@ -14,6 +15,15 @@ export function buildRouter() {
     ok: true,
     build: await buildId(),
   }));
+  /* Read by frontend/src/utils/media.js before any module loads. A one-line
+     script rather than a fetch, so nothing renders before the prefix is known. */
+  router.get('/config.js', (req, res) => {
+    res.writeHead(200, {
+      'Content-Type': 'text/javascript; charset=utf-8',
+      'Cache-Control': 'no-cache',
+    });
+    res.end(`window.__MEDIA_BASE__=${JSON.stringify(env.mediaBaseUrl || '')};`);
+  });
   router.use(authRoutes());
   router.use(orgRoutes());
   router.use(sectionRoutes());

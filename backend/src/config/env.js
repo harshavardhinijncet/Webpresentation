@@ -40,6 +40,11 @@ function readBool(key, fallback) {
 
 export const env = {
   port: Number(read('PORT', 4173)),
+  /* CDN prefix for everything under /uploads. Empty means serve from disk,
+     which is what local work and the offline presentation both rely on — so
+     this can be set in production without changing a single stored path.
+     Trailing slash trimmed, because every stored path already begins with one. */
+  mediaBaseUrl: String(read('MEDIA_BASE_URL', '')).replace(/\/+$/, ''),
   host: read('HOST', '127.0.0.1'),
   sessionTtlHours: Number(read('SESSION_TTL_HOURS', 12)),
   maxUploadBytes: Number(read('MAX_UPLOAD_MB', 32)) * 1024 * 1024,
