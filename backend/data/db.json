@@ -22,56 +22,7 @@
       "createdAt": "2026-07-29T18:03:53.618Z"
     }
   ],
-  "sessions": [
-    {
-      "token": "9c9878dbde7424a29b9cae4cbd191369762473bb92419b9dbe75035d417025aa",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-11T04:31:36.905Z",
-      "expiresAt": "2026-08-11T16:31:36.905Z"
-    },
-    {
-      "token": "59fded2c1181e6b2dff76a8439b787faeee3b1ae8d74b2d092d79641f19da886",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-11T04:48:51.286Z",
-      "expiresAt": "2026-08-11T16:48:51.286Z"
-    },
-    {
-      "token": "ad0fe3946d4e1ae9d891ed7057d706088deb789bc9413099aba8e7c5933e816a",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-11T04:52:49.518Z",
-      "expiresAt": "2026-08-11T16:52:49.518Z"
-    },
-    {
-      "token": "df2726ec81df6a1f5f2823f0ac93f0ebd782f8afa41c0a3b3bb44c7b2b1a39c3",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-11T05:17:43.448Z",
-      "expiresAt": "2026-08-11T17:17:43.448Z"
-    },
-    {
-      "token": "957b861efb249b780d149ad5e294a61c3e72f0fc4d96ac36efe842d141273fbf",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-11T05:18:51.177Z",
-      "expiresAt": "2026-08-11T17:18:51.177Z"
-    },
-    {
-      "token": "d2ee3003f375074b7280c7d490c0727a435189a9a6d0b512f19130cb52e6aee9",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-11T06:49:51.836Z",
-      "expiresAt": "2026-08-11T18:49:51.836Z"
-    },
-    {
-      "token": "1e8b932e191749aa3b3f02f9695d412fddbbd5999aace3eb25a57b508e183374",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-11T06:49:58.948Z",
-      "expiresAt": "2026-08-11T18:49:58.948Z"
-    },
-    {
-      "token": "bf5f35531e3724a654b963f1cd94d9092cde269c1ac874c5df784ecda1dea304",
-      "userId": "usr_4d7c41e246a842a5",
-      "createdAt": "2026-08-11T10:09:31.342Z",
-      "expiresAt": "2026-08-11T22:09:31.342Z"
-    }
-  ],
+  "sessions": [],
   "organizations": [
     {
       "id": "torii",

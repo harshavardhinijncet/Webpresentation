@@ -28,6 +28,11 @@ export function load() {
   try {
     const parsed = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
     state = { ...structuredClone(EMPTY), ...parsed };
+    /* Sessions never come back off disk. They are bearer tokens, and this file
+       is committed to a public repository — an old commit carrying an unexpired
+       token would otherwise still sign somebody in as admin. Dropping them at
+       load makes every historical token in git dead on arrival. */
+    state.sessions = [];
   } catch (err) {
     logger.error('database file unreadable, starting empty:', err.message);
     state = structuredClone(EMPTY);
@@ -45,7 +50,16 @@ export function persist() {
   writeChain = writeChain.then(async () => {
     const tmp = `${DB_FILE}.${process.pid}.tmp`;
     await fsp.mkdir(path.dirname(DB_FILE), { recursive: true });
-    await fsp.writeFile(tmp, JSON.stringify(data(), null, 2), 'utf8');
+    /* Everything except the sessions, which stay in memory for the life of the
+       process. Writing them put live tokens into a public git history on every
+       commit that touched this file. The cost is that a restart signs everyone
+       out, which was already true wherever this runs without a persistent disk.
+       Key order is preserved so this does not rewrite the whole file. */
+    const snapshot = {};
+    for (const [key, value] of Object.entries(data())) {
+      snapshot[key] = key === 'sessions' ? [] : value;
+    }
+    await fsp.writeFile(tmp, JSON.stringify(snapshot, null, 2), 'utf8');
     await fsp.rename(tmp, DB_FILE);
   }).catch((err) => {
     logger.error('failed to persist database:', err.message);
