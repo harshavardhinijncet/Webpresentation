@@ -6,7 +6,7 @@ Written for the deployment team, and for whoever maintains this next.
 
 ## 1. Do this before reading further
 
-**The AWS access key `AKIA2S2BHGWJNORXX6SQ` must be deleted, not rotated later.**
+**The AWS access key `AKIA2S2B…XX6SQ` must be deleted, not rotated later.**
 
 It was pasted into a chat, which means it exists in at least one transcript
 outside your control. An access key with write permission on a bucket is enough

@@ -229,7 +229,7 @@ single-digit dollars in a normal month.
 
 ## Still outstanding, and unrelated to this
 
-**The access key `AKIA2S2BHGWJNORXX6SQ` is still active** — I confirmed it
+**The access key `AKIA2S2B…XX6SQ` is still active** — I confirmed it
 answers `sts:get-caller-identity` today. It was shared over chat and should be
 deleted, not rotated later. Nothing in this repository needs it, and the
 application never authenticates to AWS: this migration is the reason it never
