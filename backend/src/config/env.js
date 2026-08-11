@@ -4,23 +4,30 @@ import { BACKEND_ROOT } from './paths.js';
 
 /** Minimal .env reader so the app keeps its zero-dependency promise. */
 function readEnvFile() {
-  const file = path.join(BACKEND_ROOT, '.env');
-  if (!fs.existsSync(file)) return {};
+  /* Both locations, because a deployment team will put .env beside the
+     repository's README as often as beside the server. Looking in only one and
+     ignoring the other fails silently: the app boots happily on defaults and
+     binds to localhost, so the container answers nothing and there is no error
+     to read. backend/.env wins a key that appears in both. */
+  const files = [path.join(BACKEND_ROOT, '..', '.env'), path.join(BACKEND_ROOT, '.env')];
   const out = {};
-  for (const rawLine of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
-    const line = rawLine.trim();
-    if (!line || line.startsWith('#')) continue;
-    const eq = line.indexOf('=');
-    if (eq === -1) continue;
-    const key = line.slice(0, eq).trim();
-    let value = line.slice(eq + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
-      value = value.slice(1, -1);
+  for (const file of files) {
+    if (!fs.existsSync(file)) continue;
+    for (const rawLine of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
+      const line = rawLine.trim();
+      if (!line || line.startsWith('#')) continue;
+      const eq = line.indexOf('=');
+      if (eq === -1) continue;
+      const key = line.slice(0, eq).trim();
+      let value = line.slice(eq + 1).trim();
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      out[key] = value;
     }
-    out[key] = value;
   }
   return out;
 }

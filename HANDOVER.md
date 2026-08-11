@@ -87,8 +87,9 @@ rewrite, and it keeps the offline path working — which matters, see section 5.
 
 ## 4. Configuration the deployment team needs
 
-Copy `.env.example` to `.env` — or set these in the platform's own environment
-panel, which is better, because then they are not on disk at all.
+Copy `.env.example` to `.env`, at the repository root or inside `backend/` —
+both are read, and `backend/.env` wins a key present in both. Better still, set
+these in the platform's own environment panel, and then they are not on disk.
 
 | Variable | Why | If unset |
 | --- | --- | --- |
