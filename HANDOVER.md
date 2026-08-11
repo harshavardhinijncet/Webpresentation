@@ -63,6 +63,11 @@ confidential, which makes the simplest architecture also the most secure:
 - **The application holds no AWS credentials at all.** Nothing to leak, nothing
   to rotate, nothing to put in an env var.
 
+**Step-by-step instructions are in `CLOUDFRONT.md`**, written against the real
+bucket: the exact origin endpoint, the bucket policy with the SourceArn
+condition, the price class that actually includes India, and the two places the
+process usually stalls.
+
 Uploading new media is then an operations task, not an application feature:
 `aws s3 sync` from a laptop with an SSO session or a short-lived role, or a
 GitHub Action using an OIDC role. Neither needs a long-lived key.
