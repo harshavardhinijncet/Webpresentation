@@ -10194,3 +10194,43 @@ body.is-presenting .pg-player { z-index: 30; }
 @media (prefers-reduced-motion: reduce) {
   .milestones__glyph { transition: none; }
 }
+
+/* --- the last stop is a word: its final letter wears the logo ------------- */
+/* NEXT has no digit to tint, so the T carries both brand colours at once. A
+   hard two-stop split, not a blend: CLAUDE.md rules out gradients as surface
+   decoration, and this is a two-colour mark rather than a wash.
+
+   background-clip: text needs transparent glyph colour, which also kills
+   text-shadow — the bloom the tinted digits get comes from a drop-shadow filter
+   here instead. Guarded, because a browser without background-clip would paint
+   the letter as nothing at all. */
+.milestones__cell.is-logo-mark .milestones__glyph { color: var(--brand-accent); }
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .milestones__cell.is-logo-mark .milestones__glyph {
+    background-image: linear-gradient(
+      160deg,
+      var(--brand-primary) 0%, var(--brand-primary) 48%,
+      var(--brand-accent) 52%, var(--brand-accent) 100%
+    );
+    /* Covers the glyph box exactly and does not travel — an oversized repeating
+       gradient is what once animated past its box and left letters unpainted. */
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+  /* Torii's primary is black, which reads as a hole on the night sky, so the
+     dark variant lifts the darker half toward white. */
+  .milestones--dark .milestones__cell.is-logo-mark .milestones__glyph {
+    background-image: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--brand-primary) 62%, #ffffff) 0%,
+      color-mix(in srgb, var(--brand-primary) 62%, #ffffff) 48%,
+      var(--brand-accent) 52%, var(--brand-accent) 100%
+    );
+    filter: drop-shadow(0 0 18px color-mix(in srgb, var(--brand-accent) 40%, transparent));
+  }
+}

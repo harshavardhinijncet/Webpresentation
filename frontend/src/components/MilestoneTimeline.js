@@ -229,9 +229,20 @@ export function MilestoneTimeline(block, { editing = false } = {}) {
       .map((glyph, i) => (cells[i].current !== glyph && DIGIT.test(glyph) ? i : -1))
       .filter((i) => i >= 0);
     const lastMoved = moved.length ? moved[moved.length - 1] : -1;
+
+    /* The last stop is a word, not a year — NEXT, where there is no digit to
+       tint. Its final letter carries the logo's own two colours instead, which
+       marks the end of the walk as something other than one more year. */
+    const wordStop = !nextGlyphs.some((glyph) => DIGIT.test(glyph));
+    let lastLetter = -1;
+    for (let i = nextGlyphs.length - 1; i >= 0; i--) {
+      if (nextGlyphs[i].trim()) { lastLetter = i; break; }
+    }
+
     cells.forEach((entry, i) => {
       entry.cell.classList.toggle('is-rolled-minor', i === lastMoved);
       entry.cell.classList.toggle('is-rolled-major', moved.includes(i) && i !== lastMoved);
+      entry.cell.classList.toggle('is-logo-mark', wordStop && i === lastLetter);
     });
 
     nextGlyphs.forEach((glyph, i) => rollCell(cells[i], glyph, forward));
