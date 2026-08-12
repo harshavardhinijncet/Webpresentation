@@ -54,18 +54,29 @@ export function justifyRows(items, width, targetH, gap = GAP, maxH = Infinity) {
   let row = [];
   let arSum = 0;
 
+  const solveRow = (items_, partial, allowFill) => {
+    const avail = width - gap * (items_.length - 1);
+    const arTotal = items_.reduce((n, it) => n + it.w / it.h, 0);
+    const solved = avail / arTotal;
+    /* A leftover tail holding one wide photo would solve to something enormous
+       beside the rows above it, so a partial row normally keeps the target
+       height. `allowFill` is the exception: when the whole selection is a single
+       row there is nothing above it to tower over, and capping it left a company
+       with two photographs sitting 242px tall in 592px of stage. */
+    const height = Math.min(
+      partial && !allowFill ? Math.min(solved, targetH * 1.08) : solved,
+      maxH,
+    );
+    return {
+      height,
+      full: height >= solved - 0.5 && height < maxH + 0.5,
+      items: items_.map((it) => ({ ...it, dw: height * (it.w / it.h), dh: height })),
+    };
+  };
+
   const flush = (partial) => {
     if (!row.length) return;
-    const avail = width - gap * (row.length - 1);
-    const solved = avail / arSum;
-    /* A last row holding one wide photo would solve to something enormous;
-       a partial row keeps the target height rather than filling the width. */
-    const height = Math.min(partial ? Math.min(solved, targetH * 1.08) : solved, maxH);
-    rows.push({
-      height,
-      full: !partial && height < maxH,
-      items: row.map((it) => ({ ...it, dw: height * (it.w / it.h), dh: height })),
-    });
+    rows.push(solveRow(row, partial, false));
     row = [];
     arSum = 0;
   };
@@ -78,6 +89,15 @@ export function justifyRows(items, width, targetH, gap = GAP, maxH = Infinity) {
     if (arSum * targetH + gap * (row.length - 1) >= width) flush(false);
   });
   flush(true);
+
+  /* One row for the whole selection — a short chapter, or a company with two
+     photographs. Re-solve it filling the width, which is what "fill the screen"
+     means when the aspect ratios have to be honoured: the height follows from
+     the width, and only the stage can cap it. */
+  if (rows.length === 1) {
+    const only = rows[0].items;
+    if (only.length) return [solveRow(only, true, true)];
+  }
   return rows;
 }
 
@@ -117,14 +137,31 @@ export function PlacementWall(block, { editing = false } = {}) {
   const lightImg = h('img', { class: 'pw-light__img', alt: '' });
   const lightCap = h('p', { class: 'pw-light__cap' });
   const lightMeta = h('span', { class: 'pw-light__meta' });
+  const lightCount = h('span', { class: 'pw-light__count' });
+
+  /* The images of whatever is on screen, in reading order, so the arrows walk
+     the same sequence the wall shows. Rebuilt by drawStage. */
+  let shown = [];
+  let atIndex = 0;
+
+  const prevBtn = h('button', {
+    class: 'pw-light__nav pw-light__nav--prev', type: 'button', 'aria-label': 'Previous image',
+    onclick: (e) => { e.stopPropagation(); step(-1); },
+  }, icon('chevron-left', { class: 'ic' }));
+  const nextBtn = h('button', {
+    class: 'pw-light__nav pw-light__nav--next', type: 'button', 'aria-label': 'Next image',
+    onclick: (e) => { e.stopPropagation(); step(1); },
+  }, icon('chevron-right', { class: 'ic' }));
+
   const light = h('div', {
     class: 'pw-light', hidden: true,
     onclick: (e) => { if (e.target === light || e.target.closest('.pw-light__close')) closeLight(); },
   },
     h('button', { class: 'pw-light__close', type: 'button', 'aria-label': 'Close' },
       icon('close', { class: 'ic ic--sm' })),
+    prevBtn, nextBtn,
     h('figure', { class: 'pw-light__frame' }, lightImg,
-      h('figcaption', { class: 'pw-light__foot' }, lightCap, lightMeta)),
+      h('figcaption', { class: 'pw-light__foot' }, lightCap, lightMeta, lightCount)),
   );
   document.body.appendChild(light);
 
@@ -134,15 +171,35 @@ export function PlacementWall(block, { editing = false } = {}) {
     document.removeEventListener('keydown', onLightKey, true);
   }
   function onLightKey(e) {
-    if (e.key === 'Escape') { e.stopPropagation(); closeLight(); }
+    if (e.key === 'Escape') { e.stopPropagation(); closeLight(); return; }
+    /* Swallowed, or the deck's own left/right handler moves to the next slide
+       underneath the open image. */
+    if (e.key === 'ArrowRight') { e.stopPropagation(); e.preventDefault(); step(1); }
+    if (e.key === 'ArrowLeft') { e.stopPropagation(); e.preventDefault(); step(-1); }
   }
-  function openLight(image, group) {
+  /** Wraps, so the arrows never dead-end mid-presentation. */
+  function step(delta) {
+    if (shown.length < 2) return;
+    atIndex = (atIndex + delta + shown.length) % shown.length;
+    paint();
+  }
+  function paint() {
+    const it = shown[atIndex];
+    if (!it) return;
     /* The full file, at its own resolution — this is the one place the image is
        shown at native size, so it is the answer to "does the quality survive". */
-    lightImg.src = media(`/uploads/Placements/${image.src.split('/').map(encodeURIComponent).join('/')}`);
-    lightImg.alt = image.label || group?.name || '';
-    lightCap.textContent = image.label || group?.name || '';
-    lightMeta.textContent = `${image.w} × ${image.h}`;
+    lightImg.src = media(`/uploads/Placements/${it.src.split('/').map(encodeURIComponent).join('/')}`);
+    lightImg.alt = it.label || it.group?.name || '';
+    lightCap.textContent = it.label || it.group?.name || '';
+    lightMeta.textContent = `${it.w} × ${it.h}`;
+    lightCount.textContent = shown.length > 1 ? `${atIndex + 1} / ${shown.length}` : '';
+    const many = shown.length > 1;
+    prevBtn.hidden = !many;
+    nextBtn.hidden = !many;
+  }
+  function openLight(index) {
+    atIndex = Math.max(0, index);
+    paint();
     light.hidden = false;
     requestAnimationFrame(() => light.classList.add('is-on'));
     document.addEventListener('keydown', onLightKey, true);
@@ -196,25 +253,31 @@ export function PlacementWall(block, { editing = false } = {}) {
        margin, so both come off before anything is solved against it. Skipping
        that arithmetic is what turns "fills the stage" into "scrolls by 50px". */
     const contentH = (lastStageH || 680) - 40 - GAP;
-    /* The journeys are three tall infographics meant to be read, so they take
-       the whole stage and the target is the cap. Cards and photographs stay
-       lower, or a single wide frame in a short row towers over the rows above. */
+    /* The stage is the only ceiling. A leftover tail is already held near the
+       target height by justifyRows, so a second, smaller cap here bought
+       nothing and cost the case that matters: one company with two photographs
+       is a single row, and it was being pinned to 348px in 592px of stage. */
     const journey = activeChapter.kind === 'journey';
-    const maxH = journey ? contentH : Math.min(348, contentH);
+    const maxH = contentH;
     const rows = justifyRows(flat, width, journey ? contentH : target, GAP, maxH);
 
+    // The arrow sequence is whatever the wall is showing, in reading order.
+    shown = flat;
+
     const tiles = [];
+    let ordinal = 0;
     rows.forEach((row) => {
       const rowEl = h('div', {
         class: `pw-row${row.full ? '' : ' pw-row--short'}`,
         style: { gap: `${GAP}px`, height: `${Math.round(row.height)}px` },
       });
       row.items.forEach((it) => {
+        const index = ordinal++;
         const figure = h('button', {
           class: 'pw-tile', type: 'button',
           style: { width: `${Math.round(it.dw)}px`, height: `${Math.round(it.dh)}px` },
           title: it.label || it.group?.name || 'Open full size',
-          onclick: () => openLight(it, it.group),
+          onclick: () => openLight(index),
         },
           h('img', {
             src: media(`/uploads/Placements/${it.src.split('/').map(encodeURIComponent).join('/')}`),

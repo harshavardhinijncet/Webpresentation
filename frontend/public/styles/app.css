@@ -10034,3 +10034,29 @@ body.is-presenting .pg-player { z-index: 30; }
   .pw-tile:hover img { transform: none; }
   .pw-light, .pw-light__frame { transition: none; }
 }
+
+/* --- lightbox: step between images without closing it --------------------- */
+.pw-light__nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  display: grid; place-items: center; width: 56px; height: 56px;
+  border: 0; border-radius: 999px;
+  background: rgb(255 255 255 / 0.12); color: #fff; cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.pw-light__nav:hover { background: rgb(255 255 255 / 0.24); }
+.pw-light__nav:active { transform: translateY(-50%) scale(0.94); }
+.pw-light__nav[hidden] { display: none; }
+.pw-light__nav .ic { width: 28px; height: 28px; }
+.pw-light__nav--prev { left: 22px; }
+.pw-light__nav--next { right: 22px; }
+/* The arrows sit over the image, so the frame keeps clear of them. */
+.pw-light .pw-light__frame { max-width: calc(100% - 160px); }
+.pw-light__count {
+  margin-left: auto; color: #9ca3af; font-size: 12px;
+  font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.pw-light__foot { width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-light__nav { transition: none; }
+}
