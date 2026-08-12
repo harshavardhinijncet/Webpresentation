@@ -52,12 +52,20 @@ export const env = {
      this can be set in production without changing a single stored path.
      Trailing slash trimmed, because every stored path already begins with one. */
   mediaBaseUrl: String(read('MEDIA_BASE_URL', '')).replace(/\/+$/, ''),
-  host: read('HOST', '127.0.0.1'),
+  /* 0.0.0.0, because the deployment needs it and defaulting to loopback made
+     that a thing somebody had to know: a container bound to 127.0.0.1 accepts
+     nothing from outside itself and gives no error explaining why. */
+  host: read('HOST', '0.0.0.0'),
   sessionTtlHours: Number(read('SESSION_TTL_HOURS', 12)),
   maxUploadBytes: Number(read('MAX_UPLOAD_MB', 32)) * 1024 * 1024,
   maxVideoBytes: Number(read('MAX_VIDEO_MB', 400)) * 1024 * 1024,
   ffmpegPath: read('FFMPEG_PATH', null),
-  showLoginHint: readBool('SHOW_LOGIN_HINT', true),
+  /* Off unless asked for. This prints working admin and presenter passwords,
+     and /api/auth/me serves them to anonymous callers — defaulting it on meant
+     a public deployment published its own credentials unless somebody
+     remembered a variable. It was found doing exactly that. Set
+     SHOW_LOGIN_HINT=1 for local work. */
+  showLoginHint: readBool('SHOW_LOGIN_HINT', false),
   /* Read here, not from process.env at the point of use: http.js was checking
      process.env directly, so COOKIE_SECURE=1 in a .env file was silently
      ignored and the cookie went out without Secure on an HTTPS deployment. */
