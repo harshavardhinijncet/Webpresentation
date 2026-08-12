@@ -218,7 +218,23 @@ export function MilestoneTimeline(block, { editing = false } = {}) {
     const stop = stops[target];
     const forward = delta >= 0;
 
-    glyphsOf(stop).forEach((glyph, i) => rollCell(cells[i], glyph, forward));
+    /* Colour the digits that actually moved, and only those.
+       One digit changing (2020 → 2021) marks the units in the logo's yellow.
+       Two changing (2019 → 2020) reads as a bigger event, so the least
+       significant one keeps the yellow and the one above it takes the green —
+       one of each, as asked. Everything that stood still stays in the plain ink,
+       which is what makes the moving digits legible as the thing that moved. */
+    const nextGlyphs = glyphsOf(stop);
+    const moved = nextGlyphs
+      .map((glyph, i) => (cells[i].current !== glyph && DIGIT.test(glyph) ? i : -1))
+      .filter((i) => i >= 0);
+    const lastMoved = moved.length ? moved[moved.length - 1] : -1;
+    cells.forEach((entry, i) => {
+      entry.cell.classList.toggle('is-rolled-minor', i === lastMoved);
+      entry.cell.classList.toggle('is-rolled-major', moved.includes(i) && i !== lastMoved);
+    });
+
+    nextGlyphs.forEach((glyph, i) => rollCell(cells[i], glyph, forward));
 
     // Retriggered by removing and re-adding the class, so stepping quickly does
     // not leave a panel that never faded in.

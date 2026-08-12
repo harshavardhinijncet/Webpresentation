@@ -10163,3 +10163,34 @@ body.is-presenting .pg-player { z-index: 30; }
   .deck-step, .deck-dot, .deck-hint { transition: none; }
   .deck-dot:hover, .deck-dot:focus-visible { transform: none; }
 }
+
+/* --- the digits that moved, in the logo's two colours -------------------- */
+/* Only the changed cells are tinted, so the colour reads as "this is what
+   rolled" rather than as decoration. One digit changing takes the yellow; when
+   two change the upper one takes the green and the lower keeps the yellow.
+   The odometer sits on the night sky, and CLAUDE.md allows the raw accent on a
+   dark ground — it is the white surface where it would fail.
+
+   Targeted at the glyph, not the cell: `.milestones--dark .milestones__glyph`
+   sets an explicit white, so a colour on the cell is inherited into a child that
+   immediately overrides it and the digits stay white. */
+.milestones__cell.is-rolled-minor .milestones__glyph { color: var(--brand-accent); }
+.milestones__cell.is-rolled-major .milestones__glyph { color: var(--brand-primary); }
+
+/* Torii's primary is black, invisible against the sky, so on the dark variant
+   the green is lifted toward white and both get a faint bloom — which also
+   keeps them distinct from the plain digits at projector distance. */
+.milestones--dark .milestones__cell.is-rolled-minor .milestones__glyph {
+  color: var(--brand-accent);
+  text-shadow: 0 0 26px color-mix(in srgb, var(--brand-accent) 55%, transparent);
+}
+.milestones--dark .milestones__cell.is-rolled-major .milestones__glyph {
+  color: color-mix(in srgb, var(--brand-primary) 62%, #ffffff);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--brand-primary) 45%, transparent);
+}
+
+/* The tint arrives with the roll rather than snapping on ahead of it. */
+.milestones__glyph { transition: color 380ms ease; }
+@media (prefers-reduced-motion: reduce) {
+  .milestones__glyph { transition: none; }
+}
