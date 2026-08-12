@@ -114,6 +114,20 @@ const groupFor = (section) => {
 };
 
 /**
+ * The presenter-facing name and icon for a section, exactly as the side pane
+ * shows it — so the deck's jump bar cannot drift from the navigation. A curated
+ * group label wins; a real subsection page falls back to its own title, because
+ * no curated row is keyed to it.
+ */
+export function sectionLabel(section) {
+  const [title, iconKey] = groupFor(section);
+  return {
+    label: title || section?.title || 'Section',
+    icon: iconKey || section?.icon || iconForTitle(section?.title),
+  };
+}
+
+/**
  * One flat list of rows to draw, so the pane and the rail flyout agree.
  *
  * A row carrying a `sectionId` is a real subsection page and navigates to itself;

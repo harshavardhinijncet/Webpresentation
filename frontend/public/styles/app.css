@@ -10060,3 +10060,106 @@ body.is-presenting .pg-player { z-index: 30; }
 @media (prefers-reduced-motion: reduce) {
   .pw-light__nav { transition: none; }
 }
+
+/* ==========================================================================
+   The presenter bar — named neighbours, and one dot per slide to jump with
+   ========================================================================== */
+
+/* The bar is the existing rounded pill, widened to hold the dots. Named
+   neighbours matter more than symmetry here: "‹" alone asks a presenter to
+   remember the running order of sixteen sections while a room watches. */
+.deck-bar {
+  /* Deliberately NOT re-declaring `position`. The original rule is fixed, and
+     restating it as relative here dropped the bar out of the viewport — it fell
+     39px below the fold and grew the page a scrollbar. A fixed box is already
+     the containing block for an absolute child, so the hover label needs
+     nothing from this rule. */
+  gap: 8px;
+  padding: 8px 10px;
+  max-width: min(1180px, calc(100vw - 48px));
+}
+
+.deck-step {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 12px; border: 0; border-radius: 999px;
+  background: rgb(255 255 255 / 0.10); color: #fff;
+  font: inherit; cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.deck-step:hover { background: rgb(255 255 255 / 0.2); }
+.deck-step:active { transform: scale(0.97); }
+.deck-step .ic { flex: 0 0 auto; opacity: 0.8; }
+.deck-step__text {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
+  min-width: 0; max-width: 148px;
+}
+.deck-step__text em {
+  font-style: normal; font-size: 9.5px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.55;
+}
+.deck-step__text span {
+  font-size: 12.5px; font-weight: 650; line-height: 1.15;
+  max-width: 148px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.deck-step--next .deck-step__text { align-items: flex-end; }
+
+/* ------------------------------------------------------------- the dot rail */
+.deck-dots {
+  display: flex; align-items: center; gap: 2px;
+  padding: 0 6px; min-width: 0;
+  /* Sixteen dots fit; more than that scrolls rather than pushing Exit off the
+     end of a projector. */
+  overflow-x: auto; scrollbar-width: none;
+}
+.deck-dots::-webkit-scrollbar { width: 0; height: 0; }
+
+.deck-dot {
+  display: grid; place-items: center; flex: 0 0 auto;
+  width: 30px; height: 30px; padding: 0;
+  border: 0; border-radius: 999px; background: transparent;
+  color: rgb(255 255 255 / 0.55); cursor: pointer;
+  transition: color 160ms ease, background 160ms ease, transform 180ms cubic-bezier(.2,.9,.3,1.25);
+}
+.deck-dot:hover, .deck-dot:focus-visible {
+  color: #fff; background: rgb(255 255 255 / 0.16);
+  transform: translateY(-3px) scale(1.08);
+  outline: none;
+}
+.deck-dot.is-on {
+  color: #fff;
+  background: var(--nav-accent-ink, var(--accent-ink, #E95A22));
+}
+.deck-dot .ic { width: 16px; height: 16px; }
+
+/* ------------------------------------------------------- the hover label ---- */
+/* Absolute inside the bar, not fixed: the bar is already the top layer here, and
+   a fixed child would be measured against the viewport and drift as soon as the
+   bar is centred by a transform. */
+.deck-hint {
+  position: absolute; bottom: calc(100% + 10px); left: 0;
+  padding: 7px 12px; border-radius: 10px;
+  background: #0b0d10; color: #fff;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 0.4);
+  font-size: 12.5px; font-weight: 650; white-space: nowrap;
+  pointer-events: none;
+  opacity: 0; transform: translateY(6px) scale(0.94);
+  transform-origin: bottom center;
+  /* Overshoots slightly on the way in, which is what the spring in the design
+     reads as without a physics library. */
+  transition: opacity 150ms ease, transform 220ms cubic-bezier(.2,.9,.3,1.35);
+}
+.deck-hint.is-on { opacity: 1; transform: none; }
+.deck-hint[hidden] { display: none; }
+
+@media (max-width: 900px) {
+  /* On a narrow display the names are the first thing to go; the dots and the
+     count still tell the presenter where they are. */
+  .deck-step__text { display: none; }
+  .deck-step { padding: 7px 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deck-step, .deck-dot, .deck-hint { transition: none; }
+  .deck-dot:hover, .deck-dot:focus-visible { transform: none; }
+}

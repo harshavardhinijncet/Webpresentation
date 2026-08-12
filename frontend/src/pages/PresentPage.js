@@ -129,9 +129,14 @@ export function PresentPage(container, { org, section, onLogout }) {
       DeckControls({
         index: Math.max(0, index),
         total: deck.length,
+        // The running order itself, so the bar can name the neighbours and jump.
+        deck,
         onPrev: () => go(-1),
         onNext: () => go(1),
         onExit: exitPresenting,
+        onJump: (target) => {
+          if (target?.id && target.id !== section?.id) navigate(`/o/${org.id}/${target.id}`);
+        },
       }),
     );
   }
