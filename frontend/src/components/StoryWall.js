@@ -75,6 +75,28 @@ export function StoryWall(block, { editing = false } = {}) {
 
   /* ------------------------------------------------------------- the stage */
   const stageImg = h('img', { class: 'sw-stage__img', alt: '' });
+  const stageShot = h('div', { class: 'sw-stage__shot' }, stageImg);
+
+  /* Sixteen of the twenty-five files are 206px square. Filling the frame
+     enlarged those about fivefold and looked it, so the displayed size is
+     solved from three limits and the smallest wins: the frame's width, the
+     frame's height, and twice the file's own pixels.
+     Done in script because only the loaded file knows its own size, and with
+     explicit width and height because max-width alone only ever caps — with
+     `width: auto` the image simply sat at 1x in a large empty box. */
+  const MAX_ENLARGE = 2;
+  const fitStage = () => {
+    const nw = stageImg.naturalWidth;
+    const nh = stageImg.naturalHeight;
+    if (!nw || !nh) return;
+    const fw = stageShot.clientWidth;
+    const fh = stageShot.clientHeight;
+    if (!fw || !fh) return;
+    const scale = Math.min(MAX_ENLARGE, fw / nw, fh / nh);
+    stageImg.style.width = `${Math.round(nw * scale)}px`;
+    stageImg.style.height = `${Math.round(nh * scale)}px`;
+  };
+  stageImg.addEventListener('load', fitStage);
   const stageName = h('h3', { class: 'sw-stage__name' });
   const stageRole = h('p', { class: 'sw-stage__role' });
   const stageQuote = h('blockquote', { class: 'sw-stage__quote' });
@@ -86,7 +108,7 @@ export function StoryWall(block, { editing = false } = {}) {
   };
 
   const stage = h('div', { class: 'sw-stage' },
-    h('div', { class: 'sw-stage__shot' }, stageImg),
+    stageShot,
     h('div', { class: 'sw-stage__side' },
       h('button', { class: 'sw-close', type: 'button', onclick: close },
         icon('close', { class: 'ic ic--xs' }), h('span', {}, 'Close')),

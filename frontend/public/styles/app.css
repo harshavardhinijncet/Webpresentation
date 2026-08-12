@@ -9387,7 +9387,31 @@ body.is-presenting .coe-orbit { bottom: 104px; }
   border: 1px solid var(--border); background: var(--page-bg);
   animation: swStageIn .45s cubic-bezier(.2,.8,.2,1) both;
 }
-.sw-stage__img { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* Two caps, and the tighter one wins.
+   CSS caps it to the frame. StoryWall then caps it to twice its own pixels,
+   inline, once the file has loaded and its real size is known. Neither cap
+   alone is enough: `width: 100%` blew a 206px source up ~5x into a ~1000px
+   frame, which is softness no source survives and which `object-fit: contain`
+   does not help with, because contain still scales up. Capping at 1x instead
+   left a postage stamp in a large empty box. Twice is the point where the
+   enlargement is still tolerable at projector distance.
+
+   The border and radius live on the image, not on the frame, so a small file
+   reads as a small photograph rather than as a big box mostly full of nothing. */
+.sw-stage__shot {
+  min-height: 0; display: grid; place-items: center;
+  overflow: hidden; border: 0; background: none;
+  animation: swStageIn .45s cubic-bezier(.2,.8,.2,1) both;
+}
+.sw-stage__img {
+  display: block;
+  width: auto; height: auto;
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--page-bg);
+}
 .sw-stage__side {
   min-width: 0; display: flex; flex-direction: column; gap: 10px; overflow: auto;
   scrollbar-width: none; animation: swSideIn .45s .08s cubic-bezier(.2,.8,.2,1) both;
