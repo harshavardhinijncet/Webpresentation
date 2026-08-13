@@ -10318,13 +10318,13 @@ body.is-presenting .pg-player { z-index: 30; }
    its name, the rest plain marks. A column of seven small tiles down the left
    read as a toolbar; one bar under the title reads as navigation. */
 /* Its own row across the foot of the slide, centred. */
+/* In the flow, not floating. Absolute at the foot it sat over the front
+   window's own footer, covering the product name and its Open link. */
 .pf-railrow {
-  position: absolute; left: 0; right: 0; bottom: 22px;
-  display: flex; justify-content: center;
-  z-index: 3;
-  pointer-events: none;
+  grid-area: rail;
+  display: flex; justify-content: center; align-items: flex-end;
+  padding: 4px 0 2px;
 }
-.pf-railrow > * { pointer-events: auto; }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .pf-chips {
@@ -10418,3 +10418,76 @@ body.is-presenting .pg-player { z-index: 30; }
 @media (prefers-reduced-motion: reduce) {
   .pf-row, .pf-row__tile, .pf-row__tip { transition: none; transform: none; }
 }
+
+/* ==========================================================================
+   Platforms — title above, the stack in the middle, the bar below
+   ========================================================================== */
+
+/* One column, three bands. The two-column version put a left-hand text rail
+   beside the stack, which left the title stranded in a corner and gave the bar
+   nowhere to go but on top of the windows. */
+.pf-wall {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'intro' 'stage' 'rail';
+  gap: 0;
+  align-items: stretch;
+}
+.pf-intro {
+  grid-area: intro;
+  max-width: none;
+  padding: 26px 40px 0;
+  text-align: center;
+}
+.pf-title {
+  margin: 0 auto;
+  max-width: 20ch;
+  font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.06;
+}
+.pf-eyebrow { margin: 0 0 8px; }
+.pf-sub { margin: 12px auto 0; max-width: 60ch; }
+.pf-stagearea {
+  grid-area: stage;
+  min-height: 0;
+  display: grid; place-items: center;
+}
+
+/* --- the marks: no border, and bigger ------------------------------------ */
+/* The border drew a box round every mark and the set read as a grid of frames.
+   Without it the marks sit on the bar's own surface, which is what the
+   reference does, and the extra room goes into the mark itself. */
+.pf-chips {
+  gap: 6px;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  box-shadow: 0 14px 38px -22px rgb(15 23 42 / 0.55);
+}
+.pf-row { padding: 5px 7px; gap: 10px; }
+.pf-row__tile {
+  width: 52px; height: 52px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  box-shadow: none;
+}
+.pf-row__tile img { padding: 2px; }
+.pf-row__tile .ic { width: 26px; height: 26px; }
+.pf-row.is-near .pf-row__tile,
+.pf-row:hover .pf-row__tile { border: 0; box-shadow: none; }
+/* The current pill is the only frame on the bar, which is what makes it read as
+   the current one. */
+.pf-row.is-on .pf-row__tile { background: rgb(255 255 255 / 0.16); }
+.pf-row__tip b { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+.pf-row__tip i { font-size: 9.5px; letter-spacing: 0.14em; }
+.pf-row.is-on .pf-row__tip { max-width: 240px; }
+
+/* The stack's back cards are offset upward by slotFor, so they rise out of the
+   stage band and painted straight over the title — which measured 42px tall, in
+   the right place and the right colour, and was simply behind them. The title and
+   the bar both sit above the stack now. */
+.pf-intro { position: relative; z-index: 4; }
+.pf-railrow { position: relative; z-index: 4; }
+/* And the stack is given room to lean up into without reaching the title. */
+.pf-stagearea { padding-top: 26px; }
