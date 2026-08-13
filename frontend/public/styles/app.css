@@ -10557,3 +10557,96 @@ body.is-presenting .pg-player { z-index: 30; }
   padding-top: 0;
   place-items: center;
 }
+
+/* ==========================================================================
+   Platforms — a rail of named rows, the open one a card in its own colour
+   ========================================================================== */
+
+/* Oswald first. It was already third in the stack behind Agency FB; naming it
+   first uses it wherever it is installed, and the condensed fallbacks still
+   catch a machine that has neither. */
+.pf-title {
+  font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-size: 46px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.04;
+  text-transform: none;
+}
+
+/* --- the rail ------------------------------------------------------------- */
+.pf-chips {
+  width: 100%;
+  padding: 8px;
+  gap: 8px;
+  background: transparent;
+  border: 0;
+}
+/* A row is its name. The mark only appears on the open one, so the rail reads as
+   a list until something is chosen. */
+.pf-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  color: var(--ink, #111827);
+  text-align: left;
+  transform: none;
+  transition: background .28s ease, border-color .2s ease, color .2s ease,
+              box-shadow .28s ease, padding .28s ease;
+}
+.pf-row__tip {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  max-width: none; overflow: hidden; opacity: 1; padding: 0;
+  min-width: 0;
+}
+.pf-row__tip b {
+  font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+}
+.pf-row__tip i { color: var(--muted); }
+.pf-row__tip em {
+  display: block; font-style: normal;
+  font-size: 11px; font-weight: 600; color: var(--muted);
+}
+
+/* The mark: hidden until this row is the open one, then it grows in beside the
+   name — a snapshot of the product on its own coloured card. */
+.pf-row__tile {
+  width: 0; height: 44px;
+  border: 0; border-radius: 12px;
+  background: rgb(255 255 255 / 0.92);
+  opacity: 0;
+  transform: none;
+  transition: width .3s cubic-bezier(.2,.7,.3,1), opacity .24s ease;
+}
+.pf-row.is-on .pf-row__tile { width: 62px; opacity: 1; }
+.pf-row__tile img { padding: 5px; }
+
+/* The open row, in the product's own colour. */
+.pf-row.is-on {
+  padding: 16px 14px;
+  background: var(--tint, var(--brand-primary, #111827));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 16px 34px -18px color-mix(in srgb, var(--tint, #111827) 70%, transparent);
+}
+.pf-row.is-on .pf-row__tip b { font-size: 16px; white-space: normal; }
+.pf-row.is-on .pf-row__tip i,
+.pf-row.is-on .pf-row__tip em { color: rgb(255 255 255 / 0.8); }
+.pf-row:hover:not(.is-on) {
+  background: var(--page-bg);
+  border-color: color-mix(in srgb, var(--tint, var(--border)) 45%, transparent);
+}
+
+/* --- the stack: off the right edge --------------------------------------- */
+/* The fan was running past the slide and getting clipped. A little breathing
+   room on the right, and the whole thing pulled left to use it. */
+.pf-wall { grid-template-columns: minmax(300px, 28%) minmax(0, 1fr); column-gap: 18px; }
+.pf-stagearea { padding-right: 46px; transform: translateX(-26px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-row, .pf-row__tile { transition: none; }
+}

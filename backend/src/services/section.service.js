@@ -513,6 +513,9 @@ function normalizeBlock(raw, index = 0, depth = 0) {
              behind it while a logo drawn for white paper needs a light one. The
              alternative would be sampling pixels at render time. */
           logo: text(p?.logo, 200),
+          /* The product's own colour, for the rail's active card. Taken from
+             each platform's own login page, not invented. */
+          tint: hexColor(p?.tint),
           tone: oneOf(text(p?.tone, 8), ['dark', 'light'], 'light'),
           // The screenshot's filename under /uploads/platforms, without the
           // extension. Named explicitly rather than derived from the title, so

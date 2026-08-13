@@ -505,6 +505,9 @@ export function Platforms(block, { editing = false } = {}) {
     const count = (pane.logins || []).length;
     return h('button', {
       class: 'pf-row', type: 'button',
+      /* The product's own colour, used only by the active card. Set as a custom
+         property so the stylesheet decides where it lands. */
+      style: item.tint ? { '--tint': item.tint } : {},
       /* The accessible name has to carry what the tooltip does. A button whose
          only content is an untitled image announces nothing to a screen reader,
          and the tooltip is decoration as far as one is concerned. */
@@ -516,12 +519,15 @@ export function Platforms(block, { editing = false } = {}) {
       },
       ondblclick: () => open(pane),
     },
-      tile,
+      /* Text leads; the mark appears on the card that is open. The rail reads as
+         a list of names until one is chosen, which is the pattern in the
+         reference — a column of labelled rows, one of them expanded. */
       h('span', { class: 'pf-row__tip' },
         h('b', {}, item.name),
         label ? h('i', {}, label) : null,
         h('em', {}, `${count} login${count === 1 ? '' : 's'}`),
       ),
+      tile,
     );
   });
 
