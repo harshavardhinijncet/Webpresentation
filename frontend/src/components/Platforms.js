@@ -2,6 +2,7 @@ import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media as mediaUrl } from '../utils/media.js';
 import { toastSuccess, toastError } from './Toast.js';
+import { dockMagnify } from '../utils/dock.js';
 
 /**
  * The platform wall: a rotating 3D stack of browser windows, and opening one
@@ -490,12 +491,22 @@ export function Platforms(block, { editing = false } = {}) {
     h('em', {}, `${(pane.logins || []).length}`),
   ));
 
+  const chipRail = h('div', { class: 'pf-chips' }, ...chips);
+  /* The dock effect: the rail swells under the pointer. Started on the next
+     frame because it measures each chip's rect, and the slide is not in the
+     document yet at this point. Nothing to dispose — the loop parks itself once
+     the pointer leaves and everything has settled, and the listeners are on the
+     rail, so they go when it does. */
+  requestAnimationFrame(() => {
+    dockMagnify(chipRail, { radius: 150, amount: 0.24, lift: 4 });
+  });
+
   const wall = h('div', { class: 'pf-wall' },
     h('div', { class: 'pf-intro' },
       block.eyebrow ? h('p', { class: 'pf-eyebrow' }, block.eyebrow) : null,
       block.title ? h('h2', { class: 'pf-title' }, block.title) : null,
       block.subtitle ? h('p', { class: 'pf-sub' }, block.subtitle) : null,
-      h('div', { class: 'pf-chips' }, ...chips),
+      chipRail,
       h('p', { class: 'pf-hint' }, 'Click a window to run the platform inside this slide.'),
     ),
     h('div', { class: 'pf-stagearea' }, deck),

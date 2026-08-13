@@ -8778,6 +8778,22 @@ body.is-presenting .milestones__inner {
   transition: border-color .18s ease, transform .18s ease;
 }
 .pf-chip:hover { border-color: var(--nav-accent, var(--brand-accent)); transform: translateY(-1px); }
+
+/* Once the rail is a dock, the transform belongs to the animation loop. Leaving
+   it in the transition made every frame chase a 180ms tween of the frame before,
+   which reads as lag; and the hover lift would fight the scale for the same
+   property. Both are dropped for docked chips — the dock supplies its own lift. */
+.pf-chips.is-dock .pf-chip {
+  transition: border-color .18s ease, box-shadow .18s ease;
+  will-change: transform;
+}
+.pf-chips.is-dock .pf-chip:hover { transform: none; }
+/* Grown chips overlap their neighbours instead of shoving them, so the one under
+   the pointer needs to read as the top one. */
+.pf-chips.is-dock .pf-chip.is-near {
+  box-shadow: 0 10px 24px -10px rgb(15 23 42 / 0.35);
+  border-color: var(--nav-accent, var(--brand-accent));
+}
 .pf-chip .ic { color: var(--nav-accent-ink, var(--accent-ink)); }
 .pf-chip em {
   font-style: normal; font-size: 10.5px; font-weight: 800; color: var(--muted);
