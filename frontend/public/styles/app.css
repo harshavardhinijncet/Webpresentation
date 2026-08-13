@@ -10276,111 +10276,117 @@ body.is-presenting .pg-player { z-index: 30; }
 }
 
 /* ==========================================================================
-   Platforms — the rail is a vertical dock of the products' own marks
+   Platforms — a vertical dock of the products' own marks, named on hover
    ========================================================================== */
 
-/* One column, every row the same width. The wrapped-pill version packed two
-   onto some lines and one onto others, so the block changed shape with the
-   length of a product's name. */
+/* Marks only. Standing labels made every row as wide as the longest product
+   name and turned the column into a list; the dock this is modelled on names
+   nothing until the pointer arrives. Width is the tiles', not the column's. */
 .pf-chips {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   margin-top: 26px;
-  /* Room to the right for a row to lean out under the pointer without the
-     lean being clipped. */
-  padding-right: 14px;
+  width: fit-content;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #f4f5f7;
 }
 
 .pf-row {
+  position: relative;
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 7px 12px 7px 8px;
-  border: 1px solid var(--border);
+  place-items: center;
+  width: 48px; height: 48px;
+  padding: 0;
+  border: 0;
   border-radius: 14px;
-  background: var(--surface);
-  color: var(--text);
-  font: inherit;
-  text-align: left;
+  background: transparent;
   cursor: pointer;
-  transition: border-color .18s ease, box-shadow .22s ease, background .18s ease;
+  /* The row leans toward the pointer; the mark inside it grows. */
+  transform: translateX(calc(6px * var(--dock-k, 0)));
 }
 
 /* --- the mark ------------------------------------------------------------- */
 .pf-row__tile {
   display: grid; place-items: center;
-  width: 40px; height: 40px;
-  border-radius: 10px;
+  width: 44px; height: 44px;
+  border-radius: 12px;
   overflow: hidden;
-  /* The mark grows toward the pointer. This is the dock, and it is the only
-     thing that scales: the row itself keeps its width, so nothing re-wraps and
-     nothing leaves the column. */
-  transform: scale(calc(1 + 0.30 * var(--dock-k, 0)));
-  transition: transform 90ms linear;
-}
-/* One ground for every tile. The marks that only existed white-on-dark were
-   luma-inverted at crop time — luma only, so the orange in t@g stays orange
-   where a plain negate would have flipped it — and their grounds clipped to
-   white. Before that each tile carried the colour of whatever it was cut from,
-   and seven rows of black, white and green read as a patchwork rather than a
-   set. Uniform tiles are the whole point of the dock this is modelled on. */
-.pf-row__tile--dark,
-.pf-row__tile--light {
-  background: #f4f5f7;
+  /* One ground for every tile. The marks that only existed white-on-dark were
+     luma-inverted at crop time — luma only, so the orange in t@g survives where
+     a plain negate would have flipped it — and their grounds clipped to white.
+     Before that each tile carried the colour of whatever it was cut from, and
+     the rail read as a patchwork of black, white and green. */
+  background: #ffffff;
   border: 1px solid var(--border);
+  /* This is the dock: the mark scales, the column does not move. */
+  transform: scale(calc(1 + 0.34 * var(--dock-k, 0)));
+  transition: transform 90ms linear, box-shadow .18s ease, border-color .18s ease;
 }
 .pf-row__tile img {
   display: block; width: 100%; height: 100%;
   /* contain, never cover: these are wordmarks at three different aspect ratios
      and cover would slice the ends off the wide ones. */
   object-fit: contain;
-  padding: 4px;
+  padding: 5px;
   box-sizing: border-box;
 }
 .pf-row__tile .ic { color: var(--nav-accent-ink, var(--accent-ink)); }
+.pf-row.is-near .pf-row__tile,
+.pf-row:hover .pf-row__tile,
+.pf-row:focus-visible .pf-row__tile {
+  border-color: var(--nav-accent, var(--brand-accent));
+  box-shadow: 0 10px 22px -10px rgb(15 23 42 / 0.4);
+}
+.pf-row:focus-visible {
+  outline: 2px solid var(--nav-accent, var(--brand-accent));
+  outline-offset: 3px;
+}
 
-/* --- the label ----------------------------------------------------------- */
-.pf-row__text {
-  display: flex; flex-direction: column; gap: 1px; min-width: 0;
+/* --- the name, only while pointed at ------------------------------------- */
+/* To the right of the rail rather than above it: this dock is vertical, and a
+   label above each tile would land on the tile above. */
+.pf-row__tip {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  display: flex; align-items: baseline; gap: 7px;
+  padding: 6px 11px;
+  border-radius: 10px;
+  background: #0b0d10;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 0.32);
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-6px, -50%) scale(0.96);
+  transform-origin: left center;
+  /* Overshoots slightly on the way in, which is what the spring in the original
+     reads as without a physics library. */
+  transition: opacity .14s ease, transform .22s cubic-bezier(.2,.9,.3,1.35);
+  z-index: 5;
 }
-.pf-row__name {
-  font-size: 13.5px; font-weight: 700; letter-spacing: -0.005em; line-height: 1.2;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.pf-row:hover .pf-row__tip,
+.pf-row:focus-visible .pf-row__tip {
+  opacity: 1;
+  transform: translate(0, -50%);
 }
-/* Under the name, in the accent ink rather than a filled pill: the pill was a
-   second block of colour fighting the name for a narrow column. */
-.pf-row__role {
-  color: var(--nav-accent-ink, var(--accent-ink));
-  font-size: 9px; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase;
+.pf-row__tip b { font-size: 12.5px; font-weight: 700; }
+.pf-row__tip i {
+  font-style: normal; font-size: 9px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--nav-accent, var(--brand-accent));
 }
-.pf-row__n {
-  min-width: 20px; padding: 2px 6px; border-radius: 999px;
-  background: var(--page-bg); color: var(--muted);
-  font-size: 10.5px; font-weight: 800; text-align: center;
+.pf-row__tip em {
+  font-style: normal; font-size: 10.5px; font-weight: 600; color: #9ca3af;
   font-variant-numeric: tabular-nums;
 }
 
-/* --- proximity ----------------------------------------------------------- */
-/* The row leans out rather than swelling. Growing it would either overflow the
-   column or, with transform-origin on the left, push its right edge across the
-   platform windows beside it. */
-.pf-chips.is-dock .pf-row {
-  transform: translateX(calc(8px * var(--dock-k, 0)));
-  transition: border-color .18s ease, box-shadow .22s ease, background .18s ease;
-}
-.pf-chips.is-dock .pf-row.is-near {
-  border-color: var(--nav-accent, var(--brand-accent));
-  box-shadow: 0 12px 26px -14px rgb(15 23 42 / 0.45);
-}
-.pf-row:hover { border-color: var(--nav-accent, var(--brand-accent)); }
-.pf-row:focus-visible {
-  outline: 2px solid var(--nav-accent, var(--brand-accent));
-  outline-offset: 2px;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .pf-row, .pf-row__tile { transition: none; transform: none; }
+  .pf-row, .pf-row__tile, .pf-row__tip { transition: none; transform: none; }
+  .pf-row__tile { transform: none; }
+  .pf-row__tip { transform: translateY(-50%); }
 }

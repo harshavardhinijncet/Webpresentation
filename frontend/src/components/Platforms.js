@@ -479,11 +479,10 @@ export function Platforms(block, { editing = false } = {}) {
 
   const deck = h('div', { class: 'pf-deck' }, ...cards);
 
-  /* One row per view, every row the same width. The old rail was pills on
-     `flex-wrap`, which packed two onto some lines and one onto others and read
-     as ragged — the layout changed shape depending on how long a product's name
-     happened to be. A single column is the same shape whatever the names are,
-     and it gives the mark a fixed place to sit on the left. */
+  /* Marks only, names on hover — the dock this is modelled on carries no
+     standing labels either. Two views of the same product would be
+     indistinguishable from their marks alone, so the tooltip names the view as
+     well as the platform, and says how many sign-ins are waiting. */
   const chips = panes.map((pane, i) => {
     const { item, label } = pane;
     const tile = h('span', { class: `pf-row__tile pf-row__tile--${item.tone || 'light'}` });
@@ -503,23 +502,22 @@ export function Platforms(block, { editing = false } = {}) {
       tile.appendChild(icon(item.icon || 'grid-4', { class: 'ic ic--sm' }));
     }
 
+    const count = (pane.logins || []).length;
     return h('button', {
       class: 'pf-row', type: 'button',
+      /* The accessible name has to carry what the tooltip does. A button whose
+         only content is an untitled image announces nothing to a screen reader,
+         and the tooltip is decoration as far as one is concerned. */
+      'aria-label': `${item.name}${label ? ` — ${label}` : ''}, ${count} sign-in${count === 1 ? '' : 's'}`,
       onclick: () => { swap.focus(i); swap.stop(); swap.start(); },
       ondblclick: () => open(pane),
-      title: `Bring ${item.name}${label ? ` ${label}` : ''} to the front`,
     },
       tile,
-      /* Stacked, not side by side. A coloured pill next to the name competed
-         with it for a column narrow enough that "AI Engineer LMS" truncated to
-         "AI Engin…" — the name is the thing being read, so it gets the width and
-         the role sits under it. */
-      h('span', { class: 'pf-row__text' },
-        h('span', { class: 'pf-row__name' }, item.name),
-        label ? h('span', { class: 'pf-row__role' }, label) : null,
+      h('span', { class: 'pf-row__tip' },
+        h('b', {}, item.name),
+        label ? h('i', {}, label) : null,
+        h('em', {}, `${count} login${count === 1 ? '' : 's'}`),
       ),
-      h('span', { class: 'pf-row__n', title: `${(pane.logins || []).length} sign-in(s) ready to copy` },
-        `${(pane.logins || []).length}`),
     );
   });
 
