@@ -10321,10 +10321,17 @@ body.is-presenting .pg-player { z-index: 30; }
   transform: scale(calc(1 + 0.30 * var(--dock-k, 0)));
   transition: transform 90ms linear;
 }
-/* Cut from a dark screen or a black poster — a white wordmark needs the ground
-   it was drawn on, or it disappears into the card. */
-.pf-row__tile--dark { background: #0d1013; border: 1px solid #1e2530; }
-.pf-row__tile--light { background: var(--page-bg); border: 1px solid var(--border); }
+/* One ground for every tile. The marks that only existed white-on-dark were
+   luma-inverted at crop time — luma only, so the orange in t@g stays orange
+   where a plain negate would have flipped it — and their grounds clipped to
+   white. Before that each tile carried the colour of whatever it was cut from,
+   and seven rows of black, white and green read as a patchwork rather than a
+   set. Uniform tiles are the whole point of the dock this is modelled on. */
+.pf-row__tile--dark,
+.pf-row__tile--light {
+  background: #f4f5f7;
+  border: 1px solid var(--border);
+}
 .pf-row__tile img {
   display: block; width: 100%; height: 100%;
   /* contain, never cover: these are wordmarks at three different aspect ratios

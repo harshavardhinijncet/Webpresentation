@@ -4773,7 +4773,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_5c7c06205c6c4799",
+          "id": "blk_b68db5b69ea54193",
           "type": "platforms",
           "layout": {
             "x": 0,
@@ -4790,7 +4790,7 @@
               "blurb": "The learner portal.",
               "icon": "brain",
               "logo": "platform-logos/myna.png",
-              "tone": "dark",
+              "tone": "light",
               "shot": "myna",
               "url": "https://myna.toriiminds.com/",
               "adminUrl": "",
@@ -4828,7 +4828,7 @@
               "blurb": "The Torii learning platform and the JPath journey.",
               "icon": "route",
               "logo": "platform-logos/torii-minds.png",
-              "tone": "dark",
+              "tone": "light",
               "shot": "torii-minds",
               "url": "https://toriiminds.com/",
               "adminUrl": "",
@@ -4847,7 +4847,7 @@
               "blurb": "The AI Ready Engineer learning platform.",
               "icon": "chip",
               "logo": "platform-logos/ai-engineer-lms.png",
-              "tone": "dark",
+              "tone": "light",
               "shot": "ai-engineer-lms",
               "url": "https://aiengineer.toriiminds.com/login",
               "adminUrl": "https://aiengineer.toriiminds.com/admin/login",
@@ -4923,7 +4923,7 @@
               "blurb": "The NCET task and activity system.",
               "icon": "workflow",
               "logo": "platform-logos/tag.png",
-              "tone": "dark",
+              "tone": "light",
               "shot": "tag",
               "url": "https://tag.ncet.co.in/",
               "adminUrl": "https://tag.ncet.co.in/admin/",
@@ -5010,7 +5010,7 @@
         }
       ],
       "createdAt": "2026-08-08T09:08:24.918Z",
-      "updatedAt": "2026-08-13T06:09:42.425Z"
+      "updatedAt": "2026-08-13T06:35:08.984Z"
     },
     {
       "id": "sec_6b9961ccab6b4efa",
@@ -5027,7 +5027,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_64808c9cf8794759",
+          "id": "blk_512ec1ec55fe4714",
           "type": "platforms",
           "layout": {
             "x": 0,
@@ -5044,7 +5044,7 @@
               "blurb": "The learner portal.",
               "icon": "brain",
               "logo": "platform-logos/myna.png",
-              "tone": "dark",
+              "tone": "light",
               "shot": "myna",
               "url": "https://myna.toriiminds.com/",
               "adminUrl": "",
@@ -5082,7 +5082,7 @@
               "blurb": "The Torii learning platform and the JPath journey.",
               "icon": "route",
               "logo": "platform-logos/torii-minds.png",
-              "tone": "dark",
+              "tone": "light",
               "shot": "torii-minds",
               "url": "https://toriiminds.com/",
               "adminUrl": "",
@@ -5101,7 +5101,7 @@
               "blurb": "The AI Ready Engineer learning platform.",
               "icon": "chip",
               "logo": "platform-logos/ai-engineer-lms.png",
-              "tone": "dark",
+              "tone": "light",
               "shot": "ai-engineer-lms",
               "url": "https://aiengineer.toriiminds.com/login",
               "adminUrl": "https://aiengineer.toriiminds.com/admin/login",
@@ -5177,7 +5177,7 @@
               "blurb": "The NCET task and activity system.",
               "icon": "workflow",
               "logo": "platform-logos/tag.png",
-              "tone": "dark",
+              "tone": "light",
               "shot": "tag",
               "url": "https://tag.ncet.co.in/",
               "adminUrl": "https://tag.ncet.co.in/admin/",
@@ -5264,7 +5264,7 @@
         }
       ],
       "createdAt": "2026-08-08T09:08:24.998Z",
-      "updatedAt": "2026-08-13T06:09:42.439Z"
+      "updatedAt": "2026-08-13T06:35:09.018Z"
     }
   ],
   "assets": [
