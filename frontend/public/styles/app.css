@@ -9944,6 +9944,15 @@ body.is-presenting .pg-player { z-index: 30; }
 }
 
 /* ------------------------------------------------------------- the stage -- */
+/* Rows are centred when they fit and top-aligned when they scroll — a centred
+   scroll container hides its own first row above the fold. */
+.pw-stage.is-short {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.pw-stage.is-short .pw-row:last-child { margin-bottom: 0; }
+
 .pw-stage {
   flex: 1 1 auto;
   /* Without min-height:0 a flex child refuses to shrink below its content and

@@ -333,6 +333,17 @@ export function PlacementWall(block, { editing = false } = {}) {
     // The arrow sequence is whatever the wall is showing, in reading order.
     shown = flat;
 
+    /* Where the spare height goes. Aspect ratios are fixed, so a row can fill the
+       width or the height but not both: Google's three photographs come to 309px
+       once they span 1536, in a 592px box. Splitting them over two rows makes
+       every image *smaller* — 290px — so there is nothing to gain there. What is
+       left to decide is whether the remainder sits under the pictures or around
+       them, and centred reads as composition where bottom-stacked reads as a
+       layout that ran out. Only when it fits: centring a scrolling stage would
+       clip its first row. */
+    const totalH = rows.reduce((n, r) => n + r.height + GAP, 0) - GAP;
+    stage.classList.toggle('is-short', totalH <= contentH + 1);
+
     const tiles = [];
     let ordinal = 0;
     rows.forEach((row) => {
