@@ -165,10 +165,36 @@ export function PlacementWall(block, { editing = false } = {}) {
   );
   document.body.appendChild(light);
 
+  /* The tile the open image came out of, so it can go back into it. */
+  let fromTile = null;
+
   function closeLight() {
-    light.hidden = true;
-    light.classList.remove('is-on');
     document.removeEventListener('keydown', onLightKey, true);
+    /* Fly back into the tile, which is what makes it read as one object moving
+       rather than a viewer opening and shutting. If the arrows have walked on to
+       a different image there is no tile that matches it any more, so that case
+       just fades. */
+    const target = fromTile && shown[atIndex] === fromTile.pane ? fromTile.el : null;
+    if (!target || REDUCED?.matches) {
+      light.hidden = true;
+      light.classList.remove('is-on');
+      return;
+    }
+    const to = target.getBoundingClientRect();
+    const now = lightImg.getBoundingClientRect();
+    const sx = to.width / now.width;
+    const sy = to.height / now.height;
+    const dx = (to.left + to.width / 2) - (now.left + now.width / 2);
+    const dy = (to.top + to.height / 2) - (now.top + now.height / 2);
+    lightImg.style.transition = 'transform 320ms cubic-bezier(.4,0,.6,1)';
+    lightImg.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+    light.classList.remove('is-on');
+    // Hidden only once it has arrived, or it disappears mid-flight.
+    setTimeout(() => {
+      light.hidden = true;
+      lightImg.style.transition = '';
+      lightImg.style.transform = '';
+    }, 330);
   }
   function onLightKey(e) {
     if (e.key === 'Escape') { e.stopPropagation(); closeLight(); return; }
@@ -196,11 +222,54 @@ export function PlacementWall(block, { editing = false } = {}) {
     const many = shown.length > 1;
     prevBtn.hidden = !many;
     nextBtn.hidden = !many;
+    // Stepping with the arrows must not inherit the last flight's transform.
+    lightImg.style.transition = '';
+    lightImg.style.transform = '';
   }
-  function openLight(index) {
+
+  /**
+   * Fly the opened image out of the tile it was clicked, rather than fading a
+   * separate copy in over the top.
+   *
+   * The layout-grid this is modelled on gets it from a shared `layoutId`: React
+   * measures the element in both places and interpolates. There is no shared
+   * layout engine here, so it is done by hand — the standard invert-then-play.
+   * Measure where the image ends up, express the tile as an offset and scale from
+   * there, commit that, then transition it away to nothing.
+   *
+   * Rects on both sides, which is right for once: the tile is inside FitSlide's
+   * transform and the lightbox is on the body, and a bounding rect is in viewport
+   * space either way, so the two are directly comparable. Offsets would not be.
+   */
+  function flyFrom(tile) {
+    if (!tile || REDUCED?.matches) return;
+    const from = tile.getBoundingClientRect();
+    const play = () => {
+      const to = lightImg.getBoundingClientRect();
+      if (!to.width || !to.height || !from.width) return;
+      /* Both boxes are solved from the same file's aspect ratio, so these two
+         scales agree to within rounding and the flight does not squash. */
+      const sx = from.width / to.width;
+      const sy = from.height / to.height;
+      const dx = (from.left + from.width / 2) - (to.left + to.width / 2);
+      const dy = (from.top + from.height / 2) - (to.top + to.height / 2);
+      lightImg.style.transition = 'none';
+      lightImg.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+      void lightImg.offsetWidth; // commit the inverted state before playing it
+      lightImg.style.transition = 'transform 400ms cubic-bezier(.2,.7,.3,1)';
+      lightImg.style.transform = 'none';
+    };
+    // The final box is only knowable once the file has decoded.
+    if (lightImg.complete && lightImg.naturalWidth) requestAnimationFrame(play);
+    else lightImg.addEventListener('load', () => requestAnimationFrame(play), { once: true });
+  }
+
+  function openLight(index, tile) {
     atIndex = Math.max(0, index);
+    fromTile = tile ? { el: tile, pane: shown[atIndex] } : null;
     paint();
     light.hidden = false;
+    flyFrom(tile);
     requestAnimationFrame(() => light.classList.add('is-on'));
     document.addEventListener('keydown', onLightKey, true);
   }
@@ -277,7 +346,7 @@ export function PlacementWall(block, { editing = false } = {}) {
           class: 'pw-tile', type: 'button',
           style: { width: `${Math.round(it.dw)}px`, height: `${Math.round(it.dh)}px` },
           title: it.label || it.group?.name || 'Open full size',
-          onclick: () => openLight(index),
+          onclick: () => openLight(index, figure),
         },
           h('img', {
             src: media(`/uploads/Placements/${it.src.split('/').map(encodeURIComponent).join('/')}`),

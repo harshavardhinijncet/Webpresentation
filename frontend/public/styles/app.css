@@ -10505,3 +10505,27 @@ body.is-presenting .pg-player { z-index: 30; }
 @supports not (backdrop-filter: blur(10px)) {
   .sw-stage__side { background: rgb(255 255 255 / 0.97); }
 }
+
+/* --- the opened image behaves like the layout grid's selected card -------- */
+/* A lighter scrim than a viewer would use, and the image kept off the edges, so
+   the gallery stays visible behind it — that is the layout-grid's whole feel:
+   one card lifts out of the set rather than replacing it. */
+.pw-light { background: rgb(9 11 14 / 0.58); }
+.pw-light__img {
+  max-width: min(100%, 76vw);
+  max-height: min(calc(100vh - 12vh), 76vh);
+  box-shadow: 0 40px 90px -30px rgb(0 0 0 / 0.7);
+}
+/* The caption rises as the card lands, the way the selected card's content does
+   — 0.3s ease-in-out from 100px, matching the original. */
+.pw-light__foot {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .3s ease-in-out .12s, transform .3s ease-in-out .12s;
+}
+.pw-light.is-on .pw-light__foot { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-light__foot { opacity: 1; transform: none; transition: none; }
+  .pw-light__img { transition: none !important; }
+}
