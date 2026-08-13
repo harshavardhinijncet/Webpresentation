@@ -10491,3 +10491,69 @@ body.is-presenting .pg-player { z-index: 30; }
 .pf-railrow { position: relative; z-index: 4; }
 /* And the stack is given room to lean up into without reaching the title. */
 .pf-stagearea { padding-top: 26px; }
+
+/* ==========================================================================
+   Platforms — the navigation back on the side, and the title clear of the stack
+   ========================================================================== */
+
+/* Two columns. Stacking the title over the stack could never work: slotFor
+   offsets the back cards upward, so the fan always reaches into whatever band
+   sits above it, and lifting the title's z-index only made it legible *on top of*
+   the windows rather than clear of them. Side by side, the title is in a
+   different column and nothing has to overlap at all. */
+.pf-wall {
+  grid-template-columns: minmax(280px, 30%) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas:
+    'intro stage'
+    'rail  stage';
+  column-gap: 24px;
+  align-items: start;
+}
+.pf-intro {
+  grid-area: intro;
+  padding: 46px 0 0 44px;
+  text-align: left;
+  z-index: 4;
+}
+.pf-title {
+  margin: 0;
+  max-width: 14ch;
+  font-size: 44px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.02;
+}
+.pf-sub { margin: 14px 0 0; max-width: 34ch; text-align: left; }
+
+/* The rail under the title, down the side, and vertical again — one column of
+   marks reads as a list of products beside the thing they open. */
+.pf-railrow {
+  grid-area: rail;
+  display: flex; justify-content: flex-start; align-items: flex-start;
+  padding: 22px 0 0 44px;
+  z-index: 4;
+}
+.pf-chips {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  max-width: none;
+  overflow: visible;
+  padding: 10px;
+  border-radius: 24px;
+  background: #f6f7f9;
+  border: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+  box-shadow: none;
+}
+.pf-row { justify-content: flex-start; border-radius: 16px; }
+/* Vertical again, so the name grows sideways out of the column rather than
+   widening the bar it sits in. */
+.pf-row__tip { max-width: 0; }
+.pf-row.is-on .pf-row__tip,
+.pf-row:hover .pf-row__tip,
+.pf-row:focus-visible .pf-row__tip { max-width: 200px; }
+
+.pf-stagearea {
+  grid-area: stage;
+  align-self: stretch;
+  padding-top: 0;
+  place-items: center;
+}
