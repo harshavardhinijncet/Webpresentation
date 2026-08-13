@@ -509,7 +509,11 @@ export function Platforms(block, { editing = false } = {}) {
          only content is an untitled image announces nothing to a screen reader,
          and the tooltip is decoration as far as one is concerned. */
       'aria-label': `${item.name}${label ? ` — ${label}` : ''}, ${count} sign-in${count === 1 ? '' : 's'}`,
-      onclick: () => { swap.focus(i); swap.stop(); swap.start(); },
+      onclick: () => {
+        chips.forEach((c) => c.classList.remove('is-on'));
+        chips[i].classList.add('is-on');
+        swap.focus(i); swap.stop(); swap.start();
+      },
       ondblclick: () => open(pane),
     },
       tile,
@@ -521,6 +525,7 @@ export function Platforms(block, { editing = false } = {}) {
     );
   });
 
+  if (chips.length) chips[0].classList.add('is-on');
   const chipRail = h('div', { class: 'pf-chips' }, ...chips);
   /* The dock, vertical. `transform: false` because a full-width row scaled up
      runs out of its own column — the stylesheet reads --dock-k and grows the
@@ -537,13 +542,17 @@ export function Platforms(block, { editing = false } = {}) {
       block.eyebrow ? h('p', { class: 'pf-eyebrow' }, block.eyebrow) : null,
       block.title ? h('h2', { class: 'pf-title' }, block.title) : null,
       block.subtitle ? h('p', { class: 'pf-sub' }, block.subtitle) : null,
-      chipRail,
       /* The standing instruction is gone. It told the room what the presenter is
          about to do anyway, and the dock names each mark on hover, so the line
          was explaining an interface that now explains itself. */
     ),
     h('div', { class: 'pf-stagearea' }, deck),
   );
+
+  /* The rail spans the whole foot rather than sitting in the intro column: seven
+     pills need about 700px and that column is barely 300, so inside it the bar
+     wrapped onto three lines. */
+  wall.appendChild(h('div', { class: 'pf-railrow' }, chipRail));
 
   const swap = cardSwap(cards, { delay: 5200 });
   swap.begin();
