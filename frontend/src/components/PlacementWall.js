@@ -410,23 +410,28 @@ export function PlacementWall(block, { editing = false } = {}) {
         },
       },
         icon(c.icon || 'images', { class: 'ic ic--sm' }),
-        h('span', { class: 'pw-tab__name' }, c.name),
-        h('span', { class: 'pw-tab__n' }, countLabel(n, c.kind)),
+        h('span', { class: 'pw-tab__text' },
+          h('span', { class: 'pw-tab__name' }, c.name),
+          h('span', { class: 'pw-tab__n' }, countLabel(n, c.kind)),
+        ),
       );
       rail.appendChild(btn);
     });
   }
 
+  /* Centred, and the navigation comes first. The old head put a left-aligned
+     title over a left-aligned row of tabs, which left the page reading as three
+     things stacked in a corner. One column down the middle — title, then the
+     chapter pill, then the company chips — gives the gallery beneath it a centre
+     line to sit on. */
   const head = h('div', { class: 'pw-head' },
     h('div', { class: 'pw-head__top' },
-      h('div', {},
-        block.eyebrow ? h('p', { class: 'pw-eyebrow' }, block.eyebrow) : null,
-        h('h2', { class: 'pw-title' }, block.title || 'Placements'),
-        h('span', { class: 'pw-rule' }),
-      ),
+      block.eyebrow ? h('p', { class: 'pw-eyebrow' }, block.eyebrow) : null,
+      h('h2', { class: 'pw-title' }, block.title || 'Placements'),
+      h('span', { class: 'pw-rule' }),
       block.lead ? h('p', { class: 'pw-lead' }, block.lead) : null,
     ),
-    rail,
+    h('div', { class: 'pw-navwrap' }, rail),
     chips,
   );
 
