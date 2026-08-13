@@ -10125,64 +10125,113 @@ body.is-presenting .pg-player { z-index: 30; }
 }
 .deck-step--next .deck-step__text { align-items: flex-end; }
 
-/* ------------------------------------------------------------- the dot rail */
+/* ------------------------------------------------------------- the section rail */
 .deck-dots {
   display: flex; align-items: center; gap: 2px;
-  padding: 0 6px; min-width: 0;
-  /* Sixteen dots fit; more than that scrolls rather than pushing Exit off the
-     end of a projector. */
+  padding: 0 4px; min-width: 0;
   overflow-x: auto; scrollbar-width: none;
 }
 .deck-dots::-webkit-scrollbar { width: 0; height: 0; }
 
+/* The cell is what the menu hangs off, so the menu can be positioned against
+   its own section rather than against the whole bar. */
+.deck-cell { position: relative; flex: 0 0 auto; }
+
 .deck-dot {
-  display: grid; place-items: center; flex: 0 0 auto;
-  width: 30px; height: 30px; padding: 0;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 11px;
   border: 0; border-radius: 999px; background: transparent;
-  color: rgb(255 255 255 / 0.55); cursor: pointer;
+  font: inherit; color: rgb(255 255 255 / 0.62); cursor: pointer;
+  white-space: nowrap;
   transition: color 160ms ease, background 160ms ease, transform 180ms cubic-bezier(.2,.9,.3,1.25);
 }
-.deck-dot:hover, .deck-dot:focus-visible {
-  color: #fff; background: rgb(255 255 255 / 0.16);
-  transform: translateY(-3px) scale(1.08);
+/* Only the section in hand is named, which is the pattern in the reference: one
+   filled pill carrying its label, the rest plain icons. Thirteen names do not fit
+   1180px — they overflowed into a horizontal scroll that hid most of the deck,
+   which defeats the point of a jump bar. Hovering names one too, and the menu
+   above it repeats the name in its heading. */
+.deck-dot__name {
+  font-size: 12px; font-weight: 650;
+  max-width: 0; overflow: hidden; white-space: nowrap;
+  opacity: 0;
+  transition: max-width .26s cubic-bezier(.2,.7,.3,1), opacity .18s ease, margin .26s ease;
+}
+.deck-dot.is-on .deck-dot__name,
+.deck-cell:hover .deck-dot__name,
+.deck-dot:focus-visible .deck-dot__name {
+  max-width: 180px; opacity: 1;
+}
+.deck-dot .ic { flex: 0 0 auto; }
+.deck-cell:hover .deck-dot,
+.deck-dot:focus-visible {
+  color: #fff; background: rgb(255 255 255 / 0.14);
+  transform: translateY(-2px);
   outline: none;
 }
 .deck-dot.is-on {
   color: #fff;
   background: var(--nav-accent-ink, var(--accent-ink, #E95A22));
 }
-.deck-dot .ic { width: 16px; height: 16px; }
 
-/* ------------------------------------------------------- the hover label ---- */
-/* Absolute inside the bar, not fixed: the bar is already the top layer here, and
-   a fixed child would be measured against the viewport and drift as soon as the
-   bar is centred by a transform. */
-.deck-hint {
-  position: absolute; bottom: calc(100% + 10px); left: 0;
-  padding: 7px 12px; border-radius: 10px;
-  background: #0b0d10; color: #fff;
+/* ------------------------------------------------- the subsection menu ---- */
+/* Springs up over the bar, sized to its contents. Rendered above rather than
+   below for the obvious reason: the bar sits at the bottom of the screen. */
+.deck-menu {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  min-width: 190px; max-width: 280px;
+  padding: 10px;
+  border-radius: 16px;
+  background: #0b0d10;
   border: 1px solid rgb(255 255 255 / 0.14);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 0.4);
-  font-size: 12.5px; font-weight: 650; white-space: nowrap;
-  pointer-events: none;
-  opacity: 0; transform: translateY(6px) scale(0.94);
+  box-shadow: 0 22px 50px rgb(0 0 0 / 0.5);
+  opacity: 0;
+  transform: translate(-50%, 8px) scale(0.9);
   transform-origin: bottom center;
-  /* Overshoots slightly on the way in, which is what the spring in the design
-     reads as without a physics library. */
-  transition: opacity 150ms ease, transform 220ms cubic-bezier(.2,.9,.3,1.35);
+  pointer-events: none;
+  /* Overshoots on the way in, which is what the reference's spring reads as
+     without a physics library — mass 0.5, damping 11.5, stiffness 100 is
+     underdamped, so unlike the dock this one genuinely does bounce. */
+  transition: opacity .16s ease, transform .28s cubic-bezier(.16,1.02,.3,1.42);
+  z-index: 6;
 }
-.deck-hint.is-on { opacity: 1; transform: none; }
-.deck-hint[hidden] { display: none; }
+.deck-cell.is-open .deck-menu {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  pointer-events: auto;
+}
+.deck-menu__head {
+  display: block; padding: 2px 10px 8px;
+  color: rgb(255 255 255 / 0.45);
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.deck-menu__list { display: flex; flex-direction: column; gap: 1px; }
+.deck-menu__row {
+  display: block; width: 100%;
+  padding: 8px 10px;
+  border: 0; border-radius: 9px; background: transparent;
+  color: rgb(255 255 255 / 0.82);
+  font: inherit; font-size: 12.5px; font-weight: 600;
+  text-align: left; white-space: normal; cursor: pointer;
+  transition: color 140ms ease, background 140ms ease;
+}
+.deck-menu__row:hover, .deck-menu__row:focus-visible {
+  color: #fff; background: rgb(255 255 255 / 0.1); outline: none;
+}
 
 @media (max-width: 900px) {
   /* On a narrow display the names are the first thing to go; the dots and the
      count still tell the presenter where they are. */
   .deck-step__text { display: none; }
   .deck-step { padding: 7px 9px; }
+  /* Section names go before the icons do — the icons plus the count still say
+     where the presenter is. */
+  .deck-dot.is-on .deck-dot__name { max-width: 120px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .deck-step, .deck-dot, .deck-hint { transition: none; }
+  .deck-step, .deck-dot, .deck-menu, .deck-dot__name { transition: none; }
   .deck-dot:hover, .deck-dot:focus-visible { transform: none; }
 }
 

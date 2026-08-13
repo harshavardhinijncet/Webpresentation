@@ -1,21 +1,25 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
-import { sectionLabel } from './SideNav.js';
+import { sectionLabel, sectionMenu } from './SideNav.js';
 
 /**
  * The presenter's bar: where you are, what is either side of you, and a way to
  * reach any slide without walking there.
  *
- * Three parts, left to right. The previous and next buttons carry the name of
- * the section they lead to, because "‹" alone asks the presenter to remember the
- * running order of sixteen sections while a room watches. The middle is one dot
- * per slide, hover-labelled, so any section is one click away rather than nine
- * presses. The count and exit stay on the right where they were.
+ * Three parts, left to right. The previous and next buttons carry the name of the
+ * section they lead to, because "‹" alone asks the presenter to remember the
+ * running order of sixteen sections while a room watches. The middle names every
+ * section, and hovering one raises a card of its subsections so any page in the
+ * deck is a single click away. The count and exit stay on the right.
  *
- * The hover label is a card that springs up over the bar. It is deliberately
- * `position: absolute` inside the bar rather than fixed: the bar is already the
+ * The card is modelled on the navbar-menu: a rounded surface that springs up
+ * under the pointer. Each section owns its own, built once — the reference
+ * animates a single shared card between items with a layoutId, and re-creating
+ * one on every hover would restart its transition and read as a flicker.
+ *
+ * It is `position: absolute` inside the bar, not fixed. The bar is already the
  * top layer of the presenting view, and a fixed child would be measured against
- * the viewport and drift when the bar is centred by transform.
+ * the viewport and drift as soon as the bar is centred by a transform.
  */
 export function DeckControls({ index, total, deck = [], onPrev, onNext, onExit, onJump }) {
   const progress = h('div', {
@@ -35,11 +39,31 @@ export function DeckControls({ index, total, deck = [], onPrev, onNext, onExit, 
     return label.length > 22 ? `${label.slice(0, 21)}…` : label;
   };
 
-  const hint = h('span', { class: 'deck-hint', hidden: true });
-
   const dots = h('div', { class: 'deck-dots', role: 'tablist', 'aria-label': 'Jump to a section' });
   deck.forEach((section, i) => {
     const { label, icon: iconKey } = sectionLabel(section);
+    const menu = sectionMenu(section);
+
+    /* The hover card, per section. Built once and shown on enter, rather than
+       created on demand: the reference animates a shared card between items, and
+       re-creating one on every hover would restart its transition from scratch
+       and read as a flicker along the bar. */
+    const heading = section.parentId ? 'Also in this group' : label;
+    const card = menu.length
+      ? h('div', { class: 'deck-menu' },
+          h('span', { class: 'deck-menu__head' }, heading),
+          h('div', { class: 'deck-menu__list' },
+            ...menu.map((row) => h('button', {
+              class: 'deck-menu__row', type: 'button',
+              onclick: (e) => {
+                e.stopPropagation();
+                onJump?.(row.id ? { id: row.id } : section);
+              },
+            }, row.label)),
+          ),
+        )
+      : null;
+
     const dot = h('button', {
       class: `deck-dot${i === at ? ' is-on' : ''}`,
       type: 'button',
@@ -47,33 +71,19 @@ export function DeckControls({ index, total, deck = [], onPrev, onNext, onExit, 
       'aria-selected': i === at ? 'true' : 'false',
       'aria-label': `${i + 1}. ${label}`,
       onclick: () => onJump?.(section),
-      onmouseenter: () => showHint(dot, `${i + 1}. ${label}`),
-      onfocus: () => showHint(dot, `${i + 1}. ${label}`),
-      onmouseleave: hideHint,
-      onblur: hideHint,
-    }, icon(iconKey, { class: 'ic ic--xs' }));
-    dots.appendChild(dot);
-  });
-
-  function showHint(dot, text) {
-    hint.textContent = text;
-    hint.hidden = false;
-    /* Measured after it has text, or the first hover of the session centres the
-       card on the width it had while empty. */
-    requestAnimationFrame(() => {
-      const bar = hint.parentElement;
-      if (!bar) return;
-      const left = dot.offsetLeft + dot.offsetWidth / 2 - hint.offsetWidth / 2;
-      const max = bar.clientWidth - hint.offsetWidth - 8;
-      hint.style.left = `${Math.max(8, Math.min(left, max))}px`;
-      hint.classList.add('is-on');
+    },
+      icon(iconKey, { class: 'ic ic--xs' }),
+      h('span', { class: 'deck-dot__name' }, label),
+    );
+    const cell = h('div', { class: 'deck-cell' }, dot, card);
+    cell.addEventListener('mouseenter', () => {
+      cell.classList.add('is-open');
     });
-  }
-  function hideHint() {
-    hint.classList.remove('is-on');
-    // Kept in the tree until the fade finishes, or it vanishes without one.
-    setTimeout(() => { if (!hint.classList.contains('is-on')) hint.hidden = true; }, 180);
-  }
+    cell.addEventListener('mouseleave', () => cell.classList.remove('is-open'));
+    dot.addEventListener('focus', () => cell.classList.add('is-open'));
+    dot.addEventListener('blur', () => cell.classList.remove('is-open'));
+    dots.appendChild(cell);
+  });
 
   const step = (dir, section, handler) => h('button', {
     class: `deck-step deck-step--${dir}`,
@@ -93,7 +103,6 @@ export function DeckControls({ index, total, deck = [], onPrev, onNext, onExit, 
   const bar = h(
     'div',
     { class: 'deck-bar' },
-    hint,
     step('prev', prevSection, onPrev),
     dots,
     step('next', nextSection, onNext),
