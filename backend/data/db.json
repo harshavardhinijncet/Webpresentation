@@ -4773,7 +4773,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_b68db5b69ea54193",
+          "id": "blk_00d9cc432db94c2f",
           "type": "platforms",
           "layout": {
             "x": 0,
@@ -4781,9 +4781,9 @@
             "w": 12,
             "h": 15
           },
-          "eyebrow": "Live platforms",
-          "title": "Try it in the room",
-          "subtitle": "Open a platform inside this slide, copy a login, and demonstrate it live.",
+          "eyebrow": "",
+          "title": "Built to Deliver",
+          "subtitle": "",
           "items": [
             {
               "name": "MYNA",
@@ -5010,7 +5010,7 @@
         }
       ],
       "createdAt": "2026-08-08T09:08:24.918Z",
-      "updatedAt": "2026-08-13T06:35:08.984Z"
+      "updatedAt": "2026-08-13T08:29:33.053Z"
     },
     {
       "id": "sec_6b9961ccab6b4efa",
@@ -5027,7 +5027,7 @@
       "status": "draft",
       "blocks": [
         {
-          "id": "blk_512ec1ec55fe4714",
+          "id": "blk_e5a7836a72bb4cd8",
           "type": "platforms",
           "layout": {
             "x": 0,
@@ -5035,9 +5035,9 @@
             "w": 12,
             "h": 15
           },
-          "eyebrow": "Live platforms",
-          "title": "Try it in the room",
-          "subtitle": "Open a platform inside this slide, copy a login, and demonstrate it live.",
+          "eyebrow": "",
+          "title": "Built to Deliver",
+          "subtitle": "",
           "items": [
             {
               "name": "MYNA",
@@ -5264,7 +5264,7 @@
         }
       ],
       "createdAt": "2026-08-08T09:08:24.998Z",
-      "updatedAt": "2026-08-13T06:35:09.018Z"
+      "updatedAt": "2026-08-13T08:29:33.062Z"
     }
   ],
   "assets": [

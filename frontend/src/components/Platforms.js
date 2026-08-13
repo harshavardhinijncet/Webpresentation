@@ -538,7 +538,9 @@ export function Platforms(block, { editing = false } = {}) {
       block.title ? h('h2', { class: 'pf-title' }, block.title) : null,
       block.subtitle ? h('p', { class: 'pf-sub' }, block.subtitle) : null,
       chipRail,
-      h('p', { class: 'pf-hint' }, 'Click a window to run the platform inside this slide.'),
+      /* The standing instruction is gone. It told the room what the presenter is
+         about to do anyway, and the dock names each mark on hover, so the line
+         was explaining an interface that now explains itself. */
     ),
     h('div', { class: 'pf-stagearea' }, deck),
   );
