@@ -479,26 +479,59 @@ export function Platforms(block, { editing = false } = {}) {
 
   const deck = h('div', { class: 'pf-deck' }, ...cards);
 
-  const chips = panes.map((pane, i) => h('button', {
-    class: 'pf-chip', type: 'button',
-    onclick: () => { swap.focus(i); swap.stop(); swap.start(); },
-    ondblclick: () => open(pane),
-    title: `Bring ${pane.item.name}${pane.label ? ` ${pane.label}` : ''} to the front`,
-  },
-    icon(pane.item.icon || 'grid-4', { class: 'ic ic--xs' }),
-    h('span', {}, pane.item.name),
-    pane.label ? h('b', {}, pane.label) : null,
-    h('em', {}, `${(pane.logins || []).length}`),
-  ));
+  /* One row per view, every row the same width. The old rail was pills on
+     `flex-wrap`, which packed two onto some lines and one onto others and read
+     as ragged — the layout changed shape depending on how long a product's name
+     happened to be. A single column is the same shape whatever the names are,
+     and it gives the mark a fixed place to sit on the left. */
+  const chips = panes.map((pane, i) => {
+    const { item, label } = pane;
+    const tile = h('span', { class: `pf-row__tile pf-row__tile--${item.tone || 'light'}` });
+    if (item.logo) {
+      /* The product's own mark. The generic line icon stays as the fallback:
+         these were cut from the products' own screens, and a platform nobody has
+         supplied artwork for should not get a lookalike drawn for it. */
+      tile.appendChild(h('img', {
+        src: mediaUrl(`/uploads/${item.logo.split('/').map(encodeURIComponent).join('/')}`),
+        alt: '', loading: 'lazy', decoding: 'async',
+        onerror: (e) => {
+          e.currentTarget.remove();
+          tile.appendChild(icon(item.icon || 'grid-4', { class: 'ic ic--sm' }));
+        },
+      }));
+    } else {
+      tile.appendChild(icon(item.icon || 'grid-4', { class: 'ic ic--sm' }));
+    }
+
+    return h('button', {
+      class: 'pf-row', type: 'button',
+      onclick: () => { swap.focus(i); swap.stop(); swap.start(); },
+      ondblclick: () => open(pane),
+      title: `Bring ${item.name}${label ? ` ${label}` : ''} to the front`,
+    },
+      tile,
+      /* Stacked, not side by side. A coloured pill next to the name competed
+         with it for a column narrow enough that "AI Engineer LMS" truncated to
+         "AI Engin…" — the name is the thing being read, so it gets the width and
+         the role sits under it. */
+      h('span', { class: 'pf-row__text' },
+        h('span', { class: 'pf-row__name' }, item.name),
+        label ? h('span', { class: 'pf-row__role' }, label) : null,
+      ),
+      h('span', { class: 'pf-row__n', title: `${(pane.logins || []).length} sign-in(s) ready to copy` },
+        `${(pane.logins || []).length}`),
+    );
+  });
 
   const chipRail = h('div', { class: 'pf-chips' }, ...chips);
-  /* The dock effect: the rail swells under the pointer. Started on the next
-     frame because it measures each chip's rect, and the slide is not in the
-     document yet at this point. Nothing to dispose — the loop parks itself once
-     the pointer leaves and everything has settled, and the listeners are on the
-     rail, so they go when it does. */
+  /* The dock, vertical. `transform: false` because a full-width row scaled up
+     runs out of its own column — the stylesheet reads --dock-k and grows the
+     mark while leaning the row outward instead. Started on the next frame
+     because it measures each row's rect, and the slide is not in the document
+     yet at this point. Nothing to dispose: the loop parks itself once the
+     pointer leaves, and the listeners go with the rail. */
   requestAnimationFrame(() => {
-    dockMagnify(chipRail, { radius: 150, amount: 0.24, lift: 4 });
+    dockMagnify(chipRail, { radius: 132, transform: false });
   });
 
   const wall = h('div', { class: 'pf-wall' },

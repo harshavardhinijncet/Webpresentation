@@ -35,6 +35,7 @@ export function dockMagnify(container, options = {}) {
     amount = 0.24,         // peak extra scale
     lift = 4,              // px of rise at the peak
     rate = 15,             // how fast a value chases its target, per second
+    transform = true,      // false leaves the transform entirely to CSS via --dock-k
   } = options;
 
   if (!container) return () => {};
@@ -79,13 +80,22 @@ export function dockMagnify(container, options = {}) {
       if (Math.abs(s.target - s.value) > 0.002) busy = true;
       const k = s.value;
       if (k < 0.002) {
+        nodes[i].style.removeProperty('--dock-k');
         nodes[i].style.transform = '';
         nodes[i].style.zIndex = '';
         nodes[i].classList.remove('is-near');
         return;
       }
-      nodes[i].style.transform =
-        `translateY(${(-lift * k).toFixed(2)}px) scale(${(1 + amount * k).toFixed(4)})`;
+      /* Published as a custom property so the stylesheet decides what proximity
+         means. A horizontal rail wants the whole pill to swell; a vertical one
+         cannot — a full-width row scaled up runs straight out of its column — so
+         there it grows the logo and leans the row outward instead. Same signal,
+         two treatments, no second implementation. */
+      nodes[i].style.setProperty('--dock-k', k.toFixed(4));
+      if (transform) {
+        nodes[i].style.transform =
+          `translateY(${(-lift * k).toFixed(2)}px) scale(${(1 + amount * k).toFixed(4)})`;
+      }
       // Grown items sit over their neighbours rather than shoving them along.
       nodes[i].style.zIndex = String(10 + Math.round(k * 10));
       /* Only the ones genuinely under the pointer take the accent. Styling on
@@ -120,6 +130,7 @@ export function dockMagnify(container, options = {}) {
     if (raf) cancelAnimationFrame(raf);
     container.classList.remove('is-dock');
     nodes.forEach((node) => {
+      node.style.removeProperty('--dock-k');
       node.style.transform = '';
       node.style.zIndex = '';
       node.classList.remove('is-near');

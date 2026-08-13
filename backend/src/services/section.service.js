@@ -507,6 +507,13 @@ function normalizeBlock(raw, index = 0, depth = 0) {
           name: text(p?.name, 80),
           blurb: text(p?.blurb, 240),
           icon: iconKey(p?.icon),
+          /* The platform's own mark, a path under /uploads. `tone` says which
+             ground it was cut from — these are crops of the products' own login
+             screens and posters, so a white-on-black wordmark needs a dark tile
+             behind it while a logo drawn for white paper needs a light one. The
+             alternative would be sampling pixels at render time. */
+          logo: text(p?.logo, 200),
+          tone: oneOf(text(p?.tone, 8), ['dark', 'light'], 'light'),
           // The screenshot's filename under /uploads/platforms, without the
           // extension. Named explicitly rather than derived from the title, so
           // renaming a platform on screen never breaks its image.
