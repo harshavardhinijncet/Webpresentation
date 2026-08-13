@@ -6,46 +6,26 @@ import { media } from '../utils/media.js';
  * Success Stories: a wall of faces that never stops moving, and any one of them
  * opens into the story beside it.
  *
- * The wall is columns, not a grid. Each column carries two or three portraits,
- * sits on an arc so the whole run reads as a wave, and rises and falls on its
- * own clock — the columns are the bars of the equaliser, which is why the
- * bobbing goes on a wrapper and the arc on the column itself. One transform per
- * element; stack them and the animation overrides the offset, and the wave
- * flattens the moment it starts playing.
+ * The wall is a 3D marquee: four columns of portraits lying on a plane tilted
+ * away from the viewer, each drifting on its own long loop so the field breathes
+ * rather than scrolls. Adjacent columns run opposite directions at durations that
+ * never line up — 10s against 15s — which is what stops it reading as one sheet
+ * sliding past.
  *
- * Opening a face does not replace the wall. The portrait takes three quarters
- * of the width with the story beside it and the wall keeps running underneath,
- * so a presenter can move from one person to the next without the page ever
- * going still.
+ * All of it is CSS. The drift is a keyframe with `animation-direction:
+ * alternate`, which is the same thing the original expresses as
+ * `repeatType: "reverse"`, so nothing here runs per frame.
+ *
+ * Opening a face does not replace the wall. The portrait takes three quarters of
+ * the width with the story beside it and the marquee keeps moving behind, so a
+ * presenter can go from one person to the next without the page ever going still.
  */
 
-const UPLOADS = '/uploads';
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
-/* The wave only ever lifts. A curve centred on zero puts half the columns
-   below the baseline, and the baseline is the floor of the slide — three of
-   them hung 15px off the bottom edge. Riding from 0 upwards keeps the run
-   sitting on the floor while still reading as a crowd. */
-const arcFor = (i, n) => (n < 2 ? 0
-  : -Math.round(24 * (1 - Math.cos((i / (n - 1)) * Math.PI * 2.4))));
-
-/* The slide is a fixed 1600 nominal canvas, so the run can be made to reach
-   both edges exactly rather than sitting in the middle of it: choose a column
-   count, then let the tile width fall out of the arithmetic. */
-const CANVAS = 1600;
-const GAP = 10;
-/* Must match the side padding on .sw-wall. The tile width is derived from the
-   space actually available, and leaving the padding out of the sum is what
-   pushed the end tiles past the slide edge: 13 tiles plus 12 gaps plus 20px of
-   padding came to 1622 in a 1600 canvas. */
-const EDGE = 10;
-
-function layoutFor(count) {
-  const cols = Math.max(6, Math.min(16, Math.round(count / 2)));
-  const usable = CANVAS - EDGE * 2 - (cols - 1) * GAP;
-  const tile = Math.floor(usable / cols);
-  return { cols, tile, shot: Math.round(tile * 1.33) };
-}
+/* Four columns, as the marquee does. Fewer and the plane looks bare once it is
+   tilted; more and each portrait is too small to recognise a face in. */
+const MARQUEE_COLS = 4;
 
 /** Round-robin, so no column stands more than one portrait taller than another. */
 function columnsFrom(stories, cols) {
@@ -140,24 +120,25 @@ export function StoryWall(block, { editing = false } = {}) {
     root.classList.add('is-open');
   };
 
-  const { cols: colCount, tile: tileW, shot: shotH } = layoutFor(stories.length);
-  const cols = columnsFrom(stories, colCount);
-  const wall = h('div', {
-    class: 'sw-wall',
-    style: { '--sw-tile': `${tileW}px`, '--sw-shot': `${shotH}px`, gap: `${GAP}px` },
-  });
+  /* The wall is a 3D marquee: four columns laid on a plane tilted away from the
+     viewer, each drifting on its own long loop so the whole field breathes.
+     Adjacent columns run opposite directions and at different speeds, which is
+     what stops it reading as one sheet sliding past.
+     The drift is a CSS keyframe with `direction: alternate` — the same thing the
+     original expresses as `repeatType: "reverse"` — so there is no per-frame
+     JavaScript behind any of it. */
+  const cols = columnsFrom(stories, MARQUEE_COLS);
+  const grid = h('div', { class: 'sw-mq__grid' });
 
   cols.forEach((group, ci) => {
     const column = h('div', {
-      class: 'sw-col',
-      style: { transform: `translateY(${arcFor(ci, cols.length)}px)` },
-    });
-    const bob = h('div', {
-      class: 'sw-col__bob',
+      class: 'sw-mq__col',
       style: REDUCED?.matches ? {} : {
-        // Prime numbers of milliseconds keep the columns from falling into step.
-        'animation-duration': `${2100 + ((ci * 370) % 1900)}ms`,
-        'animation-delay': `-${(ci * 290) % 2300}ms`,
+        // Even columns fall, odd ones rise; the two durations never line up.
+        'animation-duration': `${ci % 2 === 0 ? 10 : 15}s`,
+        'animation-direction': ci % 2 === 0 ? 'alternate' : 'alternate-reverse',
+        // Negative delay starts each column part-way through its own travel.
+        'animation-delay': `-${ci * 2.5}s`,
       },
     });
     group.forEach((story) => {
@@ -174,15 +155,20 @@ export function StoryWall(block, { editing = false } = {}) {
         story.name ? h('span', { class: 'sw-tile__name' }, story.name) : null,
       );
       tiles.push(tile);
-      bob.appendChild(tile);
+      column.appendChild(tile);
     });
-    column.appendChild(bob);
-    wall.appendChild(column);
+    grid.appendChild(column);
   });
+
+  const wall = h('div', { class: 'sw-mq' }, h('div', { class: 'sw-mq__plane' }, grid));
 
   root.appendChild(intro);
   root.appendChild(stage);
-  root.appendChild(h('div', { class: 'sw-wallwrap' }, wall));
+  /* Straight onto the root, with no wrapper. The marquee is absolutely
+     positioned against .sw-root, which is already the positioned, clipping
+     ancestor — a flex wrapper in between only gave it a zero-height parent to
+     resolve nothing against. */
+  root.appendChild(wall);
 
   root.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && root.classList.contains('is-open')) {
