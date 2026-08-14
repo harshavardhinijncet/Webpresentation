@@ -10551,243 +10551,245 @@ body.is-presenting .pg-player { z-index: 30; }
   .pf-row, .pf-row__tile { transition: none; }
 }
 
+
 /* ==========================================================================
-   The landing page — a dark hero that is also the organization chooser
+   The landing page — white ground, Technical Hub's palette, partner orbits
    ========================================================================== */
 
 .lp {
+  --lp-green: #008638;
+  --lp-gold: #FFBB00;
+  --lp-ink: #0B1220;
+
   position: relative;
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 6vh 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 5vh 24px 0;
   overflow: hidden;
-  /* Near-black rather than pure: a flat #000 kills the glows, which need
-     somewhere to fall off to. */
-  background: #05070a;
-  color: #fff;
+  background: #ffffff;
+  color: var(--lp-ink);
   isolation: isolate;
 }
+/* Two faint washes of the brand, so the white is lit rather than flat. */
+.lp::before {
+  content: '';
+  position: absolute; inset: -20% -10% auto -10%; height: 70%;
+  background:
+    radial-gradient(60% 60% at 22% 20%, color-mix(in srgb, var(--lp-green) 14%, transparent) 0%, transparent 70%),
+    radial-gradient(55% 55% at 82% 12%, color-mix(in srgb, var(--lp-gold) 18%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -2;
+}
 
-/* Two lights, one per organization, drifting on their own long cycles so the
-   ground is never quite still. Neither owns the page. */
-.lp__aura {
-  position: absolute;
-  width: 62vw; height: 62vw;
-  max-width: 900px; max-height: 900px;
-  border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.16;
+/* --- the orbits ---------------------------------------------------------- */
+.lp__field {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
   pointer-events: none;
   z-index: -1;
 }
-.lp__aura--a {
-  left: -12vw; top: -14vh;
-  background: radial-gradient(circle, #E95A22 0%, transparent 68%);
-  animation: lp-drift-a 22s ease-in-out infinite alternate;
+.lp__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgb(11 18 32 / 0.06);
 }
-.lp__aura--b {
-  right: -14vw; bottom: -18vh;
-  background: radial-gradient(circle, #008638 0%, transparent 68%);
-  animation: lp-drift-b 28s ease-in-out infinite alternate;
-}
-@keyframes lp-drift-a { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(6vw,5vh,0) scale(1.12); } }
-@keyframes lp-drift-b { from { transform: translate3d(0,0,0) scale(1.08); } to { transform: translate3d(-5vw,-4vh,0) scale(1); } }
+/* Sized off the viewport height so the rings stay circular and stay behind the
+   copy at any shape of screen. */
+.lp__ring--1 { width: 84vh; height: 84vh; }
+.lp__ring--2 { width: 116vh; height: 116vh; }
+.lp__ring--3 { width: 148vh; height: 148vh; border-color: rgb(11 18 32 / 0.04); }
 
+/* A mark riding an orbit. The element declares its angle; the stylesheet does
+   the trigonometry — rotate out to the radius, then rotate back so the logo
+   itself stays upright rather than lying on the curve. */
+.lp-orb {
+  position: absolute;
+  display: grid; place-items: center;
+  width: 58px; height: 58px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid rgb(11 18 32 / 0.07);
+  box-shadow: 0 14px 30px -18px rgb(11 18 32 / 0.4);
+  animation-name: lp-bob;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+.lp-orb--r1 { transform: rotate(var(--deg)) translateY(-42vh) rotate(calc(-1 * var(--deg))); }
+.lp-orb--r2 { transform: rotate(var(--deg)) translateY(-58vh) rotate(calc(-1 * var(--deg))); }
+.lp-orb img { width: 34px; height: 34px; object-fit: contain; }
+@keyframes lp-bob { from { margin-top: -7px; } to { margin-top: 7px; } }
+
+/* --- the copy ------------------------------------------------------------ */
 .lp__inner {
   position: relative;
-  width: 100%;
-  max-width: 1080px;
+  width: 100%; max-width: 900px;
   display: flex; flex-direction: column; align-items: center;
   text-align: center;
 }
 
-/* --- the badge ----------------------------------------------------------- */
 .lp-badge {
-  display: inline-block;
-  padding: 7px 16px;
-  border: 1px solid rgb(255 255 255 / 0.16);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 15px 7px 11px;
+  border: 1px solid rgb(11 18 32 / 0.1);
   border-radius: 999px;
-  background: rgb(255 255 255 / 0.05);
-  color: rgb(255 255 255 / 0.72);
-  font-size: 10.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+  background: #fff;
+  box-shadow: 0 8px 20px -14px rgb(11 18 32 / 0.5);
+  color: #4b5563;
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
   animation: lp-rise 620ms cubic-bezier(.2,.7,.3,1) both;
 }
+.lp-badge__dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--lp-green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lp-green) 18%, transparent);
+}
 
-/* --- the headline -------------------------------------------------------- */
-/* Most of it muted so the eye passes over it, and the two words that matter in
-   white with a mark beside each — the device the reference uses to make a
-   sentence carry its own illustration. */
 .lp-title {
-  margin: 26px 0 0;
-  max-width: 22ch;
+  margin: 24px 0 0;
+  max-width: 20ch;
   font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif;
   font-weight: 500;
-  font-size: clamp(38px, 6.2vw, 82px);
-  line-height: 1.08;
+  font-size: clamp(38px, 6vw, 78px);
+  line-height: 1.06;
   letter-spacing: -0.02em;
-  color: rgb(255 255 255 / 0.42);
+  /* The line the eye passes over. */
+  color: rgb(11 18 32 / 0.34);
 }
-.lp-word {
-  display: inline-block;
-  margin-right: 0.28em;
-  animation: lp-rise 720ms cubic-bezier(.2,.7,.3,1) both;
-}
-.lp-word--lit {
-  color: #fff;
-  /* The mark sits on the text baseline beside its word. */
-  display: inline-flex; align-items: center; gap: 0.22em;
-}
-.lp-word--plus { color: rgb(255 255 255 / 0.3); }
-
-/* The closing line, kept on one row. Its own clamp is a size down from the rest
-   of the headline, because it carries two marks as well as three words and at
-   the full size it could not fit the width whatever the wrapping allowed. */
+.lp-word { display: inline-block; margin-right: 0.26em; animation: lp-rise 720ms cubic-bezier(.2,.7,.3,1) both; }
+.lp-word--lit { color: var(--lp-ink); display: inline-flex; align-items: center; gap: 0.2em; }
+.lp-word--plus { color: rgb(11 18 32 / 0.25); }
 .lp-line {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
+  display: flex; flex-wrap: nowrap; align-items: center; justify-content: center;
   width: 100%;
-  font-size: clamp(30px, 5vw, 68px);
+  font-size: clamp(32px, 5.2vw, 70px);
 }
 .lp-line .lp-word { white-space: nowrap; }
 
 @keyframes lp-rise {
-  from { opacity: 0; transform: translateY(20px); filter: blur(6px); }
+  from { opacity: 0; transform: translateY(18px); filter: blur(5px); }
   to   { opacity: 1; transform: none; filter: none; }
 }
 
-/* --- a mark set into the sentence ---------------------------------------- */
-.lp-mark {
+/* The two lit glyphs, one in each brand colour. */
+.lp-glyph {
   position: relative;
   display: inline-grid; place-items: center;
-  width: 1.02em; height: 1.02em;
+  width: 1.06em; height: 1.06em;
   flex: 0 0 auto;
   border-radius: 0.26em;
   background: #fff;
-  /* The logos are dark artwork drawn for white paper, so they keep a white chip
-     rather than being knocked out — inverting a brand mark is how a green logo
-     becomes magenta. */
-  padding: 0.1em;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.14);
+  box-shadow: 0 0 0 1px rgb(11 18 32 / 0.07);
 }
-.lp-mark__img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.lp-mark__text { font-size: 0.6em; font-weight: 800; color: #05070a; }
-/* The glow behind it breathes, which is what makes the mark read as lit rather
-   than pasted on. */
-.lp-mark__halo {
-  position: absolute; inset: -38%;
+.lp-glyph .ic { width: 62%; height: 62%; }
+.lp-glyph--green .ic { color: var(--lp-green); }
+.lp-glyph--gold .ic { color: #B27B00; }   /* the gold's readable derivative on white */
+.lp-glyph__halo {
+  position: absolute; inset: -36%;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--mark-glow) 0%, transparent 70%);
-  filter: blur(10px);
-  opacity: 0.55;
+  filter: blur(12px);
   z-index: -1;
-  animation: lp-breathe 3.6s ease-in-out infinite alternate;
+  animation: lp-breathe 3.8s ease-in-out infinite alternate;
 }
-@keyframes lp-breathe { from { opacity: 0.34; transform: scale(0.94); } to { opacity: 0.72; transform: scale(1.1); } }
+.lp-glyph--green .lp-glyph__halo { background: radial-gradient(circle, var(--lp-green) 0%, transparent 70%); }
+.lp-glyph--gold .lp-glyph__halo { background: radial-gradient(circle, var(--lp-gold) 0%, transparent 70%); }
+@keyframes lp-breathe { from { opacity: 0.26; transform: scale(0.92); } to { opacity: 0.6; transform: scale(1.1); } }
 
-/* --- the line under it --------------------------------------------------- */
 .lp-sub {
   margin: 22px 0 0;
-  max-width: 52ch;
-  color: rgb(255 255 255 / 0.5);
-  font-size: clamp(14px, 1.2vw, 16.5px);
-  line-height: 1.6;
-  animation: lp-rise 720ms 520ms cubic-bezier(.2,.7,.3,1) both;
+  max-width: 54ch;
+  color: #4b5563;
+  font-size: clamp(14px, 1.15vw, 16.5px);
+  line-height: 1.62;
+  animation: lp-rise 720ms 540ms cubic-bezier(.2,.7,.3,1) both;
 }
 
-/* --- the two cards, which are the call to action ------------------------- */
-.lp-cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  width: 100%;
-  max-width: 860px;
-  margin-top: 44px;
+/* --- the action ---------------------------------------------------------- */
+.lp-actions {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center;
+  margin-top: 30px;
+  animation: lp-rise 760ms 660ms cubic-bezier(.2,.7,.3,1) both;
 }
-.lp-card {
-  position: relative;
-  display: flex; flex-direction: column; align-items: flex-start; gap: 14px;
-  padding: 26px 26px 22px;
-  border: 1px solid rgb(255 255 255 / 0.1);
-  border-radius: 22px;
-  background: rgb(255 255 255 / 0.035);
+.lp-cta {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 14px 24px;
+  border: 0; border-radius: 999px;
+  background: var(--lp-green);
   color: #fff;
-  font: inherit;
-  text-align: left;
+  font: inherit; font-size: 14.5px; font-weight: 700;
   cursor: pointer;
-  overflow: hidden;
-  animation: lp-rise 760ms 640ms cubic-bezier(.2,.7,.3,1) both;
-  transition: transform .3s cubic-bezier(.2,.7,.3,1), border-color .3s ease, background .3s ease;
+  box-shadow: 0 16px 34px -16px color-mix(in srgb, var(--lp-green) 75%, transparent);
+  transition: transform .25s cubic-bezier(.2,.7,.3,1), box-shadow .25s ease, background .2s ease;
 }
-.lp-card:nth-child(2) { animation-delay: 740ms; }
-/* The organization's own colour, washed in from the corner rather than filling
-   the card — the deck is not open yet, so the brand announces itself without
-   taking the page over. */
-.lp-card__wash {
-  position: absolute; right: -30%; top: -60%;
-  width: 78%; aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--card-accent);
-  opacity: 0.16;
-  filter: blur(28px);
-  transition: opacity .3s ease, transform .5s cubic-bezier(.2,.7,.3,1);
-  pointer-events: none;
+.lp-cta .ic { transition: transform .25s ease; }
+.lp-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 44px -16px color-mix(in srgb, var(--lp-green) 85%, transparent);
 }
-.lp-card:hover {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--card-accent) 55%, transparent);
-  background: rgb(255 255 255 / 0.06);
-}
-.lp-card:hover .lp-card__wash { opacity: 0.3; transform: translate(-8%, 8%) scale(1.08); }
-.lp-card:focus-visible { outline: 2px solid var(--card-accent); outline-offset: 3px; }
+.lp-cta:hover .ic { transform: translateX(4px); }
+.lp-cta:focus-visible { outline: 2px solid var(--lp-ink); outline-offset: 3px; }
 
-.lp-card__logo {
-  display: block; height: 44px; width: auto; max-width: 78%;
-  padding: 9px 13px; border-radius: 12px;
-  background: #fff;
-  object-fit: contain;
-}
-.lp-card__name { font-size: 22px; font-weight: 800; }
-.lp-card__tag {
-  color: var(--card-accent);
-  font-size: 11px; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase;
-  line-height: 1.5;
-}
-.lp-card__foot {
-  display: flex; align-items: center; justify-content: space-between;
-  width: 100%; margin-top: auto; padding-top: 10px;
-  color: rgb(255 255 255 / 0.55); font-size: 12.5px; font-weight: 600;
-}
-.lp-card__go { display: inline-flex; align-items: center; gap: 7px; color: #fff; font-weight: 700; }
-.lp-card__go i { font-style: normal; transition: transform .25s ease; }
-.lp-card:hover .lp-card__go i { transform: translateX(4px); }
-
-/* --- sign out ------------------------------------------------------------ */
-.lp-signout {
-  margin-top: 34px;
-  padding: 9px 20px;
-  border: 1px solid rgb(255 255 255 / 0.14);
+.lp-ghost {
+  padding: 13px 20px;
+  border: 1px solid rgb(11 18 32 / 0.12);
   border-radius: 999px;
-  background: transparent;
-  color: rgb(255 255 255 / 0.62);
-  font: inherit; font-size: 12.5px; font-weight: 650;
+  background: #fff;
+  color: #4b5563;
+  font: inherit; font-size: 13.5px; font-weight: 650;
   cursor: pointer;
-  animation: lp-rise 760ms 840ms cubic-bezier(.2,.7,.3,1) both;
   transition: color .2s ease, border-color .2s ease, background .2s ease;
 }
-.lp-signout:hover { color: #fff; border-color: rgb(255 255 255 / 0.3); background: rgb(255 255 255 / 0.06); }
+.lp-ghost:hover { color: var(--lp-ink); border-color: rgb(11 18 32 / 0.25); background: #f8fafc; }
 
-@media (max-width: 780px) {
-  .lp-cards { grid-template-columns: 1fr; }
-  .lp-title { max-width: 20ch; }
+/* --- the partners along the foot ----------------------------------------- */
+.lp-foot {
+  position: relative;
+  width: 100%;
+  margin-top: auto;
+  padding: 34px 0 26px;
+  animation: lp-rise 800ms 820ms cubic-bezier(.2,.7,.3,1) both;
+}
+.lp-foot__lead {
+  margin: 0 0 16px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+}
+.lp-track {
+  display: flex;
+  overflow: hidden;
+  /* Faded at both ends so the marks arrive and leave rather than being cut. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+}
+.lp-track__run {
+  display: flex; align-items: center; gap: 42px;
+  padding-right: 42px;
+  flex: 0 0 auto;
+  animation: lp-marquee 46s linear infinite;
+}
+@keyframes lp-marquee { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+.lp-track:hover .lp-track__run { animation-play-state: paused; }
+
+.lp-chip { display: grid; place-items: center; flex: 0 0 auto; }
+.lp-chip img {
+  width: 40px; height: 40px; object-fit: contain;
+  /* Grey until looked at, so eighteen marks read as one band rather than
+     eighteen competing colours. */
+  filter: grayscale(1);
+  opacity: 0.55;
+  transition: filter .3s ease, opacity .3s ease, transform .3s ease;
+}
+.lp-chip:hover img { filter: none; opacity: 1; transform: scale(1.12); }
+
+@media (max-width: 900px) {
+  .lp__field { display: none; }
+  .lp-title { max-width: 18ch; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lp__aura, .lp-mark__halo { animation: none; }
-  .lp-badge, .lp-word, .lp-sub, .lp-card, .lp-signout { animation: none; opacity: 1; transform: none; filter: none; }
-  .lp-card, .lp-card__wash, .lp-card__go i { transition: none; }
-  .lp-card:hover { transform: none; }
+  .lp-orb, .lp-glyph__halo, .lp-track__run { animation: none; }
+  .lp-badge, .lp-word, .lp-sub, .lp-actions, .lp-foot { animation: none; opacity: 1; transform: none; filter: none; }
+  .lp-cta, .lp-chip img, .lp-ghost { transition: none; }
+  .lp-cta:hover { transform: none; }
 }
