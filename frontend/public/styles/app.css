@@ -10808,10 +10808,11 @@ body.is-presenting .pg-player { z-index: 30; }
   perspective: 1700px;
   perspective-origin: 30% 50%;
   z-index: 1;
-  /* Faded top and bottom, so pictures arrive and leave rather than appearing and
-     vanishing at a hard edge. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  /* Faded on every side rather than only top and bottom: the sweep is diagonal
+     now, so a horizontal fade would cut its corners off square. A radial mask
+     lets the ring dissolve as it leaves in whatever direction it leaves. */
+  -webkit-mask-image: radial-gradient(120% 78% at 46% 50%, #000 34%, rgb(0 0 0 / 0.55) 66%, transparent 92%);
+  mask-image: radial-gradient(120% 78% at 46% 50%, #000 34%, rgb(0 0 0 / 0.55) 66%, transparent 92%);
 }
 /* One circle, turning. Radius and centre are chosen so only an arc of it crosses
    the slide: the centre sits well to the left, so what shows is the right-hand
@@ -10824,9 +10825,15 @@ body.is-presenting .pg-player { z-index: 30; }
      its east point — the near side. With a percentage offset it landed the other
      way round and what showed was the far side of the circle, behind the
      headline, which is why the strip was invisible rather than merely misplaced. */
+  /* The centre is offset left AND down by R·sin45, which puts the point of the
+     circle nearest the frame at 45 degrees. The tangent there is perpendicular to
+     the radius, so the visible sweep runs top-left to bottom-right — a diagonal
+     ribbon. With the centre offset only to the left, that point sat due east and
+     the tangent was vertical, which is why the strip came out as a near-upright
+     column instead. */
   top: 50%; left: 50%;
   width: 2400px; height: 2400px;
-  margin: -1200px 0 0 -2400px;
+  margin: -351px 0 0 -2049px;
   transform-style: preserve-3d;
   animation-name: sw-orbit;
   animation-timing-function: linear;
@@ -10843,31 +10850,37 @@ body.is-presenting .pg-player { z-index: 30; }
   transform: rotate(var(--a)) translateY(-1200px);
   transform-style: preserve-3d;
 }
-/* The seat's own angle, undone. Static, because the seat's angle is static —
-   cancelling it inside the animated wrapper is not possible, since a keyframe
-   owning `transform` overrides any rotate written beside it. */
+/* One constant angle, and nothing proportional to anything.
+ *
+ * A card rides the wheel rigidly: it is not counter-rotated at all, so its tilt
+ * is simply where it currently sits on the circle. That is what makes it lean
+ * with the curve, and lean *progressively* as it travels — which is the whole
+ * character of the reference.
+ *
+ * The constant cancels the base angle. Visible cards sit near 45 degrees, which
+ * is where the circle passes the frame, so subtracting 45 puts the card at the
+ * focal point upright and lets the ones above and below it lean away by however
+ * far round the arc they are — about twenty degrees each way.
+ *
+ * Two wrong turns got here. Cancelling the seat angle in full stood every card
+ * bolt upright and the curve stopped reading. Cancelling 70% of it left 30% of
+ * the ring's *ongoing* rotation in the sum, so the cards tumbled slowly and
+ * forever — they were past 120 degrees and upside down. The tilt has to come from
+ * where a card is, never from how long the page has been open. */
 .sw-seat__fix {
   position: absolute;
-  transform: rotate(calc(-1 * var(--a)));
+  transform: rotate(-45deg);
   transform-style: preserve-3d;
 }
 /* And the ring's turn, undone, so a photograph travels the arc without tumbling.
    Same duration, reversed: two animations that cannot drift apart. */
-.sw-seat__spin {
-  position: absolute;
-  transform-origin: 50% 50%;
-  animation-name: sw-orbit;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: reverse;
-  will-change: transform;
-}
+/* A plain wrapper now. It used to carry a counter-rotation; the card riding the
+   wheel rigidly is the point, so there is nothing left for it to undo. */
+.sw-seat__spin { position: absolute; }
 
 /* Both halves stop together — for a closer look, and when a click takes over. */
 .sw-reel:hover .sw-ring,
-.sw-reel:hover .sw-seat__spin,
-.sw-root.is-held .sw-ring,
-.sw-root.is-held .sw-seat__spin { animation-play-state: paused; }
+.sw-root.is-held .sw-ring { animation-play-state: paused; }
 
 .sw-tile {
   position: absolute;
@@ -11079,5 +11092,5 @@ body.is-presenting .sw-root { min-height: 900px; max-height: 900px; }
 .sw-note__body, .sw-card__quote, .sw-card__body { font-family: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
-  .sw-ring, .sw-seat__spin { animation: none; }
+  .sw-ring { animation: none; }
 }
