@@ -10831,11 +10831,11 @@ body.is-presenting .pg-player { z-index: 30; }
 
 .sw-reel__run {
   display: flex; flex-direction: column; align-items: center;
-  /* Negative gap: cards overlap a little as they pass, which is what turns a
-     stack into a collage. */
-  gap: -14px;
   transform-style: preserve-3d;
 }
+/* The overlap that turns a stack into a collage. It has to be a negative margin:
+   `gap` is defined as non-negative, so `gap: -14px` is invalid and the parser
+   drops it — it sat here doing nothing while the margin below did the work. */
 .sw-reel__run > * + * { margin-top: -14px; }
 
 .sw-tile {
