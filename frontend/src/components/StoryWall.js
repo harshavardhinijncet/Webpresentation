@@ -3,35 +3,37 @@ import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
 
 /**
- * Success Stories: a wall of faces that never stops moving, and any one of them
- * opens into the story beside it.
+ * Success Stories: a headline on the left, a diagonal ribbon of moments running
+ * through the middle, and the one you pick opening as a card on the right.
  *
- * The wall is a 3D marquee: four columns of portraits lying on a plane tilted
- * away from the viewer, each drifting on its own long loop so the field breathes
- * rather than scrolls. Adjacent columns run opposite directions at durations that
- * never line up — 10s against 15s — which is what stops it reading as one sheet
- * sliding past.
+ * The ribbon is a single column rotated off vertical, so the tiles read as a
+ * stream passing through the slide rather than a grid sitting in it. It is taller
+ * than the slide on purpose — the ends run out of frame, which is what makes it a
+ * stream — and it drifts along its own axis so the field is never quite still.
  *
- * All of it is CSS. The drift is a keyframe with `animation-direction:
- * alternate`, which is the same thing the original expresses as
- * `repeatType: "reverse"`, so nothing here runs per frame.
+ * The card carries only what the data actually holds: the picture, the name, and
+ * where it sits in the set. The reference fills its panel with prompt metadata;
+ * there is no equivalent here, and inventing chips to fill the space would be
+ * putting words in the subject's mouth. Role, quote and body render if they are
+ * ever supplied.
  *
- * Opening a face does not replace the wall. The portrait takes three quarters of
- * the width with the story beside it and the marquee keeps moving behind, so a
- * presenter can go from one person to the next without the page ever going still.
+ * All motion is CSS. Nothing runs per frame and everything stops under
+ * prefers-reduced-motion.
  */
 
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
-/* Four columns, as the marquee does. Fewer and the plane looks bare once it is
-   tilted; more and each portrait is too small to recognise a face in. */
-const MARQUEE_COLS = 4;
-
-/** Round-robin, so no column stands more than one portrait taller than another. */
-function columnsFrom(stories, cols) {
-  const out = Array.from({ length: cols }, () => []);
-  stories.forEach((s, i) => out[i % cols].push(s));
-  return out.filter((c) => c.length);
+/** The headline, split so each line can be set differently. */
+function titleLines(raw) {
+  const text = String(raw || 'Success Stories').replace(/[—–-]/g, '—');
+  const [head, tail] = text.split('—').map((s) => s.trim());
+  // "The Legacy — Babji Neelam" becomes three lines: The / Legacy / the name.
+  const words = (head || 'Success Stories').split(/\s+/);
+  return {
+    lead: words.length > 1 ? words.slice(0, -1).join(' ') : '',
+    accent: words[words.length - 1] || '',
+    name: tail || '',
+  };
 }
 
 export function StoryWall(block, { editing = false } = {}) {
@@ -39,10 +41,6 @@ export function StoryWall(block, { editing = false } = {}) {
   const root = h('div', { class: 'sw-root ph-root' });
 
   if (!stories.length) {
-    /* This page is published, so a presenter can land on it before the
-       portraits arrive. It shows the headline and nothing else — the folder to
-       fill is a note for whoever is building the deck, not something to put on
-       a wall in front of a college. */
     root.appendChild(h('div', { class: 'sw-empty' },
       h('h2', { class: 'sw-title' }, block.title || 'Success Stories'),
       editing
@@ -53,128 +51,128 @@ export function StoryWall(block, { editing = false } = {}) {
     return root;
   }
 
-  /* ------------------------------------------------------------- the stage */
-  const stageImg = h('img', { class: 'sw-stage__img', alt: '' });
-  const stageShot = h('div', { class: 'sw-stage__shot' }, stageImg);
+  const src = (story) => media(`/uploads/${encodeURI(story.photo)}`);
+  let at = -1;
 
-  /* Sixteen of the twenty-five files are 206px square. Filling the frame
-     enlarged those about fivefold and looked it, so the displayed size is
-     solved from three limits and the smallest wins: the frame's width, the
-     frame's height, and twice the file's own pixels.
-     Done in script because only the loaded file knows its own size, and with
-     explicit width and height because max-width alone only ever caps — with
-     `width: auto` the image simply sat at 1x in a large empty box. */
+  /* ------------------------------------------------------------- the card */
+  const cardImg = h('img', { class: 'sw-card__img', alt: '' });
+  const cardName = h('h3', { class: 'sw-card__name' });
+  const cardRole = h('p', { class: 'sw-card__role' });
+  const cardQuote = h('blockquote', { class: 'sw-card__quote' });
+  const cardBody = h('p', { class: 'sw-card__body' });
+  const cardCount = h('span', { class: 'sw-card__count' });
+
+  /* Sixteen of the twenty-five files are 206px square. The card is bounded so a
+     small file is shown at its own size rather than blown up into the frame —
+     five times enlargement is softness no source survives. */
   const MAX_ENLARGE = 2;
-  const fitStage = () => {
-    const nw = stageImg.naturalWidth;
-    const nh = stageImg.naturalHeight;
+  const fitCard = () => {
+    const { naturalWidth: nw, naturalHeight: nh } = cardImg;
     if (!nw || !nh) return;
-    const fw = stageShot.clientWidth;
-    const fh = stageShot.clientHeight;
-    if (!fw || !fh) return;
-    const scale = Math.min(MAX_ENLARGE, fw / nw, fh / nh);
-    stageImg.style.width = `${Math.round(nw * scale)}px`;
-    stageImg.style.height = `${Math.round(nh * scale)}px`;
+    const box = cardImg.parentElement;
+    const fw = box?.clientWidth;
+    if (!fw) return;
+    const w = Math.min(fw, nw * MAX_ENLARGE);
+    cardImg.style.width = `${Math.round(w)}px`;
+    cardImg.style.height = `${Math.round((w / nw) * nh)}px`;
   };
-  stageImg.addEventListener('load', fitStage);
-  const stageName = h('h3', { class: 'sw-stage__name' });
-  const stageRole = h('p', { class: 'sw-stage__role' });
-  const stageQuote = h('blockquote', { class: 'sw-stage__quote' });
-  const stageBody = h('p', { class: 'sw-stage__body' });
+  cardImg.addEventListener('load', fitCard);
 
   const close = () => {
+    at = -1;
     root.classList.remove('is-open');
     tiles.forEach((t) => t.classList.remove('is-active'));
   };
 
-  const stage = h('div', { class: 'sw-stage' },
-    stageShot,
-    h('div', { class: 'sw-stage__side' },
-      h('button', { class: 'sw-close', type: 'button', onclick: close },
-        icon('close', { class: 'ic ic--xs' }), h('span', {}, 'Close')),
-      stageName, stageRole, stageQuote, stageBody,
+  const card = h('aside', { class: 'sw-card' },
+    h('button', { class: 'sw-card__close', type: 'button', 'aria-label': 'Close', onclick: close },
+      icon('close', { class: 'ic ic--xs' })),
+    h('div', { class: 'sw-card__shot' }, cardImg),
+    h('div', { class: 'sw-card__head' }, cardName, cardCount),
+    cardRole, cardQuote, cardBody,
+    h('div', { class: 'sw-card__nav' },
+      h('button', {
+        class: 'sw-card__step', type: 'button', 'aria-label': 'Previous story',
+        onclick: () => step(-1),
+      }, icon('chevron-left', { class: 'ic ic--xs' })),
+      h('button', { class: 'sw-card__next', type: 'button', onclick: () => step(1) },
+        'Next story', icon('arrow-right', { class: 'ic ic--xs' })),
     ),
   );
 
-  /* --------------------------------------------------------- the intro copy */
-  const intro = h('div', { class: 'sw-intro' },
-    h('h2', { class: 'sw-title' }, block.title || 'Success Stories'),
+  const open = (index) => {
+    const story = stories[index];
+    if (!story) return;
+    at = index;
+    cardImg.src = src(story);
+    cardImg.alt = story.name || '';
+    cardName.textContent = story.name || '';
+    cardCount.textContent = `${index + 1} / ${stories.length}`;
+    cardRole.textContent = story.role || '';
+    cardQuote.textContent = story.quote || '';
+    cardBody.textContent = story.body || '';
+    // A story with nothing written for it should not draw an empty slab.
+    cardRole.hidden = !story.role;
+    cardQuote.hidden = !story.quote;
+    cardBody.hidden = !story.body;
+
+    tiles.forEach((t, i) => t.classList.toggle('is-active', i === index));
+    root.classList.add('is-open');
+    // Bring the chosen tile into the ribbon's view.
+    tiles[index]?.scrollIntoView({ block: 'center', behavior: REDUCED?.matches ? 'auto' : 'smooth' });
+  };
+  const step = (delta) => open((at + delta + stories.length) % stories.length);
+
+  /* ------------------------------------------------------------- the hero */
+  const { lead, accent, name } = titleLines(block.title);
+  const hero = h('div', { class: 'sw-hero' },
+    h('h2', { class: 'sw-title' },
+      lead ? h('span', { class: 'sw-title__lead' }, lead) : null,
+      accent ? h('span', { class: 'sw-title__accent' }, accent) : null,
+      name ? h('span', { class: 'sw-title__name' }, name) : null,
+    ),
+    h('p', { class: 'sw-lead' },
+      `${stories.length} moments from ten years of building Technical Hub — `
+      + 'the partnerships, the launches and the rooms they filled.'),
+    h('button', {
+      class: 'sw-start', type: 'button',
+      onclick: () => open(at < 0 ? 0 : at),
+    },
+      h('span', {}, 'Walk the wall'),
+      h('i', { class: 'sw-start__spark' }, icon('sparkles', { class: 'ic ic--xs' })),
+    ),
   );
 
-  /* ------------------------------------------------------------- the wall */
-  const tiles = [];
-  const open = (story, tile) => {
-    stageImg.src = media(`/uploads/${encodeURI(story.photo)}`);
-    stageImg.alt = story.name || '';
-    stageName.textContent = story.name || '';
-    stageRole.textContent = story.role || '';
-    stageQuote.textContent = story.quote || '';
-    stageBody.textContent = story.body || '';
-    // A story with nothing written for it should not draw an empty slab.
-    stageName.hidden = !story.name;
-    stageRole.hidden = !story.role;
-    stageQuote.hidden = !story.quote;
-    stageBody.hidden = !story.body;
+  /* ----------------------------------------------------------- the ribbon */
+  const tiles = stories.map((story, i) => h('button', {
+    class: 'sw-tile',
+    type: 'button',
+    title: story.name || 'Open this story',
+    style: REDUCED?.matches ? {} : {
+      // Each tile leans a little differently, so the stream is not a ruler.
+      '--lean': `${((i * 37) % 7) - 3}deg`,
+    },
+    onclick: () => open(i),
+  },
+    h('img', {
+      src: src(story), alt: story.name || '', loading: 'lazy', decoding: 'async',
+    }),
+    story.name ? h('span', { class: 'sw-tile__name' }, story.name) : null,
+  ));
 
-    tiles.forEach((t) => t.classList.toggle('is-active', t === tile));
-    root.classList.add('is-open');
-  };
+  const ribbon = h('div', { class: 'sw-ribbon' },
+    h('div', { class: 'sw-ribbon__run' }, ...tiles),
+  );
 
-  /* The wall is a 3D marquee: four columns laid on a plane tilted away from the
-     viewer, each drifting on its own long loop so the whole field breathes.
-     Adjacent columns run opposite directions and at different speeds, which is
-     what stops it reading as one sheet sliding past.
-     The drift is a CSS keyframe with `direction: alternate` — the same thing the
-     original expresses as `repeatType: "reverse"` — so there is no per-frame
-     JavaScript behind any of it. */
-  const cols = columnsFrom(stories, MARQUEE_COLS);
-  const grid = h('div', { class: 'sw-mq__grid' });
-
-  cols.forEach((group, ci) => {
-    const column = h('div', {
-      class: 'sw-mq__col',
-      style: REDUCED?.matches ? {} : {
-        // Even columns fall, odd ones rise; the two durations never line up.
-        'animation-duration': `${ci % 2 === 0 ? 10 : 15}s`,
-        'animation-direction': ci % 2 === 0 ? 'alternate' : 'alternate-reverse',
-        // Negative delay starts each column part-way through its own travel.
-        'animation-delay': `-${ci * 2.5}s`,
-      },
-    });
-    group.forEach((story) => {
-      const tile = h('button', {
-        class: 'sw-tile',
-        type: 'button',
-        title: story.name || 'Open this story',
-        onclick: () => open(story, tile),
-      },
-        h('img', {
-          src: media(`/uploads/${encodeURI(story.photo)}`),
-          alt: story.name || '', loading: 'lazy', decoding: 'async',
-        }),
-        story.name ? h('span', { class: 'sw-tile__name' }, story.name) : null,
-      );
-      tiles.push(tile);
-      column.appendChild(tile);
-    });
-    grid.appendChild(column);
-  });
-
-  const wall = h('div', { class: 'sw-mq' }, h('div', { class: 'sw-mq__plane' }, grid));
-
-  root.appendChild(intro);
-  root.appendChild(stage);
-  /* Straight onto the root, with no wrapper. The marquee is absolutely
-     positioned against .sw-root, which is already the positioned, clipping
-     ancestor — a flex wrapper in between only gave it a zero-height parent to
-     resolve nothing against. */
-  root.appendChild(wall);
+  root.appendChild(hero);
+  root.appendChild(ribbon);
+  root.appendChild(card);
 
   root.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && root.classList.contains('is-open')) {
-      event.stopPropagation();
-      close();
-    }
+    if (!root.classList.contains('is-open')) return;
+    if (event.key === 'Escape') { event.stopPropagation(); close(); }
+    if (event.key === 'ArrowDown') { event.stopPropagation(); event.preventDefault(); step(1); }
+    if (event.key === 'ArrowUp') { event.stopPropagation(); event.preventDefault(); step(-1); }
   });
 
   return root;

@@ -9261,49 +9261,15 @@ body.is-presenting .coe-orbit { bottom: 104px; }
   50% { transform: translate3d(-3%, 2%, 0) scale(1.05); }
 }
 
-.sw-root {
-  position: relative; height: 100%; min-height: 860px; max-height: 860px;
-  overflow: hidden;
-  display: flex; flex-direction: column;
-  border-radius: var(--radius-lg); background: var(--surface);
-}
-.sw-empty { display: grid; place-items: center; align-content: center; gap: 12px; height: 100%; color: var(--muted); text-align: center; }
 
 /* -------------------------------------------------------------- the intro */
-.sw-intro { position: relative; z-index: 1; flex: 0 0 auto; padding: 44px 56px 0; }
-.sw-root.is-open .sw-intro { display: none; }
 .sw-eyebrow {
   margin: 0 0 10px; color: var(--nav-accent-ink, var(--accent-ink));
   font-size: 11.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
 }
-.sw-title {
-  margin: 0; max-width: 22ch;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
-  font-size: 62px; font-weight: 700; line-height: 1.02; letter-spacing: 0.005em;
-  text-transform: uppercase;
-}
 .sw-sub { margin: 14px 0 0; max-width: 56ch; color: var(--muted); font-size: 17px; line-height: 1.55; }
 
 /* -------------------------------------------------------------- the stage */
-.sw-stage {
-  position: relative; z-index: 1;
-  flex: 1 1 auto; min-height: 0; display: none;
-/* 80/20 of the content box, not of the slide — the padding and the gap come
-   off first. Measured: this puts the portrait at 75% of the full slide width,
-   which is what was asked for. */
-  grid-template-columns: 80fr 20fr;
-  /* The row has to be told it may not exceed the stage. Left to itself it is
-     auto-sized, so a tall portrait grew the row, the row grew the stage, and
-     the wall was pushed off the bottom of the slide. */
-  grid-template-rows: minmax(0, 1fr);
-  gap: 26px; padding: 32px 32px 0;
-}
-.sw-root.is-open .sw-stage { display: grid; }
-.sw-stage__shot {
-  min-height: 0; overflow: hidden; border-radius: 18px;
-  border: 1px solid var(--border); background: var(--page-bg);
-  animation: swStageIn .45s cubic-bezier(.2,.8,.2,1) both;
-}
 /* Two caps, and the tighter one wins.
    CSS caps it to the frame. StoryWall then caps it to twice its own pixels,
    inline, once the file has loaded and its real size is known. Neither cap
@@ -9315,39 +9281,7 @@ body.is-presenting .coe-orbit { bottom: 104px; }
 
    The border and radius live on the image, not on the frame, so a small file
    reads as a small photograph rather than as a big box mostly full of nothing. */
-.sw-stage__shot {
-  min-height: 0; display: grid; place-items: center;
-  overflow: hidden; border: 0; background: none;
-  animation: swStageIn .45s cubic-bezier(.2,.8,.2,1) both;
-}
-.sw-stage__img {
-  display: block;
-  width: auto; height: auto;
-  max-width: 100%; max-height: 100%;
-  object-fit: contain;
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  background: var(--page-bg);
-}
-.sw-stage__side {
-  min-width: 0; display: flex; flex-direction: column; gap: 10px; overflow: auto;
-  scrollbar-width: none; animation: swSideIn .45s .08s cubic-bezier(.2,.8,.2,1) both;
-}
-.sw-stage__side::-webkit-scrollbar { width: 0; display: none; }
-.sw-close {
-  align-self: flex-start; display: inline-flex; align-items: center; gap: 7px;
-  padding: 7px 14px; border: 1px solid var(--border); border-radius: 999px;
-  background: var(--page-bg); color: var(--text);
-  font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;
-}
 .sw-close:hover { border-color: var(--nav-accent, var(--brand-accent)); }
-.sw-stage__name { margin: 8px 0 0; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
-.sw-stage__role { margin: 0; color: var(--nav-accent-ink, var(--accent-ink)); font-size: 14px; font-weight: 700; }
-.sw-stage__quote {
-  margin: 10px 0 0; padding-left: 14px; border-left: 3px solid var(--nav-accent, var(--brand-accent));
-  font-size: 17px; line-height: 1.5; font-style: italic;
-}
-.sw-stage__body { margin: 8px 0 0; color: var(--muted); font-size: 14.5px; line-height: 1.6; }
 
 /* --------------------------------------------------------------- the wall */
 /* Flush to the floor of the slide, and to both edges. The columns rise from
@@ -9361,8 +9295,6 @@ body.is-presenting .coe-orbit { bottom: 104px; }
 
 @media (prefers-reduced-motion: reduce) {
   .sw-root::before { animation: none !important; }
-  .sw-col__bob { animation: none !important; }
-  .sw-stage__shot, .sw-stage__side { animation: none !important; }
   .sw-tile { transition: none !important; }
 }
 
@@ -10792,4 +10724,248 @@ body.is-presenting .pg-player { z-index: 30; }
   .lp-badge, .lp-word, .lp-sub, .lp-actions, .lp-foot { animation: none; opacity: 1; transform: none; filter: none; }
   .lp-cta, .lp-chip img, .lp-ghost { transition: none; }
   .lp-cta:hover { transform: none; }
+}
+
+/* ==========================================================================
+   Success Stories — headline left, a diagonal ribbon through the middle,
+   the chosen moment as a card on the right
+   ========================================================================== */
+
+.sw-root {
+  --sw-lime: #B8F14A;          /* the reference's accent, tuned to sit beside our green */
+  position: relative;
+  height: 100%; min-height: 860px; max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  /* Dark, as the reference is. The pictures are the colour on this page; a white
+     ground had them competing with the surface for it. */
+  background: #0B0D10;
+  color: #fff;
+  display: grid;
+  grid-template-columns: minmax(340px, 40%) minmax(0, 1fr);
+  align-items: center;
+}
+.sw-empty {
+  grid-column: 1 / -1;
+  display: grid; place-items: center; align-content: center; gap: 12px;
+  height: 100%; color: rgb(255 255 255 / 0.6); text-align: center;
+}
+.sw-hint { margin: 0; font-size: 13px; }
+
+/* --- the headline -------------------------------------------------------- */
+/* Three lines, three treatments, as the reference sets them: a serif italic for
+   the words that carry the voice and a squared face for the one that carries the
+   emphasis. */
+.sw-hero {
+  position: relative; z-index: 3;
+  padding: 0 0 0 56px;
+  max-width: 34ch;
+}
+.sw-title { margin: 0; display: flex; flex-direction: column; line-height: 0.94; }
+.sw-title__lead,
+.sw-title__name {
+  font-family: Georgia, 'Times New Roman', 'Iowan Old Style', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(40px, 4.6vw, 74px);
+  letter-spacing: -0.015em;
+  animation: sw-in 760ms cubic-bezier(.2,.7,.3,1) both;
+}
+.sw-title__accent {
+  font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-weight: 500;
+  font-size: clamp(44px, 5.4vw, 86px);
+  letter-spacing: 0.01em;
+  color: var(--sw-lime);
+  animation: sw-in 760ms 90ms cubic-bezier(.2,.7,.3,1) both;
+}
+.sw-title__name { animation-delay: 180ms; padding-left: 0.06em; }
+
+.sw-lead {
+  margin: 26px 0 0;
+  max-width: 30ch;
+  color: rgb(255 255 255 / 0.52);
+  font-size: 13.5px; line-height: 1.7;
+  animation: sw-in 760ms 300ms cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes sw-in {
+  from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+/* The round action, as in the reference. */
+.sw-start {
+  display: grid; place-items: center; gap: 3px;
+  width: 132px; height: 132px;
+  margin-top: 34px;
+  border: 0; border-radius: 50%;
+  background: var(--sw-lime);
+  color: #0B0D10;
+  font: inherit; font-size: 13px; font-weight: 700; line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  animation: sw-in 800ms 400ms cubic-bezier(.2,.7,.3,1) both;
+  transition: transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--sw-lime) 40%, transparent);
+}
+.sw-start:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 16px color-mix(in srgb, var(--sw-lime) 12%, transparent);
+}
+.sw-start__spark { display: grid; place-items: center; }
+.sw-start:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+/* --- the ribbon ---------------------------------------------------------- */
+/* One column, rotated off vertical and taller than the slide, so the stream runs
+   in at the top and out at the bottom instead of starting and stopping inside
+   the frame. */
+.sw-ribbon {
+  position: absolute;
+  top: 50%; left: 46%;
+  width: 460px; height: 128%;
+  transform: translateY(-50%) rotate(-16deg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+  z-index: 1;
+}
+.sw-ribbon::-webkit-scrollbar { width: 0; height: 0; }
+.sw-ribbon__run {
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
+  padding: 18% 0;
+}
+
+.sw-tile {
+  position: relative;
+  flex: 0 0 auto;
+  width: 300px;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #14171c;
+  cursor: pointer;
+  /* Each tile leans a little differently so the run is a stream, not a ruler. */
+  transform: rotate(var(--lean, 0deg));
+  box-shadow: 0 24px 48px -26px rgb(0 0 0 / 0.85);
+  transition: transform .34s cubic-bezier(.2,.7,.3,1), box-shadow .34s ease, opacity .3s ease;
+}
+.sw-tile img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sw-tile:hover, .sw-tile:focus-visible {
+  transform: rotate(0deg) scale(1.05);
+  box-shadow: 0 30px 60px -24px rgb(0 0 0 / 0.9);
+  outline: none;
+  z-index: 2;
+}
+.sw-tile__name {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 22px 12px 9px;
+  background: linear-gradient(transparent, rgb(5 7 10 / 0.88));
+  color: #fff; font-size: 11.5px; font-weight: 700; text-align: left;
+  /* Set upright against the ribbon's own tilt, so a name never reads on a slope. */
+  transform: rotate(calc(-1 * var(--lean, 0deg)));
+  transform-origin: left bottom;
+}
+.sw-tile.is-active {
+  transform: rotate(0deg) scale(1.06);
+  box-shadow: 0 0 0 2px var(--sw-lime), 0 30px 60px -24px rgb(0 0 0 / 0.9);
+}
+/* With a card open the rest of the stream steps back rather than disappearing. */
+.sw-root.is-open .sw-tile:not(.is-active) { opacity: 0.42; }
+
+/* --- the card ------------------------------------------------------------ */
+.sw-card {
+  position: absolute;
+  top: 50%; right: 34px;
+  width: 320px;
+  transform: translateY(-50%) translateX(24px);
+  padding: 14px;
+  border-radius: 20px;
+  background: #15181d;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.9);
+  opacity: 0; pointer-events: none;
+  z-index: 4;
+  transition: opacity .26s ease, transform .34s cubic-bezier(.2,.7,.3,1);
+}
+.sw-root.is-open .sw-card { opacity: 1; transform: translateY(-50%); pointer-events: auto; }
+
+.sw-card__close {
+  position: absolute; top: 22px; right: 22px;
+  display: grid; place-items: center;
+  width: 28px; height: 28px;
+  border: 0; border-radius: 50%;
+  background: rgb(10 12 16 / 0.7);
+  color: #fff; cursor: pointer;
+  z-index: 2;
+  transition: background .18s ease;
+}
+.sw-card__close:hover { background: rgb(10 12 16 / 0.92); }
+
+.sw-card__shot {
+  display: grid; place-items: center;
+  border-radius: 13px; overflow: hidden;
+  background: #0e1116;
+}
+/* Bounded rather than stretched: sixteen of the files are 206px square, and
+   filling this frame would enlarge them about fivefold. */
+.sw-card__img { display: block; max-width: 100%; height: auto; }
+
+.sw-card__head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  margin-top: 13px;
+}
+.sw-card__name { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+.sw-card__count {
+  flex: 0 0 auto;
+  color: rgb(255 255 255 / 0.42);
+  font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums;
+}
+.sw-card__role {
+  margin: 6px 0 0;
+  color: var(--sw-lime);
+  font-size: 10px; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase;
+}
+.sw-card__quote {
+  margin: 11px 0 0; padding: 0;
+  color: rgb(255 255 255 / 0.86);
+  font-size: 13px; line-height: 1.6; font-style: italic;
+}
+.sw-card__body {
+  margin: 9px 0 0;
+  color: rgb(255 255 255 / 0.6);
+  font-size: 12.5px; line-height: 1.62;
+}
+
+.sw-card__nav { display: flex; align-items: center; gap: 8px; margin-top: 15px; }
+.sw-card__step {
+  display: grid; place-items: center; flex: 0 0 auto;
+  width: 38px; height: 38px;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 999px;
+  background: transparent; color: #fff; cursor: pointer;
+  transition: background .18s ease, border-color .18s ease;
+}
+.sw-card__step:hover { background: rgb(255 255 255 / 0.09); border-color: rgb(255 255 255 / 0.3); }
+.sw-card__next {
+  flex: 1 1 auto;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 16px;
+  border: 0; border-radius: 999px;
+  background: var(--sw-lime);
+  color: #0B0D10;
+  font: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  transition: transform .22s ease, filter .22s ease;
+}
+.sw-card__next:hover { transform: translateY(-1px); filter: brightness(1.06); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-title__lead, .sw-title__accent, .sw-title__name, .sw-lead, .sw-start { animation: none; }
+  .sw-tile, .sw-card, .sw-start, .sw-card__next { transition: none; }
+  .sw-tile:hover, .sw-tile.is-active { transform: none; }
+  .sw-start:hover { transform: none; }
 }
