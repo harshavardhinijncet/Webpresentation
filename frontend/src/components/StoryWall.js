@@ -208,52 +208,68 @@ export function StoryWall(block, { editing = false } = {}) {
     ),
   );
 
-  /* ----------------------------------------------------------- the reel */
+  /* ----------------------------------------------------------- the ring */
+  /* Every picture is seated at its own angle on one large circle, and the circle
+     turns. That is what makes the run curve: a tile's position follows the arc,
+     so the strip bends away at the top and back at the bottom instead of running
+     straight.
+     It also makes the loop seamless for free. The belt version needed two copies
+     of all twenty-five pictures and had to travel exactly half its height to
+     hide the join; a ring has no join — tile 25 is already next to tile 1.
+     Each seat counter-rotates by the same amount the ring turns, so a photograph
+     travels the curve without tumbling. Same duration, `reverse`, so the two can
+     never drift. */
   const tiles = [];
-  const runOf = (pass) => h('div', {
-    class: 'sw-reel__run',
-    // The second copy is the same pictures; a screen reader hears them once.
-    'aria-hidden': pass ? 'true' : null,
+  const ring = h('div', {
+    class: 'sw-ring',
+    style: REDUCED?.matches ? {} : { 'animation-duration': `${ROLL_SECONDS * 2}s` },
   }, ...stories.map((story, i) => {
+    const seat = h('div', {
+      class: 'sw-seat',
+      style: { '--a': `${((i * 360) / count).toFixed(3)}deg` },
+    });
+    /* Two counter-rotations, because there are two rotations to undo and only
+       one of them moves. The seat's angle is static, so it is cancelled by a
+       static rotate; the ring's turn is animated, so it needs an animation. With
+       only the animated one in place every picture inherited its seat's angle and
+       the visible tiles sat at 11 to 73 degrees — fanned like spokes rather than
+       standing up. */
+    const fix = h('div', {
+      class: 'sw-seat__fix',
+      style: { '--a': `${((i * 360) / count).toFixed(3)}deg` },
+    });
+    const spin = h('div', {
+      class: 'sw-seat__spin',
+      style: REDUCED?.matches ? {} : { 'animation-duration': `${ROLL_SECONDS * 2}s` },
+    });
     const tile = h('button', {
       class: 'sw-tile',
       type: 'button',
-      tabindex: pass ? '-1' : null,
       title: story.name || 'Open this story',
-      style: REDUCED?.matches ? {} : {
-        // Each card leans and sits at its own depth, so the run is not a ruler.
-        '--lean': `${((i * 37) % 7) - 3}deg`,
-        '--turn': `${((i * 53) % 9) - 4}deg`,
-        '--shift': `${((i * 29) % 46) - 23}px`,
-        /* The focal pulse, as inherited properties rather than animation-*
-           directly: the animation lives on the inner face, and setting
-           animation-duration here put it on the button instead — where nothing
-           reads it, so the pulse silently never ran. Custom properties inherit;
-           animation-duration does not. */
-        '--roll': `${ROLL_SECONDS}s`,
-        '--phase': `-${((i * ROLL_SECONDS) / count).toFixed(2)}s`,
+      style: {
+        // A small lean so the run reads as editorial rather than mechanical.
+        '--lean': `${((i * 37) % 9) - 4}deg`,
+        '--roll': `${ROLL_SECONDS * 2}s`,
+        '--phase': `-${((i * ROLL_SECONDS * 2) / count).toFixed(2)}s`,
       },
       onclick: () => take(i),
     },
       h('span', { class: 'sw-tile__face' },
         h('img', {
-          src: src(story), alt: pass ? '' : (story.name || ''),
-          loading: 'lazy', decoding: 'async',
+          src: src(story), alt: story.name || '', loading: 'lazy', decoding: 'async',
         }),
         story.name ? h('span', { class: 'sw-tile__name' }, story.name) : null,
       ),
     );
     tile.dataset.story = String(i);
     tiles.push(tile);
-    return tile;
+    spin.appendChild(tile);
+    fix.appendChild(spin);
+    seat.appendChild(fix);
+    return seat;
   }));
 
-  const reel = h('div', { class: 'sw-reel' },
-    h('div', {
-      class: 'sw-reel__belt',
-      style: REDUCED?.matches ? {} : { 'animation-duration': `${ROLL_SECONDS}s` },
-    }, runOf(0), runOf(1)),
-  );
+  const reel = h('div', { class: 'sw-reel' }, ring);
 
   /* Small muted markers, and the focal band the card follows. Decoration, so
      they are hidden from the accessibility tree. */

@@ -131,9 +131,9 @@ export function OrgSelectPage(container, { onLogout }) {
            point of the sentence, so it may shrink but it may not split. */
         h('span', { class: 'lp-line' },
           word('is'),
-          lit('users', 'human', 'green'),
+          lit('fingerprint', 'human', 'green'),
           word('+', 'lp-word--plus'),
-          lit('sparkles', 'AI', 'gold'),
+          lit('spark', 'AI', 'gold'),
         ),
       ),
 
@@ -152,23 +152,5 @@ export function OrgSelectPage(container, { onLogout }) {
       ),
     ),
 
-    /* The partners named along the foot, as the reference does. It scrolls
-       because there are eighteen of them and a static row would either wrap
-       into a block or shrink each mark past reading. */
-    h('div', { class: 'lp-foot' },
-      h('p', { class: 'lp-foot__lead' }, 'Centers of Excellence, built with'),
-      h('div', { class: 'lp-track' },
-        // Twice, so the loop has something to run into as it wraps.
-        ...[0, 1].map((pass) => h('div', {
-          class: 'lp-track__run', 'aria-hidden': pass ? 'true' : null,
-        }, ...PARTNERS.map((p) => h('span', { class: 'lp-chip', title: p.name },
-          h('img', {
-            src: partnerSrc(p.file), alt: pass ? '' : p.name,
-            loading: 'lazy', decoding: 'async',
-            onerror: (e) => e.currentTarget.closest('.lp-chip')?.remove(),
-          }),
-        )))),
-      ),
-    ),
   ));
 }

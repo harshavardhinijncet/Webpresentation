@@ -36,6 +36,27 @@ const ICONS = {
   eye: ['M2.8 12S6.6 5.9 12 5.9 21.2 12 21.2 12 17.4 18.1 12 18.1 2.8 12 2.8 12z', 'c 12 12 2.9'],
   target: ['c 12 12 8.3', 'c 12 12 4.2', 'c 12 12 1'],
   heart: ['M12 20.4C7.6 17.6 4 14.6 4 10.9A4 4 0 0 1 12 8.6a4 4 0 0 1 8 2.3c0 3.7-3.6 6.7-8 9.5z'],
+  /* A fingerprint, for "human". Concentric arcs rather than a traced photograph
+     of one — it is a pictogram, and it has to read at 26px. */
+  fingerprint: [
+    'M12 3.6c-2 0-3.8.7-5.2 1.9',
+    'M18.4 6.6A8.4 8.4 0 0 0 12 3.6',
+    'M4.4 8.2A8.4 8.4 0 0 0 3.6 12c0 1.5.4 2.9 1.1 4.1',
+    'M20.4 12c0-1.4-.3-2.6-.9-3.8',
+    'M12 7.2a4.8 4.8 0 0 0-4.8 4.8c0 1.6 0 3.2-.6 4.6',
+    'M16.8 12A4.8 4.8 0 0 0 12 7.2',
+    'M17 15.4c-.2 1.6-.6 3.2-1.4 4.6',
+    'M12 10.6a1.4 1.4 0 0 0-1.4 1.4c0 2.6-.2 5.2-1 7.6',
+    'M13.4 12c0-.8-.6-1.4-1.4-1.4',
+    'M13.4 12c0 2.8-.2 5.6-.9 8.2',
+  ],
+  /* A four-point spark, for "AI". Ours, not a vendor's mark: no clean official
+     file for any AI brand is in this repository, and drawing one from memory is
+     how a deck ends up asserting a partnership nobody signed. */
+  spark: [
+    'f M12 2.4l1.9 5.9 5.9 1.9-5.9 1.9L12 21.6l-1.9-9.5L4.2 10.2l5.9-1.9z',
+    'f M19.2 15.6l.8 2.4 2.4.8-2.4.8-.8 2.4-.8-2.4-2.4-.8 2.4-.8z',
+  ],
   sparkles: ['m11.4 3.4 1.7 4.7 4.7 1.7-4.7 1.7-1.7 4.7-1.7-4.7L5 9.8l4.7-1.7z', 'm18.4 15.4.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9z'],
 
   /* ------------------------------------------------------------- people */

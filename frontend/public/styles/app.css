@@ -10803,52 +10803,82 @@ body.is-presenting .pg-player { z-index: 30; }
    instead of appearing and vanishing at a hard edge. */
 .sw-reel {
   position: absolute;
-  top: 50%; left: 44%;
-  width: 470px; height: 150%;
-  transform: translateY(-50%) rotate(-15deg);
+  inset: 0 0 0 34%;
   overflow: hidden;
-  perspective: 1500px;
-  perspective-origin: 50% 50%;
+  perspective: 1700px;
+  perspective-origin: 30% 50%;
   z-index: 1;
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  /* Faded top and bottom, so pictures arrive and leave rather than appearing and
+     vanishing at a hard edge. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
 }
-/* Two identical runs travelling exactly half the belt: at -50% the second copy
-   sits where the first began, so the loop closes with no seam to hide. */
-.sw-reel__belt {
-  display: flex; flex-direction: column;
+/* One circle, turning. Radius and centre are chosen so only an arc of it crosses
+   the slide: the centre sits well to the left, so what shows is the right-hand
+   sweep — which is why the strip bends away at the top and back at the bottom
+   rather than running straight. */
+.sw-ring {
+  position: absolute;
+  /* Placed in pixels, not percentages. The margin puts the circle's right edge
+     exactly on the frame's centre line, so the sweep that crosses the slide is
+     its east point — the near side. With a percentage offset it landed the other
+     way round and what showed was the far side of the circle, behind the
+     headline, which is why the strip was invisible rather than merely misplaced. */
+  top: 50%; left: 50%;
+  width: 2400px; height: 2400px;
+  margin: -1200px 0 0 -2400px;
   transform-style: preserve-3d;
-  animation-name: sw-roll;
+  animation-name: sw-orbit;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   will-change: transform;
 }
-@keyframes sw-roll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
-/* It stops for a closer look, and it parks when a click takes over. It does not
-   stop merely because a card is open — the card following the reel is the point. */
-.sw-reel:hover .sw-reel__belt,
-.sw-root.is-held .sw-reel__belt { animation-play-state: paused; }
+@keyframes sw-orbit { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
-.sw-reel__run {
-  display: flex; flex-direction: column; align-items: center;
+/* A seat places its picture on the rim. Static — the ring supplies the motion. */
+.sw-seat {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  transform: rotate(var(--a)) translateY(-1200px);
   transform-style: preserve-3d;
 }
-/* The overlap that turns a stack into a collage. It has to be a negative margin:
-   `gap` is defined as non-negative, so `gap: -14px` is invalid and the parser
-   drops it — it sat here doing nothing while the margin below did the work. */
-.sw-reel__run > * + * { margin-top: -14px; }
+/* The seat's own angle, undone. Static, because the seat's angle is static —
+   cancelling it inside the animated wrapper is not possible, since a keyframe
+   owning `transform` overrides any rotate written beside it. */
+.sw-seat__fix {
+  position: absolute;
+  transform: rotate(calc(-1 * var(--a)));
+  transform-style: preserve-3d;
+}
+/* And the ring's turn, undone, so a photograph travels the arc without tumbling.
+   Same duration, reversed: two animations that cannot drift apart. */
+.sw-seat__spin {
+  position: absolute;
+  transform-origin: 50% 50%;
+  animation-name: sw-orbit;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: reverse;
+  will-change: transform;
+}
+
+/* Both halves stop together — for a closer look, and when a click takes over. */
+.sw-reel:hover .sw-ring,
+.sw-reel:hover .sw-seat__spin,
+.sw-root.is-held .sw-ring,
+.sw-root.is-held .sw-seat__spin { animation-play-state: paused; }
 
 .sw-tile {
-  position: relative;
-  flex: 0 0 auto;
-  width: 296px;
+  position: absolute;
+  top: -114px; left: -152px;      /* centred on its seat */
+  width: 304px;
   aspect-ratio: 4 / 3;
-  margin-left: var(--shift, 0);
   padding: 0; border: 0; background: none;
   cursor: pointer;
   transform-style: preserve-3d;
-  /* The card's own attitude: a lean in the plane and a small turn out of it. */
-  transform: rotate(var(--lean, 0deg)) rotateY(var(--turn, 0deg));
+  /* The card's own lean, on top of wherever the arc has carried it. */
+  transform: rotate(var(--lean, 0deg));
   transition: transform .4s cubic-bezier(.2,.7,.3,1);
 }
 /* The focal pulse rides an inner face, not the tile. An animation on `transform`
@@ -10883,7 +10913,7 @@ body.is-presenting .pg-player { z-index: 30; }
 
 .sw-tile img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .sw-tile:hover, .sw-tile:focus-visible {
-  transform: rotate(0deg) rotateY(0deg) scale(1.05);
+  transform: rotate(0deg) scale(1.06);
   outline: none;
   z-index: 3;
 }
@@ -11030,10 +11060,24 @@ body.is-presenting .pg-player { z-index: 30; }
 
 @media (prefers-reduced-motion: reduce) {
   .sw-title__lead, .sw-title__accent, .sw-title__name, .sw-start, .sw-note { animation: none; }
-  .sw-reel__belt, .sw-tile__face { animation: none; }
+  .sw-tile__face { animation: none; }
   .sw-reel { overflow-y: auto; }
   .sw-tile, .sw-card, .sw-start, .sw-card__next { transition: none; }
   .sw-tile:hover { transform: none; }
   .sw-start:hover { transform: none; }
   .sw-card { opacity: 1; transform: none; }
+}
+
+/* --- fills the display when presenting ----------------------------------- */
+/* The root was pinned to 860px, which is the canvas budget with a head above it.
+   Presenting has no head, so 40px of the slide went unused and showed as a band
+   under the section. */
+body.is-presenting .sw-root { min-height: 900px; max-height: 900px; }
+
+/* Oswald across the section, not only the accent line. */
+.sw-root { font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif; }
+.sw-note__body, .sw-card__quote, .sw-card__body { font-family: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-ring, .sw-seat__spin { animation: none; }
 }
