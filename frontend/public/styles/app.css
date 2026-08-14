@@ -9295,7 +9295,7 @@ body.is-presenting .coe-orbit { bottom: 104px; }
 
 @media (prefers-reduced-motion: reduce) {
   .sw-root::before { animation: none !important; }
-  .sw-tile { transition: none !important; }
+  .sw-c { transition: none !important; }
 }
 
 /* ==========================================================================
@@ -10727,9 +10727,9 @@ body.is-presenting .pg-player { z-index: 30; }
 }
 
 
+
 /* ==========================================================================
-   Success Stories — an editorial reel: type left, photographs rolling through
-   the middle, the focal frame open on the right
+   Success Stories — a card carousel that arrives folded
    ========================================================================== */
 
 .sw-root {
@@ -10738,359 +10738,198 @@ body.is-presenting .pg-player { z-index: 30; }
   height: 100%; min-height: 860px; max-height: 860px;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  /* Charcoal rather than black: a true #000 gives the cards nothing to float
-     against and the shadows nowhere to fall. */
   background: #0A0B0D;
   color: #fff;
+  font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
 }
 .sw-empty {
+  grid-row: 1 / -1;
   display: grid; place-items: center; align-content: center; gap: 12px;
-  height: 100%; color: rgb(255 255 255 / 0.6); text-align: center;
+  color: rgb(255 255 255 / 0.6); text-align: center;
 }
 .sw-hint { margin: 0; font-size: 13px; }
 
-/* --- left: the type ------------------------------------------------------ */
-.sw-hero {
-  position: absolute; z-index: 4;
-  left: 58px; top: 50%;
-  transform: translateY(-50%);
-  max-width: 15ch;
-}
-.sw-title { margin: 0; display: flex; flex-direction: column; line-height: 0.92; }
+/* --- the header ---------------------------------------------------------- */
+.sw-head { padding: 40px 56px 0; text-align: center; }
+.sw-title { margin: 0; display: inline-flex; align-items: baseline; gap: 0.28em; flex-wrap: wrap; justify-content: center; }
 .sw-title__lead,
 .sw-title__name {
   font-family: Georgia, 'Times New Roman', 'Iowan Old Style', serif;
   font-style: italic; font-weight: 400;
-  font-size: clamp(42px, 4.8vw, 78px);
-  letter-spacing: -0.018em;
-  animation: sw-in 820ms cubic-bezier(.2,.7,.3,1) both;
+  font-size: clamp(30px, 3.4vw, 52px);
+  letter-spacing: -0.015em;
+  animation: sw-in 780ms cubic-bezier(.2,.7,.3,1) both;
 }
 .sw-title__accent {
-  font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif;
   font-weight: 400;
-  font-size: clamp(48px, 5.8vw, 92px);
-  letter-spacing: 0.005em;
+  font-size: clamp(34px, 4vw, 60px);
   color: var(--sw-lime);
-  animation: sw-in 820ms 100ms cubic-bezier(.2,.7,.3,1) both;
+  animation: sw-in 780ms 90ms cubic-bezier(.2,.7,.3,1) both;
 }
-.sw-title__name { animation-delay: 200ms; padding-left: 0.05em; }
+.sw-title__name { animation-delay: 180ms; }
 @keyframes sw-in {
-  from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+  from { opacity: 0; transform: translateY(16px); filter: blur(5px); }
   to   { opacity: 1; transform: none; filter: none; }
 }
-
-/* The one bright element on the page. */
-.sw-start {
-  display: grid; place-items: center; gap: 2px;
-  width: 128px; height: 128px;
-  margin-top: 40px;
-  border: 0; border-radius: 50%;
-  background: var(--sw-lime);
-  color: #0A0B0D;
-  font: inherit; font-size: 12.5px; font-weight: 700; line-height: 1.25;
-  text-align: center; cursor: pointer;
-  animation: sw-in 860ms 420ms cubic-bezier(.2,.7,.3,1) both;
-  transition: transform .34s cubic-bezier(.2,.7,.3,1), box-shadow .34s ease;
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--sw-lime) 34%, transparent);
+.sw-lead {
+  margin: 12px 0 0;
+  color: rgb(255 255 255 / 0.44);
+  font-size: 13px; letter-spacing: 0.02em;
+  animation: sw-in 780ms 300ms cubic-bezier(.2,.7,.3,1) both;
 }
-.sw-start:hover { transform: scale(1.05); box-shadow: 0 0 0 18px color-mix(in srgb, var(--sw-lime) 10%, transparent); }
-.sw-start:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
-.sw-start__spark { display: grid; place-items: center; }
-
-/* --- centre: the reel ---------------------------------------------------- */
-/* Tilted, taller than the slide, and set in a perspective so the cards read as
-   floating rather than tiled. The mask is what makes pictures arrive and leave
-   instead of appearing and vanishing at a hard edge. */
-.sw-reel {
-  position: absolute;
-  inset: 0 0 0 34%;
-  overflow: hidden;
-  perspective: 1700px;
-  perspective-origin: 30% 50%;
-  z-index: 1;
-  /* Faded on every side rather than only top and bottom: the sweep is diagonal
-     now, so a horizontal fade would cut its corners off square. A radial mask
-     lets the ring dissolve as it leaves in whatever direction it leaves. */
-  -webkit-mask-image: radial-gradient(120% 78% at 46% 50%, #000 34%, rgb(0 0 0 / 0.55) 66%, transparent 92%);
-  mask-image: radial-gradient(120% 78% at 46% 50%, #000 34%, rgb(0 0 0 / 0.55) 66%, transparent 92%);
-}
-/* One circle, turning. Radius and centre are chosen so only an arc of it crosses
-   the slide: the centre sits well to the left, so what shows is the right-hand
-   sweep — which is why the strip bends away at the top and back at the bottom
-   rather than running straight. */
-.sw-ring {
-  position: absolute;
-  /* Placed in pixels, not percentages. The margin puts the circle's right edge
-     exactly on the frame's centre line, so the sweep that crosses the slide is
-     its east point — the near side. With a percentage offset it landed the other
-     way round and what showed was the far side of the circle, behind the
-     headline, which is why the strip was invisible rather than merely misplaced. */
-  /* The centre is offset left AND down by R·sin45, which puts the point of the
-     circle nearest the frame at 45 degrees. The tangent there is perpendicular to
-     the radius, so the visible sweep runs top-left to bottom-right — a diagonal
-     ribbon. With the centre offset only to the left, that point sat due east and
-     the tangent was vertical, which is why the strip came out as a near-upright
-     column instead. */
-  top: 50%; left: 50%;
-  width: 2400px; height: 2400px;
-  margin: -351px 0 0 -2049px;
-  transform-style: preserve-3d;
-  animation-name: sw-orbit;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  will-change: transform;
-}
-@keyframes sw-orbit { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-
-/* A seat places its picture on the rim. Static — the ring supplies the motion. */
-.sw-seat {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 0; height: 0;
-  transform: rotate(var(--a)) translateY(-1200px);
-  transform-style: preserve-3d;
-}
-/* One constant angle, and nothing proportional to anything.
- *
- * A card rides the wheel rigidly: it is not counter-rotated at all, so its tilt
- * is simply where it currently sits on the circle. That is what makes it lean
- * with the curve, and lean *progressively* as it travels — which is the whole
- * character of the reference.
- *
- * The constant cancels the base angle. Visible cards sit near 45 degrees, which
- * is where the circle passes the frame, so subtracting 45 puts the card at the
- * focal point upright and lets the ones above and below it lean away by however
- * far round the arc they are — about twenty degrees each way.
- *
- * Two wrong turns got here. Cancelling the seat angle in full stood every card
- * bolt upright and the curve stopped reading. Cancelling 70% of it left 30% of
- * the ring's *ongoing* rotation in the sum, so the cards tumbled slowly and
- * forever — they were past 120 degrees and upside down. The tilt has to come from
- * where a card is, never from how long the page has been open. */
-.sw-seat__fix {
-  position: absolute;
-  transform: rotate(-45deg);
-  transform-style: preserve-3d;
-}
-/* And the ring's turn, undone, so a photograph travels the arc without tumbling.
-   Same duration, reversed: two animations that cannot drift apart. */
-/* A plain wrapper now. It used to carry a counter-rotation; the card riding the
-   wheel rigidly is the point, so there is nothing left for it to undo. */
-.sw-seat__spin { position: absolute; }
-
-/* Both halves stop together — for a closer look, and when a click takes over. */
-.sw-reel:hover .sw-ring,
-.sw-root.is-held .sw-ring { animation-play-state: paused; }
-
-.sw-tile {
-  position: absolute;
-  top: -114px; left: -152px;      /* centred on its seat */
-  width: 304px;
-  aspect-ratio: 4 / 3;
-  padding: 0; border: 0; background: none;
+.sw-open {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 18px;
+  padding: 10px 20px;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: 999px;
+  background: transparent; color: #fff;
+  font: inherit; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em;
   cursor: pointer;
-  transform-style: preserve-3d;
-  /* The card's own lean, on top of wherever the arc has carried it. */
-  transform: rotate(var(--lean, 0deg));
-  transition: transform .4s cubic-bezier(.2,.7,.3,1);
+  animation: sw-in 780ms 400ms cubic-bezier(.2,.7,.3,1) both;
+  transition: background .22s ease, border-color .22s ease, color .22s ease;
 }
-/* The focal pulse rides an inner face, not the tile. An animation on `transform`
-   outranks a hover rule for the same property, so putting it on the tile would
-   have silently killed the lift. */
-.sw-tile__face {
-  display: block;
-  width: 100%; height: 100%;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #14171c;
-  box-shadow: 0 26px 52px -28px rgb(0 0 0 / 0.9);
-  animation-name: sw-focus;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  /* Inherited from the tile, which is the only element that knows its own place
-     in the run. Zero by default, so a face with no phase simply sits still. */
-  animation-duration: var(--roll, 0s);
-  animation-delay: var(--phase, 0s);
-  transition: box-shadow .34s ease;
-}
-/* A brief swell as the card crosses the focal band, and a touch of dimming at
-   the far end of its travel, which is what gives the run its depth. */
-@keyframes sw-focus {
-  0%,  100% { transform: scale(0.93); opacity: 0.66; }
-  44%       { transform: scale(0.99); opacity: 0.92; }
-  50%       { transform: scale(1.06); opacity: 1; }
-  56%       { transform: scale(0.99); opacity: 0.92; }
-}
-.sw-reel:hover .sw-tile__face,
-.sw-root.is-held .sw-tile__face { animation-play-state: paused; }
+.sw-open:hover { background: var(--sw-lime); border-color: var(--sw-lime); color: #0A0B0D; }
+.sw-root.is-open .sw-open__label::after { content: ' — folded'; }
+.sw-root.is-open .sw-open { display: none; }
 
-.sw-tile img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.sw-tile:hover, .sw-tile:focus-visible {
-  transform: rotate(0deg) scale(1.06);
-  outline: none;
-  z-index: 3;
+/* --- the deck ------------------------------------------------------------ */
+/* Cards are all absolutely centred and moved only by transform, so switching
+   between folded and dealt reflows nothing and the whole change is composited. */
+.sw-deck {
+  position: relative;
+  min-height: 0;
+  perspective: 1600px;
 }
-.sw-tile:hover .sw-tile__face { box-shadow: 0 34px 64px -26px rgb(0 0 0 / 0.95); }
-.sw-tile__name {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 26px 13px 10px;
-  background: linear-gradient(transparent, rgb(4 5 7 / 0.9));
-  color: #fff; font-size: 11.5px; font-weight: 650; text-align: left;
-  letter-spacing: 0.01em;
-  /* Set upright against the reel's tilt, so a caption never reads on a slope. */
-  transform: rotate(calc(-1 * var(--lean, 0deg)));
-  transform-origin: left bottom;
-}
-.sw-tile.is-active .sw-tile__face {
-  box-shadow: 0 0 0 2px var(--sw-lime), 0 34px 64px -26px rgb(0 0 0 / 0.95);
-}
-
-/* --- the muted furniture ------------------------------------------------- */
-.sw-marks { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
-.sw-marks__dot {
+.sw-c {
   position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgb(255 255 255 / 0.12);
-  background: rgb(255 255 255 / 0.03);
-}
-.sw-marks__dot--a { width: 54px; height: 54px; left: 40%; top: 15%; }
-.sw-marks__dot--b { width: 22px; height: 22px; left: 36%; bottom: 24%; }
-.sw-marks__dot--c { width: 34px; height: 34px; right: 31%; top: 22%; }
-/* The band the card follows — a hairline, so it reads as a register mark rather
-   than a frame drawn round the pictures. */
-.sw-marks__focal {
-  position: absolute; left: 33%; right: 27%; top: 50%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgb(184 241 74 / 0.28), transparent);
-}
-
-/* --- right: the note ----------------------------------------------------- */
-.sw-note {
-  position: absolute; z-index: 3;
-  right: 56px; top: 74px;
-  width: 210px;
-  animation: sw-in 860ms 520ms cubic-bezier(.2,.7,.3,1) both;
-}
-.sw-note__label {
-  margin: 0 0 10px;
-  color: var(--sw-lime);
-  font-size: 9.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
-}
-.sw-note__body {
-  margin: 0;
-  color: rgb(255 255 255 / 0.42);
-  font-size: 12px; line-height: 1.72;
-}
-.sw-note__facts { margin: 20px 0 0; display: grid; gap: 9px; }
-.sw-note__facts > div {
-  display: flex; justify-content: space-between; gap: 10px;
-  padding-top: 9px;
-  border-top: 1px solid rgb(255 255 255 / 0.08);
-}
-.sw-note__facts dt {
-  color: rgb(255 255 255 / 0.32);
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-}
-.sw-note__facts dd { margin: 0; color: rgb(255 255 255 / 0.72); font-size: 11.5px; font-weight: 650; }
-
-/* --- the card ------------------------------------------------------------ */
-.sw-card {
-  position: absolute;
-  right: 40px; bottom: 46px;
-  width: 306px;
-  padding: 13px;
+  top: 50%; left: 50%;
+  width: 300px;
+  display: flex; flex-direction: column;
   border-radius: 20px;
-  background: #14161a;
-  border: 1px solid rgb(255 255 255 / 0.09);
-  box-shadow: 0 44px 86px -34px rgb(0 0 0 / 0.95);
-  opacity: 0; pointer-events: none;
-  transform: translateY(14px) scale(0.97);
-  z-index: 5;
-  transition: opacity .3s ease, transform .42s cubic-bezier(.2,.7,.3,1);
+  overflow: hidden;
+  background: #fff;
+  color: #0A0B0D;
+  cursor: pointer;
+  will-change: transform, opacity;
+  box-shadow: 0 30px 60px -28px rgb(0 0 0 / 0.85);
+  /* The one transition that does all the work — the deal, the step and the fold
+     are the same interpolation with different targets. */
+  transition: transform .72s cubic-bezier(.22,.68,0,1),
+              opacity .46s ease,
+              box-shadow .4s ease;
 }
-.sw-root.is-open .sw-card { pointer-events: auto; }
-/* Retriggered on every change, so a card that updates while open still scales
-   and fades in rather than swapping its contents in place. */
-.sw-card.is-in { opacity: 1; transform: none; }
+.sw-c.is-centre { box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.95); }
 
-.sw-card__close {
-  position: absolute; top: 21px; right: 21px;
+.sw-c__shot {
   display: grid; place-items: center;
-  width: 27px; height: 27px;
+  height: 268px;
+  padding: 16px;
+  background: #F4F5F7;
+}
+/* Contained, never cropped: these run from 206px squares to 2000px posters, and
+   a fixed crop would slice the ends off the wide ones. */
+.sw-c__img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+
+.sw-c__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 16px 16px;
+}
+.sw-c__name {
+  margin: 0; min-width: 0;
+  font-size: 13.5px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.3;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sw-c__view {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 13px;
+  border: 1px solid rgb(10 11 13 / 0.14);
+  border-radius: 999px;
+  background: #fff; color: #0A0B0D;
+  font: inherit; font-size: 11.5px; font-weight: 650;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.sw-c__view:hover { background: #0A0B0D; border-color: #0A0B0D; color: #fff; }
+/* Only the card in hand offers it — the neighbours are a click away from being
+   the card in hand, and two live buttons on one card confuse that. */
+.sw-c:not(.is-centre) .sw-c__view { opacity: 0; pointer-events: none; }
+
+/* --- the controls -------------------------------------------------------- */
+.sw-nav {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 0 0 34px;
+  opacity: 0; pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity .34s ease, transform .44s cubic-bezier(.2,.7,.3,1);
+}
+.sw-root.is-open .sw-nav { opacity: 1; pointer-events: auto; transform: none; }
+.sw-nav__btn {
+  display: grid; place-items: center;
+  width: 46px; height: 46px;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 50%;
+  background: transparent; color: #fff; cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.sw-nav__btn:hover:not(:disabled) { background: rgb(255 255 255 / 0.1); border-color: rgb(255 255 255 / 0.35); }
+.sw-nav__btn:active:not(:disabled) { transform: scale(0.94); }
+.sw-nav__btn:disabled { opacity: 0.3; cursor: default; }
+.sw-nav__count {
+  min-width: 68px; text-align: center;
+  color: rgb(255 255 255 / 0.5);
+  font-size: 12px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: 0.08em;
+}
+.sw-nav__fold {
+  margin-left: 8px;
+  padding: 10px 18px;
+  border: 0; border-radius: 999px;
+  background: var(--sw-lime); color: #0A0B0D;
+  font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: filter .2s ease, transform .2s ease;
+}
+.sw-nav__fold:hover { filter: brightness(1.06); transform: translateY(-1px); }
+
+/* --- the full-size viewer ------------------------------------------------ */
+.sw-view {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center; padding: 5vh 5vw;
+  background: rgb(6 7 9 / 0.9);
+  opacity: 0; transition: opacity .24s ease;
+}
+.sw-view.is-on { opacity: 1; }
+.sw-view[hidden] { display: none; }
+.sw-view__frame {
+  margin: 0; display: flex; flex-direction: column; align-items: center; gap: 14px;
+  max-width: 100%; max-height: 100%;
+  transform: scale(0.97);
+  transition: transform .28s cubic-bezier(.2,.7,.3,1);
+}
+.sw-view.is-on .sw-view__frame { transform: none; }
+.sw-view__img {
+  display: block; width: auto; height: auto;
+  max-width: 100%; max-height: calc(100vh - 18vh);
+  border-radius: 14px; background: #111;
+}
+.sw-view__cap { margin: 0; color: #fff; font-size: 14px; font-weight: 600; }
+.sw-view__close {
+  position: absolute; top: 22px; right: 24px;
+  display: grid; place-items: center; width: 40px; height: 40px;
   border: 0; border-radius: 50%;
-  background: rgb(8 9 11 / 0.72); color: #fff; cursor: pointer; z-index: 2;
+  background: rgb(255 255 255 / 0.12); color: #fff; cursor: pointer;
   transition: background .18s ease;
 }
-.sw-card__close:hover { background: rgb(8 9 11 / 0.94); }
+.sw-view__close:hover { background: rgb(255 255 255 / 0.24); }
 
-.sw-card__shot { display: grid; place-items: center; border-radius: 13px; overflow: hidden; background: #0d0f13; }
-/* Bounded, not filled: sixteen of the files are 206px square. */
-.sw-card__img { display: block; max-width: 100%; height: auto; }
-
-.sw-card__head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 13px; }
-.sw-card__name { margin: 0; font-size: 14.5px; font-weight: 700; letter-spacing: -0.008em; }
-.sw-card__count {
-  flex: 0 0 auto; color: var(--sw-lime);
-  font-size: 10.5px; font-weight: 750; font-variant-numeric: tabular-nums;
-}
-.sw-card__role {
-  margin: 6px 0 0; color: var(--sw-lime);
-  font-size: 9.5px; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase;
-}
-.sw-card__quote { margin: 10px 0 0; padding: 0; color: rgb(255 255 255 / 0.86); font-size: 12.5px; line-height: 1.6; font-style: italic; }
-.sw-card__body { margin: 8px 0 0; color: rgb(255 255 255 / 0.58); font-size: 12px; line-height: 1.6; }
-
-.sw-card__meta {
-  display: flex; justify-content: space-between; gap: 10px;
-  margin-top: 12px; padding-top: 10px;
-  border-top: 1px solid rgb(255 255 255 / 0.08);
-  color: rgb(255 255 255 / 0.34);
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-}
-.sw-card__size { font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
-
-.sw-card__nav { display: flex; align-items: center; gap: 7px; margin-top: 13px; }
-.sw-card__step, .sw-card__resume {
-  display: grid; place-items: center; flex: 0 0 auto;
-  width: 36px; height: 36px;
-  border: 1px solid rgb(255 255 255 / 0.13);
-  border-radius: 999px; background: transparent; color: #fff; cursor: pointer;
-  transition: background .18s ease, border-color .18s ease;
-}
-.sw-card__step:hover, .sw-card__resume:hover { background: rgb(255 255 255 / 0.09); border-color: rgb(255 255 255 / 0.28); }
-.sw-card__next {
-  flex: 1 1 auto;
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 10px 15px; border: 0; border-radius: 999px;
-  background: var(--sw-lime); color: #0A0B0D;
-  font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;
-  transition: transform .22s ease, filter .22s ease;
-}
-.sw-card__next:hover { transform: translateY(-1px); filter: brightness(1.05); }
-/* Only offered once a click has taken the reel over. */
-.sw-card__resume { display: none; }
-.sw-root.is-held .sw-card__resume { display: grid; }
-
-@media (prefers-reduced-motion: reduce) {
-  .sw-title__lead, .sw-title__accent, .sw-title__name, .sw-start, .sw-note { animation: none; }
-  .sw-tile__face { animation: none; }
-  .sw-reel { overflow-y: auto; }
-  .sw-tile, .sw-card, .sw-start, .sw-card__next { transition: none; }
-  .sw-tile:hover { transform: none; }
-  .sw-start:hover { transform: none; }
-  .sw-card { opacity: 1; transform: none; }
-}
-
-/* --- fills the display when presenting ----------------------------------- */
-/* The root was pinned to 860px, which is the canvas budget with a head above it.
-   Presenting has no head, so 40px of the slide went unused and showed as a band
-   under the section. */
+/* Fills the display when presenting: 860px is the canvas budget with a head
+   above it, and presenting has no head. */
 body.is-presenting .sw-root { min-height: 900px; max-height: 900px; }
 
-/* Oswald across the section, not only the accent line. */
-.sw-root { font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif; }
-.sw-note__body, .sw-card__quote, .sw-card__body { font-family: inherit; }
-
 @media (prefers-reduced-motion: reduce) {
-  .sw-ring { animation: none; }
+  .sw-title__lead, .sw-title__accent, .sw-title__name, .sw-lead, .sw-open { animation: none; }
+  .sw-c, .sw-nav, .sw-view, .sw-view__frame, .sw-nav__btn { transition: none; }
 }

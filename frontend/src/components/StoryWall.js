@@ -3,35 +3,32 @@ import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
 
 /**
- * Success Stories, as an editorial reel: oversized type on the left, a diagonal
- * strip of photographs rolling upward through the middle, and whichever picture
- * is passing the focal point open as a card on the right.
+ * Success Stories as a card carousel that arrives folded.
  *
- * The strip is one column built twice and travelling exactly half its own
- * height, which is what closes the loop with no seam — at -50% the second copy
- * sits precisely where the first began. It is tilted off vertical and set in a
- * perspective, so the cards read as floating rather than tiled, and each one
- * scales very slightly as it crosses the focal band.
+ * It opens as a single stack — one card face on, the rest tucked behind it with a
+ * step of offset each — and one click deals them into a row. From there the arrows
+ * walk along it, the centre card sits full size with its neighbours set back, and
+ * a card's own View opens the photograph at full size.
  *
- * The card is not driven by clicks alone. The reel keeps rolling and the card
- * follows whichever picture is at the focal point, so the page tells its own
- * story unattended. A click takes that over: the reel parks and the presenter
- * drives. Closing hands it back.
+ * Every card is placed by one function, for both states. Nothing is measured and
+ * no FLIP is needed: a card's transform is a pure function of how far it is from
+ * the centre and whether the deck is open, so changing state is a matter of
+ * recomputing and letting CSS interpolate. That is also why dealing out and
+ * stepping along share a motion — they are the same calculation with different
+ * inputs.
  *
- * Two rules keep the two halves honest. ROLL_SECONDS is declared once here and
- * written into the animation, so the timer that advances the card and the belt
- * that moves the pictures cannot drift apart. And the focal pulse lives on an
- * inner face rather than the tile, because an animation on `transform` beats a
- * hover rule for the same property and the lift would simply stop working.
- *
- * All motion is CSS. Nothing runs per frame, and everything stops under
- * prefers-reduced-motion.
+ * Photographs are contained rather than cropped, and capped at twice their own
+ * pixels. Sixteen of the twenty-five files are 206px square; at their own size on
+ * a card they read as small and sharp, which is honest, where filling the frame
+ * would enlarge them about fivefold.
  */
 
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
-/** Seconds for one full run of pictures to pass. Shared with the stylesheet. */
-const ROLL_SECONDS = 68;
+/* How far apart the dealt cards sit, and how many show either side of centre. */
+const STEP = 340;
+const WINGS = 2;
+const MAX_ENLARGE = 2;
 
 /** The headline, split so each line can be set differently. */
 function titleLines(raw) {
@@ -62,249 +59,190 @@ export function StoryWall(block, { editing = false } = {}) {
 
   const src = (story) => media(`/uploads/${encodeURI(story.photo)}`);
   const count = stories.length;
-  /* How long one picture takes to cross the focal point. The belt covers one
-     whole run in ROLL_SECONDS, and a run is every picture once. */
-  const BEAT_MS = Math.round((ROLL_SECONDS * 1000) / count);
+  let centre = 0;
+  let open = false;
 
-  let at = -1;
-  let held = false;      // a click has taken over from the reel
-  let timer = null;
+  /* ------------------------------------------------------------ the viewer */
+  /* Portalled to the body: FitSlide scales the slide with a transform, and a
+     transformed ancestor becomes the containing block for fixed descendants, so
+     inside the slide `inset: 0` would resolve to the slide and not the screen. */
+  const bigImg = h('img', { class: 'sw-view__img', alt: '' });
+  const bigCap = h('p', { class: 'sw-view__cap' });
+  const viewer = h('div', {
+    class: 'sw-view', hidden: true,
+    onclick: (e) => { if (e.target === viewer || e.target.closest('.sw-view__close')) shut(); },
+  },
+    h('button', { class: 'sw-view__close', type: 'button', 'aria-label': 'Close' },
+      icon('close', { class: 'ic ic--sm' })),
+    h('figure', { class: 'sw-view__frame' }, bigImg, h('figcaption', {}, bigCap)),
+  );
+  document.body.appendChild(viewer);
 
-  /* ------------------------------------------------------------- the card */
-  const cardImg = h('img', { class: 'sw-card__img', alt: '' });
-  const cardName = h('h3', { class: 'sw-card__name' });
-  const cardRole = h('p', { class: 'sw-card__role' });
-  const cardQuote = h('blockquote', { class: 'sw-card__quote' });
-  const cardBody = h('p', { class: 'sw-card__body' });
-  const cardCount = h('span', { class: 'sw-card__count' });
-  const cardSize = h('span', { class: 'sw-card__size' });
-
-  /* Sixteen of the twenty-five files are 206px square, so the card is bounded
-     rather than filled: at the frame's width they would be enlarged about
-     fivefold, which is softness no source survives. */
-  const MAX_ENLARGE = 2;
-  const fitCard = () => {
-    const { naturalWidth: nw, naturalHeight: nh } = cardImg;
-    if (!nw || !nh) return;
-    const fw = cardImg.parentElement?.clientWidth;
-    if (!fw) return;
-    const w = Math.min(fw, nw * MAX_ENLARGE);
-    cardImg.style.width = `${Math.round(w)}px`;
-    cardImg.style.height = `${Math.round((w / nw) * nh)}px`;
-    cardSize.textContent = `${nw} × ${nh}`;
-  };
-  cardImg.addEventListener('load', fitCard);
-
-  const paint = (index) => {
-    const story = stories[index];
+  function shut() {
+    viewer.hidden = true;
+    viewer.classList.remove('is-on');
+    document.removeEventListener('keydown', onViewKey, true);
+  }
+  function onViewKey(e) {
+    if (e.key === 'Escape') { e.stopPropagation(); shut(); }
+  }
+  function view(i) {
+    const story = stories[i];
     if (!story) return;
-    at = index;
-    cardImg.src = src(story);
-    cardImg.alt = story.name || '';
-    cardName.textContent = story.name || '';
-    cardCount.textContent = `${String(index + 1).padStart(2, '0')} / ${count}`;
-    cardRole.textContent = story.role || '';
-    cardQuote.textContent = story.quote || '';
-    cardBody.textContent = story.body || '';
-    // A story with nothing written for it should not draw an empty slab.
-    cardRole.hidden = !story.role;
-    cardQuote.hidden = !story.quote;
-    cardBody.hidden = !story.body;
-    tiles.forEach((t) => t.classList.toggle('is-active', Number(t.dataset.story) === index));
+    bigImg.src = src(story);
+    bigImg.alt = story.name || '';
+    bigCap.textContent = story.name || '';
+    viewer.hidden = false;
+    requestAnimationFrame(() => viewer.classList.add('is-on'));
+    document.addEventListener('keydown', onViewKey, true);
+  }
+
+  /* -------------------------------------------------------------- the cards */
+  const cards = stories.map((story, i) => {
+    const shot = h('img', {
+      class: 'sw-c__img', src: src(story), alt: story.name || '',
+      loading: i < 6 ? 'eager' : 'lazy', decoding: 'async',
+    });
+    /* Capped at twice its own pixels once the file has decoded — max-width alone
+       would not do it, because the image is sized by the card, not by itself. */
+    shot.addEventListener('load', () => {
+      const { naturalWidth: nw, naturalHeight: nh } = shot;
+      if (!nw || !nh) return;
+      shot.style.maxWidth = `min(100%, ${nw * MAX_ENLARGE}px)`;
+      shot.style.maxHeight = `min(100%, ${nh * MAX_ENLARGE}px)`;
+    });
+
+    const card = h('article', { class: 'sw-c' },
+      h('div', { class: 'sw-c__shot' }, shot),
+      h('div', { class: 'sw-c__foot' },
+        h('p', { class: 'sw-c__name' }, story.name || 'Untitled'),
+        h('button', {
+          class: 'sw-c__view', type: 'button',
+          onclick: (e) => { e.stopPropagation(); view(i); },
+        }, 'View', icon('arrow-right', { class: 'ic ic--xs' })),
+      ),
+    );
+    /* The whole card is the target. Folded, any click deals the deck out; dealt,
+       a neighbour walks to the centre and the centre card opens. */
+    card.addEventListener('click', () => {
+      if (!open) { deal(); return; }
+      if (i === centre) view(i);
+      else go(i);
+    });
+    return card;
+  });
+
+  const deck = h('div', { class: 'sw-deck' }, ...cards);
+
+  /**
+   * One placement rule for both states.
+   *
+   * Folded, a card's offset is its depth in the pile, clamped — so the fourth card
+   * back and the twenty-fourth sit in the same place and only the front few are
+   * drawn at all. Dealt, its offset is how far it is from the centre. Same
+   * function, different input, which is why the deal and the step share a motion
+   * and neither needed measuring.
+   */
+  function place() {
+    cards.forEach((card, i) => {
+      const d = i - centre;
+      const away = Math.abs(d);
+      if (!open) {
+        const depth = Math.min(away, 3);
+        card.style.transform =
+          `translate(-50%, -50%) translate(${depth * 15}px, ${depth * -11}px) rotate(${depth * 1.4}deg) scale(${1 - depth * 0.05})`;
+        card.style.opacity = away <= 3 ? '1' : '0';
+        card.style.zIndex = String(40 - depth);
+        card.style.pointerEvents = away === 0 ? 'auto' : 'none';
+        card.classList.toggle('is-centre', away === 0);
+        return;
+      }
+      card.style.transform =
+        `translate(-50%, -50%) translateX(${d * STEP}px) rotate(0deg) scale(${away === 0 ? 1 : 0.84})`;
+      card.style.opacity = away <= WINGS ? (away === 0 ? '1' : '0.5') : '0';
+      card.style.zIndex = String(40 - away);
+      card.style.pointerEvents = away <= WINGS ? 'auto' : 'none';
+      card.classList.toggle('is-centre', away === 0);
+    });
+    prev.disabled = open && centre === 0;
+    next.disabled = open && centre === count - 1;
+    counter.textContent = `${String(centre + 1).padStart(2, '0')} / ${count}`;
+  }
+
+  const go = (i) => { centre = Math.max(0, Math.min(count - 1, i)); place(); };
+
+  function deal() {
+    open = true;
     root.classList.add('is-open');
-    /* Retriggered by removing the class and forcing a reflow, so a card that
-       changes while already open still fades and scales in rather than swapping
-       its contents in place. */
-    card.classList.remove('is-in');
-    void card.offsetWidth;
-    card.classList.add('is-in');
-  };
+    place();
+  }
+  function fold() {
+    open = false;
+    centre = 0;
+    root.classList.remove('is-open');
+    place();
+  }
 
-  /* The reel advances the card on its own. It does not pause the belt: the whole
-     point is that the card follows whatever is passing the focal point. */
-  const rollOn = () => {
-    if (REDUCED?.matches || held) return;
-    clearInterval(timer);
-    timer = setInterval(() => {
-      if (held || !root.isConnected) return;
-      paint((at + 1) % count);
-    }, BEAT_MS);
-  };
-
-  /** A click takes over: the belt parks and the reel stops advancing. */
-  const take = (index) => {
-    held = true;
-    clearInterval(timer);
-    root.classList.add('is-held');
-    paint(index);
-  };
-
-  const release = () => {
-    held = false;
-    root.classList.remove('is-held');
-    rollOn();
-  };
-
-  const close = () => {
-    at = -1;
-    held = false;
-    clearInterval(timer);
-    root.classList.remove('is-open', 'is-held');
-    tiles.forEach((t) => t.classList.remove('is-active'));
-    rollOn();
-  };
-
-  const card = h('aside', { class: 'sw-card' },
-    h('button', { class: 'sw-card__close', type: 'button', 'aria-label': 'Close', onclick: close },
-      icon('close', { class: 'ic ic--xs' })),
-    h('div', { class: 'sw-card__shot' }, cardImg),
-    h('div', { class: 'sw-card__head' }, cardName, cardCount),
-    cardRole, cardQuote, cardBody,
-    h('div', { class: 'sw-card__meta' },
-      h('span', {}, 'Archive'), cardSize,
-    ),
-    h('div', { class: 'sw-card__nav' },
-      h('button', {
-        class: 'sw-card__step', type: 'button', 'aria-label': 'Previous',
-        onclick: () => take((at - 1 + count) % count),
-      }, icon('chevron-left', { class: 'ic ic--xs' })),
-      h('button', {
-        class: 'sw-card__next', type: 'button',
-        onclick: () => take((at + 1) % count),
-      }, 'Next', icon('arrow-right', { class: 'ic ic--xs' })),
-      h('button', {
-        class: 'sw-card__resume', type: 'button', title: 'Let the reel run again',
-        onclick: release,
-      }, icon('present', { class: 'ic ic--xs' })),
-    ),
+  /* ---------------------------------------------------------------- controls */
+  const prev = h('button', {
+    class: 'sw-nav__btn', type: 'button', 'aria-label': 'Previous',
+    onclick: () => go(centre - 1),
+  }, icon('chevron-left', { class: 'ic ic--sm' }));
+  const next = h('button', {
+    class: 'sw-nav__btn', type: 'button', 'aria-label': 'Next',
+    onclick: () => go(centre + 1),
+  }, icon('chevron-right', { class: 'ic ic--sm' }));
+  const counter = h('span', { class: 'sw-nav__count' });
+  const nav = h('div', { class: 'sw-nav' },
+    prev, counter, next,
+    h('button', { class: 'sw-nav__fold', type: 'button', onclick: fold }, 'Fold'),
   );
 
-  /* ------------------------------------------------------------- the hero */
+  /* ------------------------------------------------------------------ header */
   const { lead, accent, name } = titleLines(block.title);
-  const hero = h('div', { class: 'sw-hero' },
+  const head = h('div', { class: 'sw-head' },
     h('h2', { class: 'sw-title' },
       lead ? h('span', { class: 'sw-title__lead' }, lead) : null,
       accent ? h('span', { class: 'sw-title__accent' }, accent) : null,
       name ? h('span', { class: 'sw-title__name' }, name) : null,
     ),
+    h('p', { class: 'sw-lead' }, `${count} moments from ten years of building Technical Hub.`),
     h('button', {
-      class: 'sw-start', type: 'button',
-      onclick: () => (held ? release() : take(at < 0 ? 0 : at)),
+      class: 'sw-open', type: 'button',
+      onclick: () => (open ? fold() : deal()),
     },
-      h('span', {}, held ? 'Resume reel' : 'Walk the wall'),
-      h('i', { class: 'sw-start__spark' }, icon('sparkles', { class: 'ic ic--xs' })),
+      h('span', { class: 'sw-open__label' }, 'Deal the collection'),
+      icon('layers', { class: 'ic ic--xs' }),
     ),
   );
 
-  /* --------------------------------------------- the note on the right side */
-  const aside = h('div', { class: 'sw-note' },
-    h('p', { class: 'sw-note__label' }, 'The archive'),
-    h('p', { class: 'sw-note__body' },
-      `${count} moments from ten years of building Technical Hub — the `
-      + 'partnerships signed, the labs opened and the rooms they filled.'),
-    h('dl', { class: 'sw-note__facts' },
-      h('div', {}, h('dt', {}, 'Frames'), h('dd', {}, String(count))),
-      h('div', {}, h('dt', {}, 'Subject'), h('dd', {}, 'Babji Neelam')),
-    ),
-  );
-
-  /* ----------------------------------------------------------- the ring */
-  /* Every picture is seated at its own angle on one large circle, and the circle
-     turns. That is what makes the run curve: a tile's position follows the arc,
-     so the strip bends away at the top and back at the bottom instead of running
-     straight.
-     It also makes the loop seamless for free. The belt version needed two copies
-     of all twenty-five pictures and had to travel exactly half its height to
-     hide the join; a ring has no join — tile 25 is already next to tile 1.
-     Each seat counter-rotates by the same amount the ring turns, so a photograph
-     travels the curve without tumbling. Same duration, `reverse`, so the two can
-     never drift. */
-  const tiles = [];
-  const ring = h('div', {
-    class: 'sw-ring',
-    style: REDUCED?.matches ? {} : { 'animation-duration': `${ROLL_SECONDS * 2}s` },
-  }, ...stories.map((story, i) => {
-    const seat = h('div', {
-      class: 'sw-seat',
-      style: { '--a': `${((i * 360) / count).toFixed(3)}deg` },
-    });
-    /* Two counter-rotations, because there are two rotations to undo and only
-       one of them moves. The seat's angle is static, so it is cancelled by a
-       static rotate; the ring's turn is animated, so it needs an animation. With
-       only the animated one in place every picture inherited its seat's angle and
-       the visible tiles sat at 11 to 73 degrees — fanned like spokes rather than
-       standing up. */
-    const fix = h('div', {
-      class: 'sw-seat__fix',
-      style: { '--a': `${((i * 360) / count).toFixed(3)}deg` },
-    });
-    const spin = h('div', {
-      class: 'sw-seat__spin',
-      style: REDUCED?.matches ? {} : { 'animation-duration': `${ROLL_SECONDS * 2}s` },
-    });
-    const tile = h('button', {
-      class: 'sw-tile',
-      type: 'button',
-      title: story.name || 'Open this story',
-      style: {
-        // A small lean so the run reads as editorial rather than mechanical.
-        '--lean': `${((i * 37) % 9) - 4}deg`,
-        '--roll': `${ROLL_SECONDS * 2}s`,
-        '--phase': `-${((i * ROLL_SECONDS * 2) / count).toFixed(2)}s`,
-      },
-      onclick: () => take(i),
-    },
-      h('span', { class: 'sw-tile__face' },
-        h('img', {
-          src: src(story), alt: story.name || '', loading: 'lazy', decoding: 'async',
-        }),
-        story.name ? h('span', { class: 'sw-tile__name' }, story.name) : null,
-      ),
-    );
-    tile.dataset.story = String(i);
-    tiles.push(tile);
-    spin.appendChild(tile);
-    fix.appendChild(spin);
-    seat.appendChild(fix);
-    return seat;
-  }));
-
-  const reel = h('div', { class: 'sw-reel' }, ring);
-
-  /* Small muted markers, and the focal band the card follows. Decoration, so
-     they are hidden from the accessibility tree. */
-  const marks = h('div', { class: 'sw-marks', 'aria-hidden': 'true' },
-    h('span', { class: 'sw-marks__dot sw-marks__dot--a' }),
-    h('span', { class: 'sw-marks__dot sw-marks__dot--b' }),
-    h('span', { class: 'sw-marks__dot sw-marks__dot--c' }),
-    h('span', { class: 'sw-marks__focal' }),
-  );
-
-  root.appendChild(hero);
-  root.appendChild(reel);
-  root.appendChild(marks);
-  root.appendChild(aside);
-  root.appendChild(card);
+  root.appendChild(head);
+  root.appendChild(deck);
+  root.appendChild(nav);
 
   root.addEventListener('keydown', (event) => {
-    if (!root.classList.contains('is-open')) return;
-    if (event.key === 'Escape') { event.stopPropagation(); close(); }
-    if (event.key === 'ArrowDown') { event.stopPropagation(); event.preventDefault(); take((at + 1) % count); }
-    if (event.key === 'ArrowUp') { event.stopPropagation(); event.preventDefault(); take((at - 1 + count) % count); }
+    if (!open) return;
+    if (event.key === 'ArrowRight') { event.stopPropagation(); event.preventDefault(); go(centre + 1); }
+    if (event.key === 'ArrowLeft') { event.stopPropagation(); event.preventDefault(); go(centre - 1); }
+    if (event.key === 'Escape') { event.stopPropagation(); fold(); }
   });
 
-  /* The reel starts itself once the slide is in the document, and the interval
-     is cleared the moment the slide leaves — a timer outliving its page would
-     keep painting into a card nobody can see. */
-  requestAnimationFrame(() => {
-    if (!root.isConnected) return;
-    paint(0);
-    rollOn();
-    const watch = new MutationObserver(() => {
-      if (!root.isConnected) { clearInterval(timer); watch.disconnect(); }
-    });
-    watch.observe(document.body, { childList: true, subtree: true });
+  /* Placed on the next frame, not during construction: the first paint has to
+     carry the folded transforms for the deal to animate away from them. Set them
+     synchronously and the browser takes the dealt state as the starting style and
+     skips the motion entirely. */
+  requestAnimationFrame(place);
+
+  /* The viewer lives on the body, so it has to be taken down by hand when the
+     slide that owns it is replaced. */
+  const watch = new MutationObserver(() => {
+    if (!root.isConnected) {
+      viewer.remove();
+      watch.disconnect();
+      document.removeEventListener('keydown', onViewKey, true);
+    }
   });
+  watch.observe(document.body, { childList: true, subtree: true });
 
   return root;
 }
