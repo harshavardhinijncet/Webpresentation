@@ -26,8 +26,12 @@ import { media } from '../utils/media.js';
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
 /* How far apart the dealt cards sit, and how many show either side of centre. */
-const STEP = 340;
-const WINGS = 2;
+/* Must exceed the card width (396px) or dealt neighbours overlap the centre. */
+const STEP = 438;
+/* One neighbour each side, not two. At a 438px step a second wing puts its card
+   at 876px from centre — past the edge of a 1600px slide — so it was drawn at
+   half opacity and then clipped, which reads as a bug rather than depth. */
+const WINGS = 1;
 const MAX_ENLARGE = 2;
 
 /** The headline, split so each line can be set differently. */

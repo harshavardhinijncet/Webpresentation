@@ -10730,17 +10730,29 @@ body.is-presenting .pg-player { z-index: 30; }
 
 
 /* ==========================================================================
-   Success Stories — a card carousel that arrives folded
+   Success Stories — a card carousel that arrives folded, hung on a wire
    ========================================================================== */
 
 .sw-root {
-  --sw-lime: #B8F14A;
+  /* Sized from one place, because the card height is what decides whether the
+     section fills the slide: the deck band is what is left after the head and
+     the controls, and a card shorter than that band leaves a hole under it. */
+  --sw-card-w: 396px;
+  --sw-shot-h: 424px;
+  --sw-green: #008638;
+  --sw-ink: #0B1220;
+
   position: relative;
   height: 100%; min-height: 860px; max-height: 860px;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  background: #0A0B0D;
-  color: #fff;
+  /* A white gradient, not a flat white: the cards are white too, so the ground
+     needs to fall away underneath them or they have nothing to sit against. */
+  background:
+    radial-gradient(80% 60% at 18% 0%, rgb(0 134 56 / 0.07) 0%, transparent 62%),
+    radial-gradient(70% 55% at 88% 4%, rgb(255 187 0 / 0.10) 0%, transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #F4F7F9 52%, #E8EEF2 100%);
+  color: var(--sw-ink);
   font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
@@ -10748,25 +10760,31 @@ body.is-presenting .pg-player { z-index: 30; }
 .sw-empty {
   grid-row: 1 / -1;
   display: grid; place-items: center; align-content: center; gap: 12px;
-  color: rgb(255 255 255 / 0.6); text-align: center;
+  color: #5B6570; text-align: center;
 }
 .sw-hint { margin: 0; font-size: 13px; }
 
 /* --- the header ---------------------------------------------------------- */
-.sw-head { padding: 40px 56px 0; text-align: center; }
-.sw-title { margin: 0; display: inline-flex; align-items: baseline; gap: 0.28em; flex-wrap: wrap; justify-content: center; }
+.sw-head { padding: 34px 56px 0; text-align: center; }
+.sw-title {
+  margin: 0;
+  display: inline-flex; align-items: baseline; gap: 0.26em;
+  flex-wrap: wrap; justify-content: center;
+}
 .sw-title__lead,
 .sw-title__name {
   font-family: Georgia, 'Times New Roman', 'Iowan Old Style', serif;
   font-style: italic; font-weight: 400;
-  font-size: clamp(30px, 3.4vw, 52px);
+  font-size: clamp(28px, 3.2vw, 50px);
   letter-spacing: -0.015em;
   animation: sw-in 780ms cubic-bezier(.2,.7,.3,1) both;
 }
 .sw-title__accent {
-  font-weight: 400;
-  font-size: clamp(34px, 4vw, 60px);
-  color: var(--sw-lime);
+  font-weight: 500;
+  font-size: clamp(32px, 3.8vw, 58px);
+  /* The brand green, not the lime: on white the lime measures far too pale to
+     carry a headline. */
+  color: var(--sw-green);
   animation: sw-in 780ms 90ms cubic-bezier(.2,.7,.3,1) both;
 }
 .sw-title__name { animation-delay: 180ms; }
@@ -10775,45 +10793,36 @@ body.is-presenting .pg-player { z-index: 30; }
   to   { opacity: 1; transform: none; filter: none; }
 }
 .sw-lead {
-  margin: 12px 0 0;
-  color: rgb(255 255 255 / 0.44);
+  margin: 10px 0 0;
+  color: #5B6570;
   font-size: 13px; letter-spacing: 0.02em;
   animation: sw-in 780ms 300ms cubic-bezier(.2,.7,.3,1) both;
 }
 .sw-open {
   display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 18px;
+  margin-top: 14px;
   padding: 10px 20px;
-  border: 1px solid rgb(255 255 255 / 0.16);
+  border: 1px solid rgb(11 18 32 / 0.14);
   border-radius: 999px;
-  background: transparent; color: #fff;
+  background: #fff; color: var(--sw-ink);
   font: inherit; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em;
   cursor: pointer;
+  box-shadow: 0 8px 20px -14px rgb(11 18 32 / 0.4);
   animation: sw-in 780ms 400ms cubic-bezier(.2,.7,.3,1) both;
   transition: background .22s ease, border-color .22s ease, color .22s ease;
 }
-.sw-open:hover { background: var(--sw-lime); border-color: var(--sw-lime); color: #0A0B0D; }
-.sw-root.is-open .sw-open__label::after { content: ' — folded'; }
+.sw-open:hover { background: var(--sw-green); border-color: var(--sw-green); color: #fff; }
 .sw-root.is-open .sw-open { display: none; }
 
-/* --- the deck ------------------------------------------------------------ */
-/* Cards are all absolutely centred and moved only by transform, so switching
-   between folded and dealt reflows nothing and the whole change is composited. */
-.sw-deck {
-  position: relative;
-  min-height: 0;
-  padding-top: 8px;
-  perspective: 1600px;
-}
-/* The wire the pins hang from. Drawn at the pin line, and only once the deck is
-   dealt — folded, every pin is in the same place and a rail through one point is
-   just a line across the slide. */
+/* --- the wire and the deck ------------------------------------------------ */
+.sw-deck { position: relative; min-height: 0; }
+
 .sw-wire {
   position: absolute;
-  left: 0; right: 0; top: 40px;
+  left: 0; right: 0; top: 30px;
   height: 1px;
   background: linear-gradient(to right,
-    transparent, rgb(255 255 255 / 0.18) 12%, rgb(255 255 255 / 0.18) 88%, transparent);
+    transparent, rgb(11 18 32 / 0.16) 10%, rgb(11 18 32 / 0.16) 90%, transparent);
   opacity: 0;
   transition: opacity .5s ease .16s;
   pointer-events: none;
@@ -10822,55 +10831,48 @@ body.is-presenting .pg-player { z-index: 30; }
 
 .sw-c {
   position: absolute;
-  /* Top-anchored, not vertically centred. Every card's top edge has to land on
-     the same line for the pins to sit on one wire, and the origin is the top edge
-     so a scaled-down neighbour shrinks downward from its pin instead of about its
-     own middle — which would lift it off the wire. */
-  top: 40px; left: 50%;
+  /* Top-anchored with the origin on the top edge, so every card's top lands on
+     the same line and a scaled-down neighbour shrinks downward from its pin
+     rather than lifting away from the wire. */
+  top: 30px; left: 50%;
   transform-origin: 50% 0;
-  width: 300px;
-  padding-top: 26px;              /* room for the cord between pin and frame */
+  width: var(--sw-card-w);
+  padding-top: 26px;                /* the cord's length */
   cursor: pointer;
   will-change: transform, opacity;
-  /* The one transition that does all the work — the deal, the step and the fold
-     are the same interpolation with different targets. */
   transition: transform .72s cubic-bezier(.22,.68,0,1), opacity .46s ease;
 }
 
-/* The pin itself, sitting on the wire. */
 .sw-c__pin {
   position: absolute; top: -5px; left: 50%;
   width: 11px; height: 11px; margin-left: -5.5px;
   border-radius: 50%;
-  background: var(--sw-lime);
-  box-shadow: 0 0 0 3px rgb(184 241 74 / 0.16), 0 2px 6px rgb(0 0 0 / 0.6);
-  opacity: 0;
-  transition: opacity .4s ease .2s;
+  background: var(--sw-green);
+  box-shadow: 0 0 0 3px rgb(0 134 56 / 0.14), 0 2px 5px rgb(11 18 32 / 0.35);
+  opacity: 0; transition: opacity .4s ease .2s;
   z-index: 2;
 }
-/* And the cord it hangs by. */
 .sw-c__cord {
   position: absolute; top: 2px; left: 50%;
   width: 1px; height: 26px; margin-left: -0.5px;
-  background: rgb(255 255 255 / 0.24);
-  opacity: 0;
-  transition: opacity .4s ease .2s;
+  background: rgb(11 18 32 / 0.22);
+  opacity: 0; transition: opacity .4s ease .2s;
 }
 .sw-root.is-open .sw-c__pin,
 .sw-root.is-open .sw-c__cord { opacity: 1; }
 
-/* The card itself swings from the pin. The sway is on the body rather than on
-   .sw-c because .sw-c's transform is written by script every time the deck moves,
-   and an animation on the same property would win and freeze the layout — the
-   mistake that killed the focal pulse and the hover lift earlier. */
+/* The card swings from the pin. The sway is on this body and not on .sw-c,
+   because .sw-c's transform is rewritten by script on every move and an
+   animation on the same property would win and freeze the layout. */
 .sw-c__body {
   display: flex; flex-direction: column;
   border-radius: 20px;
   overflow: hidden;
   background: #fff;
-  color: #0A0B0D;
+  /* A hairline, because a white card on a near-white ground needs an edge. */
+  border: 1px solid rgb(11 18 32 / 0.07);
   transform-origin: 50% 0;
-  box-shadow: 0 30px 60px -28px rgb(0 0 0 / 0.85);
+  box-shadow: 0 26px 50px -26px rgb(11 18 32 / 0.34);
   transition: box-shadow .4s ease;
 }
 .sw-root.is-open .sw-c__body {
@@ -10883,49 +10885,48 @@ body.is-presenting .pg-player { z-index: 30; }
 /* The card being read hangs nearly still — a picture someone is looking at should
    not be the most restless thing on the slide. */
 .sw-root.is-open .sw-c.is-centre .sw-c__body { animation-duration: calc(var(--sway-dur, 6s) * 1.6); }
-.sw-c.is-centre .sw-c__body { box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.95); }
-/* Hovering steadies it, so the pointer is not chasing a moving target. */
+.sw-c.is-centre .sw-c__body { box-shadow: 0 36px 70px -28px rgb(11 18 32 / 0.42); }
 .sw-c:hover .sw-c__body { animation-play-state: paused; }
 
 .sw-c__shot {
   display: grid; place-items: center;
-  height: 268px;
-  padding: 16px;
-  background: #F4F5F7;
+  height: var(--sw-shot-h);
+  padding: 18px;
+  background: #F5F7F9;
 }
-/* Contained, never cropped: these run from 206px squares to 2000px posters, and
-   a fixed crop would slice the ends off the wide ones. */
+/* Contained, never cropped: the sources run from 206px squares to 2000px posters
+   and a fixed crop would slice the ends off the wide ones. */
 .sw-c__img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
 
 .sw-c__foot {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 14px 16px 16px;
+  padding: 16px 18px 18px;
 }
 .sw-c__name {
   margin: 0; min-width: 0;
-  font-size: 13.5px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.3;
+  font-size: 14px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.3;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .sw-c__view {
   flex: 0 0 auto;
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 13px;
-  border: 1px solid rgb(10 11 13 / 0.14);
+  padding: 8px 14px;
+  border: 1px solid rgb(11 18 32 / 0.16);
   border-radius: 999px;
-  background: #fff; color: #0A0B0D;
+  background: #fff; color: var(--sw-ink);
   font: inherit; font-size: 11.5px; font-weight: 650;
   cursor: pointer;
   transition: background .2s ease, color .2s ease, border-color .2s ease;
 }
-.sw-c__view:hover { background: #0A0B0D; border-color: #0A0B0D; color: #fff; }
-/* Only the card in hand offers it — the neighbours are a click away from being
-   the card in hand, and two live buttons on one card confuse that. */
+.sw-c__view:hover { background: var(--sw-ink); border-color: var(--sw-ink); color: #fff; }
+/* Only the card in hand offers it: the neighbours are one click from becoming the
+   card in hand, and two live buttons on one card confuses that. */
 .sw-c:not(.is-centre) .sw-c__view { opacity: 0; pointer-events: none; }
 
 /* --- the controls -------------------------------------------------------- */
 .sw-nav {
   display: flex; align-items: center; justify-content: center; gap: 12px;
-  padding: 0 0 34px;
+  padding: 0 0 30px;
   opacity: 0; pointer-events: none;
   transform: translateY(10px);
   transition: opacity .34s ease, transform .44s cubic-bezier(.2,.7,.3,1);
@@ -10934,31 +10935,35 @@ body.is-presenting .pg-player { z-index: 30; }
 .sw-nav__btn {
   display: grid; place-items: center;
   width: 46px; height: 46px;
-  border: 1px solid rgb(255 255 255 / 0.18);
+  border: 1px solid rgb(11 18 32 / 0.16);
   border-radius: 50%;
-  background: transparent; color: #fff; cursor: pointer;
+  background: #fff; color: var(--sw-ink); cursor: pointer;
+  box-shadow: 0 6px 16px -12px rgb(11 18 32 / 0.5);
   transition: background .2s ease, border-color .2s ease, transform .2s ease;
 }
-.sw-nav__btn:hover:not(:disabled) { background: rgb(255 255 255 / 0.1); border-color: rgb(255 255 255 / 0.35); }
+.sw-nav__btn:hover:not(:disabled) { background: #F1F4F6; border-color: rgb(11 18 32 / 0.3); }
 .sw-nav__btn:active:not(:disabled) { transform: scale(0.94); }
-.sw-nav__btn:disabled { opacity: 0.3; cursor: default; }
+.sw-nav__btn:disabled { opacity: 0.32; cursor: default; }
 .sw-nav__count {
   min-width: 68px; text-align: center;
-  color: rgb(255 255 255 / 0.5);
+  color: #5B6570;
   font-size: 12px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: 0.08em;
 }
 .sw-nav__fold {
   margin-left: 8px;
-  padding: 10px 18px;
+  padding: 11px 20px;
   border: 0; border-radius: 999px;
-  background: var(--sw-lime); color: #0A0B0D;
+  background: var(--sw-green); color: #fff;
   font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
   cursor: pointer;
+  box-shadow: 0 12px 26px -14px rgb(0 134 56 / 0.7);
   transition: filter .2s ease, transform .2s ease;
 }
-.sw-nav__fold:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.sw-nav__fold:hover { filter: brightness(1.08); transform: translateY(-1px); }
 
 /* --- the full-size viewer ------------------------------------------------ */
+/* Still dark: it is a viewer, and a photograph shows best against something that
+   is not competing with it. */
 .sw-view {
   position: fixed; inset: 0; z-index: 60;
   display: grid; place-items: center; padding: 5vh 5vw;
@@ -10984,16 +10989,21 @@ body.is-presenting .pg-player { z-index: 30; }
   position: absolute; top: 22px; right: 24px;
   display: grid; place-items: center; width: 40px; height: 40px;
   border: 0; border-radius: 50%;
-  background: rgb(255 255 255 / 0.12); color: #fff; cursor: pointer;
+  background: rgb(255 255 255 / 0.14); color: #fff; cursor: pointer;
   transition: background .18s ease;
 }
-.sw-view__close:hover { background: rgb(255 255 255 / 0.24); }
+.sw-view__close:hover { background: rgb(255 255 255 / 0.26); }
 
-/* Fills the display when presenting: 860px is the canvas budget with a head
-   above it, and presenting has no head. */
-body.is-presenting .sw-root { min-height: 900px; max-height: 900px; }
+/* --- filling the display ------------------------------------------------- */
+/* 860px is the canvas budget with a head above it; presenting has no head, so the
+   section gets the whole slide and the cards grow with it. */
+body.is-presenting .sw-root {
+  min-height: 900px; max-height: 900px;
+  --sw-shot-h: 456px;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .sw-title__lead, .sw-title__accent, .sw-title__name, .sw-lead, .sw-open { animation: none; }
-  .sw-c, .sw-nav, .sw-view, .sw-view__frame, .sw-nav__btn { transition: none; }
+  .sw-c, .sw-c__body, .sw-nav, .sw-view, .sw-view__frame, .sw-nav__btn { transition: none; }
+  .sw-root.is-open .sw-c__body { animation: none; }
 }
