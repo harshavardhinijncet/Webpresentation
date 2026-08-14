@@ -9295,7 +9295,8 @@ body.is-presenting .coe-orbit { bottom: 104px; }
 
 @media (prefers-reduced-motion: reduce) {
   .sw-root::before { animation: none !important; }
-  .sw-c { transition: none !important; }
+  .sw-c, .sw-c__body { transition: none !important; }
+  .sw-c__body { animation: none !important; }
 }
 
 /* ==========================================================================
@@ -10801,27 +10802,90 @@ body.is-presenting .pg-player { z-index: 30; }
 .sw-deck {
   position: relative;
   min-height: 0;
+  padding-top: 8px;
   perspective: 1600px;
 }
+/* The wire the pins hang from. Drawn at the pin line, and only once the deck is
+   dealt — folded, every pin is in the same place and a rail through one point is
+   just a line across the slide. */
+.sw-wire {
+  position: absolute;
+  left: 0; right: 0; top: 40px;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent, rgb(255 255 255 / 0.18) 12%, rgb(255 255 255 / 0.18) 88%, transparent);
+  opacity: 0;
+  transition: opacity .5s ease .16s;
+  pointer-events: none;
+}
+.sw-root.is-open .sw-wire { opacity: 1; }
+
 .sw-c {
   position: absolute;
-  top: 50%; left: 50%;
+  /* Top-anchored, not vertically centred. Every card's top edge has to land on
+     the same line for the pins to sit on one wire, and the origin is the top edge
+     so a scaled-down neighbour shrinks downward from its pin instead of about its
+     own middle — which would lift it off the wire. */
+  top: 40px; left: 50%;
+  transform-origin: 50% 0;
   width: 300px;
+  padding-top: 26px;              /* room for the cord between pin and frame */
+  cursor: pointer;
+  will-change: transform, opacity;
+  /* The one transition that does all the work — the deal, the step and the fold
+     are the same interpolation with different targets. */
+  transition: transform .72s cubic-bezier(.22,.68,0,1), opacity .46s ease;
+}
+
+/* The pin itself, sitting on the wire. */
+.sw-c__pin {
+  position: absolute; top: -5px; left: 50%;
+  width: 11px; height: 11px; margin-left: -5.5px;
+  border-radius: 50%;
+  background: var(--sw-lime);
+  box-shadow: 0 0 0 3px rgb(184 241 74 / 0.16), 0 2px 6px rgb(0 0 0 / 0.6);
+  opacity: 0;
+  transition: opacity .4s ease .2s;
+  z-index: 2;
+}
+/* And the cord it hangs by. */
+.sw-c__cord {
+  position: absolute; top: 2px; left: 50%;
+  width: 1px; height: 26px; margin-left: -0.5px;
+  background: rgb(255 255 255 / 0.24);
+  opacity: 0;
+  transition: opacity .4s ease .2s;
+}
+.sw-root.is-open .sw-c__pin,
+.sw-root.is-open .sw-c__cord { opacity: 1; }
+
+/* The card itself swings from the pin. The sway is on the body rather than on
+   .sw-c because .sw-c's transform is written by script every time the deck moves,
+   and an animation on the same property would win and freeze the layout — the
+   mistake that killed the focal pulse and the hover lift earlier. */
+.sw-c__body {
   display: flex; flex-direction: column;
   border-radius: 20px;
   overflow: hidden;
   background: #fff;
   color: #0A0B0D;
-  cursor: pointer;
-  will-change: transform, opacity;
+  transform-origin: 50% 0;
   box-shadow: 0 30px 60px -28px rgb(0 0 0 / 0.85);
-  /* The one transition that does all the work — the deal, the step and the fold
-     are the same interpolation with different targets. */
-  transition: transform .72s cubic-bezier(.22,.68,0,1),
-              opacity .46s ease,
-              box-shadow .4s ease;
+  transition: box-shadow .4s ease;
 }
-.sw-c.is-centre { box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.95); }
+.sw-root.is-open .sw-c__body {
+  animation: sw-sway var(--sway-dur, 6s) var(--sway-delay, 0s) ease-in-out infinite alternate;
+}
+@keyframes sw-sway {
+  from { transform: rotate(-1.15deg); }
+  to   { transform: rotate(1.15deg); }
+}
+/* The card being read hangs nearly still — a picture someone is looking at should
+   not be the most restless thing on the slide. */
+.sw-root.is-open .sw-c.is-centre .sw-c__body { animation-duration: calc(var(--sway-dur, 6s) * 1.6); }
+.sw-c.is-centre .sw-c__body { box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.95); }
+/* Hovering steadies it, so the pointer is not chasing a moving target. */
+.sw-c:hover .sw-c__body { animation-play-state: paused; }
 
 .sw-c__shot {
   display: grid; place-items: center;

@@ -112,14 +112,29 @@ export function StoryWall(block, { editing = false } = {}) {
       shot.style.maxHeight = `min(100%, ${nh * MAX_ENLARGE}px)`;
     });
 
+    /* The pin and its cord stay outside the swaying body, because a pin does not
+       swing — the card hangs from it. Putting them inside would have the whole
+       fixture rock, which reads as the wall moving rather than the picture. */
     const card = h('article', { class: 'sw-c' },
-      h('div', { class: 'sw-c__shot' }, shot),
-      h('div', { class: 'sw-c__foot' },
-        h('p', { class: 'sw-c__name' }, story.name || 'Untitled'),
-        h('button', {
-          class: 'sw-c__view', type: 'button',
-          onclick: (e) => { e.stopPropagation(); view(i); },
-        }, 'View', icon('arrow-right', { class: 'ic ic--xs' })),
+      h('span', { class: 'sw-c__pin', 'aria-hidden': 'true' }),
+      h('span', { class: 'sw-c__cord', 'aria-hidden': 'true' }),
+      h('div', {
+        class: 'sw-c__body',
+        style: REDUCED?.matches ? {} : {
+          /* Primes, so no two pictures swing in step — a row of cards all
+             rocking together looks mechanical rather than hung. */
+          '--sway-dur': `${5200 + ((i * 617) % 2600)}ms`,
+          '--sway-delay': `-${(i * 431) % 3300}ms`,
+        },
+      },
+        h('div', { class: 'sw-c__shot' }, shot),
+        h('div', { class: 'sw-c__foot' },
+          h('p', { class: 'sw-c__name' }, story.name || 'Untitled'),
+          h('button', {
+            class: 'sw-c__view', type: 'button',
+            onclick: (e) => { e.stopPropagation(); view(i); },
+          }, 'View', icon('arrow-right', { class: 'ic ic--xs' })),
+        ),
       ),
     );
     /* The whole card is the target. Folded, any click deals the deck out; dealt,
@@ -132,7 +147,11 @@ export function StoryWall(block, { editing = false } = {}) {
     return card;
   });
 
-  const deck = h('div', { class: 'sw-deck' }, ...cards);
+  /* The wire, drawn once behind the row. It only shows when the deck is dealt —
+     folded, every pin is in the same place and a rail through one point is just a
+     line across the slide. */
+  const wire = h('span', { class: 'sw-wire', 'aria-hidden': 'true' });
+  const deck = h('div', { class: 'sw-deck' }, wire, ...cards);
 
   /**
    * One placement rule for both states.
@@ -150,15 +169,18 @@ export function StoryWall(block, { editing = false } = {}) {
       if (!open) {
         const depth = Math.min(away, 3);
         card.style.transform =
-          `translate(-50%, -50%) translate(${depth * 15}px, ${depth * -11}px) rotate(${depth * 1.4}deg) scale(${1 - depth * 0.05})`;
+          `translateX(-50%) translate(${depth * 15}px, ${depth * 9}px) rotate(${depth * 1.4}deg) scale(${1 - depth * 0.05})`;
         card.style.opacity = away <= 3 ? '1' : '0';
         card.style.zIndex = String(40 - depth);
         card.style.pointerEvents = away === 0 ? 'auto' : 'none';
         card.classList.toggle('is-centre', away === 0);
         return;
       }
+      /* No vertical translate and the origin is the top edge, so scaling a
+         neighbour shrinks it downward from its pin rather than about its middle —
+         which is what keeps every top edge on the wire. */
       card.style.transform =
-        `translate(-50%, -50%) translateX(${d * STEP}px) rotate(0deg) scale(${away === 0 ? 1 : 0.84})`;
+        `translateX(-50%) translateX(${d * STEP}px) rotate(0deg) scale(${away === 0 ? 1 : 0.84})`;
       card.style.opacity = away <= WINGS ? (away === 0 ? '1' : '0.5') : '0';
       card.style.zIndex = String(40 - away);
       card.style.pointerEvents = away <= WINGS ? 'auto' : 'none';
