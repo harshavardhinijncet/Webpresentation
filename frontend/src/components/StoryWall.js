@@ -80,7 +80,7 @@ export function StoryWall(block, { editing = false } = {}) {
 
   const close = () => {
     at = -1;
-    root.classList.remove('is-open');
+    root.classList.remove('is-open');   // and the ring picks up where it stopped
     tiles.forEach((t) => t.classList.remove('is-active'));
   };
 
@@ -116,10 +116,11 @@ export function StoryWall(block, { editing = false } = {}) {
     cardQuote.hidden = !story.quote;
     cardBody.hidden = !story.body;
 
-    tiles.forEach((t, i) => t.classList.toggle('is-active', i === index));
+    tiles.forEach((t) => t.classList.toggle('is-active', Number(t.dataset.story) === index));
+    /* Opening a story parks the ring. The belt is mid-animation, so scrolling a
+       tile into view would fight it; pausing instead leaves the chosen picture
+       where the presenter just pointed at it. */
     root.classList.add('is-open');
-    // Bring the chosen tile into the ribbon's view.
-    tiles[index]?.scrollIntoView({ block: 'center', behavior: REDUCED?.matches ? 'auto' : 'smooth' });
   };
   const step = (delta) => open((at + delta + stories.length) % stories.length);
 
@@ -144,24 +145,42 @@ export function StoryWall(block, { editing = false } = {}) {
   );
 
   /* ----------------------------------------------------------- the ribbon */
-  const tiles = stories.map((story, i) => h('button', {
-    class: 'sw-tile',
-    type: 'button',
-    title: story.name || 'Open this story',
-    style: REDUCED?.matches ? {} : {
-      // Each tile leans a little differently, so the stream is not a ruler.
-      '--lean': `${((i * 37) % 7) - 3}deg`,
+  /* The run turns continuously, so the ribbon reads as a ring passing through
+     the slide rather than a list that happens to be tilted. It is built twice
+     and travels exactly half its own height, which is what makes the loop
+     seamless — at -50% the second copy sits precisely where the first began, so
+     there is no jump to hide.
+     Both copies map to the same story, so a click works on either. */
+  const tiles = [];
+  const runOf = (pass) => h('div', {
+    class: 'sw-ribbon__run',
+    // Only the first copy is announced; the second is the same 25 pictures.
+    'aria-hidden': pass ? 'true' : null,
+  }, ...stories.map((story, i) => {
+    const tile = h('button', {
+      class: 'sw-tile',
+      type: 'button',
+      tabindex: pass ? '-1' : null,
+      title: story.name || 'Open this story',
+      style: REDUCED?.matches ? {} : {
+        // Each tile leans a little differently, so the stream is not a ruler.
+        '--lean': `${((i * 37) % 7) - 3}deg`,
+      },
+      onclick: () => open(i),
     },
-    onclick: () => open(i),
-  },
-    h('img', {
-      src: src(story), alt: story.name || '', loading: 'lazy', decoding: 'async',
-    }),
-    story.name ? h('span', { class: 'sw-tile__name' }, story.name) : null,
-  ));
+      h('img', {
+        src: src(story), alt: pass ? '' : (story.name || ''),
+        loading: 'lazy', decoding: 'async',
+      }),
+      story.name ? h('span', { class: 'sw-tile__name' }, story.name) : null,
+    );
+    tile.dataset.story = String(i);
+    tiles.push(tile);
+    return tile;
+  }));
 
   const ribbon = h('div', { class: 'sw-ribbon' },
-    h('div', { class: 'sw-ribbon__run' }, ...tiles),
+    h('div', { class: 'sw-ribbon__belt' }, runOf(0), runOf(1)),
   );
 
   root.appendChild(hero);

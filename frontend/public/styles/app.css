@@ -10824,17 +10824,29 @@ body.is-presenting .pg-player { z-index: 30; }
   top: 50%; left: 46%;
   width: 460px; height: 128%;
   transform: translateY(-50%) rotate(-16deg);
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: none;
+  /* Hidden, not scrollable: the belt travels on its own now, and a scroll
+     container would fight the animation for the same axis. */
+  overflow: hidden;
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
   mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
   z-index: 1;
 }
-.sw-ribbon::-webkit-scrollbar { width: 0; height: 0; }
+/* The belt carries two identical runs and travels exactly half its own height.
+   At -50% the second copy sits where the first began, so the loop closes with
+   nothing to hide. */
+.sw-ribbon__belt {
+  display: flex; flex-direction: column;
+  animation: sw-roll 64s linear infinite;
+  will-change: transform;
+}
+@keyframes sw-roll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+/* It stops for a closer look, and it stops while a story is open. */
+.sw-ribbon:hover .sw-ribbon__belt,
+.sw-root.is-open .sw-ribbon__belt { animation-play-state: paused; }
+
 .sw-ribbon__run {
   display: flex; flex-direction: column; align-items: center; gap: 22px;
-  padding: 18% 0;
+  padding-bottom: 22px;
 }
 
 .sw-tile {
@@ -10966,6 +10978,8 @@ body.is-presenting .pg-player { z-index: 30; }
 @media (prefers-reduced-motion: reduce) {
   .sw-title__lead, .sw-title__accent, .sw-title__name, .sw-lead, .sw-start { animation: none; }
   .sw-tile, .sw-card, .sw-start, .sw-card__next { transition: none; }
+  .sw-ribbon__belt { animation: none; }
+  .sw-ribbon { overflow-y: auto; }
   .sw-tile:hover, .sw-tile.is-active { transform: none; }
   .sw-start:hover { transform: none; }
 }
