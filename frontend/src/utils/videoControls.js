@@ -91,8 +91,12 @@ export function videoControls(player, { skip = SKIP } = {}) {
   if (isFrame) pokeYouTube(player);
 
   /* Starts as "pause" because everything in this deck autoplays; a bar that
-     opened on "play" would be lying about the state it is sitting on. */
+     opened on "play" would be lying about the state it is sitting on.
+     And starts muted, because that is the only way anything autoplays at all —
+     every browser refuses to start a film with sound until the viewer has asked
+     for it. The sound button is that request; there is no setting that skips it. */
   let playing = true;
+  let muted = true;
 
   const glyph = icon('pause', { class: 'ic ic--sm' });
   const toggle = h('button', {
@@ -124,6 +128,20 @@ export function videoControls(player, { skip = SKIP } = {}) {
     player.currentTime = Math.min(Math.max(0, player.currentTime + by), end);
   }
 
+  const sound = h('button', {
+    class: 'vc__btn', type: 'button', 'aria-label': 'Unmute',
+    onclick: (e) => { e.stopPropagation(); setMuted(!muted); },
+  }, icon('volume-off', { class: 'ic ic--xs' }));
+
+  function setMuted(next) {
+    muted = next;
+    if (isFrame) ytCommand(player, next ? 'mute' : 'unMute');
+    else player.muted = next;
+    sound.replaceChildren(icon(next ? 'volume-off' : 'volume', { class: 'ic ic--xs' }));
+    sound.setAttribute('aria-label', next ? 'Unmute' : 'Mute');
+    sound.classList.toggle('is-live', !next);
+  }
+
   const step = (by, label, name) => h('button', {
     class: 'vc__btn', type: 'button', 'aria-label': label,
     onclick: (e) => { e.stopPropagation(); jump(by); },
@@ -135,6 +153,10 @@ export function videoControls(player, { skip = SKIP } = {}) {
   if (!isFrame) {
     player.addEventListener('play', () => { playing = true; paint(); });
     player.addEventListener('pause', () => { playing = false; paint(); });
+    // The element can be muted by something else too; the glyph follows it.
+    player.addEventListener('volumechange', () => {
+      if (player.muted !== muted) setMuted(player.muted);
+    });
   }
 
   paint();
@@ -142,5 +164,6 @@ export function videoControls(player, { skip = SKIP } = {}) {
     step(-skip, `Back ${skip} seconds`, 'rewind'),
     toggle,
     step(skip, `Forward ${skip} seconds`, 'forward'),
+    sound,
   );
 }

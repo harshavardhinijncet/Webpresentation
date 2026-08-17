@@ -36,6 +36,12 @@ const ICONS = {
   eye: ['M2.8 12S6.6 5.9 12 5.9 21.2 12 21.2 12 17.4 18.1 12 18.1 2.8 12 2.8 12z', 'c 12 12 2.9'],
   target: ['c 12 12 8.3', 'c 12 12 4.2', 'c 12 12 1'],
   heart: ['M12 20.4C7.6 17.6 4 14.6 4 10.9A4 4 0 0 1 12 8.6a4 4 0 0 1 8 2.3c0 3.7-3.6 6.7-8 9.5z'],
+  /* Sound. Filled cone plus stroked arcs, so the state reads at a glance on a
+     dark scrim: arcs present means audible, the slash means silent. */
+  volume: ['f M4.6 9.4h3.2L12 5.8v12.4l-4.2-3.6H4.6z',
+           'M15.4 9.6a3.4 3.4 0 0 1 0 4.8', 'M17.8 7.2a6.8 6.8 0 0 1 0 9.6'],
+  'volume-off': ['f M4.6 9.4h3.2L12 5.8v12.4l-4.2-3.6H4.6z',
+                 'm15.6 10.2 4.4 4.4', 'm20 10.2-4.4 4.4'],
   /* Transport controls. Filled rather than stroked: at 18px a stroked triangle
      reads as an outline of nothing, and these sit on a dark scrim where a solid
      shape carries much further. */

@@ -11089,3 +11089,11 @@ body.is-presenting .sw-root {
 @media (prefers-reduced-motion: reduce) {
   .vc, .vc__btn { transition: none; }
 }
+
+/* The sound button lights when audio is actually on, so a presenter can see at a
+   glance whether the room is about to hear anything. */
+.vc__btn.is-live {
+  background: var(--nav-accent, var(--brand-accent, #B8F14A));
+  color: #0A0B0D;
+}
+.vc__btn.is-live:hover { background: var(--nav-accent, var(--brand-accent, #B8F14A)); filter: brightness(1.08); }
