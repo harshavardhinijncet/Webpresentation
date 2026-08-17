@@ -20,6 +20,10 @@ import { icon } from './icons.js';
  * skip seeks relative to the last figure seen. One window listener serves every
  * frame on the page, keyed by the frame's own window.
  *
+ * Proven against a real film rather than assumed: driving the bar on a YouTube
+ * embed moves the frame through states 3, 1, 2 — buffering, playing, paused —
+ * and its reported clock stops advancing at the moment of the click.
+ *
  * The controls are decoration over content that already exists, so they carry
  * aria-hidden on the wrapper and real labels on the buttons — a screen reader
  * gets the buttons, not the scaffolding.
