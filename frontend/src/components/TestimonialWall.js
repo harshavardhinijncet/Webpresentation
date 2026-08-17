@@ -1,6 +1,7 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
+import { videoControls } from '../utils/videoControls.js';
 
 /**
  * Testimonials: a row of arched portraits, and clicking a student plays their
@@ -19,7 +20,9 @@ import { media } from '../utils/media.js';
 const UPLOADS = '/uploads';
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
-const YT = 'autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3'
+/* enablejsapi is what lets the hover controls reach the frame at all: without
+   it postMessage is ignored and the buttons do nothing. */
+const YT = 'autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&enablejsapi=1'
   + '&playsinline=1&disablekb=1&fs=0&color=white';
 const ytEmbed = (id) => `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?${YT}`;
 
@@ -59,7 +62,10 @@ export function TestimonialWall(block, { editing = false } = {}) {
 
   const play = (person, card) => {
     playerName.textContent = person.name;
-    frame.replaceChildren(person.youtube
+    /* Built first, so the control bar can be handed the element it drives: it
+       has to know whether it is talking to a <video> it can call directly or to
+       a cross-origin frame it can only post messages at. */
+    const surface = person.youtube
       ? h('iframe', {
           class: 'tw-player__yt', src: ytEmbed(person.youtube),
           title: person.name,
@@ -69,7 +75,8 @@ export function TestimonialWall(block, { editing = false } = {}) {
       : h('video', {
           class: 'tw-player__file', src: media(`/uploads/${encodeURI(person.src)}`),
           controls: true, autoplay: true, playsinline: true,
-        }));
+        });
+    frame.replaceChildren(surface, videoControls(surface));
     cards.forEach((c) => c.classList.toggle('is-active', c === card));
     /* Out of the slide entirely while it plays. FitSlide scales the slide with
        a transform, which becomes the containing block for anything fixed inside

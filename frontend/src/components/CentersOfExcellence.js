@@ -1,6 +1,7 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
+import { videoControls } from '../utils/videoControls.js';
 
 /**
  * Centers of Excellence: a wall of accredited academies and partner practices,
@@ -169,7 +170,7 @@ function mediaTile(item, center) {
       controls: true, preload: 'metadata', playsinline: true,
       src,
     });
-    return h('figure', { class: 'coe-tile' }, video,
+    return h('figure', { class: 'coe-tile has-vc' }, video, videoControls(video),
       item.label ? h('figcaption', {}, item.label) : null);
   }
   const img = h('img', {

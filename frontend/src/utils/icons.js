@@ -36,6 +36,13 @@ const ICONS = {
   eye: ['M2.8 12S6.6 5.9 12 5.9 21.2 12 21.2 12 17.4 18.1 12 18.1 2.8 12 2.8 12z', 'c 12 12 2.9'],
   target: ['c 12 12 8.3', 'c 12 12 4.2', 'c 12 12 1'],
   heart: ['M12 20.4C7.6 17.6 4 14.6 4 10.9A4 4 0 0 1 12 8.6a4 4 0 0 1 8 2.3c0 3.7-3.6 6.7-8 9.5z'],
+  /* Transport controls. Filled rather than stroked: at 18px a stroked triangle
+     reads as an outline of nothing, and these sit on a dark scrim where a solid
+     shape carries much further. */
+  play: ['f M8.4 5.6 18 12l-9.6 6.4z'],
+  pause: ['f M8 5.4h2.9v13.2H8z', 'f M13.1 5.4H16v13.2h-2.9z'],
+  rewind: ['f M11.4 6.6v10.8L4.6 12z', 'f M19.4 6.6v10.8L12.6 12z'],
+  forward: ['f M12.6 6.6 19.4 12l-6.8 5.4z', 'f M4.6 6.6 11.4 12l-6.8 5.4z'],
   /* A fingerprint, for "human". Concentric arcs rather than a traced photograph
      of one — it is a pictogram, and it has to read at 26px. */
   fingerprint: [

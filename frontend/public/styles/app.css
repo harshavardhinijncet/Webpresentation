@@ -11007,3 +11007,80 @@ body.is-presenting .sw-root {
   .sw-c, .sw-c__body, .sw-nav, .sw-view, .sw-view__frame, .sw-nav__btn { transition: none; }
   .sw-root.is-open .sw-c__body { animation: none; }
 }
+
+/* ==========================================================================
+   Hover controls for every player — play/pause and skip
+   ========================================================================== */
+
+/* One bar, six call sites. It sits over whatever it drives and appears on hover
+   of that surface, so it never covers a picture nobody is pointing at. */
+.vc {
+  position: absolute;
+  left: 50%; bottom: 18px;
+  transform: translateX(-50%) translateY(8px);
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgb(8 10 13 / 0.72);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+  transition: opacity .2s ease, transform .28s cubic-bezier(.2,.7,.3,1);
+}
+@supports not (backdrop-filter: blur(10px)) { .vc { background: rgb(8 10 13 / 0.9); } }
+
+/* Shown when the player's own surface is hovered — or the bar itself, so it does
+   not vanish out from under the pointer on the way to a button. */
+.has-vc:hover > .vc,
+.has-vc:focus-within > .vc,
+.pf-win:hover .vc,
+.pg-player__frame:hover .vc,
+.tw-player__frame:hover .vc,
+.hero__vc:hover .vc,
+.hero:hover .hero__vc .vc,
+.vc:hover, .vc:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%);
+}
+
+.vc__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  min-width: 34px; height: 34px;
+  padding: 0 9px;
+  border: 0; border-radius: 999px;
+  background: rgb(255 255 255 / 0.1);
+  color: #fff;
+  font: inherit; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background .16s ease, transform .16s ease;
+}
+.vc__btn:hover { background: rgb(255 255 255 / 0.22); }
+.vc__btn:active { transform: scale(0.94); }
+.vc__btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* Play/pause reads as the primary of the three. */
+.vc__btn--main {
+  min-width: 42px; height: 42px; padding: 0;
+  background: #fff; color: #0A0B0D;
+}
+.vc__btn--main:hover { background: #fff; transform: scale(1.06); }
+
+/* The hero's film is a backdrop under the headline, so its controls need their
+   own layer above the copy rather than sitting on an element nobody can reach. */
+.hero__vc {
+  position: absolute; inset: auto 0 0 0; height: 120px;
+  pointer-events: none;
+  z-index: 4;
+}
+.hero__vc .vc { pointer-events: auto; }
+.hero:hover .hero__vc .vc { opacity: 1; }
+
+/* The players that portal to the body keep their bar above the film. */
+.pg-player.is-portal .vc,
+.tw-player.is-portal .vc { bottom: 30px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .vc, .vc__btn { transition: none; }
+}

@@ -3,6 +3,7 @@ import { icon } from '../utils/icons.js';
 import { media as mediaUrl } from '../utils/media.js';
 import { toastSuccess, toastError } from './Toast.js';
 import { dockMagnify } from '../utils/dock.js';
+import { videoControls } from '../utils/videoControls.js';
 
 /**
  * The platform wall: a rotating 3D stack of browser windows, and opening one
@@ -101,8 +102,14 @@ function shotMedia(item, mount, onMissing) {
   video.muted = true; // The attribute alone does not satisfy autoplay policy.
 
   let usable = true;
-  video.addEventListener('error', () => { usable = false; video.remove(); still(); }, true);
+  /* The bar belongs to the recording, so a file that fails takes its controls
+     with it rather than leaving buttons hovering over a still image. */
+  const bar = videoControls(video);
+  video.addEventListener('error', () => {
+    usable = false; video.remove(); bar?.remove(); still();
+  }, true);
   mount.appendChild(video);
+  if (bar) mount.appendChild(bar);
 
   return {
     play() {

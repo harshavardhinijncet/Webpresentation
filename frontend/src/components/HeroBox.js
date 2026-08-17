@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { inlineRich } from '../utils/format.js';
+import { videoControls } from '../utils/videoControls.js';
 import { ButtonRow } from './Elements.js';
 
 /**
@@ -26,35 +27,39 @@ export function HeroBox(block, { editing = false } = {}) {
     const usingLink = block.source === 'url';
     const fileUrl = usingLink ? (block.link?.kind === 'file' ? block.link.playbackUrl : null) : block.asset?.url;
     if (fileUrl) {
-      background.push(
-        h('video', {
-          class: 'hero__media',
-          src: fileUrl,
-          autoplay: true,
-          muted: true,
-          loop: true,
-          playsinline: true,
-          // Autoplay only sticks when the element is muted before it loads.
-          oncanplay: (event) => {
-            event.target.muted = true;
-            event.target.play?.().catch(() => {});
-          },
-        }),
-      );
+      const heroVideo = h('video', {
+        class: 'hero__media',
+        src: fileUrl,
+        autoplay: true,
+        muted: true,
+        loop: true,
+        playsinline: true,
+        // Autoplay only sticks when the element is muted before it loads.
+        oncanplay: (event) => {
+          event.target.muted = true;
+          event.target.play?.().catch(() => {});
+        },
+      });
+      /* The film is a backdrop behind the headline, so its controls go in their
+         own layer above it — the element itself sits under the copy and could
+         never be hovered. */
+      background.push(heroVideo, h('div', { class: 'hero__vc' }, videoControls(heroVideo)));
     } else if (usingLink && block.link?.embedUrl) {
       const sep = block.link.embedUrl.includes('?') ? '&' : '?';
-      const embedSrc = `${block.link.embedUrl}${sep}autoplay=1&mute=1&loop=1&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0&iv_load_policy=3`;
-      background.push(
-        h('iframe', {
-          class: 'hero__media hero__media--embed',
-          src: embedSrc,
-          title: block.heading || 'Background video',
-          allow: 'autoplay; encrypted-media; picture-in-picture',
-          frameborder: '0',
-          tabindex: '-1',
-          style: { pointerEvents: 'none' },
-        }),
-      );
+      /* enablejsapi is what lets the hover controls reach the frame: without it
+         every command posted to it is ignored and the buttons do nothing. */
+      const embedSrc = `${block.link.embedUrl}${sep}autoplay=1&mute=1&loop=1&controls=0`
+        + '&disablekb=1&fs=0&modestbranding=1&rel=0&iv_load_policy=3&enablejsapi=1';
+      const heroFrame = h('iframe', {
+        class: 'hero__media hero__media--embed',
+        src: embedSrc,
+        title: block.heading || 'Background video',
+        allow: 'autoplay; encrypted-media; picture-in-picture',
+        frameborder: '0',
+        tabindex: '-1',
+        style: { pointerEvents: 'none' },
+      });
+      background.push(heroFrame, h('div', { class: 'hero__vc' }, videoControls(heroFrame)));
     }
   }
 

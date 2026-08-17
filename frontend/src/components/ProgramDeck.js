@@ -1,6 +1,7 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
+import { videoControls } from '../utils/videoControls.js';
 
 /**
  * Programs: one card that opens into the whole set, each of those into its
@@ -25,7 +26,9 @@ import { media } from '../utils/media.js';
 const UPLOADS = '/uploads';
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
-const YT = 'autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3'
+/* enablejsapi is what lets the hover controls reach the frame at all: without
+   it postMessage is ignored and the buttons do nothing. */
+const YT = 'autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&enablejsapi=1'
   + '&playsinline=1&disablekb=1&fs=0&color=white';
 const ytEmbed = (id) => `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?${YT}`;
 const ytPoster = (id) => `https://i.ytimg.com/vi/${encodeURIComponent(id)}/maxresdefault.jpg`;
@@ -68,7 +71,10 @@ export function ProgramDeck(block, { editing = false } = {}) {
 
   const play = (video) => {
     playerTitle.textContent = video.title || '';
-    frame.replaceChildren(video.youtube
+    /* Built first, so the control bar can be handed the element it drives: it
+       has to know whether it is talking to a <video> it can call directly or to
+       a cross-origin frame it can only post messages at. */
+    const surface = video.youtube
       ? h('iframe', {
           class: 'pg-player__yt', src: ytEmbed(video.youtube),
           title: video.title || 'Video',
@@ -78,7 +84,8 @@ export function ProgramDeck(block, { editing = false } = {}) {
       : h('video', {
           class: 'pg-player__file', src: media(`/uploads/${encodeURI(video.src)}`),
           controls: true, autoplay: true, playsinline: true,
-        }));
+        });
+    frame.replaceChildren(surface, videoControls(surface));
     /* Out of the slide entirely while it plays. FitSlide scales the slide with
        a transform, which becomes the containing block for anything fixed inside
        it — so a player that lives in the section can only ever fill the slide,

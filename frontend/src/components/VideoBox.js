@@ -1,4 +1,5 @@
 import { h } from '../utils/dom.js';
+import { videoControls } from '../utils/videoControls.js';
 
 /**
  * Video block. Three ways in, one behaviour out:
@@ -96,7 +97,8 @@ export function VideoBox(block, { editing = false } = {}) {
     '⛶ Fullscreen',
   );
 
-  const frame = h('div', { class: 'video-box__frame' }, player, backButton, fullscreenButton);
+  const frame = h('div', { class: 'video-box__frame has-vc' },
+    player, videoControls(player), backButton, fullscreenButton);
 
   async function enterFullscreen() {
     // Remember the reading position independently of the browser.
