@@ -11016,8 +11016,12 @@ body.is-presenting .sw-root {
    of that surface, so it never covers a picture nobody is pointing at. */
 .vc {
   position: absolute;
-  left: 50%; bottom: 18px;
-  transform: translateX(-50%) translateY(8px);
+  /* Dead centre of whatever it drives, not pinned to the bottom. Along the foot
+     it sat right on top of the presenter bar — the two overlapped and the skip
+     buttons landed on the section icons. The middle of the picture is also where
+     the pointer already is when someone reaches for pause. */
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.94);
   display: flex; align-items: center; gap: 8px;
   padding: 8px 10px;
   border-radius: 999px;
@@ -11043,7 +11047,7 @@ body.is-presenting .sw-root {
 .vc:hover, .vc:focus-within {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .vc__btn {
@@ -11070,16 +11074,17 @@ body.is-presenting .sw-root {
 /* The hero's film is a backdrop under the headline, so its controls need their
    own layer above the copy rather than sitting on an element nobody can reach. */
 .hero__vc {
-  position: absolute; inset: auto 0 0 0; height: 120px;
+  /* The whole frame, so the bar centres in the hero rather than in a strip along
+     its foot. */
+  position: absolute; inset: 0;
   pointer-events: none;
   z-index: 4;
 }
 .hero__vc .vc { pointer-events: auto; }
 .hero:hover .hero__vc .vc { opacity: 1; }
 
-/* The players that portal to the body keep their bar above the film. */
-.pg-player.is-portal .vc,
-.tw-player.is-portal .vc { bottom: 30px; }
+/* Nothing to offset any more: a centred bar clears the presenter bar by the
+   height of half the film. */
 
 @media (prefers-reduced-motion: reduce) {
   .vc, .vc__btn { transition: none; }
