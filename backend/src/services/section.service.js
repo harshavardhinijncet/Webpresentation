@@ -646,6 +646,14 @@ function normalizeBlock(raw, index = 0, depth = 0) {
          own artwork rather than stock, and a file under /uploads like everything
          else on this page. */
       block.backdrop = text(raw.backdrop, 240);
+      /* The register's three headline figures, verbatim from the reference design
+         rather than derived here. `value` is a string on purpose: the reference
+         writes them as "32,000+" and "~2", which are claims about scale, not sums
+         this page is entitled to recompute. */
+      block.stats = (Array.isArray(raw.stats) ? raw.stats : [])
+        .map((f) => ({ value: text(f?.value, 24), label: text(f?.label, 80) }))
+        .filter((f) => f.value && f.label)
+        .slice(0, 4);
       block.credentials = (Array.isArray(raw.credentials) ? raw.credentials : [])
         .map((c) => ({
           name: text(c?.name, 160),

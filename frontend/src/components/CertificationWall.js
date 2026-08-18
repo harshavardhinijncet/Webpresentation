@@ -33,6 +33,12 @@ const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 const CANVAS = 1600;
 const GAP = 12;
 
+/* From the reference. `DWELL` is how long the tour rests on one credential; the
+   reference also carries STEP_VH, a scroll distance per credential, which has
+   nothing to scrub here — this deck is fixed 16:9 slides with no page scroll, so
+   the tour advances on a timer instead of on scroll position. */
+const DWELL = 4200;
+
 const ACTS = [
   { key: 'register', num: '01', name: 'The Register' },
   { key: 'skills', num: '02', name: 'Skills Unlocked' },
@@ -263,16 +269,23 @@ export function CertificationWall(block, { editing = false } = {}) {
           : h('em', {}, (p.vendor || '?').slice(0, 2).toUpperCase()))),
       ),
       h('div', { class: 'cs-reg__mid' },
+        /* The reference's own three figures when the block carries them, which it
+           does — they are written as strings there ("32,000+", "~2") because they
+           are claims about scale rather than sums this page recomputes. The
+           derived trio is the fallback for a block published without them. */
         h('div', { class: 'cs-figs' },
-          h('div', { class: 'cs-fig' },
-            h('strong', {}, nf(earned)),
-            h('span', {}, 'certifications earned')),
-          h('div', { class: 'cs-fig' },
-            h('strong', {}, nf(credentials.length)),
-            h('span', {}, 'distinct credentials')),
-          h('div', { class: 'cs-fig' },
-            h('strong', {}, nf(bodies)),
-            h('span', {}, 'awarding bodies')),
+          ...(block.stats?.length
+            ? block.stats.map((f) => h('div', { class: 'cs-fig' },
+                h('strong', {}, f.value),
+                h('span', {}, f.label)))
+            : [
+                h('div', { class: 'cs-fig' },
+                  h('strong', {}, nf(earned)), h('span', {}, 'certifications earned')),
+                h('div', { class: 'cs-fig' },
+                  h('strong', {}, nf(credentials.length)), h('span', {}, 'distinct credentials')),
+                h('div', { class: 'cs-fig' },
+                  h('strong', {}, nf(bodies)), h('span', {}, 'awarding bodies')),
+              ]),
         ),
         block.quote
           ? h('blockquote', { class: 'cs-quote' },
@@ -289,6 +302,38 @@ export function CertificationWall(block, { editing = false } = {}) {
   const skillPane = h('div', { class: 'cs-skill' });
   let pick = 0;
 
+  /* The auto-tour. Forty-two credentials at 4.2s is just under three minutes of
+     unattended walk, which is exactly the case it is for: a presenter leaves this
+     act running and talks over it rather than clicking forty-two times.
+     Off under prefers-reduced-motion, and stopped the moment anyone picks a row by
+     hand — a tour that fights the person driving is worse than no tour. */
+  let touring = false;
+  let tourTimer = null;
+
+  function stopTour() {
+    touring = false;
+    if (tourTimer) { clearTimeout(tourTimer); tourTimer = null; }
+  }
+
+  function tourStep() {
+    if (!touring) return;
+    pick = (pick + 1) % credentials.length;
+    drawSkills();
+    /* The live row is scrolled into view, or the tour walks past the fold and the
+       list stops agreeing with the pane beside it. */
+    const row = skillList.querySelector('.cs-cred__row.is-on');
+    if (row) row.scrollIntoView({ block: 'nearest', behavior: REDUCED?.matches ? 'auto' : 'smooth' });
+    tourTimer = setTimeout(tourStep, DWELL);
+  }
+
+  function setTour(on) {
+    stopTour();
+    if (!on || REDUCED?.matches) { drawSkills(); return; }
+    touring = true;
+    tourTimer = setTimeout(tourStep, DWELL);
+    drawSkills();
+  }
+
   function drawSkills() {
     const sorted = [...credentials].sort((a, b) => b.held - a.held);
 
@@ -296,7 +341,7 @@ export function CertificationWall(block, { editing = false } = {}) {
       class: `cs-cred__row${i === pick ? ' is-on' : ''}`,
       type: 'button',
       style: REDUCED?.matches ? {} : { '--i': String(Math.min(i, 30)) },
-      onclick: () => { pick = i; drawSkills(); },
+      onclick: () => { pick = i; stopTour(); drawSkills(); },
     },
       h('span', { class: 'cs-cred__mark' }, c.badge
         ? h('img', { src: src(c.badge), alt: '', loading: 'lazy', decoding: 'async' })
@@ -324,7 +369,22 @@ export function CertificationWall(block, { editing = false } = {}) {
         h('strong', {}, nf(c.held)),
         h('span', {}, c.held === 1 ? 'trainee holds it' : 'trainees hold it'),
       ),
-      h('p', { class: 'cs-skill__label' }, 'What it tests'),
+      h('div', { class: 'cs-skill__bar' },
+        h('p', { class: 'cs-skill__label' }, 'What it tests'),
+        REDUCED?.matches ? null : h('button', {
+          class: `cs-tour${touring ? ' is-on' : ''}`, type: 'button',
+          'aria-pressed': String(touring),
+          onclick: () => setTour(!touring),
+        },
+          icon(touring ? 'pause' : 'play', { class: 'ic ic--xs' }),
+          h('span', {}, touring ? 'Touring' : 'Auto-tour'),
+          /* The dwell, drawn. Keyed on the pick so the bar restarts with each
+             credential rather than carrying on from where the last one left it. */
+          touring
+            ? h('span', { class: 'cs-tour__run', style: { 'animation-duration': `${DWELL}ms` } })
+            : null,
+        ),
+      ),
       h('ol', { class: 'cs-skill__list' },
         ...c.skills.map((s, i) => h('li', {
           style: REDUCED?.matches ? {} : { '--i': String(i) },
@@ -471,6 +531,8 @@ export function CertificationWall(block, { editing = false } = {}) {
     acts.dataset.act = act;
     if (act === 'register') drawRegister();
     if (act === 'skills') drawSkills();
+    // A tour running behind another act is a timer nobody can see.
+    if (act !== 'skills') stopTour();
     if (act === 'gallery') { drawRail(); drawBanner(); drawWall(); }
   }
 
@@ -514,6 +576,7 @@ export function CertificationWall(block, { editing = false } = {}) {
       light.remove();
       watch.disconnect();
       watchSize.disconnect();
+      stopTour();
       document.removeEventListener('keydown', onKey, true);
     }
   });
