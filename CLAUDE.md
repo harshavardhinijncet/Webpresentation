@@ -149,6 +149,8 @@ them is a fair reference for what "designed" means here:
 - **Placements** — justified-row galleries; the sources are announcement cards
   with names and counts set into them, so nothing there may be cropped
 - **Certifications** — 82 cohort cards across 19 vendors, same rule
+- **Events & Milestones** — the whole film library, 91 across six chapters,
+  built from `backend/uploads/Videos.xlsx`
 
 Torii has no content yet. The same Leadership content applies to it — ask before
 mirroring.
@@ -160,3 +162,20 @@ together and picks a column count, because a row of square cards is always far
 wider than it is tall and filling the width alone strands the stage in white.
 Neither ever crops: a tile's width is always its own aspect ratio times the
 solved height.
+
+Films live in `backend/uploads/Videos.xlsx`, six sheets, and the sheet's own
+convention matters: a row with a title starts a series and every row beneath it
+with the title left blank is another part of it. `EventReel` draws a series as a
+numbered run with arrows, and the same films are also filed into the matching
+programme on Programs and the matching centre on Centers of Excellence — merged,
+never replacing what those pages already carry.
+
+No YouTube poster may be load-bearing. They come from `i.ytimg.com` and there is
+no network at presentation time, so every poster in the deck removes itself on
+`error` and the card falls back to type on a dark plate.
+
+One trap worth knowing before adding a section that scrolls internally:
+`.canvas-block > *` sets `flex: 1`, and its `flex-basis: 0%` overrides `height`
+on the main axis. A `min-height` root then grows to its content instead of
+letting a child scroll, and FitSlide scales the slide down to fit. Use
+`flex: 0 0 auto` with `height` **and** `max-height` — see `.ev-root`.
