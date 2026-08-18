@@ -40,7 +40,6 @@ export const BLOCK_TYPES = [
   'program-deck',
   'testimonial-wall',
   'placement-wall',
-  'certification-wall',
   'event-reel',
   'video-resume',
 ];
@@ -630,68 +629,6 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         }))
         .filter((c) => c.key && c.name && c.groups.length)
         .slice(0, 12);
-      break;
-
-    case 'certification-wall':
-      block.eyebrow = text(raw.eyebrow, 120);
-      block.title = text(raw.title, 160);
-      block.lead = text(raw.lead, 400);
-      /* The credential register: the named certifications the place awards, with
-         how many trainees hold each and what each one actually tests. Separate
-         from `vendors` below, which is the cohort artwork — one is the catalogue,
-         the other is the evidence. */
-      block.quote = text(raw.quote, 400);
-      block.quoteBy = text(raw.quoteBy, 160);
-      /* A wide cohort photograph, held far back behind the register's type. Their
-         own artwork rather than stock, and a file under /uploads like everything
-         else on this page. */
-      block.backdrop = text(raw.backdrop, 240);
-      /* The register's three headline figures, verbatim from the reference design
-         rather than derived here. `value` is a string on purpose: the reference
-         writes them as "32,000+" and "~2", which are claims about scale, not sums
-         this page is entitled to recompute. */
-      block.stats = (Array.isArray(raw.stats) ? raw.stats : [])
-        .map((f) => ({ value: text(f?.value, 24), label: text(f?.label, 80) }))
-        .filter((f) => f.value && f.label)
-        .slice(0, 4);
-      block.credentials = (Array.isArray(raw.credentials) ? raw.credentials : [])
-        .map((c) => ({
-          name: text(c?.name, 160),
-          vendor: text(c?.vendor, 80),
-          domain: text(c?.domain, 80),
-          held: clampInt(c?.held, 0, 1000000, 0),
-          /* A file under /uploads. The catalogue pointed at eight different CDNs
-             and the deck is presented offline, so the badges are downloaded and
-             served locally; one the CDN refuses carries no badge and the card
-             falls back to type. */
-          badge: text(c?.badge, 240),
-          skills: (Array.isArray(c?.skills) ? c.skills : [])
-            .map((k) => text(k, 140)).filter(Boolean).slice(0, 8),
-        }))
-        .filter((c) => c.name && c.vendor)
-        .slice(0, 120);
-      block.vendors = (Array.isArray(raw.vendors) ? raw.vendors : [])
-        .map((v) => ({
-          key: text(v?.key, 60),
-          name: text(v?.name, 80),
-          /* What the cards evidence, from the catalogue the user supplied. Kept
-             per vendor rather than per card: one card is one cohort, and the
-             certification it belongs to is the vendor's, not the photograph's. */
-          domain: text(v?.domain, 80),
-          skills: (Array.isArray(v?.skills) ? v.skills : [])
-            .map((k) => text(k, 120)).filter(Boolean).slice(0, 8),
-          certs: (Array.isArray(v?.certs) ? v.certs : [])
-            .map((c) => ({
-              src: text(c?.src, 240),
-              label: text(c?.label, 120),
-              w: clampInt(c?.w, 1, 20000, 0),
-              h: clampInt(c?.h, 1, 20000, 0),
-            }))
-            .filter((c) => c.src && c.w && c.h)
-            .slice(0, 60),
-        }))
-        .filter((v) => v.key && v.certs.length)
-        .slice(0, 30);
       break;
 
     /* Placements. Every image carries its true pixel dimensions, and that is

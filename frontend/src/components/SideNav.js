@@ -45,10 +45,6 @@ const NAVIGATION_GROUPS = [
   // centres invest, and splitting them across four nav rows made the reader open
   // four pages to see a single picture.
   ['team', 'Centers of Excellence', 'beaker', []],
-  /* Its own name, at last. This row said "Talent Acquisition" and carried two
-     placeholder labels, so the finished 82-card certifications wall was sitting
-     behind a heading that gave no hint it was there. */
-  ['certifications', 'Certifications', 'certificate', []],
   ['placements', 'Placements', 'trend-up', []],
   /* One section, no subsections. "Events", "Workshops" and "Project Arena" were
      placeholders for pages nobody built, and the whole film library is one page. */
