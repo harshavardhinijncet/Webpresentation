@@ -41,6 +41,7 @@ export const BLOCK_TYPES = [
   'testimonial-wall',
   'placement-wall',
   'event-reel',
+  'credential-register',
   'video-resume',
 ];
 
@@ -596,6 +597,37 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         }))
         .filter((p) => p.name && (p.youtube || p.src))
         .slice(0, 400);
+      break;
+
+    case 'credential-register':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.quote = text(raw.quote, 400);
+      block.quoteBy = text(raw.quoteBy, 160);
+      /* A wide photograph held far back behind the register's type. */
+      block.backdrop = text(raw.backdrop, 240);
+      /* The three headline figures, verbatim from the reference design rather than
+         derived. `value` is a string on purpose — the reference writes them as
+         "32,000+" and "~2", which are claims about scale, not sums to recompute. */
+      block.stats = (Array.isArray(raw.stats) ? raw.stats : [])
+        .map((f) => ({ value: text(f?.value, 24), label: text(f?.label, 80) }))
+        .filter((f) => f.value && f.label)
+        .slice(0, 4);
+      block.credentials = (Array.isArray(raw.credentials) ? raw.credentials : [])
+        .map((c) => ({
+          name: text(c?.name, 160),
+          vendor: text(c?.vendor, 80),
+          domain: text(c?.domain, 80),
+          held: clampInt(c?.held, 0, 1000000, 0),
+          /* A file under /uploads. The catalogue points at eight different CDNs
+             and this deck presents with no network, so badges are downloaded
+             locally; one the CDN refuses carries none and falls back to type. */
+          badge: text(c?.badge, 240),
+          skills: (Array.isArray(c?.skills) ? c.skills : [])
+            .map((k) => text(k, 140)).filter(Boolean).slice(0, 8),
+        }))
+        .filter((c) => c.name && c.vendor)
+        .slice(0, 200);
       break;
 
     case 'event-reel':

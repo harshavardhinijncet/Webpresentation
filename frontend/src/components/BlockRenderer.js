@@ -18,6 +18,7 @@ import { ProgramDeck } from './ProgramDeck.js';
 import { TestimonialWall } from './TestimonialWall.js';
 import { PlacementWall } from './PlacementWall.js';
 import { EventReel } from './EventReel.js';
+import { CredentialRegister } from './CredentialRegister.js';
 import { VideoResumes } from './VideoResumes.js';
 import { AiReadyEngineer } from './AiReadyEngineer.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
@@ -136,6 +137,9 @@ export function renderBlock(block, options = {}) {
 
     case 'event-reel':
       return EventReel(block, options);
+
+    case 'credential-register':
+      return CredentialRegister(block, options);
 
     case 'video-resume':
       return VideoResumes(block, options);
