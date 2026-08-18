@@ -11111,305 +11111,6 @@ body.is-presenting .sw-root {
 }
 .vc__btn.is-live:hover { background: var(--nav-accent, var(--brand-accent, #B8F14A)); filter: brightness(1.08); }
 
-/* ==========================================================================
-   Certifications — a vendor rail, and a wall that crops nothing
-   ==========================================================================
-   Every file is a finished branded card: cohort photograph, vendor badge, the
-   trainee count already set in type. So the tiles are solved from each file's
-   own aspect ratio and the wall fills its height by choosing a row height, never
-   by trimming an edge. Same discipline as the Placements gallery, different
-   navigation: nineteen vendors is a list down the side, not a row of pills.
-   ========================================================================== */
-
-.cw-root {
-  display: flex;
-  flex-direction: column;
-  /* A fixed minimum, not a percentage: the root's height comes from this, so its
-     computed height is `auto` and a percentage height on a child would resolve to
-     auto as well. Flex hands the stage the leftover space instead. */
-  min-height: 860px;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-}
-.cw-empty { display: grid; place-items: center; min-height: 400px; gap: 10px; text-align: center; }
-.cw-hint { margin: 0; color: var(--muted); font-size: 13px; }
-
-/* --------------------------------------------------------------- the head -- */
-/* Title left, the two figures right. Centred would have pushed the wall 60px
-   further down for no gain — the rail already gives the page its left edge, so
-   the head shares it. */
-.cw-head {
-  flex: 0 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
-  align-items: end; column-gap: 28px;
-  padding: 22px 26px 16px;
-  border-bottom: 1px solid var(--hairline, #e5e7eb);
-}
-.cw-eyebrow {
-  margin: 0 0 7px; color: var(--nav-accent-ink, var(--accent-ink));
-  font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
-}
-.cw-title { margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; }
-.cw-rule {
-  display: block; height: 3px; margin-top: 10px;
-  background: var(--nav-accent-ink, var(--accent-ink)); border-radius: 2px;
-  width: 76px; transform-origin: left center;
-  animation: cw-draw 620ms cubic-bezier(.2,.7,.3,1) both;
-}
-@keyframes cw-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.cw-lead {
-  margin: 0 0 4px; max-width: 60ch; color: var(--muted);
-  font-size: 14px; line-height: 1.5;
-}
-.cw-stats { display: flex; gap: 26px; }
-.cw-stat { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
-.cw-stat strong {
-  font-size: 30px; font-weight: 800; letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums; color: var(--ink, #111827);
-}
-.cw-stat span {
-  margin-top: 5px; color: var(--muted);
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-}
-
-/* --------------------------------------------------------------- the body -- */
-/* Fixed rail, flexible wall. The rail width is a constant here *and* in
-   CertificationWall.js, because the row solver has to know the wall width in
-   layout pixels before a single image has loaded — measuring it would return
-   post-transform pixels from inside FitSlide. Change one and change the other. */
-.cw-body {
-  flex: 1 1 auto; min-height: 0;
-  display: grid; grid-template-columns: 250px minmax(0, 1fr);
-  column-gap: 22px; padding: 0 26px;
-}
-
-.cw-rail {
-  display: flex; flex-direction: column; gap: 2px;
-  min-height: 0; padding: 14px 14px 16px 0;
-  overflow-y: auto; scrollbar-width: none;
-  border-right: 1px solid var(--hairline, #e5e7eb);
-  margin-right: -14px;
-}
-.cw-rail::-webkit-scrollbar { width: 0; }
-
-.cw-tab {
-  flex: 0 0 auto;
-  display: grid; grid-template-columns: 22px minmax(0, 1fr) auto;
-  align-items: center; gap: 9px;
-  padding: 6px 10px; border: 0; border-radius: var(--radius-sm);
-  background: transparent; color: var(--muted);
-  text-align: left; cursor: pointer;
-  transition: background 160ms ease, color 160ms ease;
-  animation: cw-rail-in 420ms cubic-bezier(.2,.7,.3,1) both;
-}
-@keyframes cw-rail-in {
-  from { opacity: 0; transform: translateX(-10px); }
-  to { opacity: 1; transform: none; }
-}
-.cw-tab__glyph { display: grid; place-items: center; opacity: 0.8; }
-.cw-tab__text { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
-.cw-tab__name {
-  font-size: 13px; font-weight: 700; letter-spacing: -0.005em;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-/* The domain only shows on the active row. Nineteen rows each carrying two lines
-   is 40px apiece, which does not fit the stage — and a list where every row is
-   equally loud is a list nothing stands out in. */
-.cw-tab__sub {
-  display: none; margin-top: 1px;
-  font-size: 10.5px; font-weight: 650; letter-spacing: 0.02em; opacity: 0.85;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.cw-tab__n {
-  font-size: 11px; font-weight: 750; font-variant-numeric: tabular-nums;
-  opacity: 0.6; padding-left: 2px;
-}
-.cw-tab:hover { color: var(--ink, #111827); background: var(--page-bg); }
-.cw-tab.is-on {
-  color: #fff; background: var(--nav-accent-ink, var(--accent-ink));
-  padding-top: 8px; padding-bottom: 8px;
-}
-.cw-tab.is-on .cw-tab__sub { display: block; }
-.cw-tab.is-on .cw-tab__glyph { opacity: 1; }
-.cw-tab.is-on .cw-tab__n { opacity: 0.9; }
-.cw-tab:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
-
-.cw-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-
-/* ------------------------------------------------------------- the banner -- */
-.cw-banner {
-  flex: 0 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 24px; padding: 14px 0 0;
-}
-.cw-banner__id { display: flex; align-items: center; gap: 11px; min-width: 0; }
-.cw-banner__glyph {
-  display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 auto;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--nav-accent-ink, var(--accent-ink)) 12%, transparent);
-  color: var(--nav-accent-ink, var(--accent-ink));
-}
-.cw-banner__name { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: -0.015em; }
-.cw-banner__meta {
-  margin: 2px 0 0; color: var(--muted);
-  font-size: 11.5px; font-weight: 650; letter-spacing: 0.01em;
-}
-.cw-banner__dot { margin: 0 7px; opacity: 0.5; }
-
-.cw-skills { display: flex; gap: 7px; margin: 0; padding: 0; list-style: none; flex-wrap: nowrap; }
-.cw-skills__item {
-  display: flex; align-items: center; gap: 5px;
-  max-width: 25ch; padding: 5px 10px;
-  border: 1px solid var(--hairline, #e5e7eb); border-radius: 999px;
-  color: var(--muted); font-size: 10.5px; font-weight: 650; line-height: 1.25;
-  animation: cw-chip-in 460ms cubic-bezier(.2,.7,.3,1) both;
-}
-.cw-skills__item .ic { flex: 0 0 auto; color: var(--nav-accent-ink, var(--accent-ink)); }
-@keyframes cw-chip-in {
-  from { opacity: 0; transform: translateY(7px); }
-  to { opacity: 1; transform: none; }
-}
-
-/* -------------------------------------------------------------- the stage -- */
-/* No horizontal padding: the row solver is handed this element exact content
-   width as a constant, and padding here would make every row that much too wide.
-   The vertical padding is the 28px the solver subtracts. */
-.cw-stage {
-  flex: 1 1 auto; min-height: 0;
-  padding: 14px 0;
-  overflow-y: auto; overflow-x: hidden;
-  scrollbar-width: none;                 /* the reveal is the scroll cue */
-  scroll-behavior: smooth;
-}
-.cw-stage::-webkit-scrollbar { width: 0; height: 0; }
-/* Centred when the rows fit, top-aligned when they scroll — a centred scroll
-   container hides its own first row above the fold. */
-.cw-stage.is-short { display: flex; flex-direction: column; justify-content: center; }
-.cw-wall .cw-row:last-child { margin-bottom: 0; }
-
-/* The rows as one centred block, each starting on the same left edge.
-   Not all rows are the same width — a few of these files are not square, so a
-   fixed column count gives the row holding a wide card more width than its
-   neighbours. Centring each row on its own made the eighty-two-card wall look like
-   a grid that had come apart; one straight left edge with a ragged right reads as
-   the mosaic it actually is. Width is set inline, from the widest row. */
-.cw-wall { flex: 0 0 auto; margin: 0 auto; }
-.cw-row { display: flex; align-items: stretch; justify-content: flex-start; margin-bottom: 12px; }
-
-.cw-tile {
-  position: relative; flex: 0 0 auto; padding: 0;
-  border: 1px solid var(--hairline, #e5e7eb); border-radius: var(--radius-sm);
-  overflow: hidden; background: #f3f4f6; cursor: zoom-in;
-  opacity: 0; transform: translateY(15px) scale(0.985);
-  transition: opacity 500ms cubic-bezier(.2,.7,.3,1),
-              transform 500ms cubic-bezier(.2,.7,.3,1),
-              box-shadow 200ms ease, border-color 200ms ease;
-}
-.cw-tile.is-in { opacity: 1; transform: none; }
-.cw-tile:hover {
-  box-shadow: 0 14px 32px rgb(0 0 0 / 0.18);
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-  z-index: 2;
-}
-.cw-tile img {
-  display: block; width: 100%; height: 100%;
-  /* The box was solved from this file own width and height, so cover has nothing
-     to crop past a rounding hairline — and unlike `contain` it cannot leave a
-     letterbox line where the rounding fell the other way. */
-  object-fit: cover;
-  transition: transform 420ms cubic-bezier(.2,.7,.3,1);
-}
-.cw-tile:hover img { transform: scale(1.04); }
-.cw-tile__tag {
-  position: absolute; inset: auto 0 0 0; padding: 18px 9px 7px;
-  display: flex; flex-direction: column; gap: 1px;
-  background: linear-gradient(to top, rgb(0 0 0 / 0.78), transparent);
-  color: #fff; text-align: left; opacity: 0; transition: opacity 200ms ease;
-}
-.cw-tile__tag em {
-  font-style: normal; font-size: 11px; font-weight: 750; line-height: 1.25;
-  /* Two lines and then an ellipsis: some of these names run long, and a name that
-     overflows its tile paints across the picture below it. */
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.cw-tile__tag span {
-  font-size: 9.5px; font-weight: 650; letter-spacing: 0.06em;
-  text-transform: uppercase; opacity: 0.75;
-}
-.cw-tile__zoom {
-  position: absolute; top: 7px; right: 7px;
-  display: grid; place-items: center; width: 24px; height: 24px;
-  border-radius: 7px; background: rgb(255 255 255 / 0.9); color: #111827;
-  opacity: 0; transform: scale(0.86); transition: opacity 180ms ease, transform 180ms ease;
-}
-.cw-tile:hover .cw-tile__tag,
-.cw-tile:focus-visible .cw-tile__tag { opacity: 1; }
-.cw-tile:hover .cw-tile__zoom,
-.cw-tile:focus-visible .cw-tile__zoom { opacity: 1; transform: none; }
-
-/* ---------------------------------------------------------- the lightbox -- */
-/* On the body, never inside the slide: FitSlide transform would otherwise be the
-   containing block and `inset: 0` would mean the slide, not the screen. */
-.cw-light {
-  position: fixed; inset: 0; z-index: 60;
-  display: grid; place-items: center; padding: 3vh 3vw;
-  background: rgb(9 11 14 / 0.92);
-  opacity: 0; transition: opacity 220ms ease;
-}
-.cw-light.is-on { opacity: 1; }
-.cw-light[hidden] { display: none; }
-.cw-light__frame {
-  margin: 0; display: flex; flex-direction: column; gap: 12px;
-  max-width: calc(100% - 160px);         /* the arrows sit over the image */
-  max-height: 100%;
-  transform: scale(0.97); transition: transform 260ms cubic-bezier(.2,.7,.3,1);
-}
-.cw-light.is-on .cw-light__frame { transform: none; }
-.cw-light__img {
-  /* Bounded by the viewport and nothing else, so the file is shown at its own
-     resolution wherever it fits. */
-  display: block; max-width: 100%; max-height: calc(100vh - 14vh);
-  width: auto; height: auto; object-fit: contain;
-  border-radius: var(--radius); background: #111;
-}
-.cw-light__foot { display: flex; width: 100%; align-items: baseline; gap: 12px; color: #e5e7eb; }
-.cw-light__cap { margin: 0; font-size: 15px; font-weight: 700; }
-.cw-light__meta { color: #9ca3af; font-size: 12px; font-variant-numeric: tabular-nums; }
-.cw-light__count {
-  margin-left: auto; color: #9ca3af; font-size: 12px;
-  font-weight: 700; font-variant-numeric: tabular-nums;
-}
-.cw-light__close {
-  position: absolute; top: 18px; right: 20px;
-  display: grid; place-items: center; width: 40px; height: 40px;
-  border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.12);
-  color: #fff; cursor: pointer; transition: background 160ms ease;
-}
-.cw-light__close:hover { background: rgb(255 255 255 / 0.22); }
-.cw-light__nav {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  display: grid; place-items: center; width: 56px; height: 56px;
-  border: 0; border-radius: 999px;
-  background: rgb(255 255 255 / 0.12); color: #fff; cursor: pointer;
-  transition: background 160ms ease, transform 160ms ease;
-}
-.cw-light__nav:hover { background: rgb(255 255 255 / 0.24); }
-.cw-light__nav:active { transform: translateY(-50%) scale(0.94); }
-.cw-light__nav[hidden] { display: none; }
-.cw-light__nav .ic { width: 28px; height: 28px; }
-.cw-light__nav--prev { left: 22px; }
-.cw-light__nav--next { right: 22px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .cw-rule, .cw-tab, .cw-skills__item { animation: none; }
-  .cw-tile { opacity: 1; transform: none; transition: none; }
-  .cw-tile:hover img { transform: none; }
-  .cw-light, .cw-light__frame, .cw-light__nav { transition: none; }
-}
-
 /* --- a centre's YouTube film ---------------------------------------------- */
 /* The vendor academies publish to YouTube, so a centre's strip holds frames as
    well as files. Mounted on click: four Pega films that all start the moment a
@@ -11448,88 +11149,6 @@ body.is-presenting .sw-root {
   .coe-tile__play .ic { transition: none; }
   .coe-tile__play:hover .ic { transform: none; }
 }
-
-/* ==========================================================================
-   Certifications, in the brand
-   ==========================================================================
-   The wall was built neutral — grey rails, a grey head, one green accent. These
-   overrides put Technical Hub's own two colours on it in the order the logo uses
-   them: green leads and carries anything structural or active, gold is the detail
-   and marks what the eye should land on. Gold as text only ever appears as
-   --nav-second-ink; raw #FFBB00 measures 1.7:1 on white and is reserved for a
-   dark ground or a solid fill with dark type on it.
-   ========================================================================== */
-
-/* A brand rule across the top of the page, green into gold. Two solid stops
-   rather than a blend, because the house rule is no gradients. */
-.cw-root {
-  border-top: 3px solid transparent;
-  border-image: linear-gradient(to right,
-    var(--nav-accent, #008638) 0 62%, var(--brand-accent, #FFBB00) 62% 100%) 1;
-}
-.cw-eyebrow { color: var(--nav-second-ink, var(--accent-ink)); }
-.cw-title { color: var(--nav-accent-ink, var(--accent-ink)); }
-.cw-rule {
-  width: 84px;
-  background: linear-gradient(to right,
-    var(--nav-accent, #008638) 0 58%, var(--brand-accent, #FFBB00) 58% 100%);
-}
-/* The two figures are the headline claim on this page, so they take the brand
-   green and sit on a tinted plate rather than floating as grey numerals. */
-.cw-stats { gap: 14px; }
-.cw-stat {
-  align-items: center; padding: 8px 16px; border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--nav-accent, #008638) 7%, transparent);
-}
-.cw-stat strong { color: var(--nav-accent-ink, var(--accent-ink)); }
-.cw-stat span { color: var(--nav-accent-ink, var(--accent-ink)); opacity: 0.72; }
-/* Gold on the second plate: 82 cards is the volume, 19 vendors is the breadth,
-   and marking them differently is what stops the pair reading as one number. */
-.cw-stat:last-child {
-  background: color-mix(in srgb, var(--brand-accent, #FFBB00) 16%, transparent);
-}
-.cw-stat:last-child strong, .cw-stat:last-child span {
-  color: var(--nav-second-ink, var(--accent-ink));
-}
-
-/* The active vendor gets the green fill it already had, plus a gold edge so the
-   eye finds it in a list of twenty without having to read the rows. */
-.cw-tab.is-on {
-  box-shadow: inset 3px 0 0 var(--brand-accent, #FFBB00);
-  padding-left: 13px;
-}
-.cw-tab.is-on .cw-tab__n {
-  padding: 1px 6px; border-radius: 999px;
-  background: var(--brand-accent, #FFBB00); color: #1a1a1a; opacity: 1;
-}
-.cw-tab__glyph { color: var(--nav-accent-ink, var(--accent-ink)); opacity: 0.6; }
-.cw-tab:hover .cw-tab__glyph { opacity: 0.9; }
-.cw-tab.is-on .cw-tab__glyph { color: #fff; }
-
-/* The vendor plate goes green, and its count chip gold. */
-.cw-banner__glyph {
-  background: var(--nav-accent, #008638); color: #fff;
-}
-.cw-banner__name { color: var(--nav-accent-ink, var(--accent-ink)); }
-.cw-skills__item {
-  border-color: color-mix(in srgb, var(--nav-accent, #008638) 22%, transparent);
-  background: color-mix(in srgb, var(--nav-accent, #008638) 4%, transparent);
-}
-.cw-skills__item .ic { color: var(--nav-second-ink, var(--accent-ink)); }
-
-/* A card on hover reads green at the edge and gold at the corner — the brand
-   pairing again, and the gold chip is the one thing that says "this opens". */
-.cw-tile__zoom {
-  background: var(--brand-accent, #FFBB00); color: #1a1a1a;
-}
-.cw-tile__tag {
-  background: linear-gradient(to top, rgb(0 0 0 / 0.8), transparent);
-}
-.cw-tile__tag span { color: var(--brand-accent, #FFBB00); opacity: 1; }
-/* The lightbox counter is the one figure on a dark ground, where raw gold is
-   readable and is exactly the right emphasis. */
-.cw-light__count { color: var(--brand-accent, #FFBB00); }
-.cw-light__nav:hover { background: color-mix(in srgb, var(--nav-accent, #008638) 62%, transparent); }
 
 /* ==========================================================================
    The full-screen film stage — shared by Events and Video Resumes
@@ -12025,4 +11644,469 @@ body.is-presenting .sw-root {
   .vr-rule, .vr-card { animation: none; }
   .vr-card, .vr-card__play, .vr-letter { transition: none; }
   .vr-card:hover .vr-card__shot .fs-poster { transform: none; }
+}
+
+/* ==========================================================================
+   Certifications — three acts
+   ==========================================================================
+   01 The Register    the badges as a constellation, the totals, the claim
+   02 Skills Unlocked what each credential actually tests
+   03 The Gallery     the cohort artwork, one card per batch that passed
+
+   The register is set in the serif and on a soft ground, because it is the one
+   page in this deck that is making an argument rather than presenting evidence.
+   The other two acts return to the deck's own voice.
+   ========================================================================== */
+
+.cs-root {
+  display: flex; flex-direction: column;
+  /* `.canvas-block > *` sets `flex: 1`, whose `flex-basis: 0%` overrides `height`
+     on the main axis, so a min-height root grows to its content and FitSlide
+     scales the slide down to fit. A definite basis is what lets a child scroll. */
+  flex: 0 0 auto; height: 860px; max-height: 860px;
+  overflow: hidden; border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.cs-empty { display: grid; place-items: center; min-height: 400px; gap: 10px; text-align: center; }
+.cs-hint { margin: 0; color: var(--muted); font-size: 13px; }
+
+/* --------------------------------------------------------------- the head -- */
+.cs-head {
+  flex: 0 0 auto;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 30px; padding: 20px 30px 14px;
+  border-bottom: 1px solid var(--hairline, #e5e7eb);
+}
+.cs-eyebrow {
+  margin: 0 0 6px; color: var(--nav-second-ink, var(--accent-ink));
+  font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.cs-title {
+  margin: 0; color: var(--nav-accent-ink, var(--accent-ink));
+  font-size: 30px; font-weight: 800; letter-spacing: -0.024em; line-height: 1.05;
+}
+
+/* The act nav, numbered. Small caps and a hairline underline on the live one —
+   this is a table of contents, not a row of buttons. */
+.cs-steps { display: flex; align-items: baseline; gap: 26px; padding-bottom: 4px; }
+.cs-step {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 0 0 6px; border: 0; border-bottom: 2px solid transparent;
+  background: none; color: var(--muted); cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.cs-step em {
+  font-style: normal; font-size: 11px; font-weight: 800;
+  font-variant-numeric: tabular-nums; opacity: 0.55;
+}
+.cs-step span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 19px; letter-spacing: -0.01em;
+}
+.cs-step:hover { color: var(--ink, #111827); }
+.cs-step.is-on {
+  color: var(--nav-accent-ink, var(--accent-ink));
+  border-bottom-color: var(--brand-accent, #FFBB00);
+}
+.cs-step.is-on em { opacity: 1; color: var(--nav-second-ink, var(--accent-ink)); }
+.cs-step:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 3px; }
+
+/* One act visible at a time. Kept in the DOM rather than rebuilt, so returning to
+   the gallery does not re-solve the wall from scratch. */
+.cs-acts { flex: 1 1 auto; min-height: 0; position: relative; }
+.cs-act { position: absolute; inset: 0; display: none; }
+.cs-acts[data-act="register"] .cs-act--register,
+.cs-acts[data-act="skills"] .cs-act--skills,
+.cs-acts[data-act="gallery"] .cs-act--gallery { display: block; }
+
+/* ======================================================== 01 THE REGISTER == */
+.cs-reg {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  /* A wash rather than a flat white, because the constellation needs something to
+     sit in. Two brand tints and a cool third so the field has some depth; this is
+     a ground, not a decorative gradient on a surface. */
+  background:
+    radial-gradient(ellipse 70% 60% at 12% 8%, color-mix(in srgb, var(--nav-accent, #008638) 13%, transparent), transparent 70%),
+    radial-gradient(ellipse 62% 55% at 92% 22%, color-mix(in srgb, #7b6cff 15%, transparent), transparent 72%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, color-mix(in srgb, var(--brand-accent, #FFBB00) 10%, transparent), transparent 74%),
+    #fbfbfd;
+}
+
+.cs-sky { position: absolute; inset: 0; }
+.cs-sky__b {
+  position: absolute; display: grid; place-items: center;
+  transform: translate(-50%, -50%);
+  animation: cs-rise 900ms cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes cs-rise {
+  from { opacity: 0; transform: translate(-50%, -40%) scale(0.86); }
+}
+.cs-sky__b img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgb(20 24 40 / 0.16));
+}
+.cs-sky__b em {
+  font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: 0.06em;
+  color: var(--nav-accent-ink, var(--accent-ink));
+  width: 100%; height: 100%; display: grid; place-items: center;
+  border-radius: 8px; background: rgb(255 255 255 / 0.8);
+  box-shadow: 0 4px 12px rgb(20 24 40 / 0.12);
+}
+
+/* The clear band the arc leaves. Centred, and above the badges. */
+/* The photograph, faded into the ground rather than placed on it. Bottom-anchored
+   because that is where the crowd belongs and where the panel had 130px of empty
+   space to fill. */
+/* A strip, because the source is cropped to 4.9:1 — the lower group row of a
+   published card, with the card's own headline and contact bar cut away so this
+   page's typography carries the message rather than competing with someone
+   else's. */
+.cs-reg__back { position: absolute; inset: auto 0 0 0; height: 30%; overflow: hidden; }
+.cs-reg__back img {
+  width: 100%; height: 100%; object-fit: cover; object-position: 50% 46%;
+  opacity: 0.38; filter: saturate(0.5) contrast(0.9);
+  /* Faded in from the top so it never draws a hard edge across the page. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 58%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 58%, #000 100%);
+}
+
+/* The clear band the arc leaves, filled rather than top-stacked: the figures and
+   the quote centre in it, which is what keeps the bottom from reading as empty. */
+.cs-reg__mid {
+  position: absolute; inset: auto 0 0 0; top: 40%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 30px; padding: 0 60px 34px; text-align: center;
+}
+/* A veil under the type, not over the picture. The cite is small grey caps and it
+   lands squarely on the crowd; nothing else guarantees it stays readable wherever
+   the photograph happens to be busy. */
+.cs-reg__mid::before {
+  content: ''; position: absolute; inset: -6% -4% -2% -4%; z-index: -1;
+  background: radial-gradient(ellipse 58% 62% at 50% 56%,
+    rgb(251 251 253 / 0.93) 0%, rgb(251 251 253 / 0.72) 58%, rgb(251 251 253 / 0) 100%);
+}
+
+.cs-figs { display: flex; align-items: flex-start; }
+.cs-fig {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 0 44px;
+}
+.cs-fig + .cs-fig { border-left: 1px solid rgb(20 24 40 / 0.12); }
+.cs-fig strong {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 58px; font-weight: 400; line-height: 0.95;
+  letter-spacing: -0.01em; color: #1b1e2b;
+  font-variant-numeric: tabular-nums;
+}
+.cs-fig span {
+  max-width: 15ch;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.17em; text-transform: uppercase;
+  color: #5b6070; line-height: 1.5;
+}
+
+.cs-quote { margin: 0; max-width: 62ch; }
+.cs-quote p {
+  margin: 0; font-family: Georgia, 'Times New Roman', serif;
+  font-size: 25px; font-style: italic; line-height: 1.45; color: #23262f;
+  letter-spacing: -0.005em;
+}
+.cs-quote cite {
+  display: block; margin-top: 14px; font-style: normal;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #6b7080;
+}
+
+/* ==================================================== 02 SKILLS UNLOCKED == */
+.cs-skills {
+  height: 100%; display: grid; grid-template-columns: 470px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  column-gap: 26px; padding: 18px 30px 22px;
+}
+
+.cs-cred {
+  min-height: 0; display: flex; flex-direction: column; gap: 4px;
+  overflow-y: auto; scrollbar-width: thin; padding-right: 6px;
+}
+.cs-cred::-webkit-scrollbar { width: 6px; }
+.cs-cred::-webkit-scrollbar-thumb { background: #d8dce1; border-radius: 999px; }
+
+.cs-cred__row {
+  flex: 0 0 auto;
+  display: grid; grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center; gap: 11px;
+  padding: 7px 11px; border: 1px solid transparent; border-radius: var(--radius-sm);
+  background: transparent; color: var(--ink, #111827);
+  text-align: left; cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+  animation: cs-row-in 420ms cubic-bezier(.2,.7,.3,1) both;
+  animation-delay: calc(var(--i, 0) * 18ms);
+}
+@keyframes cs-row-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: none; }
+}
+.cs-cred__row:hover { background: var(--page-bg); }
+.cs-cred__row.is-on {
+  background: color-mix(in srgb, var(--nav-accent, #008638) 8%, transparent);
+  border-color: color-mix(in srgb, var(--nav-accent, #008638) 30%, transparent);
+}
+.cs-cred__mark { display: grid; place-items: center; width: 34px; height: 34px; }
+.cs-cred__mark img { width: 100%; height: 100%; object-fit: contain; }
+.cs-cred__mark em {
+  font-style: normal; font-size: 10px; font-weight: 800;
+  width: 100%; height: 100%; display: grid; place-items: center;
+  border-radius: 7px; background: var(--page-bg); color: var(--muted);
+}
+.cs-cred__text { min-width: 0; display: flex; flex-direction: column; }
+.cs-cred__name {
+  font-size: 12.5px; font-weight: 700; line-height: 1.25;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cs-cred__vendor {
+  font-size: 10.5px; font-weight: 650; color: var(--muted); margin-top: 1px;
+}
+.cs-cred__held {
+  font-size: 12.5px; font-weight: 800; font-variant-numeric: tabular-nums;
+  color: var(--nav-accent-ink, var(--accent-ink));
+}
+
+.cs-skill {
+  min-height: 0; display: flex; flex-direction: column; gap: 16px;
+  padding: 22px 26px; border-radius: var(--radius);
+  border: 1px solid var(--hairline, #e5e7eb);
+  background:
+    radial-gradient(ellipse 60% 50% at 88% 6%, color-mix(in srgb, var(--nav-accent, #008638) 7%, transparent), transparent 70%),
+    var(--surface);
+  overflow-y: auto; scrollbar-width: thin;
+}
+.cs-skill__head { display: flex; align-items: center; gap: 16px; }
+.cs-skill__mark { display: grid; place-items: center; width: 62px; height: 62px; flex: 0 0 auto; }
+.cs-skill__mark img { width: 100%; height: 100%; object-fit: contain; }
+.cs-skill__mark em {
+  font-style: normal; font-size: 17px; font-weight: 800;
+  width: 100%; height: 100%; display: grid; place-items: center;
+  border-radius: 12px; background: var(--page-bg); color: var(--nav-accent-ink, var(--accent-ink));
+}
+.cs-skill__vendor {
+  margin: 0 0 4px; font-size: 11px; font-weight: 750;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--nav-second-ink, var(--accent-ink));
+}
+.cs-skill__name {
+  margin: 0; font-family: Georgia, 'Times New Roman', serif;
+  font-size: 25px; line-height: 1.2; letter-spacing: -0.012em; color: #1b1e2b;
+}
+.cs-skill__count { display: flex; align-items: baseline; gap: 10px; }
+.cs-skill__count strong {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 40px; font-weight: 400; line-height: 1;
+  font-variant-numeric: tabular-nums; color: var(--nav-accent-ink, var(--accent-ink));
+}
+.cs-skill__count span {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted);
+}
+.cs-skill__label {
+  margin: 0; padding-top: 4px; border-top: 1px solid var(--hairline, #e5e7eb);
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted);
+}
+.cs-skill__list {
+  flex: 1 1 auto; min-height: 0; margin: 0; padding: 4px 0 0; list-style: none;
+  display: flex; flex-direction: column; justify-content: space-evenly; gap: 10px;
+}
+.cs-skill__list li {
+  display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; align-items: baseline;
+  padding-bottom: 10px; border-bottom: 1px solid var(--hairline, #e5e7eb);
+  animation: cs-skill-in 460ms cubic-bezier(.2,.7,.3,1) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 90ms);
+}
+@keyframes cs-skill-in {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: none; }
+}
+.cs-skill__list em {
+  font-style: normal; font-size: 11px; font-weight: 800;
+  font-variant-numeric: tabular-nums; color: var(--brand-accent, #FFBB00);
+  -webkit-text-stroke: 0.4px color-mix(in srgb, var(--nav-second-ink, #8c6700) 60%, transparent);
+}
+.cs-skill__list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.cs-skill__list em { font-size: 12px; }
+.cs-skill__list span { font-size: 16.5px; line-height: 1.4; color: var(--ink, #111827); }
+
+/* ======================================================= 03 THE GALLERY === */
+.cs-gal {
+  height: 100%; display: grid; grid-template-columns: 250px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  column-gap: 22px; padding: 14px 26px 18px;
+}
+.cs-rail {
+  display: flex; flex-direction: column; gap: 2px; min-height: 0;
+  padding: 4px 14px 8px 0; margin-right: -14px;
+  overflow-y: auto; scrollbar-width: none;
+  border-right: 1px solid var(--hairline, #e5e7eb);
+}
+.cs-rail::-webkit-scrollbar { width: 0; }
+.cs-tab {
+  flex: 0 0 auto;
+  display: grid; grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center; gap: 9px;
+  padding: 6px 10px; border: 0; border-radius: var(--radius-sm);
+  background: transparent; color: var(--muted); text-align: left; cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+  animation: cs-rail-in 400ms cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes cs-rail-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: none; }
+}
+.cs-tab__glyph { display: grid; place-items: center; color: var(--nav-accent-ink, var(--accent-ink)); opacity: 0.6; }
+.cs-tab__text { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.cs-tab__name {
+  font-size: 13px; font-weight: 700; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+/* Only the live row carries its domain. Twenty rows of two lines does not fit,
+   and a list where every row is equally loud is a list nothing stands out in. */
+.cs-tab__sub {
+  display: none; margin-top: 1px; font-size: 10.5px; font-weight: 650;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cs-tab__n { font-size: 11px; font-weight: 750; font-variant-numeric: tabular-nums; opacity: 0.6; }
+.cs-tab:hover { color: var(--ink, #111827); background: var(--page-bg); }
+.cs-tab.is-on {
+  color: #fff; background: var(--nav-accent-ink, var(--accent-ink));
+  box-shadow: inset 3px 0 0 var(--brand-accent, #FFBB00);
+  padding: 8px 10px 8px 13px;
+}
+.cs-tab.is-on .cs-tab__sub { display: block; }
+.cs-tab.is-on .cs-tab__glyph { color: #fff; opacity: 1; }
+.cs-tab.is-on .cs-tab__n {
+  padding: 1px 6px; border-radius: 999px; opacity: 1;
+  background: var(--brand-accent, #FFBB00); color: #1a1a1a;
+}
+.cs-tab:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
+
+.cs-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.cs-banner { flex: 0 0 auto; display: flex; align-items: center; padding: 4px 0 0; }
+.cs-banner__id { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.cs-banner__glyph {
+  display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 auto;
+  border-radius: 10px; background: var(--nav-accent, #008638); color: #fff;
+}
+.cs-banner__name {
+  margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.015em;
+  color: var(--nav-accent-ink, var(--accent-ink));
+}
+.cs-banner__meta { margin: 2px 0 0; color: var(--muted); font-size: 11.5px; font-weight: 650; }
+
+/* No horizontal padding: the row solver is handed this element's exact content
+   width as a constant, and padding here would make every row that much too wide. */
+.cs-stage {
+  flex: 1 1 auto; min-height: 0; padding: 14px 0;
+  overflow-y: auto; overflow-x: hidden; scrollbar-width: none;
+}
+.cs-stage::-webkit-scrollbar { width: 0; height: 0; }
+.cs-stage.is-short { display: flex; flex-direction: column; justify-content: center; }
+.cs-wall { flex: 0 0 auto; margin: 0 auto; }
+.cs-wall .cs-row:last-child { margin-bottom: 0; }
+.cs-row { display: flex; align-items: stretch; justify-content: flex-start; margin-bottom: 12px; }
+
+.cs-tile {
+  position: relative; flex: 0 0 auto; padding: 0;
+  border: 1px solid var(--hairline, #e5e7eb); border-radius: var(--radius-sm);
+  overflow: hidden; background: #f3f4f6; cursor: zoom-in;
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+.cs-tile:hover {
+  box-shadow: 0 14px 32px rgb(0 0 0 / 0.18);
+  border-color: var(--nav-accent-ink, var(--accent-ink)); z-index: 2;
+}
+.cs-tile img {
+  display: block; width: 100%; height: 100%;
+  /* The box was solved from this file's own width and height, so cover has nothing
+     to crop past a rounding hairline — and unlike `contain` it cannot leave a
+     letterbox line where the rounding fell the other way. */
+  object-fit: cover;
+  transition: transform 420ms cubic-bezier(.2,.7,.3,1);
+}
+.cs-tile:hover img { transform: scale(1.04); }
+.cs-tile__tag {
+  position: absolute; inset: auto 0 0 0; padding: 18px 9px 7px;
+  display: flex; flex-direction: column; gap: 1px;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.8), transparent);
+  color: #fff; text-align: left; opacity: 0; transition: opacity 200ms ease;
+}
+.cs-tile__tag em {
+  font-style: normal; font-size: 11px; font-weight: 750; line-height: 1.25;
+  /* Two lines then an ellipsis: some names run long, and a name that overflows its
+     tile paints across the picture below it. */
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cs-tile__tag span {
+  font-size: 9.5px; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--brand-accent, #FFBB00);
+}
+.cs-tile__zoom {
+  position: absolute; top: 7px; right: 7px;
+  display: grid; place-items: center; width: 24px; height: 24px;
+  border-radius: 7px; background: var(--brand-accent, #FFBB00); color: #1a1a1a;
+  opacity: 0; transform: scale(0.86);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.cs-tile:hover .cs-tile__tag, .cs-tile:focus-visible .cs-tile__tag { opacity: 1; }
+.cs-tile:hover .cs-tile__zoom, .cs-tile:focus-visible .cs-tile__zoom { opacity: 1; transform: none; }
+
+/* ---------------------------------------------------------- the lightbox -- */
+.cs-light {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center; padding: 3vh 3vw;
+  background: rgb(9 11 14 / 0.92);
+  opacity: 0; transition: opacity 220ms ease;
+}
+.cs-light.is-on { opacity: 1; }
+.cs-light[hidden] { display: none; }
+.cs-light__frame {
+  margin: 0; display: flex; flex-direction: column; gap: 12px;
+  max-width: calc(100% - 160px); max-height: 100%;
+  transform: scale(0.97); transition: transform 260ms cubic-bezier(.2,.7,.3,1);
+}
+.cs-light.is-on .cs-light__frame { transform: none; }
+.cs-light__img {
+  display: block; max-width: 100%; max-height: calc(100vh - 14vh);
+  width: auto; height: auto; object-fit: contain;
+  border-radius: var(--radius); background: #111;
+}
+.cs-light__foot { display: flex; width: 100%; align-items: baseline; gap: 12px; color: #e5e7eb; }
+.cs-light__cap { margin: 0; font-size: 15px; font-weight: 700; }
+.cs-light__meta { color: #9ca3af; font-size: 12px; font-variant-numeric: tabular-nums; }
+.cs-light__count {
+  margin-left: auto; color: var(--brand-accent, #FFBB00);
+  font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.cs-light__close {
+  position: absolute; top: 18px; right: 20px;
+  display: grid; place-items: center; width: 40px; height: 40px;
+  border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.12);
+  color: #fff; cursor: pointer; transition: background 160ms ease;
+}
+.cs-light__close:hover { background: rgb(255 255 255 / 0.22); }
+.cs-light__nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  display: grid; place-items: center; width: 56px; height: 56px;
+  border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.12);
+  color: #fff; cursor: pointer; transition: background 160ms ease, transform 160ms ease;
+}
+.cs-light__nav:hover { background: color-mix(in srgb, var(--nav-accent, #008638) 62%, transparent); }
+.cs-light__nav:active { transform: translateY(-50%) scale(0.94); }
+.cs-light__nav[hidden] { display: none; }
+.cs-light__nav .ic { width: 28px; height: 28px; }
+.cs-light__nav--prev { left: 22px; }
+.cs-light__nav--next { right: 22px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-sky__b, .cs-cred__row, .cs-skill__list li, .cs-tab { animation: none; }
+  .cs-tile, .cs-tile__tag, .cs-tile__zoom, .cs-step, .cs-cred__row { transition: none; }
+  .cs-tile:hover img { transform: none; }
+  .cs-light, .cs-light__frame, .cs-light__nav { transition: none; }
 }

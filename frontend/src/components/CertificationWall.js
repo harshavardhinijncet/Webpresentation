@@ -3,104 +3,106 @@ import { icon } from '../utils/icons.js';
 import { upload } from '../utils/media.js';
 
 /**
- * Certifications: a vendor rail, and a wall that never crops a certificate.
+ * Certifications, in three acts.
  *
- * Each file here is a finished branded card — the cohort photograph, the vendor
- * badge, the words "THE TEAM OF 136 CERTIFIED TRAINEES", the Technical Hub and
- * college logos, all set into the image by whoever published it. That makes the
- * one rule for this page obvious: nothing may be cropped and nothing may be
- * stretched, because either one cuts into a name, a count or a badge. Every tile
- * keeps its own aspect ratio to the pixel.
+ *   01 The Register    — the badges as a constellation, the totals, the claim.
+ *   02 Skills Unlocked — what each credential actually tests.
+ *   03 The Gallery     — the cohort artwork, one card per batch that passed.
  *
- * Where it parts company with the Placements gallery is how the row height is
- * found. That gallery solves each row against the width it has to fill, which is
- * right for photographs of every shape and wrong for these: a row of square
- * cards is always far wider than it is tall, so filling the width strands the
- * stage in white. `packRows` solves the width and the height together instead,
- * and picks the column count that makes the cards biggest. Nothing is guessed.
+ * The three exist because there are two different bodies of evidence here and
+ * they answer different questions. The register is the catalogue: forty-two named
+ * credentials, twenty-two awarding bodies, and how many trainees hold each one.
+ * The gallery is the proof: eighty-two published cards, each one a batch with its
+ * count and its photograph already set into the artwork. Showing only the
+ * catalogue is a list of claims; showing only the artwork is a wall with no total.
  *
- * The trailing number on each filename is deliberately not printed. It is a
- * cohort size in "AWS Cloud Practioner_136" and a plain sequence number in
- * "CCNA Routing and Switching_1", with nothing in the filename to tell the two
- * apart — so showing either as a figure would be inventing a metric. The count
- * is already set into the artwork, and the lightbox counter separates one cohort
- * from the next.
+ * Every badge is a local file. The catalogue pointed at eight different CDNs and
+ * this deck is presented with no network, so the artwork is downloaded at publish
+ * time and served by the app. One badge the CDN refuses to release carries none,
+ * and its card falls back to the vendor set in type — which is the same bargain
+ * every image in this deck makes.
+ *
+ * Nothing here is rounded up. The register totals 31,920 exactly, so it says
+ * 31,920: "32,000+" would be claiming eighty certifications that were not earned.
  */
 
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
-/* Layout pixels, not measured ones. The stage sits inside FitSlide's transform,
-   so a bounding rect would come back scaled and the solver would be working in
-   the wrong unit. The nominal canvas is 1600; the rail and the gutters come off
-   it here. */
+/* Layout pixels, not measured ones — the page sits inside FitSlide's transform,
+   so a bounding rect comes back scaled and would solve in the wrong unit. */
 const CANVAS = 1600;
-const EDGE = 26;
-const RAIL = 250;
-const SPLIT = 22;
 const GAP = 12;
-const STAGE_W = CANVAS - EDGE * 2 - RAIL - SPLIT;
+
+const ACTS = [
+  { key: 'register', num: '01', name: 'The Register' },
+  { key: 'skills', num: '02', name: 'Skills Unlocked' },
+  { key: 'gallery', num: '03', name: 'The Gallery' },
+];
 
 /* One glyph per vendor, by keyword from the deck's own icon family. Deliberately
-   not the vendors' marks: no official logo files exist in this library, and
-   hand-drawing someone else's trademark is worse than not showing it. */
+   not the vendors' marks: hand-drawing someone else's trademark is worse than not
+   showing it, and the real badge artwork is doing that job on this page anyway. */
 const GLYPH = {
-  aws: 'server',
-  microsoft: 'grid-4',
-  'google-cloud': 'globe',
-  oracle: 'layers',
-  redhat: 'terminal',
-  cisco: 'route',
-  juniper: 'swap',
-  'pearson-it-specialist': 'code',
-  servicenow: 'checklist',
-  pega: 'workflow',
-  salesforce: 'users',
-  'automation-anywhere': 'gear',
-  postman: 'link',
-  unity: 'cube',
-  'arduino-iot': 'chip',
-  adobe: 'image',
-  comptia: 'shield',
-  mile2: 'target',
-  others: 'medal',
+  aws: 'server', microsoft: 'grid-4', 'google-cloud': 'globe', oracle: 'layers',
+  redhat: 'terminal', cisco: 'route', juniper: 'swap', 'pearson-it-specialist': 'code',
+  servicenow: 'checklist', pega: 'workflow', salesforce: 'users',
+  'automation-anywhere': 'gear', postman: 'link', unity: 'cube', 'arduino-iot': 'chip',
+  adobe: 'image', comptia: 'shield', mile2: 'target', others: 'medal',
 };
 
-/* How much smaller a card may be before a wider wall stops being worth it. */
-const SIZE_TOLERANCE = 0.95;
+const nf = (n) => Number(n || 0).toLocaleString('en-US');
+
+/* A stable pseudo-random from a string. The constellation must land in the same
+   place on every render — Math.random would reshuffle the badges each time the
+   act is opened, and a composition that moves is a composition nobody trusts. */
+function hash(str) {
+  let x = 2166136261;
+  for (let i = 0; i < str.length; i += 1) {
+    x ^= str.charCodeAt(i);
+    x = Math.imul(x, 16777619);
+  }
+  return ((x >>> 0) % 10000) / 10000;
+}
 
 /**
- * Choose the column count that fills the stage best.
+ * Scatter the badges around the edge of the stage, clear of the middle.
  *
- * The Placements gallery solves each row against the width it has to fill, which
- * is right for photographs of every shape and wrong for these. Five square AWS
- * cards in one row come to 246px and leave 190px of white above *and* below,
- * because a row of squares is always far wider than it is tall. Filling the width
- * is not the same as filling the stage.
- *
- * So both bounds are solved for every column count: a shared card height is the
- * smaller of what the widest row can afford and what the stage has left once the
- * row gaps are paid. Aspect ratios are untouched throughout — a width is always
- * the shared height times that file's own ratio, so nothing is cropped and
- * nothing is stretched.
- *
- * Then two things are wanted at once, and taking either alone gives a worse page:
- *
- *   Biggest card wins outright when it is decisively bigger. Five AWS cards go
- *   from one row of 246px to 3 + 2 at 315px — half again as large.
- *
- *   Otherwise the widest wall wins. Microsoft's eleven cards measure 206px as
- *   4 / 4 / 3 and 203px as 6 / 5 — the same card, but the first leaves 416px of
- *   white down the sides, and a narrow island reads as a small page no matter how
- *   completely it fills its own height.
- *
- * Hence the tolerance: within five percent on card size, the wider wall takes it.
- *
- * A half-empty last row is refused outright, not merely deprecated. Preferring
- * width alone put the five AWS cards on screen as 4 + 1 the moment presentation
- * mode gave the stage more height — a single card stranded under a full row, which
- * looks like a load that failed rather than a wall. The gate only lifts if no
- * arrangement satisfies it.
+ * The reference composition is an arc that opens across the top and falls down
+ * both flanks, with the type sitting in the clear space it leaves. So a badge's
+ * angle comes from its position in the list and its distance from a per-badge
+ * hash — deterministic, so the arrangement is identical every time — and the
+ * centre band is simply never used.
  */
+function constellation(items) {
+  const n = items.length;
+  return items.map((it, i) => {
+    const t = n > 1 ? i / (n - 1) : 0.5;
+    /* 190° to 350° sweeps the top and both sides; the gap at the bottom is where
+       the quote goes. */
+    const angle = (196 + t * 148) * (Math.PI / 180);
+    const jitter = hash(it.name);
+    /* Radii kept well inside the box. At 46-57% the badges on the flanks were
+       sliced off by the panel edge, which reads as a bug rather than a field. */
+    const rx = 36 + jitter * 8;           // percentage radii, so it scales
+    const ry = 27 + hash(it.vendor) * 9;
+    return {
+      ...it,
+      left: 50 + Math.cos(angle) * rx,
+      top: 52 + Math.sin(angle) * ry,
+      size: 34 + Math.round(jitter * 22),
+      delay: Math.round(i * 34),
+      depth: jitter,
+    };
+  });
+}
+
+/* ------------------------------------------------------------ the cohort wall */
+/* Unchanged from the version this page grew out of, and still the only honest way
+   to lay these out: the width and the height are solved together, because a row
+   of square cards is always far wider than it is tall and filling the width alone
+   strands the stage in white. */
+const SIZE_TOLERANCE = 0.95;
+
 function packRows(items, width, contentH) {
   const n = items.length;
   if (!n) return [];
@@ -111,27 +113,18 @@ function packRows(items, width, contentH) {
     const groups = [];
     for (let i = 0; i < n; i += c) groups.push(items.slice(i, i + c));
     const rows = groups.length;
-    // What the stage has left for the cards once the gaps between rows are paid.
     const byHeight = (contentH - GAP * (rows - 1)) / rows;
     if (byHeight <= 0) continue;
-    /* What the tightest row can afford. The partial last row holds fewer cards so
-       it could always go taller; the filled rows are what binds. */
     const spans = groups.map((g) => g.reduce((sum, it) => sum + aspect(it), 0));
     const byWidth = Math.min(...groups.map((g, i) => (width - GAP * (g.length - 1)) / spans[i]));
     const height = Math.min(byHeight, byWidth);
-    // How much of the width the widest row actually covers at that height.
     const used = Math.max(...groups.map((g, i) => height * spans[i] + GAP * (g.length - 1)));
-    // How empty the last row is, as a fraction of a full one.
     const ragged = rows > 1 ? (c * rows - n) / c : 0;
     candidates.push({ groups, height, used, ragged });
   }
-
-  /* Nothing fits at all — a stage shorter than a single card. Let it scroll
-     rather than crop, which is the standing rule for this material. */
   if (!candidates.length) {
     candidates.push({ groups: items.map((it) => [it]), height: 120, used: width, ragged: 0 });
   }
-
   const tallest = Math.max(...candidates.map((k) => k.height));
   const pool = candidates.filter((k) => k.height >= tallest * SIZE_TOLERANCE);
   const even = pool.filter((k) => k.ragged <= 0.5);
@@ -145,271 +138,263 @@ function packRows(items, width, contentH) {
   });
 }
 
-const plural = (n) => `${n} ${n === 1 ? 'certification' : 'certifications'}`;
-
 export function CertificationWall(block, { editing = false } = {}) {
   const vendors = (block.vendors || []).filter((v) => v.certs?.length);
-  const root = h('div', { class: 'cw-root ph-root' });
+  const credentials = (block.credentials || []).filter((c) => c.name);
+  const root = h('div', { class: 'cs-root ph-root' });
 
-  if (!vendors.length) {
-    root.appendChild(h('div', { class: 'cw-empty' },
-      h('h2', { class: 'cw-title' }, block.title || 'Certifications'),
+  if (!vendors.length && !credentials.length) {
+    root.appendChild(h('div', { class: 'cs-empty' },
+      h('h2', { class: 'cs-title' }, block.title || 'Certifications'),
       editing
-        ? h('p', { class: 'cw-hint' },
+        ? h('p', { class: 'cs-hint' },
             'Drop the cards into backend/uploads/certifications/ and re-run the publish step.')
         : null,
     ));
     return root;
   }
 
-  const total = vendors.reduce((n, v) => n + v.certs.length, 0);
-  const src = (cert) => upload(cert.src.split('/').map(encodeURIComponent).join('/'));
+  const cards = vendors.reduce((n, v) => n + v.certs.length, 0);
+  const earned = credentials.reduce((n, c) => n + (c.held || 0), 0);
+  const bodies = new Set(credentials.map((c) => c.vendor)).size;
 
-  /* ------------------------------------------------------------- lightbox */
+  let act = ACTS[0].key;
+  const src = (p) => upload(String(p).split('/').map(encodeURIComponent).join('/'));
+
+  /* --------------------------------------------------------------- lightbox */
   /* Portalled to the body. FitSlide scales the slide with a transform, and a
      transformed ancestor becomes the containing block for fixed descendants — so
-     inside the slide, `inset: 0` would resolve to the 1600×900 slide box and not
-     the screen. */
-  const lightImg = h('img', { class: 'cw-light__img', alt: '' });
-  const lightCap = h('p', { class: 'cw-light__cap' });
-  const lightMeta = h('span', { class: 'cw-light__meta' });
-  const lightCount = h('span', { class: 'cw-light__count' });
-
-  /* Whatever the wall is showing, in reading order, so the arrows walk the same
-     sequence the eye does. Rebuilt by drawStage. */
+     inside the slide `inset: 0` resolves to the 1600×900 slide box, not the
+     screen. */
+  const lightImg = h('img', { class: 'cs-light__img', alt: '' });
+  const lightCap = h('p', { class: 'cs-light__cap' });
+  const lightMeta = h('span', { class: 'cs-light__meta' });
+  const lightCount = h('span', { class: 'cs-light__count' });
   let shown = [];
   let at = 0;
-  let fromTile = null;
 
   const prevBtn = h('button', {
-    class: 'cw-light__nav cw-light__nav--prev', type: 'button', 'aria-label': 'Previous certificate',
+    class: 'cs-light__nav cs-light__nav--prev', type: 'button', 'aria-label': 'Previous',
     onclick: (e) => { e.stopPropagation(); step(-1); },
   }, icon('chevron-left', { class: 'ic' }));
   const nextBtn = h('button', {
-    class: 'cw-light__nav cw-light__nav--next', type: 'button', 'aria-label': 'Next certificate',
+    class: 'cs-light__nav cs-light__nav--next', type: 'button', 'aria-label': 'Next',
     onclick: (e) => { e.stopPropagation(); step(1); },
   }, icon('chevron-right', { class: 'ic' }));
 
   const light = h('div', {
-    class: 'cw-light', hidden: true,
-    onclick: (e) => { if (e.target === light || e.target.closest('.cw-light__close')) shut(); },
+    class: 'cs-light', hidden: true,
+    onclick: (e) => { if (e.target === light || e.target.closest('.cs-light__close')) shut(); },
   },
-    h('button', { class: 'cw-light__close', type: 'button', 'aria-label': 'Close' },
+    h('button', { class: 'cs-light__close', type: 'button', 'aria-label': 'Close' },
       icon('close', { class: 'ic ic--sm' })),
     prevBtn, nextBtn,
-    h('figure', { class: 'cw-light__frame' }, lightImg,
-      h('figcaption', { class: 'cw-light__foot' }, lightCap, lightMeta, lightCount)),
+    h('figure', { class: 'cs-light__frame' }, lightImg,
+      h('figcaption', { class: 'cs-light__foot' }, lightCap, lightMeta, lightCount)),
   );
   document.body.appendChild(light);
 
   function shut() {
-    document.removeEventListener('keydown', onKey, true);
-    /* Fly back into the tile it came out of, which is what makes it read as one
-       object moving. Once the arrows have walked on, no tile matches what is on
-       screen any more, so that case simply fades. */
-    const target = fromTile && shown[at] === fromTile.item ? fromTile.el : null;
-    if (!target || REDUCED?.matches) {
-      light.hidden = true;
-      light.classList.remove('is-on');
-      return;
-    }
-    const to = target.getBoundingClientRect();
-    const now = lightImg.getBoundingClientRect();
-    const dx = (to.left + to.width / 2) - (now.left + now.width / 2);
-    const dy = (to.top + to.height / 2) - (now.top + now.height / 2);
-    lightImg.style.transition = 'transform 320ms cubic-bezier(.4,0,.6,1)';
-    lightImg.style.transform =
-      `translate(${dx}px, ${dy}px) scale(${to.width / now.width}, ${to.height / now.height})`;
+    light.hidden = true;
     light.classList.remove('is-on');
-    // Hidden only once it has arrived, or it vanishes mid-flight.
-    setTimeout(() => {
-      light.hidden = true;
-      lightImg.style.transition = '';
-      lightImg.style.transform = '';
-    }, 330);
+    document.removeEventListener('keydown', onKey, true);
   }
-
   function onKey(e) {
     if (e.key === 'Escape') { e.stopPropagation(); shut(); return; }
-    /* Swallowed, or the deck's own arrow handler changes slide underneath the
-       open certificate. */
+    // Swallowed, or the deck's own arrow handler changes slide underneath.
     if (e.key === 'ArrowRight') { e.stopPropagation(); e.preventDefault(); step(1); }
     if (e.key === 'ArrowLeft') { e.stopPropagation(); e.preventDefault(); step(-1); }
   }
-
-  /** Wraps, so the arrows never dead-end mid-presentation. */
-  function step(delta) {
+  function step(d) {
     if (shown.length < 2) return;
-    at = (at + delta + shown.length) % shown.length;
-    paint();
+    at = (at + d + shown.length) % shown.length;
+    paintLight();
   }
-
-  function paint() {
+  function paintLight() {
     const it = shown[at];
     if (!it) return;
-    // The full file at its own resolution — the one place nothing is scaled down.
-    lightImg.src = src(it);
+    // The full file at its own resolution — the answer to "does the quality survive".
+    lightImg.src = src(it.src);
     lightImg.alt = it.label || '';
     lightCap.textContent = it.label || '';
     lightMeta.textContent = `${it.vendor} · ${it.w} × ${it.h}`;
     lightCount.textContent = shown.length > 1 ? `${at + 1} / ${shown.length}` : '';
     prevBtn.hidden = shown.length < 2;
     nextBtn.hidden = shown.length < 2;
-    // Stepping must not inherit the previous flight's transform.
-    lightImg.style.transition = '';
-    lightImg.style.transform = '';
   }
-
-  /**
-   * Fly the certificate out of the tile that was clicked: the standard
-   * invert-then-play. Measure where it lands, express the tile as an offset and
-   * scale from there, commit that, then transition it away to nothing.
-   *
-   * Bounding rects on both sides, which is correct here even though the tile is
-   * inside FitSlide's transform and the lightbox is on the body — a rect is in
-   * viewport space either way, so the two are comparable. Offsets would not be.
-   */
-  function flyFrom(tile) {
-    if (!tile || REDUCED?.matches) return;
-    const from = tile.getBoundingClientRect();
-    const play = () => {
-      const to = lightImg.getBoundingClientRect();
-      if (!to.width || !to.height || !from.width) return;
-      const dx = (from.left + from.width / 2) - (to.left + to.width / 2);
-      const dy = (from.top + from.height / 2) - (to.top + to.height / 2);
-      lightImg.style.transition = 'none';
-      lightImg.style.transform =
-        `translate(${dx}px, ${dy}px) scale(${from.width / to.width}, ${from.height / to.height})`;
-      void lightImg.offsetWidth; // commit the inverted state before playing it
-      lightImg.style.transition = 'transform 400ms cubic-bezier(.2,.7,.3,1)';
-      lightImg.style.transform = 'none';
-    };
-    // The final box is only knowable once the file has decoded.
-    if (lightImg.complete && lightImg.naturalWidth) requestAnimationFrame(play);
-    else lightImg.addEventListener('load', () => requestAnimationFrame(play), { once: true });
-  }
-
-  function open(index, tile) {
-    at = Math.max(0, index);
-    fromTile = tile ? { el: tile, item: shown[at] } : null;
-    paint();
+  function openLight(list, i) {
+    shown = list;
+    at = Math.max(0, i);
+    paintLight();
     light.hidden = false;
-    flyFrom(tile);
     requestAnimationFrame(() => light.classList.add('is-on'));
     document.addEventListener('keydown', onKey, true);
   }
 
-  /* ----------------------------------------------------------------- state */
-  const rail = h('nav', { class: 'cw-rail', 'aria-label': 'Certification vendors' });
-  const stage = h('div', { class: 'cw-stage' });
-  const banner = h('div', { class: 'cw-banner' });
+  /* ============================================================== 01 REGISTER */
+  const stage1 = h('div', { class: 'cs-reg' });
 
-  /* null is "every credential" — the scale shot. It opens on the first vendor
-     instead, because eighty-two branded cards at once solve to about ninety
-     pixels each and the type on them stops being readable, which defeats the
-     point of not cropping them. */
-  let active = vendors[0];
-  let lastH = 0;
+  function drawRegister() {
+    const withBadge = credentials.filter((c) => c.badge);
+    const placed = constellation(withBadge.length ? withBadge : credentials);
 
-  const shownVendors = () => (active ? [active] : vendors);
-
-  /* --------------------------------------------------------------- reveal */
-  const reveal = (tiles) => {
-    if (REDUCED?.matches) { tiles.forEach((t) => t.classList.add('is-in')); return; }
-    /* Reading order, capped: past about twenty the stagger stops reading as
-       sequence and only delays the last tile past the presenter's patience. */
-    tiles.forEach((tile, i) => { tile.style.transitionDelay = `${Math.min(i, 20) * 24}ms`; });
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
-        io.unobserve(entry.target);
-      });
-    }, { root: stage, rootMargin: '80px 0px' });
-    tiles.forEach((t) => io.observe(t));
-  };
-
-  /* ---------------------------------------------------------------- render */
-  function drawBanner() {
-    banner.textContent = '';
-    const vs = shownVendors();
-    const n = vs.reduce((sum, v) => sum + v.certs.length, 0);
-    const skills = active ? (active.skills || []) : [];
-
-    banner.appendChild(h('div', { class: 'cw-banner__id' },
-      h('span', { class: 'cw-banner__glyph' },
-        icon(active ? GLYPH[active.key] || 'certificate' : 'grid-4', { class: 'ic ic--sm' })),
-      h('div', {},
-        h('h3', { class: 'cw-banner__name' }, active ? active.name : 'Every credential'),
-        h('p', { class: 'cw-banner__meta' },
-          active ? active.domain || '' : `${vendors.length} vendors`,
-          h('span', { class: 'cw-banner__dot' }, '·'),
-          plural(n)),
+    stage1.replaceChildren(
+      /* Their own cohort panorama, held right back. The reference sets this type
+         over a crowd, and using a real one of theirs beats any stock ground. */
+      block.backdrop
+        ? h('div', { class: 'cs-reg__back', 'aria-hidden': 'true' },
+            h('img', { src: src(block.backdrop), alt: '', decoding: 'async' }))
+        : null,
+      h('div', { class: 'cs-sky', 'aria-hidden': 'true' },
+        ...placed.map((p) => h('span', {
+          class: 'cs-sky__b',
+          style: {
+            left: `${p.left}%`, top: `${p.top}%`,
+            width: `${p.size}px`, height: `${p.size}px`,
+            /* Depth by opacity and blur rather than by size alone, so the arc
+               reads as a field the eye can travel into instead of a flat ring. */
+            opacity: String(0.42 + p.depth * 0.58),
+            filter: p.depth < 0.28 ? 'blur(1.1px)' : 'none',
+            'animation-delay': REDUCED?.matches ? '0ms' : `${p.delay}ms`,
+          },
+          title: p.name,
+        }, p.badge
+          ? h('img', { src: src(p.badge), alt: '', loading: 'lazy', decoding: 'async' })
+          : h('em', {}, (p.vendor || '?').slice(0, 2).toUpperCase()))),
       ),
-    ));
-
-    if (skills.length) {
-      banner.appendChild(h('ul', { class: 'cw-skills' },
-        ...skills.slice(0, 4).map((s, i) => h('li', {
-          class: 'cw-skills__item',
-          style: REDUCED?.matches ? {} : { 'animation-delay': `${120 + i * 70}ms` },
-        }, icon('check', { class: 'ic ic--xs' }), h('span', {}, s))),
-      ));
-    }
+      h('div', { class: 'cs-reg__mid' },
+        h('div', { class: 'cs-figs' },
+          h('div', { class: 'cs-fig' },
+            h('strong', {}, nf(earned)),
+            h('span', {}, 'certifications earned')),
+          h('div', { class: 'cs-fig' },
+            h('strong', {}, nf(credentials.length)),
+            h('span', {}, 'distinct credentials')),
+          h('div', { class: 'cs-fig' },
+            h('strong', {}, nf(bodies)),
+            h('span', {}, 'awarding bodies')),
+        ),
+        block.quote
+          ? h('blockquote', { class: 'cs-quote' },
+              h('p', {}, `“${block.quote}”`),
+              block.quoteBy ? h('cite', {}, block.quoteBy) : null,
+            )
+          : null,
+      ),
+    );
   }
 
-  function drawStage() {
-    stage.textContent = '';
-    stage.scrollTop = 0;
+  /* ================================================================ 02 SKILLS */
+  const skillList = h('div', { class: 'cs-cred' });
+  const skillPane = h('div', { class: 'cs-skill' });
+  let pick = 0;
 
+  function drawSkills() {
+    const sorted = [...credentials].sort((a, b) => b.held - a.held);
+
+    skillList.replaceChildren(...sorted.map((c, i) => h('button', {
+      class: `cs-cred__row${i === pick ? ' is-on' : ''}`,
+      type: 'button',
+      style: REDUCED?.matches ? {} : { '--i': String(Math.min(i, 30)) },
+      onclick: () => { pick = i; drawSkills(); },
+    },
+      h('span', { class: 'cs-cred__mark' }, c.badge
+        ? h('img', { src: src(c.badge), alt: '', loading: 'lazy', decoding: 'async' })
+        : h('em', {}, (c.vendor || '?').slice(0, 2).toUpperCase())),
+      h('span', { class: 'cs-cred__text' },
+        h('span', { class: 'cs-cred__name' }, c.name),
+        h('span', { class: 'cs-cred__vendor' }, c.vendor),
+      ),
+      h('span', { class: 'cs-cred__held' }, nf(c.held)),
+    )));
+
+    const c = sorted[pick];
+    if (!c) { skillPane.replaceChildren(); return; }
+    skillPane.replaceChildren(
+      h('div', { class: 'cs-skill__head' },
+        h('span', { class: 'cs-skill__mark' }, c.badge
+          ? h('img', { src: src(c.badge), alt: '' })
+          : h('em', {}, (c.vendor || '?').slice(0, 2).toUpperCase())),
+        h('div', {},
+          h('p', { class: 'cs-skill__vendor' }, `${c.vendor} · ${c.domain}`),
+          h('h3', { class: 'cs-skill__name' }, c.name),
+        ),
+      ),
+      h('div', { class: 'cs-skill__count' },
+        h('strong', {}, nf(c.held)),
+        h('span', {}, c.held === 1 ? 'trainee holds it' : 'trainees hold it'),
+      ),
+      h('p', { class: 'cs-skill__label' }, 'What it tests'),
+      h('ol', { class: 'cs-skill__list' },
+        ...c.skills.map((s, i) => h('li', {
+          style: REDUCED?.matches ? {} : { '--i': String(i) },
+        }, h('em', {}, String(i + 1).padStart(2, '0')), h('span', {}, s))),
+      ),
+    );
+  }
+
+  /* =============================================================== 03 GALLERY */
+  const rail = h('nav', { class: 'cs-rail', 'aria-label': 'Certification vendors' });
+  const banner = h('div', { class: 'cs-banner' });
+  const wallStage = h('div', { class: 'cs-stage' });
+  let vendor = vendors[0] || null;
+  let lastH = 0;
+
+  const shownVendors = () => (vendor ? [vendor] : vendors);
+  const RAIL_W = 250;
+  const STAGE_W = CANVAS - 52 - RAIL_W - 22;
+
+  function drawBanner() {
+    const vs = shownVendors();
+    const n = vs.reduce((sum, v) => sum + v.certs.length, 0);
+    banner.replaceChildren(
+      h('div', { class: 'cs-banner__id' },
+        h('span', { class: 'cs-banner__glyph' },
+          icon(vendor ? GLYPH[vendor.key] || 'certificate' : 'grid-4', { class: 'ic ic--sm' })),
+        h('div', {},
+          h('h3', { class: 'cs-banner__name' }, vendor ? vendor.name : 'Every credential'),
+          h('p', { class: 'cs-banner__meta' },
+            `${vendor ? vendor.domain || '' : `${vendors.length} vendors`} · ${n} card${n === 1 ? '' : 's'}`),
+        ),
+      ),
+    );
+  }
+
+  function drawWall() {
+    wallStage.textContent = '';
+    wallStage.scrollTop = 0;
     const flat = shownVendors().flatMap((v) => v.certs.map((c) => ({ ...c, vendor: v.name })));
     /* clientHeight is layout, not post-transform, so it is safe to solve against
-       — unlike a bounding rect, which comes back scaled by FitSlide. It reads 0
-       before the first mount, hence the fallback and the ResizeObserver below. */
-    lastH = stage.clientHeight;
-    // The stage's own padding and each row's bottom margin come off first.
+       — unlike a bounding rect, which comes back scaled by FitSlide. */
+    lastH = wallStage.clientHeight;
     const contentH = (lastH || 480) - 28 - GAP;
     const rows = packRows(flat, STAGE_W, contentH);
 
-    shown = flat;
-
-    /* Where the spare height goes: around the cards rather than under them.
-       Centred reads as composition; bottom-stacked reads as a layout that ran out.
-       Only when it fits — centring a scrolling stage would hide its first row
-       above the fold. */
     const totalH = rows.reduce((n, r) => n + r.height + GAP, 0) - GAP;
-    stage.classList.toggle('is-short', totalH <= contentH + 1);
+    wallStage.classList.toggle('is-short', totalH <= contentH + 1);
 
-    /* Every row starts on the same left edge, and the block of them is centred as
-       one. Rows are not all the same width — a handful of these files are not
-       square, so a fixed column count gives a row with a wide card in it more
-       width than its neighbours — and centring each row independently made the
-       eighty-two-card wall look like a grid that had come apart. One straight left
-       edge and a ragged right one reads as a mosaic, which is what it is. */
+    /* Every row starts on the same left edge and the block of them is centred as
+       one. A few of these files are not square, so a fixed column count gives the
+       row holding a wide card more width than its neighbours, and centring each
+       row on its own made the full wall look like a grid that had come apart. */
     const wallW = Math.ceil(Math.max(...rows.map(
       (r) => r.items.reduce((n, it) => n + it.dw, 0) + GAP * (r.items.length - 1),
     )));
-    const wall = h('div', { class: 'cw-wall', style: { width: `${Math.min(wallW, STAGE_W)}px` } });
+    const wall = h('div', { class: 'cs-wall', style: { width: `${Math.min(wallW, STAGE_W)}px` } });
 
-    const tiles = [];
     let ordinal = 0;
     rows.forEach((row) => {
       const rowEl = h('div', {
-        class: 'cw-row',
+        class: 'cs-row',
         style: { gap: `${GAP}px`, height: `${Math.round(row.height)}px` },
       });
-      /* Rounding each width on its own drifted a filled row 2–3px past the stage,
-         and the stage clips horizontally, so the right-hand certificate lost a
-         visible sliver. The row therefore has to land on the margin exactly.
-         Largest-remainder: floor every width, then hand the leftover pixels out
-         one each to the tiles that were rounded down hardest. No tile moves more
-         than a pixel from its true width, which matters — giving the whole drift
-         to one tile put a 76px card 2.4% off its own aspect ratio, and keeping
-         these aspect ratios is the entire reason this section exists. */
+      /* Largest-remainder widths: floor every one, then hand the leftover pixels
+         to the tiles rounded down hardest. Giving the whole drift to a single tile
+         put a 76px card 2.4% off its own aspect ratio, and keeping these ratios is
+         the entire reason this wall exists. */
       const widths = row.items.map((it) => Math.floor(it.dw));
       if (row.full) {
-        let spare = (STAGE_W - GAP * (widths.length - 1))
-          - widths.reduce((n, w) => n + w, 0);
+        let spare = (STAGE_W - GAP * (widths.length - 1)) - widths.reduce((n, w) => n + w, 0);
         const order = row.items
           .map((it, i) => ({ i, frac: it.dw - Math.floor(it.dw) }))
           .sort((a, b) => b.frac - a.frac);
@@ -417,107 +402,110 @@ export function CertificationWall(block, { editing = false } = {}) {
           widths[order[k % order.length].i] += 1;
         }
       }
-
       row.items.forEach((it, col) => {
         const index = ordinal++;
         const tile = h('button', {
-          class: 'cw-tile', type: 'button',
+          class: 'cs-tile', type: 'button',
           style: { width: `${widths[col]}px`, height: `${Math.round(it.dh)}px` },
           title: `${it.label} — open full size`,
-          onclick: () => open(index, tile),
+          onclick: () => openLight(flat, index),
         },
           h('img', {
-            src: src(it), alt: it.label || '',
+            src: src(it.src), alt: it.label || '',
             // The intrinsic size, so the browser reserves the right box.
             width: it.w, height: it.h,
             loading: index < 12 ? 'eager' : 'lazy', decoding: 'async',
           }),
-          h('span', { class: 'cw-tile__tag' },
+          h('span', { class: 'cs-tile__tag' },
             h('em', {}, it.label),
-            active ? null : h('span', {}, it.vendor)),
-          h('span', { class: 'cw-tile__zoom', 'aria-hidden': 'true' },
+            vendor ? null : h('span', {}, it.vendor)),
+          h('span', { class: 'cs-tile__zoom', 'aria-hidden': 'true' },
             icon('expand', { class: 'ic ic--xs' })),
         );
-        tiles.push(tile);
         rowEl.appendChild(tile);
       });
       wall.appendChild(rowEl);
     });
-    stage.appendChild(wall);
-    reveal(tiles);
+    wallStage.appendChild(wall);
   }
 
   function drawRail() {
     rail.textContent = '';
-
-    const entry = (label, sub, value, count, glyph, i) => {
-      const on = active === value;
-      const btn = h('button', {
-        class: `cw-tab${on ? ' is-on' : ''}`,
-        type: 'button', 'aria-current': on ? 'true' : 'false',
-        style: REDUCED?.matches ? {} : { 'animation-delay': `${i * 34}ms` },
-        onclick: () => {
-          if (active === value) return;
-          active = value;
-          drawRail(); drawBanner(); drawStage();
-        },
+    const entry = (label, sub, value, count, glyph, i) => h('button', {
+      class: `cs-tab${vendor === value ? ' is-on' : ''}`,
+      type: 'button', 'aria-current': vendor === value ? 'true' : 'false',
+      style: REDUCED?.matches ? {} : { 'animation-delay': `${i * 30}ms` },
+      onclick: () => {
+        if (vendor === value) return;
+        vendor = value;
+        drawRail(); drawBanner(); drawWall();
       },
-        h('span', { class: 'cw-tab__glyph' }, icon(glyph, { class: 'ic ic--xs' })),
-        h('span', { class: 'cw-tab__text' },
-          h('span', { class: 'cw-tab__name' }, label),
-          sub ? h('span', { class: 'cw-tab__sub' }, sub) : null,
-        ),
-        h('span', { class: 'cw-tab__n' }, String(count)),
-      );
-      return btn;
-    };
-
-    rail.appendChild(entry('Every credential', `${vendors.length} vendors`, null, total, 'grid-4', 0));
+    },
+      h('span', { class: 'cs-tab__glyph' }, icon(glyph, { class: 'ic ic--xs' })),
+      h('span', { class: 'cs-tab__text' },
+        h('span', { class: 'cs-tab__name' }, label),
+        sub ? h('span', { class: 'cs-tab__sub' }, sub) : null),
+      h('span', { class: 'cs-tab__n' }, String(count)),
+    );
+    rail.appendChild(entry('Every credential', `${vendors.length} vendors`, null, cards, 'grid-4', 0));
     vendors.forEach((v, i) => rail.appendChild(
-      entry(v.name, v.domain, v, v.certs.length, GLYPH[v.key] || 'certificate', i + 1),
-    ));
+      entry(v.name, v.domain, v, v.certs.length, GLYPH[v.key] || 'certificate', i + 1)));
   }
 
-  /* ------------------------------------------------------------------ head */
-  const head = h('div', { class: 'cw-head' },
-    h('div', { class: 'cw-head__text' },
-      block.eyebrow ? h('p', { class: 'cw-eyebrow' }, block.eyebrow) : null,
-      h('h2', { class: 'cw-title' }, block.title || 'Certifications'),
-      h('span', { class: 'cw-rule' }),
+  /* =================================================================== chrome */
+  const steps = h('nav', { class: 'cs-steps', role: 'tablist' });
+  const acts = h('div', { class: 'cs-acts' });
+
+  function drawSteps() {
+    steps.replaceChildren(...ACTS.map((a) => h('button', {
+      class: `cs-step${a.key === act ? ' is-on' : ''}`,
+      type: 'button', role: 'tab', 'aria-selected': String(a.key === act),
+      onclick: () => { if (a.key !== act) { act = a.key; drawSteps(); showAct(); } },
+    },
+      h('em', {}, a.num),
+      h('span', {}, a.name),
+    )));
+  }
+
+  function showAct() {
+    acts.dataset.act = act;
+    if (act === 'register') drawRegister();
+    if (act === 'skills') drawSkills();
+    if (act === 'gallery') { drawRail(); drawBanner(); drawWall(); }
+  }
+
+  const head = h('div', { class: 'cs-head' },
+    h('div', {},
+      block.eyebrow ? h('p', { class: 'cs-eyebrow' }, block.eyebrow) : null,
+      h('h2', { class: 'cs-title' }, block.title || 'Certifications'),
     ),
-    block.lead ? h('p', { class: 'cw-lead' }, block.lead) : null,
-    h('div', { class: 'cw-stats' },
-      h('div', { class: 'cw-stat' },
-        h('strong', {}, String(total)), h('span', {}, 'certification cards')),
-      h('div', { class: 'cw-stat' },
-        h('strong', {}, String(vendors.length)), h('span', {}, 'vendors and bodies')),
-    ),
+    steps,
   );
 
-  root.appendChild(head);
-  root.appendChild(h('div', { class: 'cw-body' },
-    rail,
-    h('div', { class: 'cw-main' }, banner, stage),
-  ));
+  acts.append(
+    h('section', { class: 'cs-act cs-act--register' }, stage1),
+    h('section', { class: 'cs-act cs-act--skills' },
+      h('div', { class: 'cs-skills' }, skillList, skillPane)),
+    h('section', { class: 'cs-act cs-act--gallery' },
+      h('div', { class: 'cs-gal' },
+        rail,
+        h('div', { class: 'cs-main' }, banner, wallStage))),
+  );
 
-  drawRail();
-  drawBanner();
-  drawStage();
+  root.append(head, acts);
+  drawSteps();
+  showAct();
 
-  /* The first pass ran before the slide was in the document, so it solved against
-     the fallback height — and the real height arrives in stages, not once. The
-     banner's skill chips animate in from below, which grew the stage by 140px
-     *after* a single settle-on-next-frame had already committed a layout, and the
-     cards came out 245px tall where the packer had solved 315.
-
-     So the stage is watched instead of sampled. Guarded on the same 8px threshold
-     drawStage records, which is also what stops a loop: the stage takes its height
-     from the flex row above it rather than from its own content, so a redraw does
-     not move it and the observer settles after one pass. */
+  /* The wall is watched rather than sampled once: the banner and the rail settle
+     after their entrance animations, and a single measurement on the next frame
+     committed a column count against the wrong height. Guarded on the same 8px
+     threshold drawWall records, which is also what stops a loop — the stage takes
+     its height from the flex row above it, not from its own content. */
   const watchSize = new ResizeObserver(() => {
-    if (stage.clientHeight && Math.abs(stage.clientHeight - lastH) > 8) drawStage();
+    if (act !== 'gallery') return;
+    if (wallStage.clientHeight && Math.abs(wallStage.clientHeight - lastH) > 8) drawWall();
   });
-  watchSize.observe(stage);
+  watchSize.observe(wallStage);
 
   /* The lightbox lives on the body, so it has to be taken down by hand when the
      slide that owns it is replaced. */

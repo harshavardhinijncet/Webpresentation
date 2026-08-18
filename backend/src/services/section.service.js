@@ -636,6 +636,32 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 160);
       block.lead = text(raw.lead, 400);
+      /* The credential register: the named certifications the place awards, with
+         how many trainees hold each and what each one actually tests. Separate
+         from `vendors` below, which is the cohort artwork — one is the catalogue,
+         the other is the evidence. */
+      block.quote = text(raw.quote, 400);
+      block.quoteBy = text(raw.quoteBy, 160);
+      /* A wide cohort photograph, held far back behind the register's type. Their
+         own artwork rather than stock, and a file under /uploads like everything
+         else on this page. */
+      block.backdrop = text(raw.backdrop, 240);
+      block.credentials = (Array.isArray(raw.credentials) ? raw.credentials : [])
+        .map((c) => ({
+          name: text(c?.name, 160),
+          vendor: text(c?.vendor, 80),
+          domain: text(c?.domain, 80),
+          held: clampInt(c?.held, 0, 1000000, 0),
+          /* A file under /uploads. The catalogue pointed at eight different CDNs
+             and the deck is presented offline, so the badges are downloaded and
+             served locally; one the CDN refuses carries no badge and the card
+             falls back to type. */
+          badge: text(c?.badge, 240),
+          skills: (Array.isArray(c?.skills) ? c.skills : [])
+            .map((k) => text(k, 140)).filter(Boolean).slice(0, 8),
+        }))
+        .filter((c) => c.name && c.vendor)
+        .slice(0, 120);
       block.vendors = (Array.isArray(raw.vendors) ? raw.vendors : [])
         .map((v) => ({
           key: text(v?.key, 60),
