@@ -9220,9 +9220,12 @@ body.is-presenting .milestones__inner {
    it. These paddings are in slide units and the slide is scaled to the
    display, so 96 here is ~82px on a 1366-wide screen and ~115px on a 1920 —
    comfortably clear at both ends without stealing height when not presenting. */
+/* The wall and the detail scroll, so shortening them costs nothing — content
+   simply continues under the pill. The orbit does not: it is a fixed composition
+   with the ring centred well clear of the pill, so the reservation was a 104px
+   dead strip along the bottom of the page in presentation mode and nothing else. */
 body.is-presenting .coe-wall,
-body.is-presenting .coe-detail,
-body.is-presenting .coe-orbit { bottom: 104px; }
+body.is-presenting .coe-detail { bottom: 104px; }
 
 /* ==========================================================================
    Success Stories — a wall of faces that keeps moving, and any one of them
@@ -9364,6 +9367,12 @@ body.is-presenting .coe-orbit { bottom: 104px; }
   display: flex; align-items: center; justify-content: center;
   gap: 12px; width: 100%; height: 100%; max-height: 620px;
 }
+/* These caps are deliberate and were tried the other way. Raised to 700 the cards
+   did reach further down the block, but a 163px-wide card 630px tall is a column
+   of white with a logo floating in the middle of it — the emptiness moved inside
+   the card instead of going away. Eight narrow cards cannot fill an 860px block;
+   what they can do is sit as a compact row with equal air above and below, which
+   is a margin rather than a dead band. */
 .pg-card {
   flex: 1 1 0; min-width: 0; max-width: 190px; height: 100%; max-height: 560px;
   display: flex; flex-direction: column; align-items: center; gap: 12px;
@@ -9474,8 +9483,12 @@ body.is-presenting .coe-orbit { bottom: 104px; }
 }
 .slide--hero .pg-root { min-height: 860px !important; max-height: 860px !important; height: 100% !important; flex: 1 1 auto !important; border-radius: 0 !important; }
 
-body.is-presenting .pg-gal__grid { padding-bottom: 100px; }
-body.is-presenting .pg-wall { padding-bottom: 96px; }
+/* No reserved band for the presenter pill. It is `position: fixed` at 0.28
+   opacity until hovered, it is centred rather than full width, and every other
+   section in the deck lets it float over content. Reserving 100px here put a dead
+   strip under the film gallery on every programme — which is the empty bottom
+   this page was reported for. The exception stays where the pill lands on small
+   click targets: see `.milestones__inner`, whose rail dots it covers exactly. */
 
 @media (prefers-reduced-motion: reduce) {
   .pg-card, .pg-shot, .pg-cover { transition: none !important; }
@@ -11397,380 +11410,6 @@ body.is-presenting .sw-root {
   .cw-light, .cw-light__frame, .cw-light__nav { transition: none; }
 }
 
-/* ==========================================================================
-   Events & Milestones — one stage, six chapters, ninety-one films
-   ==========================================================================
-   The workbook keeps its series structure and so does this page: an entry with
-   more than one film draws a numbered run with arrows between the parts, because
-   the arrows are what say these are in order and there is more after this one.
-   Green leads and the gold carries the detail, which is the order the logo uses.
-   ========================================================================== */
-
-.ev-root {
-  display: flex;
-  flex-direction: column;
-  /* A hard height, and all three declarations are load-bearing.
-     `.canvas-block > *` sets `flex: 1`, whose `flex-basis: 0%` overrides `height`
-     for main-axis sizing — so `height` alone was ignored, the content's
-     max-content height propagated up through the canvas and the slide, and
-     twenty-three entries made this root 1988px tall. FitSlide then scaled the
-     whole slide down to fit that, so the page came out small instead of the list
-     scrolling. `flex: 0 0 auto` hands the basis back to `height`, and `max-height`
-     caps the max-content contribution so nothing upstream can be talked into
-     growing. The other walls never hit this because their content fits 860. */
-  flex: 0 0 auto;
-  height: 860px;
-  max-height: 860px;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-}
-.ev-empty { display: grid; place-items: center; min-height: 400px; gap: 10px; text-align: center; }
-.ev-hint { margin: 0; color: var(--muted); font-size: 13px; }
-
-/* --------------------------------------------------------------- the head -- */
-.ev-head {
-  flex: 0 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
-  align-items: end; column-gap: 28px;
-  padding: 22px 26px 15px;
-}
-.ev-eyebrow {
-  margin: 0 0 7px; color: var(--nav-second-ink, var(--accent-ink));
-  font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
-}
-.ev-title {
-  margin: 0; color: var(--nav-accent-ink, var(--accent-ink));
-  font-size: 34px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.05;
-}
-.ev-rule {
-  display: block; height: 3px; width: 76px; margin-top: 10px; border-radius: 2px;
-  /* Green then gold, the two brand colours in the order the logo reads them.
-     Two solid stops, not a blend — the house rule is no gradients. */
-  background: linear-gradient(to right,
-    var(--nav-accent, #008638) 0 58%, var(--brand-accent, #FFBB00) 58% 100%);
-  transform-origin: left center;
-  animation: ev-draw 640ms cubic-bezier(.2,.7,.3,1) both;
-}
-@keyframes ev-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.ev-lead {
-  margin: 0 0 4px; max-width: 58ch; color: var(--muted);
-  font-size: 14px; line-height: 1.5;
-}
-.ev-stats { display: flex; gap: 26px; }
-.ev-stat { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
-.ev-stat strong {
-  font-size: 30px; font-weight: 800; letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums; color: var(--nav-accent-ink, var(--accent-ink));
-}
-.ev-stat span {
-  margin-top: 5px; color: var(--muted);
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-}
-
-/* --------------------------------------------------------------- the tabs -- */
-.ev-tabs {
-  flex: 0 0 auto; display: flex; gap: 7px;
-  padding: 0 26px 14px; border-bottom: 1px solid var(--hairline, #e5e7eb);
-}
-.ev-tab {
-  display: flex; align-items: center; gap: 7px;
-  padding: 7px 13px; border: 1px solid var(--hairline, #e5e7eb);
-  border-radius: 999px; background: var(--surface); color: var(--muted);
-  cursor: pointer; white-space: nowrap;
-  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
-  animation: ev-tab-in 460ms cubic-bezier(.2,.7,.3,1) both;
-}
-@keyframes ev-tab-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
-}
-.ev-tab__name { font-size: 13px; font-weight: 700; letter-spacing: -0.005em; }
-.ev-tab__n {
-  min-width: 20px; padding: 1px 6px; border-radius: 999px;
-  background: var(--page-bg); color: var(--muted);
-  font-size: 10px; font-weight: 750; font-variant-numeric: tabular-nums; text-align: center;
-}
-.ev-tab:hover { color: var(--ink, #111827); border-color: #d1d5db; }
-.ev-tab.is-on {
-  color: #fff; background: var(--nav-accent-ink, var(--accent-ink));
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-}
-/* The count on the live tab goes gold: it is the one number on the row that is
-   about where the presenter is, and gold is this brand's detail colour. */
-.ev-tab.is-on .ev-tab__n { background: var(--brand-accent, #FFBB00); color: #1a1a1a; }
-.ev-tab:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
-
-/* --------------------------------------------------------------- the body -- */
-/* One stage and one list. Six sheets of films is far too much for a slide at
-   once, and ninety-one embeds would want ninety-one connections before the first
-   frame — so a chapter at a time, beside a single player. */
-.ev-body {
-  flex: 1 1 auto; min-height: 0;
-  display: grid; grid-template-columns: minmax(0, 1fr) 496px;
-  /* The row has to be bounded or the grid sizes itself to its tallest child and
-     the entry list simply grows: twenty-three entries measured 1716px inside a
-     662px column, and the root clipped the overflow rather than the list
-     scrolling it. An implicit `auto` row is what did that. */
-  grid-template-rows: minmax(0, 1fr);
-  column-gap: 24px; padding: 16px 26px 20px;
-}
-
-.ev-stage { display: flex; flex-direction: column; min-width: 0; gap: 14px; }
-.ev-stage__box {
-  position: relative; flex: 0 0 auto;
-  aspect-ratio: 16 / 9; width: 100%;
-  border-radius: var(--radius); overflow: hidden;
-  background: #0b0d10;
-}
-.ev-stage__frame { position: absolute; inset: 0; }
-.ev-stage__yt, .ev-stage__file {
-  display: block; width: 100%; height: 100%; border: 0; object-fit: cover;
-}
-/* The bar is centred over the film and appears on hover — the same control bar
-   every other player in the deck uses. */
-.ev-stage__box .vc { opacity: 0; transition: opacity 180ms ease; }
-.ev-stage__box:hover .vc, .ev-stage__box:focus-within .vc { opacity: 1; }
-
-.ev-opener {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 14px; border: 0; background: #0b0d10; color: #fff; cursor: pointer;
-  transition: opacity 260ms ease;
-}
-/* The first film of the chapter, held back so the button and the label stay
-   legible over it. A nicety only: the poster host is unreachable at presentation
-   time and the image removes itself, leaving the plain dark plate. */
-.ev-opener__shot { position: absolute; inset: 0; overflow: hidden; }
-.ev-opener__shot img {
-  width: 100%; height: 100%; object-fit: cover;
-  opacity: 0.4; filter: saturate(0.85);
-}
-/* A scrim darkest at the centre, where the button and its label sit. A plate
-   behind the label alone was not enough: these posters carry their own wordmarks
-   across the middle of the frame, and the anniversary artwork put its gold
-   "TECHNICAL HUB" straight through gold type. Dimming the whole poster instead
-   would lose the picture, which is the reason for showing it. */
-.ev-opener__shot::after {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 44% 52% at 50% 48%,
-    rgb(8 10 13 / 0.82) 0%, rgb(8 10 13 / 0.55) 55%, rgb(8 10 13 / 0) 100%);
-}
-.is-playing .ev-opener { opacity: 0; pointer-events: none; }
-/* Above the scrim. The shot is positioned and the button is not, so without a
-   stacking position of its own the scrim painted straight over the button and the
-   label and dimmed the pair of them. */
-.ev-opener__play {
-  position: relative; z-index: 1;
-  display: grid; place-items: center; width: 68px; height: 68px;
-  border-radius: 999px; background: var(--nav-accent, #008638); color: #fff;
-  box-shadow: 0 0 0 0 rgb(0 134 56 / 0.5);
-  animation: ev-pulse 2600ms ease-out infinite;
-}
-.ev-opener__play .ic { width: 30px; height: 30px; }
-@keyframes ev-pulse {
-  0% { box-shadow: 0 0 0 0 rgb(0 134 56 / 0.45); }
-  70% { box-shadow: 0 0 0 26px rgb(0 134 56 / 0); }
-  100% { box-shadow: 0 0 0 0 rgb(0 134 56 / 0); }
-}
-/* On its own dark plate. The poster behind it is someone else's artwork with its
-   own type in it — gold-on-gold against the anniversary wordmark was unreadable —
-   and a plate is the only treatment that holds up over all six chapters. */
-.ev-opener__label {
-  position: relative; z-index: 1;
-  padding: 6px 14px; border-radius: 999px;
-  background: rgb(8 10 13 / 0.72);
-  font-size: 13px; font-weight: 750; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--brand-accent, #FFBB00);
-}
-
-/* ------------------------------------------------------------- now playing -- */
-.ev-now {
-  flex: 1 1 auto; min-height: 0;
-  display: grid; grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto auto; align-items: start;
-  column-gap: 18px; row-gap: 8px;
-}
-.ev-now__text { min-width: 0; }
-.ev-now__title {
-  margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -0.018em; line-height: 1.2;
-  /* Two lines then an ellipsis: some of these titles run long and a third line
-     pushes the step buttons off the slide. */
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-.ev-now__meta {
-  margin: 5px 0 0; color: var(--muted);
-  font-size: 12px; font-weight: 650; letter-spacing: 0.01em;
-}
-.ev-now__chapter { color: var(--nav-accent-ink, var(--accent-ink)); font-weight: 800; }
-.ev-now__sep { margin: 0 7px; opacity: 0.5; }
-
-.ev-now__dots { grid-column: 1; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-.ev-dot {
-  width: 9px; height: 9px; padding: 0; border: 0; border-radius: 999px;
-  background: #d4d8dd; cursor: pointer;
-  transition: background 160ms ease, transform 160ms ease, width 200ms ease;
-}
-.ev-dot:hover { background: #9aa1a9; }
-.ev-dot.is-on { width: 24px; background: var(--brand-accent, #FFBB00); }
-
-.ev-now__steps { grid-column: 2; grid-row: 1 / span 2; display: flex; gap: 8px; align-self: start; }
-.ev-now__step {
-  display: flex; align-items: center; gap: 5px;
-  padding: 8px 13px; border: 1px solid var(--hairline, #e5e7eb);
-  border-radius: 999px; background: var(--surface); color: var(--ink, #111827);
-  font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;
-  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
-}
-.ev-now__step:hover:not(:disabled) {
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-  color: var(--nav-accent-ink, var(--accent-ink));
-}
-.ev-now__step:disabled { opacity: 0.4; cursor: default; }
-
-/* --------------------------------------------------------------- the list -- */
-.ev-side {
-  display: flex; flex-direction: column; min-width: 0; min-height: 0;
-  border-left: 1px solid var(--hairline, #e5e7eb); padding-left: 22px;
-}
-.ev-list__head {
-  flex: 0 0 auto; display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 14px; padding-bottom: 12px;
-}
-.ev-list__name { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: -0.012em; }
-.ev-list__blurb {
-  margin: 4px 0 0; color: var(--muted); font-size: 11.5px; line-height: 1.45; max-width: 42ch;
-}
-.ev-list__n {
-  flex: 0 0 auto; padding: 4px 9px; border-radius: 999px;
-  background: color-mix(in srgb, var(--nav-accent, #008638) 10%, transparent);
-  color: var(--nav-accent-ink, var(--accent-ink));
-  font-size: 10.5px; font-weight: 800; letter-spacing: 0.04em; white-space: nowrap;
-}
-
-.ev-list {
-  flex: 1 1 auto; min-height: 0;
-  display: flex; flex-direction: column; gap: 8px;
-  overflow-y: auto; scrollbar-width: thin; padding-right: 4px;
-}
-.ev-list::-webkit-scrollbar { width: 6px; }
-.ev-list::-webkit-scrollbar-thumb { background: #d8dce1; border-radius: 999px; }
-
-.ev-item, .ev-step {
-  flex: 0 0 auto;
-  animation: ev-row-in 460ms cubic-bezier(.2,.7,.3,1) both;
-  animation-delay: calc(var(--i, 0) * 34ms);
-}
-@keyframes ev-row-in {
-  from { opacity: 0; transform: translateX(14px); }
-  to { opacity: 1; transform: none; }
-}
-
-/* A chapter that is itself in order — the anniversary films, year by year — gets
-   a rule down its left edge and a number per entry, so the column reads as one
-   run instead of a stack of unrelated cards. */
-.ev-step { display: grid; grid-template-columns: 34px minmax(0, 1fr); column-gap: 10px; }
-.ev-step__n {
-  position: relative; display: grid; place-items: start center; padding-top: 14px;
-  color: var(--nav-accent-ink, var(--accent-ink));
-  font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums;
-}
-/* The rule joining one year to the next. Not on the last entry — a line running
-   out of the final card points at nothing. */
-.ev-step:not(:last-child) .ev-step__n::after {
-  content: ''; position: absolute; top: 32px; bottom: -12px; left: 50%;
-  width: 2px; margin-left: -1px; border-radius: 1px;
-  background: color-mix(in srgb, var(--nav-accent, #008638) 26%, transparent);
-}
-.ev-step__body { min-width: 0; }
-
-.ev-card {
-  display: grid; grid-template-columns: 74px minmax(0, 1fr) auto;
-  align-items: center; gap: 11px; width: 100%;
-  padding: 8px 10px 8px 8px; border: 1px solid var(--hairline, #e5e7eb);
-  border-radius: var(--radius-sm); background: var(--surface);
-  text-align: left; cursor: pointer;
-  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
-}
-.ev-card:hover {
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-  box-shadow: 0 6px 18px rgb(0 0 0 / 0.08);
-}
-.ev-card.is-on {
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-  background: color-mix(in srgb, var(--nav-accent, #008638) 6%, var(--surface));
-}
-.ev-card:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
-
-/* The poster is a nicety, not a requirement: it comes from i.ytimg.com and there
-   is no network at presentation time, so the image removes itself on error and
-   the tile falls back to this dark plate with the title carrying the card. */
-.ev-card__shot {
-  position: relative; display: block; width: 74px; aspect-ratio: 16 / 9;
-  border-radius: 6px; overflow: hidden; background: #10141a;
-}
-.ev-card__shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.ev-card__body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.ev-card__title {
-  font-size: 12.5px; font-weight: 750; line-height: 1.3; color: var(--ink, #111827);
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-.ev-card__n {
-  color: var(--muted); font-size: 10px; font-weight: 700;
-  letter-spacing: 0.06em; text-transform: uppercase;
-}
-.ev-card.is-on .ev-card__n { color: var(--nav-accent-ink, var(--accent-ink)); }
-.ev-card__go {
-  display: grid; place-items: center; width: 26px; height: 26px; flex: 0 0 auto;
-  border-radius: 999px; background: var(--page-bg); color: var(--muted);
-  transition: background 180ms ease, color 180ms ease;
-}
-.ev-card:hover .ev-card__go, .ev-card.is-on .ev-card__go {
-  background: var(--nav-accent-ink, var(--accent-ink)); color: #fff;
-}
-
-/* ------------------------------------------------------------ the run of parts */
-/* One title, several films — ten rows of T-News is one series of ten. The arrows
-   are the point: they say these are in order and there is another after this. */
-.ev-flow {
-  display: flex; align-items: center; flex-wrap: wrap; gap: 3px;
-  padding: 7px 0 2px 10px;
-}
-.ev-flow__part {
-  min-width: 27px; padding: 3px 6px; border: 1px solid var(--hairline, #e5e7eb);
-  border-radius: 7px; background: var(--surface); color: var(--muted);
-  font-size: 10.5px; font-weight: 800; font-variant-numeric: tabular-nums;
-  cursor: pointer;
-  transition: color 160ms ease, background 160ms ease, border-color 160ms ease, transform 160ms ease;
-  animation: ev-part-in 420ms cubic-bezier(.2,.7,.3,1) both;
-  animation-delay: calc(var(--i, 0) * 44ms + 120ms);
-}
-@keyframes ev-part-in {
-  from { opacity: 0; transform: scale(0.82); }
-  to { opacity: 1; transform: none; }
-}
-.ev-flow__part:hover {
-  color: var(--nav-accent-ink, var(--accent-ink));
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-}
-.ev-flow__part.is-on {
-  color: #1a1a1a; background: var(--brand-accent, #FFBB00);
-  border-color: var(--brand-accent, #FFBB00);
-}
-.ev-flow__arrow {
-  display: grid; place-items: center; color: #c3c8ce;
-  animation: ev-part-in 420ms cubic-bezier(.2,.7,.3,1) both;
-  animation-delay: calc(var(--i, 0) * 44ms + 150ms);
-}
-.ev-flow__arrow .ic { width: 13px; height: 13px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .ev-rule, .ev-tab, .ev-item, .ev-step, .ev-flow__part, .ev-flow__arrow { animation: none; }
-  .ev-opener__play { animation: none; }
-  .ev-card, .ev-dot, .ev-flow__part, .ev-now__step { transition: none; }
-}
-
 /* --- a centre's YouTube film ---------------------------------------------- */
 /* The vendor academies publish to YouTube, so a centre's strip holds frames as
    well as files. Mounted on click: four Pega films that all start the moment a
@@ -11891,3 +11530,499 @@ body.is-presenting .sw-root {
    readable and is exactly the right emphasis. */
 .cw-light__count { color: var(--brand-accent, #FFBB00); }
 .cw-light__nav:hover { background: color-mix(in srgb, var(--nav-accent, #008638) 62%, transparent); }
+
+/* ==========================================================================
+   The full-screen film stage — shared by Events and Video Resumes
+   ==========================================================================
+   On the body, never inside a slide: FitSlide scales the slide with a transform,
+   and a transformed ancestor becomes the containing block for fixed descendants,
+   so `inset: 0` in a slide means the slide and not the screen.
+   ========================================================================== */
+
+.fs-root {
+  position: fixed; inset: 0; z-index: 70;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto;
+  padding: 3vh 3vw 0;
+  background: rgb(6 8 10 / 0.96);
+  opacity: 0; transition: opacity 220ms ease;
+}
+.fs-root.is-on { opacity: 1; }
+.fs-root[hidden] { display: none; }
+
+.fs-box {
+  /* Width solved against both limits, so the ratio is exact. `max-height` fought
+     the aspect ratio instead: the box came out 1408x776, a ratio of 1.815, and the
+     player letterboxed itself inside it. Taking the smaller of the width the
+     viewport allows and the width the remaining height allows leaves 16:9 intact. */
+  place-self: center;
+  width: min(calc(100vw - 12vw), calc((100vh - 15vh) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius); overflow: hidden; background: #000;
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.6);
+  transform: scale(0.975); transition: transform 260ms cubic-bezier(.2,.7,.3,1);
+}
+.fs-root.is-on .fs-box { transform: none; }
+.fs-frame { position: relative; width: 100%; height: 100%; }
+.fs-yt, .fs-file { display: block; width: 100%; height: 100%; border: 0; object-fit: contain; }
+/* The bar is centred over the film and arms on hover, like every other player. */
+.fs-frame .vc { opacity: 0; transition: opacity 180ms ease; }
+.fs-box:hover .vc, .fs-box:focus-within .vc { opacity: 1; }
+
+.fs-bar {
+  display: flex; align-items: baseline; gap: 20px;
+  padding: 16px 4px 18px; color: #e8eaed;
+}
+.fs-bar__text { min-width: 0; }
+.fs-title {
+  margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fs-sub { margin: 4px 0 0; color: #9aa1a9; font-size: 13px; font-weight: 650; }
+.fs-sub[hidden] { display: none; }
+.fs-count {
+  margin-left: auto; flex: 0 0 auto;
+  color: var(--brand-accent, #FFBB00);
+  font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;
+}
+
+.fs-close {
+  position: absolute; top: 20px; right: 24px; z-index: 2;
+  display: grid; place-items: center; width: 44px; height: 44px;
+  border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.12);
+  color: #fff; cursor: pointer; transition: background 160ms ease;
+}
+.fs-close:hover { background: rgb(255 255 255 / 0.24); }
+.fs-nav {
+  position: absolute; top: 50%; z-index: 2; transform: translateY(-50%);
+  display: grid; place-items: center; width: 58px; height: 58px;
+  border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.12);
+  color: #fff; cursor: pointer; transition: background 160ms ease, transform 160ms ease;
+}
+.fs-nav:hover { background: color-mix(in srgb, var(--nav-accent, #008638) 70%, transparent); }
+.fs-nav:active { transform: translateY(-50%) scale(0.94); }
+.fs-nav[hidden] { display: none; }
+.fs-nav .ic { width: 28px; height: 28px; }
+.fs-nav--prev { left: 18px; }
+.fs-nav--next { right: 18px; }
+
+.fs-poster { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fs-root, .fs-box, .fs-nav, .fs-close { transition: none; }
+}
+
+/* ==========================================================================
+   Events — one chapter at a time, read from across a room
+   ==========================================================================
+   The previous version put a player beside a list of every entry, and it was too
+   much at once: 23 rows in a 496px column at 12.5px. This is one thing instead —
+   a grid of entries at a size that can be read — and the film plays full screen.
+   ========================================================================== */
+
+.ev-root {
+  display: flex; flex-direction: column;
+  /* `.canvas-block > *` sets `flex: 1`, whose `flex-basis: 0%` overrides `height`
+     on the main axis. Without a basis of its own this root grows to its content
+     and FitSlide scales the whole slide down to fit; with it, the grid scrolls. */
+  flex: 0 0 auto; height: 860px; max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.ev-empty { display: grid; place-items: center; min-height: 400px; gap: 10px; text-align: center; }
+.ev-hint { margin: 0; color: var(--muted); font-size: 13px; }
+
+.ev-head {
+  flex: 0 0 auto;
+  display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
+  align-items: end; column-gap: 30px; padding: 24px 30px 16px;
+}
+.ev-eyebrow {
+  margin: 0 0 8px; color: var(--nav-second-ink, var(--accent-ink));
+  font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.ev-title {
+  margin: 0; color: var(--nav-accent-ink, var(--accent-ink));
+  font-size: 40px; font-weight: 800; letter-spacing: -0.028em; line-height: 1.03;
+}
+.ev-rule {
+  display: block; height: 4px; width: 88px; margin-top: 12px; border-radius: 2px;
+  background: linear-gradient(to right,
+    var(--nav-accent, #008638) 0 58%, var(--brand-accent, #FFBB00) 58% 100%);
+  transform-origin: left center;
+  animation: ev-draw 640ms cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes ev-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.ev-lead {
+  margin: 0 0 6px; max-width: 54ch; color: var(--muted);
+  font-size: 15px; line-height: 1.5;
+}
+.ev-stats { display: flex; gap: 14px; }
+.ev-stat {
+  display: flex; flex-direction: column; align-items: center; line-height: 1;
+  padding: 10px 18px; border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--nav-accent, #008638) 7%, transparent);
+}
+.ev-stat:last-child {
+  background: color-mix(in srgb, var(--brand-accent, #FFBB00) 16%, transparent);
+}
+.ev-stat strong {
+  font-size: 32px; font-weight: 800; letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums; color: var(--nav-accent-ink, var(--accent-ink));
+}
+.ev-stat:last-child strong { color: var(--nav-second-ink, var(--accent-ink)); }
+.ev-stat span {
+  margin-top: 6px; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--nav-accent-ink, var(--accent-ink)); opacity: 0.75;
+}
+.ev-stat:last-child span { color: var(--nav-second-ink, var(--accent-ink)); opacity: 0.8; }
+
+/* --------------------------------------------------------------- the tabs -- */
+.ev-tabs { flex: 0 0 auto; display: flex; gap: 9px; padding: 0 30px; }
+.ev-tab {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 17px; border: 1px solid var(--hairline, #e5e7eb);
+  border-radius: 999px; background: var(--surface); color: var(--muted);
+  cursor: pointer; white-space: nowrap;
+  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+  animation: ev-tab-in 460ms cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes ev-tab-in {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: none; }
+}
+.ev-tab__name { font-size: 15px; font-weight: 750; letter-spacing: -0.008em; }
+.ev-tab__n {
+  min-width: 24px; padding: 2px 8px; border-radius: 999px;
+  background: var(--page-bg); color: var(--muted);
+  font-size: 11.5px; font-weight: 800; font-variant-numeric: tabular-nums; text-align: center;
+}
+.ev-tab:hover { color: var(--ink, #111827); border-color: #d1d5db; }
+.ev-tab.is-on {
+  color: #fff; background: var(--nav-accent-ink, var(--accent-ink));
+  border-color: var(--nav-accent-ink, var(--accent-ink));
+}
+.ev-tab.is-on .ev-tab__n { background: var(--brand-accent, #FFBB00); color: #1a1a1a; }
+.ev-tab:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
+
+.ev-blurb {
+  flex: 0 0 auto; display: flex; align-items: baseline; gap: 16px;
+  margin: 0; padding: 14px 30px 12px;
+  border-bottom: 1px solid var(--hairline, #e5e7eb);
+}
+.ev-blurb__text { color: var(--muted); font-size: 14px; line-height: 1.4; }
+.ev-blurb__n {
+  margin-left: auto; flex: 0 0 auto;
+  color: var(--nav-accent-ink, var(--accent-ink));
+  font-size: 12px; font-weight: 800; letter-spacing: 0.04em; white-space: nowrap;
+}
+.ev-blurb__n em { font-style: normal; margin: 0 7px; opacity: 0.5; }
+
+/* --------------------------------------------------------------- the grid -- */
+/* Column count and card width are both solved in JS and arrive as custom
+   properties, because a card's height follows from its width and one fixed count
+   cannot serve a chapter of four and a chapter of twenty-three. */
+.ev-grid {
+  flex: 1 1 auto; min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--ev-cols, 4), var(--ev-card, 1fr));
+  /* Definite, never `auto`. The card's poster uses `aspect-ratio` off a
+     percentage width and contributes no intrinsic height, so an auto track sized
+     itself to the card's foot and clipped the picture. Solved in JS and handed
+     over as a custom property. */
+  grid-auto-rows: var(--ev-cardh, auto);
+  align-content: start; justify-content: center;
+  gap: 18px; padding: 18px 30px 22px;
+  overflow-y: auto; scrollbar-width: thin;
+}
+.ev-grid::-webkit-scrollbar { width: 7px; }
+.ev-grid::-webkit-scrollbar-thumb { background: #d8dce1; border-radius: 999px; }
+/* Everything fits, so the rows centre rather than pooling their slack under the
+   last one — which is exactly the empty band this page had at the bottom. */
+.ev-grid.is-short { align-content: center; }
+
+.ev-card {
+  display: flex; flex-direction: column; min-width: 0;
+  border: 1px solid var(--hairline, #e5e7eb); border-radius: var(--radius-sm);
+  background: var(--surface); overflow: hidden;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  animation: ev-card-in 480ms cubic-bezier(.2,.7,.3,1) both;
+  animation-delay: calc(var(--i, 0) * 30ms);
+}
+@keyframes ev-card-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+.ev-card:hover {
+  border-color: var(--nav-accent-ink, var(--accent-ink));
+  box-shadow: 0 12px 28px rgb(0 0 0 / 0.12);
+}
+.ev-card__hit {
+  display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer;
+}
+.ev-card__shot {
+  position: relative; display: block; width: 100%; aspect-ratio: 16 / 9;
+  background: #10141a; overflow: hidden;
+}
+.ev-card__shot .fs-poster { transition: transform 420ms cubic-bezier(.2,.7,.3,1); }
+.ev-card:hover .ev-card__shot .fs-poster { transform: scale(1.05); }
+.ev-card__play {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: #fff;
+}
+.ev-card__play .ic {
+  width: 44px; height: 44px; padding: 11px; border-radius: 999px;
+  background: rgb(8 10 13 / 0.55); color: #fff;
+  transition: background 180ms ease, transform 180ms ease;
+}
+.ev-card:hover .ev-card__play .ic {
+  background: var(--nav-accent, #008638); transform: scale(1.09);
+}
+.ev-card__foot {
+  flex: 1 1 auto; display: flex; flex-direction: column; gap: 6px;
+  padding: 10px 12px 12px; min-width: 0;
+}
+.ev-card__title {
+  margin: 0; font-size: 14px; font-weight: 750; line-height: 1.3;
+  color: var(--ink, #111827);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ev-card__one {
+  margin-top: auto; color: var(--muted);
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+}
+
+/* One title, several films. The arrows say these are in order and there is
+   another after this one; each chip opens the film it points at, so a presenter
+   can go straight to part six without walking the first five. */
+.ev-flow {
+  margin-top: auto; display: flex; align-items: center; flex-wrap: wrap; gap: 3px;
+}
+.ev-flow__part {
+  min-width: 30px; padding: 4px 7px;
+  border: 1px solid var(--hairline, #e5e7eb); border-radius: 7px;
+  background: var(--surface); color: var(--muted);
+  font-size: 11.5px; font-weight: 800; font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+  animation: ev-part-in 420ms cubic-bezier(.2,.7,.3,1) both;
+  animation-delay: calc(var(--i, 0) * 40ms + 140ms);
+}
+@keyframes ev-part-in {
+  from { opacity: 0; transform: scale(0.84); }
+  to { opacity: 1; transform: none; }
+}
+.ev-flow__part:hover {
+  color: #1a1a1a; background: var(--brand-accent, #FFBB00);
+  border-color: var(--brand-accent, #FFBB00);
+}
+.ev-flow__arrow { display: grid; place-items: center; color: #c3c8ce; }
+.ev-flow__arrow .ic { width: 12px; height: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ev-rule, .ev-tab, .ev-card, .ev-flow__part { animation: none; }
+  .ev-card, .ev-card__play .ic, .ev-flow__part { transition: none; }
+  .ev-card:hover .ev-card__shot .fs-poster { transform: none; }
+}
+
+/* ==========================================================================
+   Video Resumes — a hundred and sixteen students, by name
+   ==========================================================================
+   Finding a name is the job, so the search box and the initial strip come before
+   the wall. No card depends on its thumbnail arriving: the initials plate sits
+   under the poster and carries the tile when the host is unreachable, which is
+   every presentation.
+   ========================================================================== */
+
+.vr-root {
+  display: flex; flex-direction: column;
+  /* Same flex-basis trap as the reel — see `.ev-root`. */
+  flex: 0 0 auto; height: 860px; max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.vr-empty { display: grid; place-items: center; min-height: 400px; gap: 10px; text-align: center; }
+.vr-hint { margin: 0; color: var(--muted); font-size: 13px; }
+
+.vr-head {
+  flex: 0 0 auto;
+  display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
+  align-items: end; column-gap: 30px; padding: 24px 30px 16px;
+}
+.vr-eyebrow {
+  margin: 0 0 8px; color: var(--nav-second-ink, var(--accent-ink));
+  font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.vr-title {
+  margin: 0; color: var(--nav-accent-ink, var(--accent-ink));
+  font-size: 40px; font-weight: 800; letter-spacing: -0.028em; line-height: 1.03;
+}
+.vr-rule {
+  display: block; height: 4px; width: 88px; margin-top: 12px; border-radius: 2px;
+  background: linear-gradient(to right,
+    var(--nav-accent, #008638) 0 58%, var(--brand-accent, #FFBB00) 58% 100%);
+  transform-origin: left center;
+  animation: ev-draw 640ms cubic-bezier(.2,.7,.3,1) both;
+}
+.vr-lead {
+  margin: 0 0 6px; max-width: 56ch; color: var(--muted);
+  font-size: 15px; line-height: 1.5;
+}
+.vr-stats { display: flex; gap: 14px; }
+.vr-stat {
+  display: flex; flex-direction: column; align-items: center; line-height: 1;
+  padding: 10px 18px; border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--nav-accent, #008638) 7%, transparent);
+}
+.vr-stat strong {
+  font-size: 32px; font-weight: 800; letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums; color: var(--nav-accent-ink, var(--accent-ink));
+}
+.vr-stat span {
+  margin-top: 6px; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--nav-accent-ink, var(--accent-ink)); opacity: 0.75;
+}
+
+/* -------------------------------------------------------------- the tools -- */
+.vr-tools {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 16px;
+  padding: 0 30px 14px; border-bottom: 1px solid var(--hairline, #e5e7eb);
+}
+.vr-search {
+  display: flex; align-items: center; gap: 8px; flex: 0 0 auto;
+  padding: 8px 14px; border: 1px solid var(--hairline, #e5e7eb);
+  border-radius: 999px; background: var(--surface); color: var(--muted);
+}
+.vr-search:focus-within {
+  border-color: var(--nav-accent-ink, var(--accent-ink));
+  color: var(--nav-accent-ink, var(--accent-ink));
+}
+.vr-search__input {
+  width: 190px; border: 0; background: none; outline: none;
+  color: var(--ink, #111827); font: inherit; font-size: 14px;
+}
+.vr-search__input::-webkit-search-cancel-button { filter: grayscale(1); }
+
+.vr-strip { display: flex; gap: 4px; flex-wrap: wrap; min-width: 0; }
+.vr-letter {
+  min-width: 30px; padding: 5px 8px; border: 1px solid transparent;
+  border-radius: 8px; background: transparent; color: var(--muted);
+  font-size: 13px; font-weight: 800; cursor: pointer;
+  transition: color 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+.vr-letter:hover { color: var(--ink, #111827); background: var(--page-bg); }
+.vr-letter.is-on {
+  color: #fff; background: var(--nav-accent-ink, var(--accent-ink));
+  border-color: var(--nav-accent-ink, var(--accent-ink));
+}
+.vr-letter:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
+
+.vr-note {
+  margin: 0 0 0 auto; flex: 0 0 auto; display: flex; align-items: center; gap: 12px;
+  color: var(--muted); font-size: 13px; white-space: nowrap;
+}
+.vr-note strong {
+  color: var(--nav-accent-ink, var(--accent-ink));
+  font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums;
+}
+.vr-note__clear {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border: 1px solid var(--hairline, #e5e7eb);
+  border-radius: 999px; background: var(--surface); color: var(--muted);
+  font-size: 11.5px; font-weight: 700; cursor: pointer;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+.vr-note__clear:hover {
+  color: var(--nav-accent-ink, var(--accent-ink));
+  border-color: var(--nav-accent-ink, var(--accent-ink));
+}
+
+/* --------------------------------------------------------------- the wall -- */
+/* auto-fit, never auto-fill: auto-fill keeps a phantom empty column and a short
+   filtered result ends up filling 60% of the width. */
+.vr-wall {
+  flex: 1 1 auto; min-height: 0;
+  /* Fixed track width, so the poster's height is an exact ratio of a known
+     number rather than something the grid has to infer. */
+  /* 176px is the track that lets eight of them plus their gaps fit the width the
+     wall really has. Not 1540: the vertical scrollbar takes 7px off it, and at
+     178px that was enough to drop the eighth column and leave 190px unused. */
+  display: grid; grid-template-columns: repeat(auto-fit, 176px);
+  /* Definite rows. Left on `auto` the track sized itself to the name alone and
+     every card came out 22px tall — 105px poster plus the name band and the two
+     borders is the real number, so it is stated rather than inferred. */
+  grid-auto-rows: 139px;
+  align-content: start; justify-content: center;
+  gap: 16px; padding: 18px 30px 22px;
+  overflow-y: auto; scrollbar-width: thin;
+}
+.vr-wall::-webkit-scrollbar { width: 7px; }
+.vr-wall::-webkit-scrollbar-thumb { background: #d8dce1; border-radius: 999px; }
+.vr-none { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 14px; }
+
+.vr-card {
+  display: flex; flex-direction: column; min-width: 0; padding: 0;
+  border: 1px solid var(--hairline, #e5e7eb); border-radius: var(--radius-sm);
+  background: var(--surface); overflow: hidden; cursor: pointer; text-align: left;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  animation: vr-card-in 460ms cubic-bezier(.2,.7,.3,1) both;
+  animation-delay: calc(var(--i, 0) * 22ms);
+}
+@keyframes vr-card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.vr-card:hover {
+  border-color: var(--nav-accent-ink, var(--accent-ink));
+  box-shadow: 0 12px 26px rgb(0 0 0 / 0.12);
+}
+.vr-card:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
+
+/* An explicit height, not `aspect-ratio`. A box sized by aspect ratio off a
+   percentage width contributes nothing to intrinsic height, and the grid row
+   collapsed to the name — every card came out 28px tall with a 5px poster.
+   105px is 16:9 of the 186px track, so the ratio is still exact. */
+/* `flex: 0 0 105px`, not a plain height. The card is a flex column, so a height
+   alone still had `flex-shrink: 1` against it and the poster was squeezed to zero
+   before the name gave up a single pixel. 105px is 16:9 of the 186px track, so the
+   ratio stays exact. */
+.vr-card__shot {
+  position: relative; display: block; width: 100%;
+  flex: 0 0 99px; height: 99px;
+  background: #0f1216; overflow: hidden;
+}
+/* Under the poster, so it shows through when the thumbnail host is unreachable.
+   The poster is painted over it by document order. */
+.vr-card__mono {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: var(--brand-accent, #FFBB00);
+  font-size: 30px; font-weight: 800; letter-spacing: 0.04em;
+}
+.vr-card__shot .fs-poster {
+  position: relative; z-index: 1;
+  transition: transform 420ms cubic-bezier(.2,.7,.3,1);
+}
+.vr-card:hover .vr-card__shot .fs-poster { transform: scale(1.05); }
+.vr-card__play {
+  position: absolute; inset: 0; z-index: 2; display: grid; place-items: center;
+  opacity: 0; transition: opacity 180ms ease;
+}
+.vr-card__play .ic {
+  width: 40px; height: 40px; padding: 10px; border-radius: 999px;
+  background: var(--nav-accent, #008638); color: #fff;
+}
+.vr-card:hover .vr-card__play, .vr-card:focus-visible .vr-card__play { opacity: 1; }
+.vr-card__name {
+  padding: 9px 11px 11px; font-size: 13.5px; font-weight: 750; line-height: 1.25;
+  color: var(--ink, #111827);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vr-rule, .vr-card { animation: none; }
+  .vr-card, .vr-card__play, .vr-letter { transition: none; }
+  .vr-card:hover .vr-card__shot .fs-poster { transform: none; }
+}

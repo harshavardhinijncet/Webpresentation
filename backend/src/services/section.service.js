@@ -42,6 +42,7 @@ export const BLOCK_TYPES = [
   'placement-wall',
   'certification-wall',
   'event-reel',
+  'video-resume',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -583,6 +584,21 @@ function normalizeBlock(raw, index = 0, depth = 0) {
        the real pixels have to travel with the data.
        Unlike Placements they are almost all square, which is why the wall can be
        a uniform grid rather than solved rows. */
+    case 'video-resume':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.lead = text(raw.lead, 400);
+      block.people = (Array.isArray(raw.people) ? raw.people : [])
+        .map((p) => ({
+          name: text(p?.name, 80),
+          // A YouTube id, or a file under /uploads — never both.
+          youtube: text(p?.youtube, 24),
+          src: text(p?.src, 200),
+        }))
+        .filter((p) => p.name && (p.youtube || p.src))
+        .slice(0, 400);
+      break;
+
     case 'event-reel':
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 160);

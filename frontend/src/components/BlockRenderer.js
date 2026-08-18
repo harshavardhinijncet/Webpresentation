@@ -19,6 +19,7 @@ import { TestimonialWall } from './TestimonialWall.js';
 import { PlacementWall } from './PlacementWall.js';
 import { CertificationWall } from './CertificationWall.js';
 import { EventReel } from './EventReel.js';
+import { VideoResumes } from './VideoResumes.js';
 import { AiReadyEngineer } from './AiReadyEngineer.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
@@ -139,6 +140,9 @@ export function renderBlock(block, options = {}) {
 
     case 'event-reel':
       return EventReel(block, options);
+
+    case 'video-resume':
+      return VideoResumes(block, options);
 
     case 'ai-ready-engineer':
       return AiReadyEngineer(block, options);

@@ -23,40 +23,38 @@ import { SectionIconGlyph } from './IconChooser.js';
  * announced as Strategic Foundation. A presenter never receives the full list,
  * so position cannot identify a section for them. The key can.
  */
+/* The deck, in the order a presenter walks it. Ten sections, and every one of
+   them has something on it — the seven that never got content have been removed
+   rather than left as blank slides a presenter can walk into.
+
+   A curated label wins over the stored title, so this list is the presenter-facing
+   naming. Three of them were actively wrong: "Talent Acquisition" was the label on
+   the Certifications page, which is why nobody could find the certifications;
+   "Events & Milestones" carried three subsection labels for pages that do not
+   exist; and Testimonials is now the video resumes. */
 const NAVIGATION_GROUPS = [
   ['company-profile', 'Organization Overview', 'layers', ['Executive Summary', 'Organization Snapshot', 'History & Milestones']],
   ['ceo-message', 'Leadership', 'users', ['CEO Profile', 'Leadership Journey', 'Success Stories', 'CEO Vision']],
-  ['best-practices', 'Strategic Initiatives', 'sparkles', ['T-Connect', 'Get Ready Connect', 'Drive Ready Connect', 'AI Innovations']],
   // One page, not a tree. Ignite Coder, Moon Coder, SkillUp, Become, Bamboo,
   // Owl, Drive Ready and PEGA are all programmes and belong on the Programs
-  // page together — as eight nav rows they made the reader open eight pages to
-  // read one catalogue. AI Ready Engineer has left for a section of its own.
+  // page together. AI Ready Engineer has left for a section of its own.
   ['programs', 'Programs & Learning', 'book', []],
-  // One page, like Programs. The four strands read as one story about where
-  // the centres invest, and splitting them across four nav rows made the
-  // reader open four pages to see a single picture.
-  ['team', 'Centers of Excellence', 'beaker', []],
-  ['initiatives', 'Operational Excellence', 'workflow', [
-    'Learning Pathways',
-    'Industry Integration',
-    { label: 'Assessment Platforms', children: ['MYNA', 'HOOT', 'ATS'] },
-  ]],
-  ['certifications', 'Talent Acquisition', 'user-check', ['Entrance Test', 'Interview & Screening']],
-  ['placements', 'Placements', 'trend-up', []],
-  ['coe', 'Strategic Partnerships', 'partners', ['Academic Partners', 'Industry Partners', 'Global Collaborations']],
-  ['mous', 'Career Outcomes', 'trend-up', ['Placement Readiness', 'Placement Statistics', 'Success Stories']],
-  ['moments', 'Recognition & Achievements', 'trophy', ['Institutional Awards', 'Student Achievements', 'Faculty Recognition']],
-  ['achievements', 'Events & Milestones', 'calendar', ['Events', 'Workshops', 'Project Arena']],
-  ['media', 'Media Center', 'images', ['Photo Gallery', 'Video Gallery']],
-  /* One page, and its own name. The three labels under it were placeholders
-     for pages nobody built, and calling it Success Stories put a second row
-     of that name in the nav while Leadership already owned one. */
-  ['testimonials', 'Testimonials', 'quote', []],
-  ['contact', 'Connect With Us', 'mail', ['Contact Information', 'Office Locations', 'Contact Form']],
-   /* A section with no entry here keeps its stored title and a keyword icon,
-     which is a fine fallback — but the flagship programme deserves its own
-     curated name. */
   ['ai-ready-engineer', 'AI Ready Engineer', 'brain', []],
+  ['platforms', 'Platforms', 'grid-4', []],
+  // One page, like Programs. The four strands read as one story about where the
+  // centres invest, and splitting them across four nav rows made the reader open
+  // four pages to see a single picture.
+  ['team', 'Centers of Excellence', 'beaker', []],
+  /* Its own name, at last. This row said "Talent Acquisition" and carried two
+     placeholder labels, so the finished 82-card certifications wall was sitting
+     behind a heading that gave no hint it was there. */
+  ['certifications', 'Certifications', 'certificate', []],
+  ['placements', 'Placements', 'trend-up', []],
+  /* One section, no subsections. "Events", "Workshops" and "Project Arena" were
+     placeholders for pages nobody built, and the whole film library is one page. */
+  ['achievements', 'Events', 'calendar', []],
+  /* Was Testimonials. It carries the student video resumes now. */
+  ['testimonials', 'Video Resumes', 'user-badge', []],
 ];
 
 /**
