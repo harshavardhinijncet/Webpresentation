@@ -1,7 +1,7 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
-import { videoControls } from '../utils/videoControls.js';
+import { videoControls, withPlayerApi } from '../utils/videoControls.js';
 
 /**
  * Centers of Excellence: a wall of accredited academies and partner practices,
@@ -162,7 +162,47 @@ function centerCard(center, index, onOpen) {
 
 /* ------------------------------------------------------------- the detail */
 
+/* The vendor academies publish their films on YouTube rather than as files, so a
+   centre's strip has to hold both. A frame is on another origin and cannot be
+   read or called, which is why the hover bar drives it by postMessage — the same
+   arrangement every other player in the deck uses. */
+const YT_PARAMS = withPlayerApi('autoplay=1&controls=0&modestbranding=1&rel=0'
+  + '&iv_load_policy=3&playsinline=1&disablekb=1&fs=0&color=white');
+
+function youtubeTile(item, center) {
+  /* Mounted on click, not on open. Four Pega films that all start the instant a
+     centre is opened is four soundtracks at once, and an iframe cannot be told to
+     wait once it is in the document. */
+  const box = h('div', { class: 'coe-tile__media coe-tile__yt' });
+  const start = h('button', {
+    class: 'coe-tile__play', type: 'button',
+    'aria-label': `Play ${item.label || center.name}`,
+    onclick: () => {
+      const frame = h('iframe', {
+        class: 'coe-tile__frame',
+        src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(item.youtube)}?${YT_PARAMS}`,
+        title: item.label || center.name, frameborder: '0',
+        allow: 'autoplay; encrypted-media; picture-in-picture', allowfullscreen: '',
+      });
+      box.replaceChildren(frame, videoControls(frame));
+      box.classList.add('is-live');
+    },
+  }, icon('play', { class: 'ic' }));
+  /* A poster is a nicety: it comes from i.ytimg.com and there is no network at
+     presentation time, so it removes itself on error and the plate carries the
+     caption instead. */
+  const shot = h('img', {
+    class: 'coe-tile__poster', alt: '', loading: 'lazy', decoding: 'async',
+    src: `https://i.ytimg.com/vi/${encodeURIComponent(item.youtube)}/hqdefault.jpg`,
+  });
+  shot.addEventListener('error', () => shot.remove());
+  box.append(shot, start);
+  return h('figure', { class: 'coe-tile coe-tile--yt has-vc' }, box,
+    item.label ? h('figcaption', {}, item.label) : null);
+}
+
 function mediaTile(item, center) {
+  if (item.youtube) return youtubeTile(item, center);
   const src = media(`/uploads/${encodeURI(item.src)}`);
   if (item.kind === 'video') {
     const video = h('video', {

@@ -41,6 +41,7 @@ export const BLOCK_TYPES = [
   'testimonial-wall',
   'placement-wall',
   'certification-wall',
+  'event-reel',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -582,6 +583,39 @@ function normalizeBlock(raw, index = 0, depth = 0) {
        the real pixels have to travel with the data.
        Unlike Placements they are almost all square, which is why the wall can be
        a uniform grid rather than solved rows. */
+    case 'event-reel':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.lead = text(raw.lead, 400);
+      block.chapters = (Array.isArray(raw.chapters) ? raw.chapters : [])
+        .map((c) => ({
+          key: text(c?.key, 40),
+          name: text(c?.name, 80),
+          icon: text(c?.icon, 40),
+          blurb: text(c?.blurb, 240),
+          /* A chapter whose entries are themselves in order — the anniversary
+             films — is drawn as one connected run rather than a set of cards. */
+          sequential: Boolean(c?.sequential),
+          groups: (Array.isArray(c?.groups) ? c.groups : [])
+            .map((g) => ({
+              title: text(g?.title, 160),
+              films: (Array.isArray(g?.films) ? g.films : [])
+                .map((f) => ({
+                  // A YouTube id, or a file under /uploads — never both.
+                  youtube: text(f?.youtube, 24),
+                  src: text(f?.src, 200),
+                  label: text(f?.label, 120),
+                }))
+                .filter((f) => f.youtube || f.src)
+                .slice(0, 24),
+            }))
+            .filter((g) => g.title && g.films.length)
+            .slice(0, 60),
+        }))
+        .filter((c) => c.key && c.name && c.groups.length)
+        .slice(0, 12);
+      break;
+
     case 'certification-wall':
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 160);
@@ -667,7 +701,10 @@ function normalizeBlock(raw, index = 0, depth = 0) {
               src: text(v?.src, 200),
             }))
             .filter((v) => v.youtube || v.src)
-            .slice(0, 12),
+            /* Twelve was the old ceiling and T-Connect landed exactly on it once
+               the video workbook was folded in, which is one film away from
+               silently losing one. */
+            .slice(0, 24),
         }))
         .filter((p) => p.key && p.name)
         .slice(0, 24);
@@ -714,10 +751,13 @@ function normalizeBlock(raw, index = 0, depth = 0) {
           media: (Array.isArray(c?.media) ? c.media : [])
             .map((m) => ({
               src: text(m?.src, 200),
+              /* A YouTube id instead of a file. The vendor-academy films live on
+                 YouTube, so a centre's strip has to be able to hold one. */
+              youtube: text(m?.youtube, 24),
               kind: oneOf(m?.kind, ['image', 'video'], 'image'),
               label: text(m?.label, 120),
             }))
-            .filter((m) => m.src)
+            .filter((m) => m.src || m.youtube)
             .slice(0, 40),
         }))
         .filter((c) => c.key && c.name)
