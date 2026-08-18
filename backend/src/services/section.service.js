@@ -40,6 +40,7 @@ export const BLOCK_TYPES = [
   'program-deck',
   'testimonial-wall',
   'placement-wall',
+  'certification-wall',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -573,6 +574,40 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         }))
         .filter((p) => p.name && (p.youtube || p.src))
         .slice(0, 24);
+      break;
+
+    /* Certifications. Same shape as the placement wall and for the same reason:
+       these are finished announcement cards with the cohort count, the vendor
+       badge and the branding already set into them, so nothing may be cropped and
+       the real pixels have to travel with the data.
+       Unlike Placements they are almost all square, which is why the wall can be
+       a uniform grid rather than solved rows. */
+    case 'certification-wall':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.lead = text(raw.lead, 400);
+      block.vendors = (Array.isArray(raw.vendors) ? raw.vendors : [])
+        .map((v) => ({
+          key: text(v?.key, 60),
+          name: text(v?.name, 80),
+          /* What the cards evidence, from the catalogue the user supplied. Kept
+             per vendor rather than per card: one card is one cohort, and the
+             certification it belongs to is the vendor's, not the photograph's. */
+          domain: text(v?.domain, 80),
+          skills: (Array.isArray(v?.skills) ? v.skills : [])
+            .map((k) => text(k, 120)).filter(Boolean).slice(0, 8),
+          certs: (Array.isArray(v?.certs) ? v.certs : [])
+            .map((c) => ({
+              src: text(c?.src, 240),
+              label: text(c?.label, 120),
+              w: clampInt(c?.w, 1, 20000, 0),
+              h: clampInt(c?.h, 1, 20000, 0),
+            }))
+            .filter((c) => c.src && c.w && c.h)
+            .slice(0, 60),
+        }))
+        .filter((v) => v.key && v.certs.length)
+        .slice(0, 30);
       break;
 
     /* Placements. Every image carries its true pixel dimensions, and that is

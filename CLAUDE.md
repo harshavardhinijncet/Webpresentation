@@ -137,11 +137,26 @@ put, and browser Back returns.
 
 ## Current state
 
-Blank except two finished areas, which are the reference for what designed means:
+Fourteen of Technical Hub's twenty-three pages are designed and published. Any of
+them is a fair reference for what "designed" means here:
 
-- **Technical Hub → Organization Overview** — Executive Summary
-- **Technical Hub → Leadership** — CEO Profile · Leadership Journey · Success
-  Stories · CEO Vision, built from the Babji Neelam portfolio page
+- **Organization Overview** — the section page, plus Organization Snapshot and
+  History & Milestones
+- **Leadership** — CEO Profile, Leadership Journey, Success Stories, CEO Vision,
+  built from the Babji Neelam portfolio page
+- **Programs & Learning**, **AI Ready Engineer**, **Platforms**,
+  **Centers of Excellence**, **Testimonials**
+- **Placements** — justified-row galleries; the sources are announcement cards
+  with names and counts set into them, so nothing there may be cropped
+- **Certifications** — 82 cohort cards across 19 vendors, same rule
 
 Torii has no content yet. The same Leadership content applies to it — ask before
 mirroring.
+
+Two galleries now solve their own layout, and they do it differently on purpose.
+`PlacementWall.justifyRows` fills each row's width, which is right for
+photographs of every shape. `CertificationWall.packRows` solves width and height
+together and picks a column count, because a row of square cards is always far
+wider than it is tall and filling the width alone strands the stage in white.
+Neither ever crops: a tile's width is always its own aspect ratio times the
+solved height.

@@ -11097,3 +11097,302 @@ body.is-presenting .sw-root {
   color: #0A0B0D;
 }
 .vc__btn.is-live:hover { background: var(--nav-accent, var(--brand-accent, #B8F14A)); filter: brightness(1.08); }
+
+/* ==========================================================================
+   Certifications — a vendor rail, and a wall that crops nothing
+   ==========================================================================
+   Every file is a finished branded card: cohort photograph, vendor badge, the
+   trainee count already set in type. So the tiles are solved from each file's
+   own aspect ratio and the wall fills its height by choosing a row height, never
+   by trimming an edge. Same discipline as the Placements gallery, different
+   navigation: nineteen vendors is a list down the side, not a row of pills.
+   ========================================================================== */
+
+.cw-root {
+  display: flex;
+  flex-direction: column;
+  /* A fixed minimum, not a percentage: the root's height comes from this, so its
+     computed height is `auto` and a percentage height on a child would resolve to
+     auto as well. Flex hands the stage the leftover space instead. */
+  min-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.cw-empty { display: grid; place-items: center; min-height: 400px; gap: 10px; text-align: center; }
+.cw-hint { margin: 0; color: var(--muted); font-size: 13px; }
+
+/* --------------------------------------------------------------- the head -- */
+/* Title left, the two figures right. Centred would have pushed the wall 60px
+   further down for no gain — the rail already gives the page its left edge, so
+   the head shares it. */
+.cw-head {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
+  align-items: end; column-gap: 28px;
+  padding: 22px 26px 16px;
+  border-bottom: 1px solid var(--hairline, #e5e7eb);
+}
+.cw-eyebrow {
+  margin: 0 0 7px; color: var(--nav-accent-ink, var(--accent-ink));
+  font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.cw-title { margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; }
+.cw-rule {
+  display: block; height: 3px; margin-top: 10px;
+  background: var(--nav-accent-ink, var(--accent-ink)); border-radius: 2px;
+  width: 76px; transform-origin: left center;
+  animation: cw-draw 620ms cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes cw-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.cw-lead {
+  margin: 0 0 4px; max-width: 60ch; color: var(--muted);
+  font-size: 14px; line-height: 1.5;
+}
+.cw-stats { display: flex; gap: 26px; }
+.cw-stat { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+.cw-stat strong {
+  font-size: 30px; font-weight: 800; letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums; color: var(--ink, #111827);
+}
+.cw-stat span {
+  margin-top: 5px; color: var(--muted);
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------- the body -- */
+/* Fixed rail, flexible wall. The rail width is a constant here *and* in
+   CertificationWall.js, because the row solver has to know the wall width in
+   layout pixels before a single image has loaded — measuring it would return
+   post-transform pixels from inside FitSlide. Change one and change the other. */
+.cw-body {
+  flex: 1 1 auto; min-height: 0;
+  display: grid; grid-template-columns: 250px minmax(0, 1fr);
+  column-gap: 22px; padding: 0 26px;
+}
+
+.cw-rail {
+  display: flex; flex-direction: column; gap: 2px;
+  min-height: 0; padding: 14px 14px 16px 0;
+  overflow-y: auto; scrollbar-width: none;
+  border-right: 1px solid var(--hairline, #e5e7eb);
+  margin-right: -14px;
+}
+.cw-rail::-webkit-scrollbar { width: 0; }
+
+.cw-tab {
+  flex: 0 0 auto;
+  display: grid; grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center; gap: 9px;
+  padding: 6px 10px; border: 0; border-radius: var(--radius-sm);
+  background: transparent; color: var(--muted);
+  text-align: left; cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+  animation: cw-rail-in 420ms cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes cw-rail-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: none; }
+}
+.cw-tab__glyph { display: grid; place-items: center; opacity: 0.8; }
+.cw-tab__text { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.cw-tab__name {
+  font-size: 13px; font-weight: 700; letter-spacing: -0.005em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* The domain only shows on the active row. Nineteen rows each carrying two lines
+   is 40px apiece, which does not fit the stage — and a list where every row is
+   equally loud is a list nothing stands out in. */
+.cw-tab__sub {
+  display: none; margin-top: 1px;
+  font-size: 10.5px; font-weight: 650; letter-spacing: 0.02em; opacity: 0.85;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cw-tab__n {
+  font-size: 11px; font-weight: 750; font-variant-numeric: tabular-nums;
+  opacity: 0.6; padding-left: 2px;
+}
+.cw-tab:hover { color: var(--ink, #111827); background: var(--page-bg); }
+.cw-tab.is-on {
+  color: #fff; background: var(--nav-accent-ink, var(--accent-ink));
+  padding-top: 8px; padding-bottom: 8px;
+}
+.cw-tab.is-on .cw-tab__sub { display: block; }
+.cw-tab.is-on .cw-tab__glyph { opacity: 1; }
+.cw-tab.is-on .cw-tab__n { opacity: 0.9; }
+.cw-tab:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
+
+.cw-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+
+/* ------------------------------------------------------------- the banner -- */
+.cw-banner {
+  flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; padding: 14px 0 0;
+}
+.cw-banner__id { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.cw-banner__glyph {
+  display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 auto;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--nav-accent-ink, var(--accent-ink)) 12%, transparent);
+  color: var(--nav-accent-ink, var(--accent-ink));
+}
+.cw-banner__name { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: -0.015em; }
+.cw-banner__meta {
+  margin: 2px 0 0; color: var(--muted);
+  font-size: 11.5px; font-weight: 650; letter-spacing: 0.01em;
+}
+.cw-banner__dot { margin: 0 7px; opacity: 0.5; }
+
+.cw-skills { display: flex; gap: 7px; margin: 0; padding: 0; list-style: none; flex-wrap: nowrap; }
+.cw-skills__item {
+  display: flex; align-items: center; gap: 5px;
+  max-width: 25ch; padding: 5px 10px;
+  border: 1px solid var(--hairline, #e5e7eb); border-radius: 999px;
+  color: var(--muted); font-size: 10.5px; font-weight: 650; line-height: 1.25;
+  animation: cw-chip-in 460ms cubic-bezier(.2,.7,.3,1) both;
+}
+.cw-skills__item .ic { flex: 0 0 auto; color: var(--nav-accent-ink, var(--accent-ink)); }
+@keyframes cw-chip-in {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* -------------------------------------------------------------- the stage -- */
+/* No horizontal padding: the row solver is handed this element exact content
+   width as a constant, and padding here would make every row that much too wide.
+   The vertical padding is the 28px the solver subtracts. */
+.cw-stage {
+  flex: 1 1 auto; min-height: 0;
+  padding: 14px 0;
+  overflow-y: auto; overflow-x: hidden;
+  scrollbar-width: none;                 /* the reveal is the scroll cue */
+  scroll-behavior: smooth;
+}
+.cw-stage::-webkit-scrollbar { width: 0; height: 0; }
+/* Centred when the rows fit, top-aligned when they scroll — a centred scroll
+   container hides its own first row above the fold. */
+.cw-stage.is-short { display: flex; flex-direction: column; justify-content: center; }
+.cw-wall .cw-row:last-child { margin-bottom: 0; }
+
+/* The rows as one centred block, each starting on the same left edge.
+   Not all rows are the same width — a few of these files are not square, so a
+   fixed column count gives the row holding a wide card more width than its
+   neighbours. Centring each row on its own made the eighty-two-card wall look like
+   a grid that had come apart; one straight left edge with a ragged right reads as
+   the mosaic it actually is. Width is set inline, from the widest row. */
+.cw-wall { flex: 0 0 auto; margin: 0 auto; }
+.cw-row { display: flex; align-items: stretch; justify-content: flex-start; margin-bottom: 12px; }
+
+.cw-tile {
+  position: relative; flex: 0 0 auto; padding: 0;
+  border: 1px solid var(--hairline, #e5e7eb); border-radius: var(--radius-sm);
+  overflow: hidden; background: #f3f4f6; cursor: zoom-in;
+  opacity: 0; transform: translateY(15px) scale(0.985);
+  transition: opacity 500ms cubic-bezier(.2,.7,.3,1),
+              transform 500ms cubic-bezier(.2,.7,.3,1),
+              box-shadow 200ms ease, border-color 200ms ease;
+}
+.cw-tile.is-in { opacity: 1; transform: none; }
+.cw-tile:hover {
+  box-shadow: 0 14px 32px rgb(0 0 0 / 0.18);
+  border-color: var(--nav-accent-ink, var(--accent-ink));
+  z-index: 2;
+}
+.cw-tile img {
+  display: block; width: 100%; height: 100%;
+  /* The box was solved from this file own width and height, so cover has nothing
+     to crop past a rounding hairline — and unlike `contain` it cannot leave a
+     letterbox line where the rounding fell the other way. */
+  object-fit: cover;
+  transition: transform 420ms cubic-bezier(.2,.7,.3,1);
+}
+.cw-tile:hover img { transform: scale(1.04); }
+.cw-tile__tag {
+  position: absolute; inset: auto 0 0 0; padding: 18px 9px 7px;
+  display: flex; flex-direction: column; gap: 1px;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.78), transparent);
+  color: #fff; text-align: left; opacity: 0; transition: opacity 200ms ease;
+}
+.cw-tile__tag em {
+  font-style: normal; font-size: 11px; font-weight: 750; line-height: 1.25;
+  /* Two lines and then an ellipsis: some of these names run long, and a name that
+     overflows its tile paints across the picture below it. */
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cw-tile__tag span {
+  font-size: 9.5px; font-weight: 650; letter-spacing: 0.06em;
+  text-transform: uppercase; opacity: 0.75;
+}
+.cw-tile__zoom {
+  position: absolute; top: 7px; right: 7px;
+  display: grid; place-items: center; width: 24px; height: 24px;
+  border-radius: 7px; background: rgb(255 255 255 / 0.9); color: #111827;
+  opacity: 0; transform: scale(0.86); transition: opacity 180ms ease, transform 180ms ease;
+}
+.cw-tile:hover .cw-tile__tag,
+.cw-tile:focus-visible .cw-tile__tag { opacity: 1; }
+.cw-tile:hover .cw-tile__zoom,
+.cw-tile:focus-visible .cw-tile__zoom { opacity: 1; transform: none; }
+
+/* ---------------------------------------------------------- the lightbox -- */
+/* On the body, never inside the slide: FitSlide transform would otherwise be the
+   containing block and `inset: 0` would mean the slide, not the screen. */
+.cw-light {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center; padding: 3vh 3vw;
+  background: rgb(9 11 14 / 0.92);
+  opacity: 0; transition: opacity 220ms ease;
+}
+.cw-light.is-on { opacity: 1; }
+.cw-light[hidden] { display: none; }
+.cw-light__frame {
+  margin: 0; display: flex; flex-direction: column; gap: 12px;
+  max-width: calc(100% - 160px);         /* the arrows sit over the image */
+  max-height: 100%;
+  transform: scale(0.97); transition: transform 260ms cubic-bezier(.2,.7,.3,1);
+}
+.cw-light.is-on .cw-light__frame { transform: none; }
+.cw-light__img {
+  /* Bounded by the viewport and nothing else, so the file is shown at its own
+     resolution wherever it fits. */
+  display: block; max-width: 100%; max-height: calc(100vh - 14vh);
+  width: auto; height: auto; object-fit: contain;
+  border-radius: var(--radius); background: #111;
+}
+.cw-light__foot { display: flex; width: 100%; align-items: baseline; gap: 12px; color: #e5e7eb; }
+.cw-light__cap { margin: 0; font-size: 15px; font-weight: 700; }
+.cw-light__meta { color: #9ca3af; font-size: 12px; font-variant-numeric: tabular-nums; }
+.cw-light__count {
+  margin-left: auto; color: #9ca3af; font-size: 12px;
+  font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.cw-light__close {
+  position: absolute; top: 18px; right: 20px;
+  display: grid; place-items: center; width: 40px; height: 40px;
+  border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.12);
+  color: #fff; cursor: pointer; transition: background 160ms ease;
+}
+.cw-light__close:hover { background: rgb(255 255 255 / 0.22); }
+.cw-light__nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  display: grid; place-items: center; width: 56px; height: 56px;
+  border: 0; border-radius: 999px;
+  background: rgb(255 255 255 / 0.12); color: #fff; cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.cw-light__nav:hover { background: rgb(255 255 255 / 0.24); }
+.cw-light__nav:active { transform: translateY(-50%) scale(0.94); }
+.cw-light__nav[hidden] { display: none; }
+.cw-light__nav .ic { width: 28px; height: 28px; }
+.cw-light__nav--prev { left: 22px; }
+.cw-light__nav--next { right: 22px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-rule, .cw-tab, .cw-skills__item { animation: none; }
+  .cw-tile { opacity: 1; transform: none; transition: none; }
+  .cw-tile:hover img { transform: none; }
+  .cw-light, .cw-light__frame, .cw-light__nav { transition: none; }
+}
