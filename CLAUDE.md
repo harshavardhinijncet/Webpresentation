@@ -137,45 +137,78 @@ put, and browser Back returns.
 
 ## Current state
 
-Fourteen of Technical Hub's twenty-three pages are designed and published. Any of
-them is a fair reference for what "designed" means here:
+Ten sections, all with content. Nothing is a placeholder and nothing is half
+built; the empty ones were deleted rather than left for a presenter to walk into.
 
-- **Organization Overview** — the section page, plus Organization Snapshot and
-  History & Milestones
-- **Leadership** — CEO Profile, Leadership Journey, Success Stories, CEO Vision,
-  built from the Babji Neelam portfolio page
-- **Programs & Learning**, **AI Ready Engineer**, **Platforms**,
-  **Centers of Excellence**, **Testimonials**
-- **Placements** — justified-row galleries; the sources are announcement cards
-  with names and counts set into them, so nothing there may be cropped
-- **Certifications** — 82 cohort cards across 19 vendors, same rule
-- **Events & Milestones** — the whole film library, 91 across six chapters,
-  built from `backend/uploads/Videos.xlsx`
+| # | Section | Block | Source |
+| --- | --- | --- | --- |
+| 1 | Organization Overview | `hero` + 2 pages | authored |
+| 2 | Leadership | 4 pages | Babji Neelam portfolio |
+| 3 | Programs & Learning | `program-deck` | `uploads/Programs*`, `Videos.xlsx` |
+| 4 | Centers of Excellence | `coe-wall` | `uploads/coepics/`, `Videos.xlsx` |
+| 5 | Certifications | `certification-wall` | see below |
+| 6 | Placements | `placement-wall` | `uploads/Placements/` |
+| 7 | Events | `event-reel` | `uploads/Videos.xlsx` |
+| 8 | Video Resumes | `video-resume` | `uploads/Video Resumes.xlsx` |
+| 9 | AI Ready Engineer | `course-deck` | authored |
+| 10 | Platforms | `platforms` | `uploads/platform-logos/` |
 
-Torii has no content yet. The same Leadership content applies to it — ask before
+Torii has no content. The same Leadership material applies to it — ask before
 mirroring.
 
-Two galleries now solve their own layout, and they do it differently on purpose.
-`PlacementWall.justifyRows` fills each row's width, which is right for
-photographs of every shape. `CertificationWall.packRows` solves width and height
-together and picks a column count, because a row of square cards is always far
-wider than it is tall and filling the width alone strands the stage in white.
-Neither ever crops: a tile's width is always its own aspect ratio times the
-solved height.
+**Certifications is user-supplied and is not to be redesigned.** The component,
+its CSS and `tools/publish-certifications.cjs` arrived as a bundle and were
+reverted to it once already after being rewritten. Three acts — The Register,
+Skills Unlocked, The Gallery — 42 credentials at 32,146 held, 19 vendors, 82
+cohort cards. Change it only when asked, and change only what is asked.
+
+## Republishing a section
+
+`tools/` holds what can rebuild a page from its sources. Anything not listed is
+still publishable only by hand.
+
+| Script | Section |
+| --- | --- |
+| `publish-certifications.cjs` | Certifications — counts from `Logos.xlsx`, artwork from the folders, prose in the script |
+| `fetch-certification-logos.cjs` | downloads the badge art named in `Logos.xlsx` |
+| `import-leadership-photos.cjs` | Leadership Journey |
+| `presenter-visibility.cjs` | what the presenter side shows |
+
+The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it
+rather than writing a third one.
+
+## Things already learned the hard way
+
+Two galleries solve their own layout and do it differently on purpose.
+`PlacementWall.justifyRows` fills each row's width, which suits photographs of
+every shape. `CertificationWall.packRows` solves width and height together and
+picks a column count, because a row of square cards is always far wider than it is
+tall and filling the width alone strands the stage in white. Neither ever crops: a
+tile's width is always its own aspect ratio times the solved height.
 
 Films live in `backend/uploads/Videos.xlsx`, six sheets, and the sheet's own
 convention matters: a row with a title starts a series and every row beneath it
 with the title left blank is another part of it. `EventReel` draws a series as a
-numbered run with arrows, and the same films are also filed into the matching
-programme on Programs and the matching centre on Centers of Excellence — merged,
-never replacing what those pages already carry.
+numbered run with arrows, and the same films are filed into the matching programme
+on Programs and the matching centre on Centers of Excellence — merged, never
+replacing what those pages already carry.
 
 No YouTube poster may be load-bearing. They come from `i.ytimg.com` and there is
-no network at presentation time, so every poster in the deck removes itself on
-`error` and the card falls back to type on a dark plate.
+no network at presentation time, so every poster removes itself on `error` and the
+card falls back to type on a dark plate. The same rule covers vendor badges, which
+is why they are downloaded rather than hot-linked.
 
-One trap worth knowing before adding a section that scrolls internally:
-`.canvas-block > *` sets `flex: 1`, and its `flex-basis: 0%` overrides `height`
-on the main axis. A `min-height` root then grows to its content instead of
-letting a child scroll, and FitSlide scales the slide down to fit. Use
-`flex: 0 0 auto` with `height` **and** `max-height` — see `.ev-root`.
+A dimension check does not prove an image is whole. `others/DriveReady 10 Trainees
+(PARTIAL DOWNLOAD).jpg` is 9.6kB of a much larger photograph with a header intact
+enough to report a size. Check the last bytes too — `FFD9` for JPEG, `IEND` for
+PNG, `0x3B` for GIF.
+
+One trap before adding a section that scrolls internally: `.canvas-block > *` sets
+`flex: 1`, and its `flex-basis: 0%` overrides `height` on the main axis. A
+`min-height` root then grows to its content instead of letting a child scroll, and
+FitSlide scales the slide down to fit. Use `flex: 0 0 auto` with `height` **and**
+`max-height` — see `.ev-root`.
+
+Related: a box sized by `aspect-ratio` off a percentage width contributes *nothing*
+to intrinsic height, so `grid-auto-rows: auto` sizes to the rest of the card and
+the picture overflows. Hand the row an explicit height.

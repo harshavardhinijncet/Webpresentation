@@ -905,27 +905,13 @@
       "updatedAt": "2026-08-08T08:40:27.357Z"
     },
     {
-      "id": "sec_99c30560f78a44f2",
-      "orgId": "technical-hub",
-      "key": "best-practices",
-      "title": "Best Practices",
-      "subtitle": "",
-      "icon": "✦",
-      "order": 3,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.051Z",
-      "updatedAt": "2026-08-08T07:03:51.679Z"
-    },
-    {
       "id": "sec_2ce27ff81ff0481d",
       "orgId": "technical-hub",
       "key": "programs",
       "title": "Programs & Learning",
       "subtitle": "",
       "icon": "▤",
-      "order": 4,
+      "order": 2,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -994,6 +980,26 @@
                   "title": "Owl Coder Placements",
                   "youtube": "Q0O3zrzOoEc",
                   "src": ""
+                },
+                {
+                  "title": "Owl Coder",
+                  "youtube": "kkBQQ9njcJA",
+                  "src": ""
+                },
+                {
+                  "title": "Life of an Owl Coder",
+                  "youtube": "sIA1L7rWtow",
+                  "src": ""
+                },
+                {
+                  "title": "Owl Coder Deliverables",
+                  "youtube": "t9aB4kHGk0w",
+                  "src": ""
+                },
+                {
+                  "title": "Owl Coder Placements",
+                  "youtube": "1JriTokxtzs",
+                  "src": ""
                 }
               ]
             },
@@ -1006,6 +1012,11 @@
                 {
                   "title": "Drive Ready 7.0",
                   "youtube": "J7rIcZ-YoRg",
+                  "src": ""
+                },
+                {
+                  "title": "Drive Ready — part 1",
+                  "youtube": "bZus9z5qZ2A",
                   "src": ""
                 }
               ]
@@ -1048,6 +1059,11 @@
                   "title": "Grow",
                   "youtube": "WBINrie9mzc",
                   "src": ""
+                },
+                {
+                  "title": "GROW",
+                  "youtube": "Zknym0jiol4",
+                  "src": ""
                 }
               ]
             },
@@ -1071,6 +1087,51 @@
                   "title": "T-Connect · 3",
                   "youtube": "awFS-mJR9q0",
                   "src": ""
+                },
+                {
+                  "title": "T-Connect",
+                  "youtube": "vxoHN48gkg0",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect 2.0",
+                  "youtube": "gyezuHlm1hE",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect 4.0",
+                  "youtube": "JD8ZQSRi-qs",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect 5.0",
+                  "youtube": "vpBMPKUCvuY",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect Feedback — part 1",
+                  "youtube": "r8cDm5SlBnA",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect Feedback — part 2",
+                  "youtube": "T6T_mrUG3IQ",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect Feedback — part 3",
+                  "youtube": "Th1mrPgaLLw",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect 6.0",
+                  "youtube": "WqkAu3j2slk",
+                  "src": ""
+                },
+                {
+                  "title": "T-Connect 6.0 Thanking Techies",
+                  "youtube": "K-W004YHfYc",
+                  "src": ""
                 }
               ]
             }
@@ -1078,7 +1139,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:38.059Z",
-      "updatedAt": "2026-08-09T14:54:29.929Z"
+      "updatedAt": "2026-08-18T08:13:35.683Z"
     },
     {
       "id": "sec_bddf4b1b0ee64631",
@@ -1087,7 +1148,7 @@
       "title": "Centers of Excellence",
       "subtitle": "",
       "icon": "⬢",
-      "order": 5,
+      "order": 3,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1140,11 +1201,13 @@
               "media": [
                 {
                   "src": "coepics/aws/1.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/aws/2.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 }
@@ -1162,11 +1225,13 @@
               "media": [
                 {
                   "src": "coepics/oracle/1.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/oracle/2.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 }
@@ -1183,72 +1248,92 @@
               "logoFull": "redhat full.png",
               "media": [
                 {
+                  "src": "",
+                  "youtube": "QRYe7MaEqdU",
+                  "kind": "video",
+                  "label": "RedHat Academy"
+                },
+                {
                   "src": "coepics/redhat/1.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/2.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/3.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/4.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/5.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/6.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/7.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/8.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/9.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/10.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/11.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/13.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/Redhat Academey Challenge.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/redhat/Redhat Challenge 1.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 }
@@ -1266,26 +1351,31 @@
               "media": [
                 {
                   "src": "coepics/snowflake/1.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/snowflake/2.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/snowflake/3.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/snowflake/4.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/snowflake/5.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 }
@@ -1302,37 +1392,62 @@
               "logoFull": "pega full.webp",
               "media": [
                 {
+                  "src": "",
+                  "youtube": "asLTQ9V4kOI",
+                  "kind": "video",
+                  "label": "PEGA — part 1"
+                },
+                {
+                  "src": "",
+                  "youtube": "ygsE4YAC1yk",
+                  "kind": "video",
+                  "label": "PEGA — part 2"
+                },
+                {
+                  "src": "",
+                  "youtube": "ljYucKe7ZEc",
+                  "kind": "video",
+                  "label": "PEGA Project Space"
+                },
+                {
                   "src": "coepics/pega/1.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/pega/2.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/pega/3.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/pega/4.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/pega/5.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/pega/6.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/pega/8.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 }
@@ -1416,26 +1531,31 @@
               "media": [
                 {
                   "src": "coepics/aa/1.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/aa/2.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/aa/3.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/aa/4.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
                   "src": "coepics/aa/5.jpg",
+                  "youtube": "",
                   "kind": "image",
                   "label": ""
                 }
@@ -1483,7 +1603,14 @@
               "ink": "#FFFFFF",
               "logo": "mile2 full.webp",
               "logoFull": "mile2 full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "",
+                  "youtube": "nL4bXn93yOM",
+                  "kind": "video",
+                  "label": "Mile 2"
+                }
+              ]
             },
             {
               "key": "microsoft",
@@ -1511,35 +1638,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:38.066Z",
-      "updatedAt": "2026-08-12T06:23:05.397Z"
-    },
-    {
-      "id": "sec_e43351a97e7643f0",
-      "orgId": "technical-hub",
-      "key": "initiatives",
-      "title": "Initiatives",
-      "subtitle": "",
-      "icon": "◈",
-      "order": 6,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.073Z",
-      "updatedAt": "2026-08-08T07:03:51.713Z"
-    },
-    {
-      "id": "sec_69c6554f56bd453e",
-      "orgId": "technical-hub",
-      "key": "certifications",
-      "title": "Certifications",
-      "subtitle": "",
-      "icon": "✚",
-      "order": 7,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.082Z",
-      "updatedAt": "2026-08-08T07:03:51.725Z"
+      "updatedAt": "2026-08-18T08:13:35.690Z"
     },
     {
       "id": "sec_23024decb4804a5e",
@@ -1548,7 +1647,7 @@
       "title": "Placements",
       "subtitle": "",
       "icon": "▲",
-      "order": 8,
+      "order": 5,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -2250,159 +2349,1468 @@
       "updatedAt": "2026-08-11T14:39:01.288Z"
     },
     {
-      "id": "sec_7be501c45f464566",
-      "orgId": "technical-hub",
-      "key": "coe",
-      "title": "Centers of Excellence",
-      "subtitle": "",
-      "icon": "◉",
-      "order": 9,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.094Z",
-      "updatedAt": "2026-08-08T07:03:51.746Z"
-    },
-    {
-      "id": "sec_1454bbb9b45d44ae",
-      "orgId": "technical-hub",
-      "key": "mous",
-      "title": "MOUs / Academic Partnerships",
-      "subtitle": "",
-      "icon": "⬟",
-      "order": 10,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.102Z",
-      "updatedAt": "2026-08-08T07:03:51.756Z"
-    },
-    {
-      "id": "sec_f22c6da161594637",
-      "orgId": "technical-hub",
-      "key": "moments",
-      "title": "Memorable Moments",
-      "subtitle": "",
-      "icon": "❖",
-      "order": 11,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.107Z",
-      "updatedAt": "2026-08-08T07:03:51.765Z"
-    },
-    {
       "id": "sec_86f7d33fd59c4bda",
       "orgId": "technical-hub",
       "key": "achievements",
-      "title": "Achievements & Awards",
+      "title": "Events",
       "subtitle": "",
       "icon": "✧",
-      "order": 12,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.117Z",
-      "updatedAt": "2026-08-08T07:03:51.776Z"
-    },
-    {
-      "id": "sec_e05d8c6687f44bf9",
-      "orgId": "technical-hub",
-      "key": "media",
-      "title": "Media / Gallery",
-      "subtitle": "",
-      "icon": "▣",
-      "order": 13,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.123Z",
-      "updatedAt": "2026-08-08T08:28:21.327Z"
-    },
-    {
-      "id": "sec_36db91d0532440aa",
-      "orgId": "technical-hub",
-      "key": "testimonials",
-      "title": "Testimonials",
-      "subtitle": "",
-      "icon": "❞",
-      "order": 14,
+      "order": 6,
       "hidden": false,
       "status": "published",
       "blocks": [
         {
-          "id": "blk_d9946de91f364852",
-          "type": "testimonial-wall",
+          "id": "blk_04fdf2b52f3446c0",
+          "type": "event-reel",
           "layout": {
             "x": 0,
             "y": 0,
             "w": 12,
             "h": 15
           },
-          "eyebrow": "In their own words",
-          "title": "What our students say",
+          "eyebrow": "Events",
+          "title": "Nine years, on film",
+          "lead": "Every film Technical Hub has published, in six chapters — the anniversary reels first, because they are the whole arc of the place.",
+          "chapters": [
+            {
+              "key": "journey",
+              "name": "The Journey",
+              "icon": "flag",
+              "blurb": "Nine years, told by the films made at the end of each of them.",
+              "sequential": true,
+              "groups": [
+                {
+                  "title": "7th Annivesary",
+                  "films": [
+                    {
+                      "youtube": "J1AaijZLehQ",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Technical Hub Journey 2022",
+                  "films": [
+                    {
+                      "youtube": "Bi185TMReEs",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Technical Hub Journey 2023",
+                  "films": [
+                    {
+                      "youtube": "AO-Unwthsss",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "8th Anniversary",
+                  "films": [
+                    {
+                      "youtube": "J1K4Jv33vJc",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Technical Hub Journey 2024",
+                  "films": [
+                    {
+                      "youtube": "ZLZ_caELALU",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Technical Hub Golden Day",
+                  "films": [
+                    {
+                      "youtube": "npWZvkGebf8",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "9th Anniversary",
+                  "films": [
+                    {
+                      "youtube": "2ad0TiZhc40",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "events",
+              "name": "Events & Arenas",
+              "icon": "calendar",
+              "blurb": "Project Space, T-News, Gitex and the days the whole campus turned out.",
+              "sequential": false,
+              "groups": [
+                {
+                  "title": "T-News",
+                  "films": [
+                    {
+                      "youtube": "bpjK1xqHIPA",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "ZjjMzdmwUOc",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "WZte7YT7EEM",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "1xXF8LuP5cc",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "Hx68TKC8i2Y",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "ls18es54N2c",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "iGgzZrpvHao",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "5Km5q4p3cQU",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "ySlLdxk3zJE",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "RlMynAkkp6I",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Why Technical Hub",
+                  "films": [
+                    {
+                      "youtube": "7ySirk9x-s4",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 2.0",
+                  "films": [
+                    {
+                      "youtube": "dlMvtDr7gOs",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "iFEVFoBh558",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space Intro",
+                  "films": [
+                    {
+                      "youtube": "cKWygWPmHy4",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 3.0- Day 1 to Day 6",
+                  "films": [
+                    {
+                      "youtube": "TslImL48kS4",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "fCINJUmmEZs",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "3j3E7xk9IjA",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "qexbja8x4oc",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "lfWMuyHAoTQ",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Poject Space 3.0 Tech Party",
+                  "films": [
+                    {
+                      "youtube": "Xq-pMGG726k",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 4.0- Onboarding Day",
+                  "films": [
+                    {
+                      "youtube": "L0-zSurRC68",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 4.0- Implementation Day",
+                  "films": [
+                    {
+                      "youtube": "gQsY_y37ZQw",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 4.0- Deep Dive Day",
+                  "films": [
+                    {
+                      "youtube": "k3AKCNni5Jc",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 4.0- Fun Network Day",
+                  "films": [
+                    {
+                      "youtube": "B4lYDREHQaE",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 4.0- Expert Session Day",
+                  "films": [
+                    {
+                      "youtube": "5lxbtE_SryQ",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 4.0- Highlights",
+                  "films": [
+                    {
+                      "youtube": "Zknym0jiol4",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 7.0",
+                  "films": [
+                    {
+                      "youtube": "2YpciZnl2h8",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Project Space 8.0",
+                  "films": [
+                    {
+                      "youtube": "4eF2haYMoWM",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "PEGA Project Space",
+                  "films": [
+                    {
+                      "youtube": "ljYucKe7ZEc",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Marker Square",
+                  "films": [
+                    {
+                      "youtube": "WHSDYLToQZo",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Public AR Show",
+                  "films": [
+                    {
+                      "youtube": "0lkBr-cKDR0",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "3000+ Internships",
+                  "films": [
+                    {
+                      "youtube": "IW3DYR2Nr2o",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Programmers Day",
+                  "films": [
+                    {
+                      "youtube": "bxiIsk4ltxM",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Gitex Global",
+                  "films": [
+                    {
+                      "youtube": "0Y-gCZ3Cl3A",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "sTI1LfxKzsw",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "83PojqxKOww",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "P-F8i6LLSds",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Vandematram",
+                  "films": [
+                    {
+                      "youtube": "eFgcXLijFeQ",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Technical Hub Certification",
+                  "films": [
+                    {
+                      "youtube": "eUqOavJxRag",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Independence Day",
+                  "films": [
+                    {
+                      "youtube": "1JriTokxtzs",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "4eF2haYMoWM",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "programs",
+              "name": "Programs",
+              "icon": "book",
+              "blurb": "Every programme that runs here, filmed as it ran.",
+              "sequential": false,
+              "groups": [
+                {
+                  "title": "Drive Ready",
+                  "films": [
+                    {
+                      "youtube": "bZus9z5qZ2A",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "J7rIcZ-YoRg",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Mind Camp",
+                  "films": [
+                    {
+                      "youtube": "Kt4tJdl3Mus",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "L24A2CBjQ0o",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "T-Connect",
+                  "films": [
+                    {
+                      "youtube": "vxoHN48gkg0",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "T-Connect 2.0",
+                  "films": [
+                    {
+                      "youtube": "gyezuHlm1hE",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "T-Connect 4.0",
+                  "films": [
+                    {
+                      "youtube": "JD8ZQSRi-qs",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "T-Connect 5.0",
+                  "films": [
+                    {
+                      "youtube": "vpBMPKUCvuY",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "T-Connect Feedback",
+                  "films": [
+                    {
+                      "youtube": "r8cDm5SlBnA",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "T6T_mrUG3IQ",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "Th1mrPgaLLw",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "T-Connect 6.0",
+                  "films": [
+                    {
+                      "youtube": "WqkAu3j2slk",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "T-Connect 6.0 Thanking Techies",
+                  "films": [
+                    {
+                      "youtube": "K-W004YHfYc",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "T-Connect 7.0",
+                  "films": [
+                    {
+                      "youtube": "awFS-mJR9q0",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Owl Coder",
+                  "films": [
+                    {
+                      "youtube": "kkBQQ9njcJA",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Life of an Owl Coder",
+                  "films": [
+                    {
+                      "youtube": "sIA1L7rWtow",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Owl Coder 2.0",
+                  "films": [
+                    {
+                      "youtube": "5xUzKes5Pcs",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Owl Coder Deliverables",
+                  "films": [
+                    {
+                      "youtube": "t9aB4kHGk0w",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Owl Coder Placements",
+                  "films": [
+                    {
+                      "youtube": "Q0O3zrzOoEc",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "30+ Certifications",
+                  "films": [
+                    {
+                      "youtube": "bu94vHIGtpI",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Mock Interviews",
+                  "films": [
+                    {
+                      "youtube": "9Nybgc9Ho6w",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "bSzgeOYDGJU",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "HOOT",
+                  "films": [
+                    {
+                      "youtube": "T2bqDXAC49c",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "MPOD",
+                  "films": [
+                    {
+                      "youtube": "lfQFKSmsC3w",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "GROW",
+                  "films": [
+                    {
+                      "youtube": "Zknym0jiol4",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "coe",
+              "name": "Centers of Excellence",
+              "icon": "beaker",
+              "blurb": "Inside the vendor academies — Red Hat, Pega and Mile2.",
+              "sequential": false,
+              "groups": [
+                {
+                  "title": "RedHat Academy",
+                  "films": [
+                    {
+                      "youtube": "QRYe7MaEqdU",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "PEGA",
+                  "films": [
+                    {
+                      "youtube": "asLTQ9V4kOI",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "ygsE4YAC1yk",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "PEGA Project Space",
+                  "films": [
+                    {
+                      "youtube": "ljYucKe7ZEc",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Mile 2",
+                  "films": [
+                    {
+                      "youtube": "nL4bXn93yOM",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "team",
+              "name": "The Team",
+              "icon": "users",
+              "blurb": "The people who run it, and the days they compete.",
+              "sequential": false,
+              "groups": [
+                {
+                  "title": "Team",
+                  "films": [
+                    {
+                      "youtube": "KlKlgpDknto",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "1bbN7ONKlpE",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "1859SiCSeTg",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "mH2LHdnL0W8",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Technical Hub Awards",
+                  "films": [
+                    {
+                      "youtube": "6Zh9Exwrnzs",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Clash of Techies",
+                  "films": [
+                    {
+                      "youtube": "2-PX7PPtsiU",
+                      "src": "",
+                      "label": ""
+                    },
+                    {
+                      "youtube": "-5K5xzzK2kk",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "ai",
+              "name": "Technical Hub AI",
+              "icon": "brain",
+              "blurb": "Robots, avatars and the assistants built in house.",
+              "sequential": false,
+              "groups": [
+                {
+                  "title": "Technical Hub Robo Gen AI",
+                  "films": [
+                    {
+                      "youtube": "GbI5nWeP2N0",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Technical Hub Maya",
+                  "films": [
+                    {
+                      "youtube": "DyTC7LROZo8",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Technical Hub Zoro",
+                  "films": [
+                    {
+                      "youtube": "mkTwsweWZ24",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Emo Pulse",
+                  "films": [
+                    {
+                      "youtube": "WSNquCjFEqk",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Story Book",
+                  "films": [
+                    {
+                      "youtube": "EvuY7qSz6kE",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                },
+                {
+                  "title": "Maya AI",
+                  "films": [
+                    {
+                      "youtube": "NblyE09mDio",
+                      "src": "",
+                      "label": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.117Z",
+      "updatedAt": "2026-08-18T09:19:21.607Z"
+    },
+    {
+      "id": "sec_36db91d0532440aa",
+      "orgId": "technical-hub",
+      "key": "testimonials",
+      "title": "Video Resumes",
+      "subtitle": "",
+      "icon": "❞",
+      "order": 7,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_1205a0642d28457f",
+          "type": "video-resume",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "eyebrow": "Video resumes",
+          "title": "Meet them for yourself",
+          "lead": "Every student here recorded their own introduction. Search a name, or pick a letter, and the film plays across the whole screen.",
           "people": [
             {
               "name": "Anjana",
-              "note": "",
-              "photo": "Testimonials/anjana.jpg",
               "youtube": "mwMu4_6JcCI",
               "src": ""
             },
             {
-              "name": "Divyal Nandini",
-              "note": "",
-              "photo": "Testimonials/divyal-nandini.jpg",
+              "name": "Divya Nandini",
               "youtube": "dXELJOGLmy4",
               "src": ""
             },
             {
               "name": "Sayed Alisha",
-              "note": "",
-              "photo": "Testimonials/sayed-alisha.jpg",
               "youtube": "BZTaXMKeIO0",
               "src": ""
             },
             {
-              "name": "Muzna",
-              "note": "",
-              "photo": "Testimonials/muzna.jpg",
+              "name": "Bhanu",
+              "youtube": "trR1WrxnnKc",
+              "src": ""
+            },
+            {
+              "name": "Maheshwari",
+              "youtube": "JfwLH5orM2k",
+              "src": ""
+            },
+            {
+              "name": "Yashasvi",
+              "youtube": "AnqtDEitnqM",
+              "src": ""
+            },
+            {
+              "name": "Mujna Jawhar",
               "youtube": "44jQeEluNcE",
               "src": ""
             },
             {
-              "name": "Azar",
-              "note": "",
-              "photo": "Testimonials/azar.jpg",
+              "name": "Tulasi",
+              "youtube": "Op9vy5gslqc",
+              "src": ""
+            },
+            {
+              "name": "Leela prasanthi",
+              "youtube": "F7in-i80UTg",
+              "src": ""
+            },
+            {
+              "name": "Mounica",
+              "youtube": "YgAmcc3RxnY",
+              "src": ""
+            },
+            {
+              "name": "Anantha Lakshmi",
+              "youtube": "Cg_aQvy8XcU",
+              "src": ""
+            },
+            {
+              "name": "Yamini",
+              "youtube": "u8P2g_8T0z0",
+              "src": ""
+            },
+            {
+              "name": "Aman Kumar",
+              "youtube": "XcfZPd00giQ",
+              "src": ""
+            },
+            {
+              "name": "Azarunnisa",
               "youtube": "93W68JYp-Nw",
               "src": ""
             },
             {
-              "name": "Ananthalakshmi",
-              "note": "",
-              "photo": "Testimonials/ananthalakshmi.jpg",
-              "youtube": "Cg_aQvy8XcU",
+              "name": "Aaquelah",
+              "youtube": "k7TJFw0Ypac",
+              "src": ""
+            },
+            {
+              "name": "Nikhil",
+              "youtube": "QhTbuJe_J3o",
+              "src": ""
+            },
+            {
+              "name": "Sai Padma",
+              "youtube": "pBE2kRy0seE",
+              "src": ""
+            },
+            {
+              "name": "Aswini",
+              "youtube": "HcULhqshlE4",
+              "src": ""
+            },
+            {
+              "name": "Sweety",
+              "youtube": "UCdxI-6LlrY",
+              "src": ""
+            },
+            {
+              "name": "Venkat",
+              "youtube": "w5r_-IMDfsE",
+              "src": ""
+            },
+            {
+              "name": "Charan",
+              "youtube": "gDyGpYvdGps",
+              "src": ""
+            },
+            {
+              "name": "jitesh Kumar",
+              "youtube": "0iTu_rlbKqI",
+              "src": ""
+            },
+            {
+              "name": "Meghana",
+              "youtube": "bOZuhSIUHrQ",
+              "src": ""
+            },
+            {
+              "name": "Pravallika",
+              "youtube": "YxZZeigMoVg",
+              "src": ""
+            },
+            {
+              "name": "Vivek",
+              "youtube": "BUuLDPXKU3o",
+              "src": ""
+            },
+            {
+              "name": "Venkata Babu",
+              "youtube": "REFT9kZcK7w",
+              "src": ""
+            },
+            {
+              "name": "Abhinaya",
+              "youtube": "eQRDgCSai54",
+              "src": ""
+            },
+            {
+              "name": "Abhishek",
+              "youtube": "jKXtsNTOqc4",
+              "src": ""
+            },
+            {
+              "name": "Abhishek Varanasi",
+              "youtube": "R1x8Gr9I0Ps",
+              "src": ""
+            },
+            {
+              "name": "Akash",
+              "youtube": "4ROf8zAAlfE",
+              "src": ""
+            },
+            {
+              "name": "Amali",
+              "youtube": "8ndgGtUiCiQ",
+              "src": ""
+            },
+            {
+              "name": "Ankitha",
+              "youtube": "ZvIUxVOs_lM",
+              "src": ""
+            },
+            {
+              "name": "Usha",
+              "youtube": "06mstmIO_8E",
+              "src": ""
+            },
+            {
+              "name": "Neelima",
+              "youtube": "5vnETI8ls0E",
+              "src": ""
+            },
+            {
+              "name": "Divya Harshitha",
+              "youtube": "1CQhkiPtwmw",
+              "src": ""
+            },
+            {
+              "name": "Harshini",
+              "youtube": "KvmJ7Hb5z28",
+              "src": ""
+            },
+            {
+              "name": "Harshit",
+              "youtube": "cz4gqQSrFiQ",
+              "src": ""
+            },
+            {
+              "name": "Hema",
+              "youtube": "zC0sTOJT3Zk",
+              "src": ""
+            },
+            {
+              "name": "Roshan",
+              "youtube": "bexOd_ezS2Q",
+              "src": ""
+            },
+            {
+              "name": "Jansi Rani",
+              "youtube": "RQ3S8eqtTMA",
+              "src": ""
+            },
+            {
+              "name": "Sanjay",
+              "youtube": "Bw-Svlu8IL4",
+              "src": ""
+            },
+            {
+              "name": "Jyothi",
+              "youtube": "qZ6v7hShQIg",
+              "src": ""
+            },
+            {
+              "name": "Shiva",
+              "youtube": "sA2yFZXSaXM",
+              "src": ""
+            },
+            {
+              "name": "Jagadish",
+              "youtube": "FTIPGMlMiuw",
+              "src": ""
+            },
+            {
+              "name": "K Vivek",
+              "youtube": "vIFEnMkMFBs",
+              "src": ""
+            },
+            {
+              "name": "Prasanna Ramya",
+              "youtube": "GUnBTRJUlTg",
+              "src": ""
+            },
+            {
+              "name": "Susmitha",
+              "youtube": "41F65TRsWzA",
+              "src": ""
+            },
+            {
+              "name": "Raghava",
+              "youtube": "1mqGkQjXkxc",
+              "src": ""
+            },
+            {
+              "name": "Karthik",
+              "youtube": "rfCFh7pFs0k",
+              "src": ""
+            },
+            {
+              "name": "Mahalakshmi",
+              "youtube": "vi6NmQpd3b0",
+              "src": ""
+            },
+            {
+              "name": "Anusha",
+              "youtube": "bxeTdSElBkw",
+              "src": ""
+            },
+            {
+              "name": "Mukesh Varma",
+              "youtube": "8aNK-fsecrg",
+              "src": ""
+            },
+            {
+              "name": "Niharika",
+              "youtube": "YM42jpbV_pI",
+              "src": ""
+            },
+            {
+              "name": "Revathi",
+              "youtube": "uxEFZ2364-s",
+              "src": ""
+            },
+            {
+              "name": "Durga prasad",
+              "youtube": "UYQm7pJt-CA",
+              "src": ""
+            },
+            {
+              "name": "Shashank",
+              "youtube": "aljqiHUWg8I",
+              "src": ""
+            },
+            {
+              "name": "Lokesh",
+              "youtube": "H2CDJziuoro",
+              "src": ""
+            },
+            {
+              "name": "Sravya",
+              "youtube": "ctSMaUxWdZg",
+              "src": ""
+            },
+            {
+              "name": "Kishore",
+              "youtube": "b2s1vgopu4I",
+              "src": ""
+            },
+            {
+              "name": "Santhoshi",
+              "youtube": "vbLISWp7oVA",
+              "src": ""
+            },
+            {
+              "name": "Navyatha",
+              "youtube": "I9RwI4E6OZI",
+              "src": ""
+            },
+            {
+              "name": "iswaryambhika",
+              "youtube": "eGNtXJ17jt0",
+              "src": ""
+            },
+            {
+              "name": "Uday kiran",
+              "youtube": "EcPDJRJqGEk",
+              "src": ""
+            },
+            {
+              "name": "Alekhya",
+              "youtube": "PCa2lknY40M",
+              "src": ""
+            },
+            {
+              "name": "Kalyan",
+              "youtube": "VT8k1PCrQi0",
+              "src": ""
+            },
+            {
+              "name": "Bindeshwaar",
+              "youtube": "5kqx9NtNZQM",
+              "src": ""
+            },
+            {
+              "name": "Loki Venkat",
+              "youtube": "IraE-i7Pess",
+              "src": ""
+            },
+            {
+              "name": "Yaswanth",
+              "youtube": "s7OZdHDI3jI",
+              "src": ""
+            },
+            {
+              "name": "Durgesh",
+              "youtube": "Dt05uU1tLWY",
+              "src": ""
+            },
+            {
+              "name": "Robin Kumar",
+              "youtube": "2GNGnxXCnCA",
+              "src": ""
+            },
+            {
+              "name": "Meghana",
+              "youtube": "tc65WJm1a_Y",
+              "src": ""
+            },
+            {
+              "name": "Bhaskar",
+              "youtube": "AgpZTBIa3e8",
+              "src": ""
+            },
+            {
+              "name": "Srivalli",
+              "youtube": "r_EgWaSyWJk",
+              "src": ""
+            },
+            {
+              "name": "Vidhya",
+              "youtube": "U9hR1_viwqI",
+              "src": ""
+            },
+            {
+              "name": "Madhulatha",
+              "youtube": "WN4AEFWZekE",
+              "src": ""
+            },
+            {
+              "name": "Viswa Amit",
+              "youtube": "LzfKkqsZxGI",
+              "src": ""
+            },
+            {
+              "name": "Vindhya",
+              "youtube": "kbfNTKK5jeg",
+              "src": ""
+            },
+            {
+              "name": "Tarun",
+              "youtube": "rcyuu1sHRdQ",
+              "src": ""
+            },
+            {
+              "name": "Srinivas",
+              "youtube": "SDnhJC_R33o",
+              "src": ""
+            },
+            {
+              "name": "Ruchita",
+              "youtube": "25zzA4Mbu3k",
+              "src": ""
+            },
+            {
+              "name": "Nida Khanam",
+              "youtube": "MQPqFwL8FNI",
+              "src": ""
+            },
+            {
+              "name": "Mahalakshmi",
+              "youtube": "6sAC6DfP-gE",
+              "src": ""
+            },
+            {
+              "name": "Kowsalya",
+              "youtube": "4xsPiD7-IVQ",
+              "src": ""
+            },
+            {
+              "name": "Indu",
+              "youtube": "z63MZHRT5Og",
+              "src": ""
+            },
+            {
+              "name": "Babji",
+              "youtube": "EzW2d0RSMEg",
+              "src": ""
+            },
+            {
+              "name": "Bhavani Devi",
+              "youtube": "E6kNqjRJ2AI",
+              "src": ""
+            },
+            {
+              "name": "Jeelani",
+              "youtube": "DA_9WNwzBVk",
+              "src": ""
+            },
+            {
+              "name": "Jhonwesly",
+              "youtube": "mhIfhPScA3g",
+              "src": ""
+            },
+            {
+              "name": "Mahalakshmi",
+              "youtube": "GBVYUVJ0RTg",
+              "src": ""
+            },
+            {
+              "name": "Mahendra",
+              "youtube": "SirxjQwIKyA",
+              "src": ""
+            },
+            {
+              "name": "Sai Manju",
+              "youtube": "mTVnG98ZxF0",
+              "src": ""
+            },
+            {
+              "name": "Sukanya",
+              "youtube": "OhOKclObChE",
+              "src": ""
+            },
+            {
+              "name": "Usha",
+              "youtube": "OhOKclObChE",
+              "src": ""
+            },
+            {
+              "name": "Veerraju",
+              "youtube": "5_eDDI10htE",
+              "src": ""
+            },
+            {
+              "name": "Venkatesh",
+              "youtube": "wZMGqNRGoHw",
+              "src": ""
+            },
+            {
+              "name": "Vinay",
+              "youtube": "ays8uZy6hEA",
+              "src": ""
+            },
+            {
+              "name": "Vinay Ladi",
+              "youtube": "DWi8Vft2ImU",
+              "src": ""
+            },
+            {
+              "name": "Siva",
+              "youtube": "FaPSRBNWAKs",
+              "src": ""
+            },
+            {
+              "name": "Ruchitha",
+              "youtube": "cU64i0o-8J8",
+              "src": ""
+            },
+            {
+              "name": "Tejaswi",
+              "youtube": "rYiVrqiqAxQ",
+              "src": ""
+            },
+            {
+              "name": "Suma",
+              "youtube": "1_JMlGstbAc",
+              "src": ""
+            },
+            {
+              "name": "Suresh",
+              "youtube": "K0hryOdCrKs",
+              "src": ""
+            },
+            {
+              "name": "Rama Reddy",
+              "youtube": "RYvh84f9X5o",
+              "src": ""
+            },
+            {
+              "name": "Govind Raju",
+              "youtube": "Iuvi2oCulmc",
+              "src": ""
+            },
+            {
+              "name": "Madhu",
+              "youtube": "id9a8wnKKMg",
+              "src": ""
+            },
+            {
+              "name": "Manju",
+              "youtube": "Ah3nK4_5t20",
+              "src": ""
+            },
+            {
+              "name": "Sekhar",
+              "youtube": "wtJJrFHFSOA",
+              "src": ""
+            },
+            {
+              "name": "Kumar Rajesh",
+              "youtube": "RC4ZT37QQFo",
+              "src": ""
+            },
+            {
+              "name": "Pankaj",
+              "youtube": "9Hjdb8BLaH4",
+              "src": ""
+            },
+            {
+              "name": "Anasuya",
+              "youtube": "RHlMT1U6QKI",
+              "src": ""
+            },
+            {
+              "name": "sireesha",
+              "youtube": "YzCatxNPnyY",
+              "src": ""
+            },
+            {
+              "name": "Jaidheer",
+              "youtube": "YDIYzTm_OvI",
+              "src": ""
+            },
+            {
+              "name": "Swetha",
+              "youtube": "Rbs3WBdUxn4",
+              "src": ""
+            },
+            {
+              "name": "Manikanta",
+              "youtube": "l2-jem_4LMQ",
+              "src": ""
+            },
+            {
+              "name": "Sankar",
+              "youtube": "x266raHqDzU",
+              "src": ""
+            },
+            {
+              "name": "Ramya",
+              "youtube": "1OJ-_bUtOiw",
               "src": ""
             }
           ]
         }
       ],
       "createdAt": "2026-07-30T05:29:38.129Z",
-      "updatedAt": "2026-08-12T06:23:05.973Z"
-    },
-    {
-      "id": "sec_a2aace4eba274c90",
-      "orgId": "technical-hub",
-      "key": "contact",
-      "title": "Contact",
-      "subtitle": "",
-      "icon": "✉",
-      "order": 15,
-      "hidden": false,
-      "status": "draft",
-      "blocks": [],
-      "createdAt": "2026-07-30T05:29:38.135Z",
-      "updatedAt": "2026-08-08T07:03:51.802Z"
+      "updatedAt": "2026-08-18T09:19:21.616Z"
     },
     {
       "id": "sec_7ebb72b895e94ec8",
@@ -2451,7 +3859,7 @@
       "icon": "",
       "iconKey": "user-badge",
       "iconAssetId": null,
-      "order": 0,
+      "order": 20,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -2537,7 +3945,7 @@
       "icon": "",
       "iconKey": "route",
       "iconAssetId": null,
-      "order": 1,
+      "order": 21,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -2648,7 +4056,7 @@
       "icon": "",
       "iconKey": "trophy",
       "iconAssetId": null,
-      "order": 2,
+      "order": 22,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -2856,7 +4264,7 @@
       "icon": "",
       "iconKey": "eye",
       "iconAssetId": null,
-      "order": 3,
+      "order": 23,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -3435,7 +4843,7 @@
       "icon": "",
       "iconKey": "",
       "iconAssetId": null,
-      "order": 2,
+      "order": 22,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -3596,7 +5004,7 @@
       "icon": "",
       "iconKey": "",
       "iconAssetId": null,
-      "order": 1,
+      "order": 21,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -4152,7 +5560,7 @@
       "icon": "",
       "iconKey": "sparkles",
       "iconAssetId": null,
-      "order": 16,
+      "order": 8,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -4768,7 +6176,7 @@
       "icon": "",
       "iconKey": "",
       "iconAssetId": null,
-      "order": 17,
+      "order": 9,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -5275,6 +6683,1324 @@
       ],
       "createdAt": "2026-08-08T09:08:24.998Z",
       "updatedAt": "2026-08-13T10:28:59.432Z"
+    },
+    {
+      "id": "sec_dd3be7a2809a4d9e",
+      "orgId": "technical-hub",
+      "parentId": null,
+      "key": "certifications",
+      "title": "Certifications",
+      "subtitle": "",
+      "icon": "",
+      "iconKey": "",
+      "iconAssetId": null,
+      "order": 4,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_fc066fcd724d4611",
+          "type": "certification-wall",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "eyebrow": "Certifications and credentials",
+          "title": "Certified, cohort by cohort",
+          "lead": "Every card is a batch that sat the exam and passed — the vendor, the count and the room, exactly as it was published.",
+          "quote": "A certificate is not the finish line. It is the receipt for every evening someone kept going after the subject stopped being easy.",
+          "quoteBy": "Technical Hub · certifying since 2016",
+          "backdrop": "certifications/register-crowd.jpg",
+          "credentials": [
+            {
+              "name": "Adobe Certified Professional Using Adobe Photoshop",
+              "vendor": "Adobe",
+              "domain": "Digital imaging",
+              "held": 66,
+              "badge": "certifications/badges/adobe-certified-professional-using-adobe-photoshop.webp",
+              "skills": [
+                "Non-destructive layers and masking",
+                "Selections, compositing and retouching",
+                "Colour correction with adjustment layers",
+                "Export for print, web and mobile"
+              ]
+            },
+            {
+              "name": "Arduino Fundamentals",
+              "vendor": "Arduino",
+              "domain": "Embedded electronics",
+              "held": 210,
+              "badge": "certifications/badges/arduino-fundamentals.webp",
+              "skills": [
+                "Reading schematics and breadboard wiring",
+                "Sketch structure and control flow in C++",
+                "Analog and digital sensor input",
+                "PWM, motor and actuator control"
+              ]
+            },
+            {
+              "name": "AutoCAD Certified User",
+              "vendor": "Autodesk",
+              "domain": "Technical drafting",
+              "held": 42,
+              "badge": "certifications/badges/autocad-certified-user.png",
+              "skills": [
+                "Precision 2D drawing and coordinate entry",
+                "Layers, linetypes and object properties",
+                "Dimensioning and annotation standards",
+                "Blocks, layouts and plotting"
+              ]
+            },
+            {
+              "name": "Automation Anywhere Certified Advanced RPA Professional",
+              "vendor": "Automation Anywhere",
+              "domain": "Robotic process automation",
+              "held": 210,
+              "badge": "certifications/badges/automation-anywhere-certified-advanced-rpa-professional.png",
+              "skills": [
+                "Bot architecture and reusable components",
+                "Exception handling and error recovery",
+                "Document extraction with IQ Bot",
+                "Credential Vault and bot deployment"
+              ]
+            },
+            {
+              "name": "Automation Anywhere University Certified Essentials RPA Professional",
+              "vendor": "Automation Anywhere",
+              "domain": "RPA essentials",
+              "held": 1152,
+              "badge": "certifications/badges/automation-anywhere-university-certified-essentials-rpa-professional.svg",
+              "skills": [
+                "Recorder-based task automation",
+                "Variables, loops and conditional logic",
+                "Excel and file system actions",
+                "Scheduling and running bots in Control Room"
+              ]
+            },
+            {
+              "name": "AWS Certified Developer Associate",
+              "vendor": "Amazon Web Services",
+              "domain": "Cloud development",
+              "held": 124,
+              "badge": "certifications/badges/aws-certified-developer-associate.png",
+              "skills": [
+                "Application development with SDK and CLI",
+                "Lambda, API Gateway and DynamoDB",
+                "IAM roles, KMS and secrets handling",
+                "CI/CD with CodePipeline and CloudFormation"
+              ]
+            },
+            {
+              "name": "AWS Certified Cloud Practitioner",
+              "vendor": "Amazon Web Services",
+              "domain": "Cloud foundations",
+              "held": 4914,
+              "badge": "certifications/badges/aws-certified-cloud-practitioner.png",
+              "skills": [
+                "Core services and global infrastructure",
+                "The shared responsibility security model",
+                "Pricing, billing and cost management",
+                "Well-Architected design principles"
+              ]
+            },
+            {
+              "name": "AWS Certified Solutions Architect - Associate",
+              "vendor": "Amazon Web Services",
+              "domain": "Cloud architecture",
+              "held": 204,
+              "badge": "certifications/badges/aws-certified-solutions-architect-associate.png",
+              "skills": [
+                "Highly available multi-tier architectures",
+                "VPC design, subnets and routing",
+                "Choosing between S3, EBS and EFS",
+                "Cost and performance optimisation"
+              ]
+            },
+            {
+              "name": "Azure Administrator Associate",
+              "vendor": "Microsoft Azure",
+              "domain": "Cloud administration",
+              "held": 660,
+              "badge": "certifications/badges/azure-administrator-associate.png",
+              "skills": [
+                "Identity governance with Microsoft Entra ID",
+                "Virtual networks, NSGs and peering",
+                "VM, storage and backup administration",
+                "Monitoring with Azure Monitor and Log Analytics"
+              ]
+            },
+            {
+              "name": "Cisco Certified CCNA",
+              "vendor": "Cisco",
+              "domain": "Enterprise networking",
+              "held": 522,
+              "badge": "certifications/badges/cisco-certified-ccna.png",
+              "skills": [
+                "IPv4 and IPv6 addressing and subnetting",
+                "Switching, VLANs and spanning tree",
+                "OSPF and static routing",
+                "Access control lists and network security"
+              ]
+            },
+            {
+              "name": "CISCO CyberOps Associate",
+              "vendor": "Cisco",
+              "domain": "Security operations",
+              "held": 18,
+              "badge": "certifications/badges/cisco-cyberops-associate.png",
+              "skills": [
+                "SOC monitoring and alert triage",
+                "Network intrusion analysis",
+                "Host-based forensics fundamentals",
+                "Incident response and the kill chain"
+              ]
+            },
+            {
+              "name": "Google Cloud Certified Associate Cloud Engineer",
+              "vendor": "Google Cloud",
+              "domain": "Cloud engineering",
+              "held": 420,
+              "badge": "certifications/badges/google-cloud-certified-associate-cloud-engineer.png",
+              "skills": [
+                "Project, IAM and billing configuration",
+                "Compute Engine and GKE deployment",
+                "Cloud Storage and managed databases",
+                "Monitoring and logging with Operations Suite"
+              ]
+            },
+            {
+              "name": "GitHub Foundations Certification",
+              "vendor": "GitHub",
+              "domain": "Version control",
+              "held": 276,
+              "badge": "certifications/badges/github-foundations-certification.png",
+              "skills": [
+                "Repositories, branches and commit history",
+                "Pull requests and code review flow",
+                "Issues, Projects and team collaboration",
+                "GitHub Actions and Codespaces basics"
+              ]
+            },
+            {
+              "name": "IT Specialist JavaScript",
+              "vendor": "Certiport",
+              "domain": "JavaScript",
+              "held": 780,
+              "badge": "certifications/badges/it-specialist-javascript.png",
+              "skills": [
+                "Variables, data types and operators",
+                "Functions, scope and closures",
+                "DOM manipulation and event handling",
+                "Debugging and error handling"
+              ]
+            },
+            {
+              "name": "IT Specialist Python",
+              "vendor": "Certiport",
+              "domain": "Python",
+              "held": 1756,
+              "badge": "certifications/badges/it-specialist-python.png",
+              "skills": [
+                "Data types, operators and control flow",
+                "Functions, modules and file input/output",
+                "Lists, dictionaries and comprehensions",
+                "Exception handling and troubleshooting"
+              ]
+            },
+            {
+              "name": "IT Specialist HTML and CSS",
+              "vendor": "Certiport",
+              "domain": "HTML and CSS",
+              "held": 672,
+              "badge": "certifications/badges/it-specialist-html-and-css.png",
+              "skills": [
+                "Semantic document structure",
+                "Selectors, the box model and layout",
+                "Responsive design with media queries",
+                "Forms, tables and accessibility basics"
+              ]
+            },
+            {
+              "name": "Juniper Networks JNCIA-Junos (JN0-103) - Certified Associate",
+              "vendor": "Juniper Networks",
+              "domain": "Routing and switching",
+              "held": 432,
+              "badge": "certifications/badges/juniper-networks-jncia-junos-jn0-103-certified-associate.png",
+              "skills": [
+                "Junos OS architecture and the CLI",
+                "Configuration hierarchy and commit model",
+                "Routing policy and firewall filters",
+                "Static and OSPF routing fundamentals"
+              ]
+            },
+            {
+              "name": "Microsoft Office Specialist Excel Associate",
+              "vendor": "Microsoft",
+              "domain": "Spreadsheet analysis",
+              "held": 456,
+              "badge": "certifications/badges/microsoft-office-specialist-excel-associate.png",
+              "skills": [
+                "Workbook and worksheet management",
+                "Formulas, functions and cell references",
+                "Tables, sorting and filtering",
+                "Charts and conditional formatting"
+              ]
+            },
+            {
+              "name": "Microsoft Azure AI Fundamentals",
+              "vendor": "Microsoft Azure",
+              "domain": "Applied AI",
+              "held": 618,
+              "badge": "certifications/badges/microsoft-azure-ai-fundamentals.png",
+              "skills": [
+                "Responsible AI principles and practice",
+                "Computer vision and OCR services",
+                "Natural language and speech services",
+                "Generative AI with Azure OpenAI"
+              ]
+            },
+            {
+              "name": "Microsoft Azure Fundamentals",
+              "vendor": "Microsoft Azure",
+              "domain": "Cloud foundations",
+              "held": 1728,
+              "badge": "certifications/badges/microsoft-azure-fundamentals.png",
+              "skills": [
+                "Cloud concepts and service models",
+                "Core Azure compute and storage services",
+                "Identity, governance and compliance",
+                "Cost management and service agreements"
+              ]
+            },
+            {
+              "name": "MongoDB Certified Associate Developer",
+              "vendor": "MongoDB",
+              "domain": "Document databases",
+              "held": 217,
+              "badge": "certifications/badges/mongodb-certified-associate-developer.png",
+              "skills": [
+                "Document modelling and schema design",
+                "CRUD operations and query operators",
+                "Aggregation pipeline stages",
+                "Indexing and driver integration"
+              ]
+            },
+            {
+              "name": "Microsoft Technology Associate Database Fundamentals",
+              "vendor": "Microsoft",
+              "domain": "Database fundamentals",
+              "held": 76,
+              "badge": "",
+              "skills": [
+                "Relational concepts and normalisation",
+                "Table design, keys and constraints",
+                "SELECT, JOIN and data manipulation",
+                "Backup, security and administration basics"
+              ]
+            },
+            {
+              "name": "Microsoft Technology Associate HTML",
+              "vendor": "Microsoft",
+              "domain": "HTML and CSS",
+              "held": 1404,
+              "badge": "certifications/badges/microsoft-technology-associate-html.png",
+              "skills": [
+                "Page structure with semantic tags",
+                "Styling with selectors and inheritance",
+                "The box model and positioning",
+                "Forms, media and responsive basics"
+              ]
+            },
+            {
+              "name": "Microsoft Technology Associate Java",
+              "vendor": "Microsoft",
+              "domain": "Java",
+              "held": 852,
+              "badge": "certifications/badges/microsoft-technology-associate-java.webp",
+              "skills": [
+                "Java syntax, data types and operators",
+                "Control flow, loops and arrays",
+                "Classes, objects and inheritance",
+                "Exception handling and file input/output"
+              ]
+            },
+            {
+              "name": "Microsoft Technology Associate Javascript",
+              "vendor": "Microsoft",
+              "domain": "JavaScript",
+              "held": 1050,
+              "badge": "certifications/badges/microsoft-technology-associate-javascript.png",
+              "skills": [
+                "Syntax, variables and operators",
+                "Decisions, loops and functions",
+                "DOM interaction and event handling",
+                "Form validation and error handling"
+              ]
+            },
+            {
+              "name": "Microsoft Technology Associate Python",
+              "vendor": "Microsoft",
+              "domain": "Python",
+              "held": 7689,
+              "badge": "certifications/badges/microsoft-technology-associate-python.png",
+              "skills": [
+                "Data types, operators and expressions",
+                "Flow control with conditionals and loops",
+                "Functions and module reuse",
+                "File input/output and error handling"
+              ]
+            },
+            {
+              "name": "Microsoft Technology Associate Security Fundamentals",
+              "vendor": "Microsoft",
+              "domain": "Security fundamentals",
+              "held": 1116,
+              "badge": "certifications/badges/microsoft-technology-associate-security-fundamentals.png",
+              "skills": [
+                "Security layers and defence in depth",
+                "Authentication, authorisation and accounting",
+                "Network and host security controls",
+                "Malware types and protection software"
+              ]
+            },
+            {
+              "name": "Microsoft Certified Power BI Data Analyst",
+              "vendor": "Microsoft",
+              "domain": "Data analytics",
+              "held": 64,
+              "badge": "certifications/badges/microsoft-certified-power-bi-data-analyst.png",
+              "skills": [
+                "Preparing and shaping data in Power Query",
+                "Data modelling and relationships",
+                "DAX measures and calculated columns",
+                "Report design and workspace deployment"
+              ]
+            },
+            {
+              "name": "Microsoft Certified Fabric Analytics Engineer Associate",
+              "vendor": "Microsoft Fabric",
+              "domain": "Analytics engineering",
+              "held": 25,
+              "badge": "certifications/badges/microsoft-certified-fabric-analytics-engineer-associate.png",
+              "skills": [
+                "Lakehouse and warehouse design",
+                "Ingestion with pipelines and dataflows",
+                "Transformation with Spark and T-SQL",
+                "Semantic models and workspace security"
+              ]
+            },
+            {
+              "name": "Microsoft Certified Power Platform Fundamentals",
+              "vendor": "Power Platform",
+              "domain": "Low-code applications",
+              "held": 417,
+              "badge": "certifications/badges/microsoft-certified-power-platform-fundamentals.png",
+              "skills": [
+                "Canvas and model-driven app basics",
+                "Dataverse tables and relationships",
+                "Cloud flows with Power Automate",
+                "Power BI and Copilot Studio overview"
+              ]
+            },
+            {
+              "name": "Microsoft Certified Power Platform Solution Architect",
+              "vendor": "Power Platform",
+              "domain": "Solution architecture",
+              "held": 132,
+              "badge": "certifications/badges/microsoft-certified-power-platform-solution-architect.png",
+              "skills": [
+                "Requirements gathering and solution design",
+                "Data model and integration architecture",
+                "Security, ALM and environment strategy",
+                "Performance, testing and go-live governance"
+              ]
+            },
+            {
+              "name": "Oracle Cloud Infrastructure Foundations Associate",
+              "vendor": "Oracle",
+              "domain": "Cloud infrastructure",
+              "held": 2490,
+              "badge": "certifications/badges/oracle-cloud-infrastructure-foundations-associate.png",
+              "skills": [
+                "Regions, compartments and IAM policy",
+                "Compute, storage and networking basics",
+                "Database and platform service catalogue",
+                "Pricing, support and governance"
+              ]
+            },
+            {
+              "name": "Oracle Foundation Associate Java",
+              "vendor": "Oracle",
+              "domain": "Java foundations",
+              "held": 321,
+              "badge": "certifications/badges/oracle-foundation-associate-java.png",
+              "skills": [
+                "Java platform and program structure",
+                "Variables, operators and control flow",
+                "Classes, methods and object basics",
+                "Arrays, strings and exception handling"
+              ]
+            },
+            {
+              "name": "Oracle APEX Cloud Developer",
+              "vendor": "Oracle APEX",
+              "domain": "Low-code development",
+              "held": 7,
+              "badge": "certifications/badges/oracle-apex-cloud-developer.png",
+              "skills": [
+                "Declarative application and page creation",
+                "SQL, PL/SQL and REST data sources",
+                "Interactive reports and faceted search",
+                "Authentication, authorisation and deployment"
+              ]
+            },
+            {
+              "name": "Pega Certified System Architect",
+              "vendor": "Pega",
+              "domain": "Business automation",
+              "held": 106,
+              "badge": "certifications/badges/pega-certified-system-architect.png",
+              "skills": [
+                "Case design and life-cycle modelling",
+                "Data models and user interface config",
+                "Process flows and decision rules",
+                "Application debugging and testing"
+              ]
+            },
+            {
+              "name": "Pega Certified Senior System Architect",
+              "vendor": "Pega",
+              "domain": "Enterprise architecture",
+              "held": 103,
+              "badge": "certifications/badges/pega-certified-senior-system-architect.png",
+              "skills": [
+                "Enterprise class structure design",
+                "Reusable rules and application layering",
+                "Integration with external systems",
+                "Performance tuning and security models"
+              ]
+            },
+            {
+              "name": "RedHat Certified System Administrator",
+              "vendor": "Red Hat",
+              "domain": "Linux administration",
+              "held": 306,
+              "badge": "certifications/badges/redhat-certified-system-administrator.png",
+              "skills": [
+                "Shell essentials and file management",
+                "Users, groups and permissions",
+                "Storage, LVM and file systems",
+                "systemd services, networking and SELinux"
+              ]
+            },
+            {
+              "name": "Salesforce Certified Administrator",
+              "vendor": "Salesforce",
+              "domain": "CRM administration",
+              "held": 82,
+              "badge": "certifications/badges/salesforce-certified-administrator.png",
+              "skills": [
+                "Org setup, users and the security model",
+                "Objects, fields and record types",
+                "Automation with Flow and validation rules",
+                "Reports, dashboards and data management"
+              ]
+            },
+            {
+              "name": "Salesforce Certified Platform Developer I",
+              "vendor": "Salesforce",
+              "domain": "Platform development",
+              "held": 79,
+              "badge": "certifications/badges/salesforce-certified-platform-developer-i.png",
+              "skills": [
+                "Apex classes, triggers and unit testing",
+                "SOQL, SOSL and DML operations",
+                "Lightning Web Components",
+                "Declarative versus programmatic design"
+              ]
+            },
+            {
+              "name": "Servicenow Certified System Administrator",
+              "vendor": "ServiceNow",
+              "domain": "IT service management",
+              "held": 125,
+              "badge": "certifications/badges/servicenow-certified-system-administrator.png",
+              "skills": [
+                "User administration and access control",
+                "Tables, forms and UI configuration",
+                "Flow Designer and business rules",
+                "Reporting, imports and instance upgrades"
+              ]
+            },
+            {
+              "name": "Servicenow Certified Application Developer",
+              "vendor": "ServiceNow",
+              "domain": "Application development",
+              "held": 117,
+              "badge": "certifications/badges/servicenow-certified-application-developer.webp",
+              "skills": [
+                "Scoped application design",
+                "Data models and table relationships",
+                "Client and server-side scripting",
+                "Application security and deployment"
+              ]
+            },
+            {
+              "name": "Unity Certified User: Programmer",
+              "vendor": "Unity",
+              "domain": "Real-time 3D",
+              "held": 108,
+              "badge": "certifications/badges/unity-certified-user-programmer.png",
+              "skills": [
+                "C# scripting and the MonoBehaviour lifecycle",
+                "GameObjects, components and prefabs",
+                "Physics, collisions and input handling",
+                "UI, debugging and build deployment"
+              ]
+            }
+          ],
+          "vendors": [
+            {
+              "key": "aws",
+              "name": "AWS",
+              "domain": "Cloud",
+              "skills": [
+                "Core services and global infrastructure",
+                "Highly available multi-tier architectures",
+                "IAM, KMS and the shared responsibility model",
+                "Cost, billing and Well-Architected review"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/aws/AWS Certified Solution Architect.jpg",
+                  "label": "AWS Certified Solution Architect",
+                  "w": 1920,
+                  "h": 1920
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/aws/AWS Cloud Practioner_100+.jpg",
+                  "label": "AWS Cloud Practioner 100+",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/aws/AWS Cloud Practioner_136.jpg",
+                  "label": "AWS Cloud Practioner 136",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/aws/AWS Cloud Practioner_150+.jpg",
+                  "label": "AWS Cloud Practioner 150+",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/aws/AWS Cloud Practioner_200+.jpg",
+                  "label": "AWS Cloud Practioner 200+",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "microsoft",
+              "name": "Microsoft",
+              "domain": "Cloud and data",
+              "skills": [
+                "Azure identity, networking and storage",
+                "Responsible AI and Azure OpenAI",
+                "Power BI modelling and DAX",
+                "Power Platform apps and cloud flows"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Azure AI Fundamentals_15.jpg",
+                  "label": "Azure AI Fundamentals 15",
+                  "w": 1280,
+                  "h": 1280
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Azure AI Fundamentals_32.jpg",
+                  "label": "Azure AI Fundamentals 32",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Azure AI Fundamentals_86.jpg",
+                  "label": "Azure AI Fundamentals 86",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Azure Fundamentals_160+.jpg",
+                  "label": "Azure Fundamentals 160+",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Azure Fundamentals_250+.jpg",
+                  "label": "Azure Fundamentals 250+",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Azure Fundamentals_255+.jpg",
+                  "label": "Azure Fundamentals 255+",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Azure Fundamentals_50+.jpg",
+                  "label": "Azure Fundamentals 50+",
+                  "w": 1280,
+                  "h": 1280
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Microsoft Azure Administrator Associate_25.jpg",
+                  "label": "Microsoft Azure Administrator Associate 25",
+                  "w": 1600,
+                  "h": 1600
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Microsoft Excel.jpg",
+                  "label": "Microsoft Excel",
+                  "w": 2048,
+                  "h": 1152
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Microsoft Power BI Data Analyst_38.jpg",
+                  "label": "Microsoft Power BI Data Analyst 38",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/microsoft/Power Platform Fundamentals.jpg",
+                  "label": "Power Platform Fundamentals",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "google-cloud",
+              "name": "Google Cloud",
+              "domain": "Cloud engineering",
+              "skills": [
+                "Project, IAM and billing configuration",
+                "Compute Engine and GKE deployment",
+                "Cloud Storage and managed databases",
+                "Monitoring with the Operations Suite"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/google-cloud/Google Cloud certified associate cloud engineer_33.jpg",
+                  "label": "Google Cloud certified associate cloud engineer 33",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/google-cloud/Google Cloud certified associate cloud engineer_35.jpg",
+                  "label": "Google Cloud certified associate cloud engineer 35",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "oracle",
+              "name": "Oracle",
+              "domain": "Cloud and Java",
+              "skills": [
+                "Regions, compartments and IAM policy",
+                "Compute, storage and networking basics",
+                "Java syntax, classes and control flow",
+                "Arrays, strings and exception handling"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/oracle/Oracle Academy Java_140.jpg",
+                  "label": "Oracle Academy Java 140",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/oracle/Oracle Cloud Certified Associate 100+.jpg",
+                  "label": "Oracle Cloud Certified Associate 100+",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/oracle/Oracle Foundations Associate Java.jpg",
+                  "label": "Oracle Foundations Associate Java",
+                  "w": 800,
+                  "h": 800
+                }
+              ]
+            },
+            {
+              "key": "redhat",
+              "name": "Red Hat",
+              "domain": "Linux administration",
+              "skills": [
+                "Shell essentials and file management",
+                "Users, groups and permissions",
+                "Storage, LVM and file systems",
+                "systemd, networking and SELinux"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat System Admin._1jpg.jpg",
+                  "label": "RedHat System Admin. 1jpg",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat System Admin.jpg",
+                  "label": "RedHat System Admin",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat System Admin_2.jpg",
+                  "label": "RedHat System Admin 2",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat System Admin_3.jpg",
+                  "label": "RedHat System Admin 3",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat System Admin_4.jpg",
+                  "label": "RedHat System Admin 4",
+                  "w": 1920,
+                  "h": 1920
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat.jpg",
+                  "label": "RedHat",
+                  "w": 1994,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat_171.jpg",
+                  "label": "RedHat 171",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat_180.jpg",
+                  "label": "RedHat 180",
+                  "w": 1600,
+                  "h": 766
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat_47.jpg",
+                  "label": "RedHat 47",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/redhat/RedHat_95.jpg",
+                  "label": "RedHat 95",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "cisco",
+              "name": "Cisco",
+              "domain": "Networking",
+              "skills": [
+                "IPv4 and IPv6 addressing and subnetting",
+                "Switching, VLANs and spanning tree",
+                "OSPF and static routing",
+                "Access control lists and network security"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/cisco/CCNA Routing and Switching.jpg",
+                  "label": "CCNA Routing and Switching",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/cisco/CCNA Routing and Switching_1.jpg",
+                  "label": "CCNA Routing and Switching 1",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/cisco/CCNA Routing and Switching_2.jpg",
+                  "label": "CCNA Routing and Switching 2",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/cisco/CCNA Routing and Switching_3.jpg",
+                  "label": "CCNA Routing and Switching 3",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/cisco/CCNA Routing and Switching_4.jpg",
+                  "label": "CCNA Routing and Switching 4",
+                  "w": 1280,
+                  "h": 1280
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/cisco/CCNA Routing and Switching_5.jpg",
+                  "label": "CCNA Routing and Switching 5",
+                  "w": 1280,
+                  "h": 1280
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/cisco/CCNA Routing and Switching_6.jpg",
+                  "label": "CCNA Routing and Switching 6",
+                  "w": 1280,
+                  "h": 1280
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/cisco/CCNA Routing and Switching_7.jpg",
+                  "label": "CCNA Routing and Switching 7",
+                  "w": 1280,
+                  "h": 1280
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/cisco/Programming Essentials in C_559.jpg",
+                  "label": "Programming Essentials in C 559",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "juniper",
+              "name": "Juniper Networks",
+              "domain": "Routing and switching",
+              "skills": [
+                "Junos OS architecture and the CLI",
+                "Configuration hierarchy and commit model",
+                "Routing policy and firewall filters",
+                "Static and OSPF fundamentals"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/juniper/Juniper Networks Associate_125.jpg",
+                  "label": "Juniper Networks Associate 125",
+                  "w": 1280,
+                  "h": 1280
+                }
+              ]
+            },
+            {
+              "key": "pearson-it-specialist",
+              "name": "IT Specialist",
+              "domain": "Programming and web",
+              "skills": [
+                "Python data types and control flow",
+                "Java classes, objects and inheritance",
+                "JavaScript functions and the DOM",
+                "Semantic HTML and responsive CSS"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist HTML and CSS.jpg",
+                  "label": "IT Specialist HTML and CSS",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist HTML and CSS_100.jpg",
+                  "label": "IT Specialist HTML and CSS 100",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist HTML and CSS_280.jpg",
+                  "label": "IT Specialist HTML and CSS 280",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist HTML and CSS_456.jpg",
+                  "label": "IT Specialist HTML and CSS 456",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist HTML and CSS_700.jpg",
+                  "label": "IT Specialist HTML and CSS 700",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Java_109jpg.jpg",
+                  "label": "IT Specialist Java 109jpg",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Java_110.jpg",
+                  "label": "IT Specialist Java 110",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Java_197.jpg",
+                  "label": "IT Specialist Java 197",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Java_286.jpg",
+                  "label": "IT Specialist Java 286",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Java_370.jpg",
+                  "label": "IT Specialist Java 370",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Java_58pg.jpg",
+                  "label": "IT Specialist Java 58pg",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Javscript_128jpg.jpg",
+                  "label": "IT Specialist Javscript 128jpg",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Javscript_130jpg.jpg",
+                  "label": "IT Specialist Javscript 130jpg",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Javscript_133.jpg",
+                  "label": "IT Specialist Javscript 133",
+                  "w": 2048,
+                  "h": 2048
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Javscript_182.jpg",
+                  "label": "IT Specialist Javscript 182",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Python_150.jpg",
+                  "label": "IT Specialist Python 150",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Python_250.jpg",
+                  "label": "IT Specialist Python 250",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Python_290+.jpg",
+                  "label": "IT Specialist Python 290+",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Python_290.jpg",
+                  "label": "IT Specialist Python 290",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Python_35.jpg",
+                  "label": "IT Specialist Python 35",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Python_412.jpg",
+                  "label": "IT Specialist Python 412",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pearson-it-specialist/IT Specialist Python_453.jpg",
+                  "label": "IT Specialist Python 453",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "servicenow",
+              "name": "ServiceNow",
+              "domain": "IT service management",
+              "skills": [
+                "User administration and access control",
+                "Tables, forms and UI configuration",
+                "Flow Designer and business rules",
+                "Reporting, imports and upgrades"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/servicenow/ServiceNow Trainees.jpg",
+                  "label": "ServiceNow Trainees",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/servicenow/ServiceNow_90.jpg",
+                  "label": "ServiceNow 90",
+                  "w": 2048,
+                  "h": 2048
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/servicenow/Servicenow admin_31.jpg",
+                  "label": "Servicenow admin 31",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "pega",
+              "name": "Pega",
+              "domain": "Business automation",
+              "skills": [
+                "Case design and life-cycle modelling",
+                "Data models and user interface config",
+                "Process flows and decision rules",
+                "Reusable rules and application layering"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/pega/Pega System Architect_149.jpg",
+                  "label": "Pega System Architect 149",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pega/Pega System Architect_73.jpg",
+                  "label": "Pega System Architect 73",
+                  "w": 2048,
+                  "h": 2048
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pega/Pega_47.jpg",
+                  "label": "Pega 47",
+                  "w": 800,
+                  "h": 450
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/pega/Pega_68.jpg",
+                  "label": "Pega 68",
+                  "w": 800,
+                  "h": 800
+                }
+              ]
+            },
+            {
+              "key": "salesforce",
+              "name": "Salesforce",
+              "domain": "CRM",
+              "skills": [
+                "Org setup, users and the security model",
+                "Objects, fields and record types",
+                "Automation with Flow and validation rules",
+                "Reports, dashboards and data management"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/salesforce/Salesforce Admin_40.jpg",
+                  "label": "Salesforce Admin 40",
+                  "w": 2048,
+                  "h": 2048
+                }
+              ]
+            },
+            {
+              "key": "automation-anywhere",
+              "name": "Automation Anywhere",
+              "domain": "Robotic process automation",
+              "skills": [
+                "Recorder-based task automation",
+                "Variables, loops and conditional logic",
+                "Exception handling and error recovery",
+                "Credential Vault and bot deployment"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/automation-anywhere/Automation Anywhere RPA.jpg",
+                  "label": "Automation Anywhere RPA",
+                  "w": 1280,
+                  "h": 1280
+                }
+              ]
+            },
+            {
+              "key": "postman",
+              "name": "Postman",
+              "domain": "API development",
+              "skills": [
+                "Requests, collections and environments",
+                "Writing tests and assertions",
+                "Mock servers and documentation",
+                "Project-based API delivery"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/postman/Postman API Fundmentals Student Exper_150+.jpg",
+                  "label": "Postman API Fundmentals Student Exper 150+",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/postman/Postman Project Based Learning_120+.jpg",
+                  "label": "Postman Project Based Learning 120+",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "unity",
+              "name": "Unity",
+              "domain": "Real-time 3D",
+              "skills": [
+                "C# scripting and the MonoBehaviour lifecycle",
+                "GameObjects, components and prefabs",
+                "Physics, collisions and input handling",
+                "UI, debugging and build deployment"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/unity/Unity Certified User_19.jpg",
+                  "label": "Unity Certified User 19",
+                  "w": 1080,
+                  "h": 1080
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/unity/Unity Certified User_6.jpg",
+                  "label": "Unity Certified User 6",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "arduino-iot",
+              "name": "Arduino",
+              "domain": "Embedded and IoT",
+              "skills": [
+                "Reading schematics and breadboard wiring",
+                "Sketch structure and control flow in C++",
+                "Analog and digital sensor input",
+                "PWM, motor and actuator control"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/arduino-iot/Aurdino_26.jpg",
+                  "label": "Aurdino 26",
+                  "w": 2048,
+                  "h": 2048
+                },
+                {
+                  "src": "certifications/Certification Images  Sorted/arduino-iot/Aurdino_28.jpg",
+                  "label": "Aurdino 28",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "adobe",
+              "name": "Adobe",
+              "domain": "Digital imaging",
+              "skills": [
+                "Non-destructive layers and masking",
+                "Selections, compositing and retouching",
+                "Colour correction with adjustment layers",
+                "Export for print, web and mobile"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/adobe/Adobe Professional AI-9.jpg",
+                  "label": "Adobe Professional AI 9",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "comptia",
+              "name": "CompTIA",
+              "domain": "Security",
+              "skills": [
+                "Threats, attacks and vulnerabilities",
+                "Identity and access management",
+                "Cryptography fundamentals",
+                "Risk and incident response"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/comptia/comptia Security_5.jpg",
+                  "label": "comptia Security 5",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "mile2",
+              "name": "Mile2",
+              "domain": "Security principles",
+              "skills": [
+                "Security governance and policy",
+                "Network and host hardening",
+                "Access control models",
+                "Incident handling basics"
+              ],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/mile2/CSP Security Principles_43.jpg",
+                  "label": "CSP Security Principles 43",
+                  "w": 1080,
+                  "h": 1080
+                }
+              ]
+            },
+            {
+              "key": "others",
+              "name": "Across the board",
+              "domain": "Programme-wide",
+              "skills": [],
+              "certs": [
+                {
+                  "src": "certifications/Certification Images  Sorted/others/11000 Trainees Certified.jpg",
+                  "label": "11000 Trainees Certified",
+                  "w": 800,
+                  "h": 800
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-08-19T03:57:25.999Z",
+      "updatedAt": "2026-08-19T04:44:23.605Z"
     }
   ],
   "assets": [
