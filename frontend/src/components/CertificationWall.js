@@ -118,48 +118,45 @@ export function CertificationWall(block, { editing = false } = {}) {
    * it. Even spacing is the whole point: the index decides the angle and nothing
    * else does, which is what removes the holes.
    */
-  function drawRegister() {
-    const list = certs;
-    const n = list.length;
-    // Percentage geometry, so the arc scales with the stage rather than being pinned.
-    const cx = 50;
-    const cy = 86;
-    const rx = 46;
-    const ry = 58;
-    const from = 188;
-    const to = 352;
+  /* Two arcs, nested. One line of forty-five marks reads as a single long band;
+     split across an outer and an inner curve the register has depth, and each mark
+     gets more room. Same centre and sweep for both, so they stay concentric.
 
+     The counts are not split evenly down the middle — they are allotted in
+     proportion to each arc's real length, which is what keeps the spacing identical
+     on both. Half each would crowd the shorter inner curve. */
+  const ARCS = [
+    { rx: 47, ry: 62, from: 187, to: 353 },
+    { rx: 34, ry: 44, from: 194, to: 346 },
+  ];
+  const ARC_CX = 50;
+  const ARC_CY = 90;
+
+  /**
+   * Sample one arc and hand back its pixel length and a point-at-distance lookup.
+   *
+   * The curve lives in percentage space and the stage is far wider than it is tall,
+   * so length has to be accumulated in real pixels — a step equal in percentage
+   * terms is not equal on screen, and measuring in viewBox units left the marks
+   * running from 22px to 51px apart.
+   */
+  function sampleArc(spec, pw, ph) {
     const at = (deg) => {
       const r = (deg * Math.PI) / 180;
-      return [cx + Math.cos(r) * rx, cy + Math.sin(r) * ry];
+      return [ARC_CX + Math.cos(r) * spec.rx, ARC_CY + Math.sin(r) * spec.ry];
     };
-
-    /* The stage's real pixel size, because "evenly spaced" means evenly spaced on
-       screen. The arc lives in percentage space and the box is far wider than it is
-       tall, so a step that is equal in percentage terms is not equal in pixels —
-       measuring the curve in viewBox units left gaps running from 22px to 51px.
-       clientWidth/Height are layout pixels, which is what this needs; a bounding
-       rect would come back scaled by FitSlide. */
-    const pw = regStage.clientWidth || 1600;
-    const ph = regStage.clientHeight || 700;
-
-    /* One generator for the line and the marks, sampled finely, so the stroke and
-       the badges are on the same curve by construction rather than by two
-       approximations that happen to agree. */
     const STEPS = 720;
     const pts = [];
-    for (let i = 0; i <= STEPS; i += 1) pts.push(at(from + (i / STEPS) * (to - from)));
+    for (let i = 0; i <= STEPS; i += 1) pts.push(at(spec.from + (i / STEPS) * (spec.to - spec.from)));
 
-    /* Cumulative length in pixels, so marks can be dropped at equal real distance. */
     const run = [0];
     for (let i = 1; i < pts.length; i += 1) {
-      const dx = (pts[i][0] - pts[i - 1][0]) / 100 * pw;
-      const dy = (pts[i][1] - pts[i - 1][1]) / 100 * ph;
+      const dx = ((pts[i][0] - pts[i - 1][0]) / 100) * pw;
+      const dy = ((pts[i][1] - pts[i - 1][1]) / 100) * ph;
       run.push(run[i - 1] + Math.hypot(dx, dy));
     }
     const span = run[run.length - 1];
 
-    /** The point at a given distance along the curve, linearly interpolated. */
     const atLength = (want) => {
       let lo = 0;
       let hi = run.length - 1;
@@ -175,6 +172,37 @@ export function CertificationWall(block, { editing = false } = {}) {
       ];
     };
 
+    // Every 8th sample is plenty for a smooth stroke and keeps the `d` short.
+    const d = pts
+      .filter((_, i) => i % 8 === 0 || i === pts.length - 1)
+      .map((q, i) => `${i ? 'L' : 'M'} ${q[0].toFixed(2)} ${q[1].toFixed(2)}`)
+      .join(' ');
+
+    return { span, atLength, d };
+  }
+
+  function drawRegister() {
+    const list = certs;
+    /* Layout pixels, not a bounding rect — the stage is inside FitSlide's transform
+       and a rect would come back scaled. Reads 0 before mount, hence the fallback
+       and the one redraw the ResizeObserver below triggers. */
+    const pw = regStage.clientWidth || 1600;
+    const ph = regStage.clientHeight || 700;
+
+    const arcs = ARCS.map((spec) => sampleArc(spec, pw, ph));
+    const total = arcs.reduce((n, a) => n + a.span, 0);
+
+    /* Allotted by length, with the remainder going to the longest arc so the counts
+       always add back to exactly the number of credentials. */
+    const counts = arcs.map((a) => Math.floor((a.span / total) * list.length));
+    let left = list.length - counts.reduce((n, c) => n + c, 0);
+    while (left > 0) {
+      let best = 0;
+      for (let i = 1; i < arcs.length; i += 1) if (arcs[i].span > arcs[best].span) best = i;
+      counts[best] += 1;
+      left -= 1;
+    }
+
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class', 'cs-arc__line');
     svg.setAttribute('viewBox', '0 0 100 100');
@@ -188,32 +216,34 @@ export function CertificationWall(block, { editing = false } = {}) {
       + '<stop offset="78%" stop-color="#e9ecf1" stop-opacity="0.95"/>'
       + '<stop offset="100%" stop-color="#c8ccd4" stop-opacity="0.15"/>'
       + '</linearGradient>';
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    // Every 8th sample is plenty for a smooth stroke and keeps the `d` short.
-    path.setAttribute('d', pts
-      .filter((_, i) => i % 8 === 0 || i === pts.length - 1)
-      .map((p, i) => `${i ? 'L' : 'M'} ${p[0].toFixed(2)} ${p[1].toFixed(2)}`)
-      .join(' '));
-    path.setAttribute('class', 'cs-arc__stroke');
-    svg.append(defs, path);
+    svg.append(defs);
 
-    /* Equal distance in pixels, not equal angle and not equal viewBox length.
-       Both of those cluster the marks towards the ends of a wide flat arc — the two
-       earlier attempts measured 8-48px and 22-51px between neighbours. Inset half a
-       step at each end so the first and last marks are not sitting on the very tips
-       of the stroke. */
-    const step = n > 1 ? span / n : 0;
-    const marks = list.map((c, i) => {
-      const [x, y] = atLength(n > 1 ? step * 0.5 + i * step : span / 2);
-      return h('span', {
-        class: 'cs-mark',
-        title: `${c.name} — ${nf(c.held)}`,
-        style: {
-          left: `${x}%`,
-          top: `${y}%`,
-          'animation-delay': REDUCED?.matches ? '0ms' : `${i * 26}ms`,
-        },
-      }, art(c, 'cs-mark__img'));
+    const marks = [];
+    let taken = 0;
+    arcs.forEach((arc, ai) => {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', arc.d);
+      path.setAttribute('class', `cs-arc__stroke${ai ? ' cs-arc__stroke--in' : ''}`);
+      svg.append(path);
+
+      const n = counts[ai];
+      /* Inset half a step at each end, so the first and last marks are not sitting
+         on the very tips of the stroke. */
+      const step = n > 0 ? arc.span / n : 0;
+      for (let i = 0; i < n; i += 1) {
+        const c = list[taken + i];
+        const [x, y] = arc.atLength(step * 0.5 + i * step);
+        marks.push(h('span', {
+          class: `cs-mark${ai ? ' cs-mark--in' : ''}`,
+          title: `${c.name} — ${nf(c.held)}`,
+          style: {
+            left: `${x}%`,
+            top: `${y}%`,
+            'animation-delay': REDUCED?.matches ? '0ms' : `${(taken + i) * 22}ms`,
+          },
+        }, art(c, 'cs-mark__img')));
+      }
+      taken += n;
     });
 
     arcWrap.replaceChildren(svg, ...marks);

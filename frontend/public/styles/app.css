@@ -11773,13 +11773,16 @@ body.is-presenting .sw-root {
   stroke-linecap: round;
   filter: drop-shadow(0 1px 1px rgb(15 20 35 / 0.16));
 }
+/* The inner arc reads as the nearer of the two: a shade heavier, so the pair has
+   depth instead of looking like one line accidentally drawn twice. */
+.cs-arc__stroke--in { stroke-width: 2.75; opacity: 0.92; }
 
 .cs-mark {
   position: absolute; z-index: 3;
-  /* Smaller than the 39px the marks are spaced at, so the silver line shows
-     between them. At 52px they overlapped by 13px and hid the stroke completely,
+  /* Smaller than the gap the marks are spaced at, so the silver line shows between
+     them. At 52px on one arc they overlapped by 13px and hid the stroke entirely,
      which defeated the point of drawing it. */
-  width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  width: 36px; height: 36px; margin: -18px 0 0 -18px;
   display: grid; place-items: center;
   animation: cs-mark-in 620ms cubic-bezier(.16,1,.3,1) both;
 }
@@ -11792,6 +11795,9 @@ body.is-presenting .sw-root {
   filter: drop-shadow(0 3px 7px rgb(15 20 35 / 0.22));
   transition: transform 220ms cubic-bezier(.16,1,.3,1);
 }
+/* The inner arc is shorter and carries fewer marks, so they can be a little larger
+   without touching — which also helps the two rows read as two. */
+.cs-mark--in { width: 42px; height: 42px; margin: -21px 0 0 -21px; }
 .cs-mark:hover { z-index: 6; }
 /* Bigger on hover than the fixed size allows, so a mark can still be identified
    without making every one of the forty-five large enough to bury the line. */
@@ -11801,9 +11807,11 @@ body.is-presenting .sw-root {
 /* Inside the arc's mouth, which is why the arc opens upward: the curve frames this
    block instead of running through it. */
 .cs-reg__mid {
-  position: absolute; inset: auto 0 0 0; top: 46%; z-index: 4;
+  /* Below the inner arc's apex, which sits at 46% — the arcs are a dome and this is
+     the block they frame, so it starts where the inner curve stops. */
+  position: absolute; inset: auto 0 0 0; top: 52%; z-index: 4;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 22px; padding: 0 60px 26px; text-align: center; pointer-events: none;
+  gap: 18px; padding: 0 60px 22px; text-align: center; pointer-events: none;
 }
 .cs-figs { display: flex; align-items: flex-start; }
 .cs-fig { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 0 44px; }
