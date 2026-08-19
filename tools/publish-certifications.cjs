@@ -22,17 +22,9 @@ const ROOT = path.resolve(__dirname, '..');
 const UPLOADS = path.join(ROOT, 'backend', 'uploads');
 const CERT_DIR = path.join(UPLOADS, 'certifications');
 const BADGE_DIR = path.join(CERT_DIR, 'badges');
-/* The logos named in Logos.xlsx, downloaded locally. Preferred over `badges/`
-   because the workbook is the source the user maintains, and its links resolve for
-   every row — including MTA Database Fundamentals, which Credly refuses. */
-const LOGO_DIR = path.join(CERT_DIR, 'logos');
 const COHORT_DIR = path.join(CERT_DIR, 'Certification Images  Sorted');
 const WORKBOOK = path.join(CERT_DIR, 'Certification Logos', 'Logos.xlsx');
-/* The register's ground. The 16k certification post, which is the artwork the user
-   asked for behind the arc; the cropped crowd band it replaces is kept only as the
-   fallback for a build where the post is missing. */
-const BACKDROP = '16k-certification-post-13b5680a75bd4a21.jpg';
-const BACKDROP_FALLBACK = 'certifications/register-crowd.jpg';
+const BACKDROP = 'certifications/register-crowd.jpg';
 
 /* Resolved by key at run time, with the id below only as a hint. A hardcoded id
    stops being true the moment the section is deleted and remade — which is exactly
@@ -319,24 +311,6 @@ const CREDENTIALS = [
     "Data models and table relationships",
     "Client and server-side scripting",
     "Application security and deployment"
-  ]],
-  ["CLA - C Certified Associate Programmer", "C++ Institute", "C programming", 167, [
-    "Data types, operators and expressions",
-    "Flow control, loops and arrays",
-    "Functions, scope and recursion",
-    "Pointers, structures and file handling"
-  ]],
-  ["CompTIA Security+", "CompTIA", "Security", 23, [
-    "Threats, attacks and vulnerabilities",
-    "Architecture and design principles",
-    "Identity and access management",
-    "Risk, governance and incident response"
-  ]],
-  ["Mile2 C)SP: Certified Security Principles", "Mile2", "Security principles", 11, [
-    "Security governance and policy",
-    "Network and host hardening",
-    "Access control models",
-    "Incident handling basics"
   ]],
   ["Unity Certified User: Programmer", "Unity", "Real-time 3D", 108, [
     "C# scripting and the MonoBehaviour lifecycle",
@@ -697,7 +671,6 @@ const ALIASES = {
   'Salesforce Certified Platform Developer I': 'Salesforce Certified Platform Developer',
   'Servicenow Certified System Administrator': 'ServiceNow Certified System Administrator (CSA)',
   'Servicenow Certified Application Developer': 'ServiceNow Certified Application Developer (CAD)',
-  'CLA - C Certified Associate Programmer': 'CLA – C Certified Associate Programmer',
 
   /* Deliberately not aliased. The workbook carries "Microsoft Certified: Azure
      Administrator Associate" twice, at 660 and at 37, so there is no telling which
@@ -763,24 +736,15 @@ function nearest(name, rows) {
   return best && best.score >= 0.5 ? best.row : null;
 }
 
-/** Artwork by slug, whatever extension it was downloaded as. */
-function readFolder(dir, rel) {
+/** Badges, by slug, whatever extension they were downloaded as. */
+function readBadges() {
+  if (!fs.existsSync(BADGE_DIR)) return new Map();
   const found = new Map();
-  if (!fs.existsSync(dir)) return found;
-  for (const file of fs.readdirSync(dir)) {
+  for (const file of fs.readdirSync(BADGE_DIR)) {
     if (!/\.(png|jpe?g|webp|svg|gif)$/i.test(file)) continue;
-    found.set(slug(path.basename(file, path.extname(file))), `${rel}/${file}`);
+    found.set(slug(path.basename(file, path.extname(file))), `certifications/badges/${file}`);
   }
   return found;
-}
-
-/* Logos first, badges as the fallback. Both are keyed by the slug of whatever the
-   file is called, so a credential finds its art under either its own name or the
-   workbook's name for it. */
-function readBadges() {
-  const merged = readFolder(BADGE_DIR, 'certifications/badges');
-  for (const [k, v] of readFolder(LOGO_DIR, 'certifications/logos')) merged.set(k, v);
-  return merged;
 }
 
 /** The cohort artwork, per vendor folder, with real pixel dimensions. */
@@ -836,12 +800,7 @@ function buildBlock() {
       stale.push({ name, verified, guess: nearest(name, rows) });
     }
 
-    /* Art is filed under whatever the file is called, and the logo downloader
-       names files from the workbook. So look under this credential's own name and
-       under the workbook's name for it — MTA Database Fundamentals is on disk as
-       "mta-database-fundamentals" and would otherwise read as having no badge. */
-    const badge = badges.get(slug(name)) || (alias ? badges.get(slug(alias)) : '') || '';
-    return { name, vendor, domain, held, badge, skills };
+    return { name, vendor, domain, held, badge: badges.get(slug(name)) || '', skills };
   });
 
   const unlisted = rows.filter((r) => !claimed.has(slug(r.name)) && !conflicts.has(slug(r.name)));
@@ -861,8 +820,7 @@ function buildBlock() {
       type: 'certification-wall',
       layout: LAYOUT,
       ...COPY,
-      backdrop: fs.existsSync(path.join(UPLOADS, BACKDROP)) ? BACKDROP
-        : (fs.existsSync(path.join(UPLOADS, BACKDROP_FALLBACK)) ? BACKDROP_FALLBACK : ''),
+      backdrop: fs.existsSync(path.join(UPLOADS, BACKDROP)) ? BACKDROP : '',
       credentials,
       vendors,
     },

@@ -1,33 +1,31 @@
-import { h } from '../utils/dom.js';
+import { h, svg } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { upload } from '../utils/media.js';
 
 /**
  * Certifications, in three acts.
  *
- *   01 The Register    every logo on one silver arc, over the certification post.
- *   02 Skills Unlocked a stacked deck that deals out, then opens to the skills.
- *   03 The Gallery     the cohort artwork, one card per batch that passed.
+ *   01 The Register    — the badges travelling two arcs, the totals, the claim.
+ *   02 Skills Unlocked — one credential at a time: badge, caption, what it tests.
+ *   03 The Gallery     — the cohort artwork, three columns running continuously.
  *
- * The arc carries all forty-five, evenly spaced. Spacing by index rather than by
- * anything hashed is what makes it read as one line of marks instead of a scatter
- * with holes in it — the earlier version placed each badge at a hashed radius and
- * the gaps that produced were the first thing anyone noticed.
+ * The three exist because there are two different bodies of evidence here and they
+ * answer different questions. The register is the catalogue: forty-two named
+ * credentials, twenty-two awarding bodies, and how many trainees hold each one. The
+ * gallery is the proof: the published cards, each a batch with its count and its
+ * photograph already set into the artwork.
  *
- * Act 02 opens as a single stack, because forty-five cards arriving at once is a
- * wall nobody reads. One click deals them into a grid of at most four columns; one
- * more opens a credential and the deck becomes a filmstrip — the chosen logo large
- * on the left, its skills on the right, its neighbours faded either side, and the
- * arrows or a horizontal drag walk along it.
+ * Every badge is a local file. The catalogue pointed at eight different CDNs and
+ * this deck is presented with no network, so the artwork is downloaded at publish
+ * time and served by the app. A badge the CDN refuses to release carries none, and
+ * falls back to the vendor set in type.
  *
- * Every logo is a local file under /uploads, downloaded from the links in
- * Logos.xlsx. This deck presents with no network, so nothing here may reach a CDN.
+ * Nothing here is rounded up. The register totals what the credentials total.
  */
 
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+const still = () => !!REDUCED?.matches;
 
-/* Layout pixels, not measured ones — the page is inside FitSlide's transform, so a
-   bounding rect comes back scaled and would solve in the wrong unit. */
 const GAP = 12;
 
 const ACTS = [
@@ -36,231 +34,348 @@ const ACTS = [
   { key: 'gallery', num: '03', name: 'The Gallery' },
 ];
 
+/* One glyph per vendor, by keyword from the deck's own icon family. Deliberately
+   not the vendors' marks: hand-drawing someone else's trademark is worse than not
+   showing it, and the real badge artwork is doing that job on this page anyway. */
+const GLYPH = {
+  aws: 'server', microsoft: 'grid-4', 'google-cloud': 'globe', oracle: 'layers',
+  redhat: 'terminal', cisco: 'route', juniper: 'swap', 'pearson-it-specialist': 'code',
+  servicenow: 'checklist', pega: 'workflow', salesforce: 'users',
+  'automation-anywhere': 'gear', postman: 'link', unity: 'cube', 'arduino-iot': 'chip',
+  adobe: 'image', comptia: 'shield', mile2: 'target', others: 'medal',
+};
+
 const nf = (n) => Number(n || 0).toLocaleString('en-US');
-const initials = (s) => String(s || '?').replace(/[^A-Za-z ]/g, '').trim().slice(0, 2).toUpperCase() || '?';
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-/* ------------------------------------------------------------ the cohort wall */
-/* Width and height solved together, because a row of square cards is always far
-   wider than it is tall and filling the width alone strands the stage in white. */
-const SIZE_TOLERANCE = 0.95;
+/* Two arcs sharing a centre below the stage. The outer one runs corner to corner:
+   given a half-width `a` and an apex rise `k`, a centre `d` below the baseline puts
+   both ends exactly on the stage edges. The apex sits 15% down so the act nav above
+   it stays clear of the badges. */
+const RINGS = [
+  { f: 1, dur: 5.6, dir: 1 },
+  { f: 0.78, dur: 6.8, dir: -1 },
+];
 
-function packRows(items, width, contentH) {
-  const n = items.length;
-  if (!n) return [];
-  const aspect = (it) => it.w / it.h;
-  const candidates = [];
+function arcLayout(w, height, count) {
+  if (!w || !height || !count) return null;
+  const a = w / 2;
+  const cx = a;
+  const size = clamp(w / 44, 24, 40);
+  const k = height - 0.15 * height;
+  const u = (a * a - k * k) / (2 * k);
+  const r0 = u + k;
+  const cy = height + u;
 
-  for (let c = 1; c <= n; c += 1) {
-    const groups = [];
-    for (let i = 0; i < n; i += c) groups.push(items.slice(i, i + c));
-    const rows = groups.length;
-    const byHeight = (contentH - GAP * (rows - 1)) / rows;
-    if (byHeight <= 0) continue;
-    const spans = groups.map((g) => g.reduce((sum, it) => sum + aspect(it), 0));
-    const byWidth = Math.min(...groups.map((g, i) => (width - GAP * (g.length - 1)) / spans[i]));
-    const height = Math.min(byHeight, byWidth);
-    const used = Math.max(...groups.map((g, i) => height * spans[i] + GAP * (g.length - 1)));
-    const ragged = rows > 1 ? (c * rows - n) / c : 0;
-    candidates.push({ groups, height, used, ragged });
+  const base = RINGS.map((cfg) => {
+    const r = r0 * cfg.f;
+    const byY = Math.acos(clamp((cy - height - size * 0.1) / r, -1, 1));
+    const byX = Math.asin(clamp((a - size * 0.1) / r, -1, 1));
+    return { r, tMax: Math.min(byY, byX) };
+  });
+
+  /* Share the badges out by how much of each arc is actually on stage, so the
+     spacing along one arc matches the spacing along the other. */
+  const weight = base.reduce((sum, g) => sum + g.tMax * g.r, 0);
+  const ideal = base.map((g) => (g.tMax * g.r * count) / weight);
+  const counts = ideal.map((v) => Math.max(4, Math.round(v)));
+  let total = counts.reduce((sum, v) => sum + v, 0);
+  let guard = 0;
+  while (total !== count && guard < 200) {
+    const dir = total < count ? 1 : -1;
+    let best = 0;
+    for (let i = 1; i < counts.length; i += 1) {
+      if (dir * (ideal[i] - counts[i]) > dir * (ideal[best] - counts[best])) best = i;
+    }
+    counts[best] += dir;
+    total += dir;
+    guard += 1;
   }
-  if (!candidates.length) {
-    candidates.push({ groups: items.map((it) => [it]), height: 120, used: width, ragged: 0 });
-  }
-  const tallest = Math.max(...candidates.map((k) => k.height));
-  const pool = candidates.filter((k) => k.height >= tallest * SIZE_TOLERANCE);
-  const even = pool.filter((k) => k.ragged <= 0.5);
-  const best = (even.length ? even : pool)
-    .sort((a, b) => (b.used - a.used) || (a.ragged - b.ragged))[0];
 
-  return best.groups.map((g) => {
-    const solved = g.map((it) => ({ ...it, dw: best.height * aspect(it), dh: best.height }));
-    const w = solved.reduce((sum, it) => sum + it.dw, 0) + GAP * (g.length - 1);
-    return { height: best.height, full: w >= width - 0.5, items: solved };
+  let from = 0;
+  const rings = base.map((g, i) => {
+    const m = Math.max(4, counts[i]);
+    const full = Math.acos(clamp((cy - height) / g.r, -1, 1));
+    const ex = cx + g.r * Math.sin(full);
+    const ey = cy - g.r * Math.cos(full);
+    const ring = {
+      r: g.r,
+      tMax: g.tMax,
+      pitch: (2 * g.tMax) / (m - 2),
+      count: m,
+      from,
+      dur: RINGS[i].dur,
+      dir: RINGS[i].dir,
+      d: `M${(cx - g.r * Math.sin(full)).toFixed(1)} ${ey.toFixed(1)}`
+        + `A${g.r.toFixed(1)} ${g.r.toFixed(1)} 0 0 1 ${ex.toFixed(1)} ${ey.toFixed(1)}`,
+    };
+    from += m;
+    return ring;
+  });
+
+  const halfBox = Math.min(430, a - 46) + size * 0.5;
+  return {
+    cx, cy, size, rings,
+    keepOut: { x0: cx - halfBox, x1: cx + halfBox, y0: 0.5 * height - size * 0.5 },
+  };
+}
+
+/* Every logo already fits its box on the long side; a wide wordmark still reads
+   larger than a square badge at equal width, so ease the extremes down a little. */
+function evenOut(img) {
+  const w = img.naturalWidth;
+  const px = img.naturalHeight;
+  if (!w || !px) return;
+  const fill = Math.min(w / px, px / w);
+  img.style.transform = `scale(${Math.max(0.86, fill ** 0.18).toFixed(3)})`;
+}
+
+function badgeArt(item, cls, srcOf) {
+  if (!item.badge) return h('em', { class: cls }, (item.vendor || '?').slice(0, 2).toUpperCase());
+  return h('img', {
+    class: cls, src: srcOf(item.badge), alt: '', loading: 'lazy', decoding: 'async',
+    onload: (e) => evenOut(e.currentTarget),
+    onerror: (e) => { e.currentTarget.style.visibility = 'hidden'; },
   });
 }
 
+/* ------------------------------------------------------------ the cohort wall */
+const TILE_SPEED = [46, 58, 52];
+
 export function CertificationWall(block, { editing = false } = {}) {
   const vendors = (block.vendors || []).filter((v) => v.certs?.length);
-  const certs = (block.credentials || []).filter((c) => c.name);
+  const credentials = (block.credentials || []).filter((c) => c.name);
   const root = h('div', { class: 'cs-root ph-root' });
 
-  if (!vendors.length && !certs.length) {
+  if (!vendors.length && !credentials.length) {
     root.appendChild(h('div', { class: 'cs-empty' },
       h('h2', { class: 'cs-title' }, block.title || 'Certifications'),
       editing
-        ? h('p', { class: 'cs-hint' }, 'Run tools/publish-certifications.cjs and it appears here.')
+        ? h('p', { class: 'cs-hint' },
+            'Drop the cards into backend/uploads/certifications/ and re-run the publish step.')
         : null,
     ));
     return root;
   }
 
   const cards = vendors.reduce((n, v) => n + v.certs.length, 0);
-  const earned = certs.reduce((n, c) => n + (c.held || 0), 0);
-  const bodies = new Set(certs.map((c) => c.vendor)).size;
-  const src = (p) => upload(String(p).split('/').map(encodeURIComponent).join('/'));
+  const earned = credentials.reduce((n, c) => n + (c.held || 0), 0);
+  const bodies = new Set(credentials.map((c) => c.vendor)).size;
 
   let act = ACTS[0].key;
+  const src = (p) => upload(String(p).split('/').map(encodeURIComponent).join('/'));
+  const frames = [];
+  const observers = [];
 
-  const art = (c, cls) => (c.badge
-    ? h('img', { class: cls, src: src(c.badge), alt: '', loading: 'lazy', decoding: 'async' })
-    : h('em', { class: `${cls} is-type` }, initials(c.vendor)));
+  /* --------------------------------------------------------------- lightbox */
+  /* Portalled to the body. FitSlide scales the slide with a transform, and a
+     transformed ancestor becomes the containing block for fixed descendants — so
+     inside the slide `inset: 0` resolves to the slide box, not the screen. */
+  const lightImg = h('img', { class: 'cs-light__img', alt: '' });
+  const lightCap = h('p', { class: 'cs-light__cap' });
+  const lightMeta = h('span', { class: 'cs-light__meta' });
+  const lightCount = h('span', { class: 'cs-light__count' });
+  let shown = [];
+  let at = 0;
 
-  /* ============================================================== 01 REGISTER */
-  const arcWrap = h('div', { class: 'cs-arc' });
-  const regStage = h('div', { class: 'cs-reg' });
+  const prevBtn = h('button', {
+    class: 'cs-light__nav cs-light__nav--prev', type: 'button', 'aria-label': 'Previous',
+    onclick: (e) => { e.stopPropagation(); step(-1); },
+  }, icon('chevron-left', { class: 'ic' }));
+  const nextBtn = h('button', {
+    class: 'cs-light__nav cs-light__nav--next', type: 'button', 'aria-label': 'Next',
+    onclick: (e) => { e.stopPropagation(); step(1); },
+  }, icon('chevron-right', { class: 'ic' }));
 
-  /**
-   * Every logo on one arc, evenly spaced.
-   *
-   * The arc is drawn as an SVG path so the silver line is a real stroke behind the
-   * marks rather than a border faked with a rounded box, and each logo is placed at
-   * the same angle the path uses — so the marks sit *on* the line instead of near
-   * it. Even spacing is the whole point: the index decides the angle and nothing
-   * else does, which is what removes the holes.
-   */
-  /* Two arcs, nested. One line of forty-five marks reads as a single long band;
-     split across an outer and an inner curve the register has depth, and each mark
-     gets more room. Same centre and sweep for both, so they stay concentric.
+  const light = h('div', {
+    class: 'cs-light', hidden: true,
+    onclick: (e) => { if (e.target === light || e.target.closest('.cs-light__close')) shut(); },
+  },
+    h('button', { class: 'cs-light__close', type: 'button', 'aria-label': 'Close' },
+      icon('close', { class: 'ic ic--sm' })),
+    prevBtn, nextBtn,
+    h('figure', { class: 'cs-light__frame' }, lightImg,
+      h('figcaption', { class: 'cs-light__foot' }, lightCap, lightMeta, lightCount)),
+  );
+  document.body.appendChild(light);
 
-     The counts are not split evenly down the middle — they are allotted in
-     proportion to each arc's real length, which is what keeps the spacing identical
-     on both. Half each would crowd the shorter inner curve. */
-  const ARCS = [
-    { rx: 47, ry: 62, from: 187, to: 353 },
-    { rx: 34, ry: 44, from: 194, to: 346 },
-  ];
-  const ARC_CX = 50;
-  const ARC_CY = 90;
-
-  /**
-   * Sample one arc and hand back its pixel length and a point-at-distance lookup.
-   *
-   * The curve lives in percentage space and the stage is far wider than it is tall,
-   * so length has to be accumulated in real pixels — a step equal in percentage
-   * terms is not equal on screen, and measuring in viewBox units left the marks
-   * running from 22px to 51px apart.
-   */
-  function sampleArc(spec, pw, ph) {
-    const at = (deg) => {
-      const r = (deg * Math.PI) / 180;
-      return [ARC_CX + Math.cos(r) * spec.rx, ARC_CY + Math.sin(r) * spec.ry];
-    };
-    const STEPS = 720;
-    const pts = [];
-    for (let i = 0; i <= STEPS; i += 1) pts.push(at(spec.from + (i / STEPS) * (spec.to - spec.from)));
-
-    const run = [0];
-    for (let i = 1; i < pts.length; i += 1) {
-      const dx = ((pts[i][0] - pts[i - 1][0]) / 100) * pw;
-      const dy = ((pts[i][1] - pts[i - 1][1]) / 100) * ph;
-      run.push(run[i - 1] + Math.hypot(dx, dy));
-    }
-    const span = run[run.length - 1];
-
-    const atLength = (want) => {
-      let lo = 0;
-      let hi = run.length - 1;
-      while (lo < hi) {
-        const mid = (lo + hi) >> 1;
-        if (run[mid] < want) lo = mid + 1; else hi = mid;
-      }
-      const i = Math.max(1, lo);
-      const t = (want - run[i - 1]) / Math.max(1e-6, run[i] - run[i - 1]);
-      return [
-        pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * t,
-        pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * t,
-      ];
-    };
-
-    // Every 8th sample is plenty for a smooth stroke and keeps the `d` short.
-    const d = pts
-      .filter((_, i) => i % 8 === 0 || i === pts.length - 1)
-      .map((q, i) => `${i ? 'L' : 'M'} ${q[0].toFixed(2)} ${q[1].toFixed(2)}`)
-      .join(' ');
-
-    return { span, atLength, d };
+  function shut() {
+    light.hidden = true;
+    light.classList.remove('is-on');
+    document.removeEventListener('keydown', onKey, true);
+  }
+  function onKey(e) {
+    if (e.key === 'Escape') { e.stopPropagation(); shut(); return; }
+    if (e.key === 'ArrowRight') { e.stopPropagation(); e.preventDefault(); step(1); }
+    if (e.key === 'ArrowLeft') { e.stopPropagation(); e.preventDefault(); step(-1); }
+  }
+  function step(d) {
+    if (shown.length < 2) return;
+    at = (at + d + shown.length) % shown.length;
+    paintLight();
+  }
+  function paintLight() {
+    const it = shown[at];
+    if (!it) return;
+    lightImg.src = src(it.src);
+    lightImg.alt = it.label || '';
+    lightCap.textContent = it.label || '';
+    lightMeta.textContent = `${it.vendor} · ${it.w} × ${it.h}`;
+    lightCount.textContent = shown.length > 1 ? `${at + 1} / ${shown.length}` : '';
+    prevBtn.hidden = shown.length < 2;
+    nextBtn.hidden = shown.length < 2;
+  }
+  function openLight(list, i) {
+    shown = list;
+    at = Math.max(0, i);
+    paintLight();
+    light.hidden = false;
+    requestAnimationFrame(() => light.classList.add('is-on'));
+    document.addEventListener('keydown', onKey, true);
   }
 
-  function drawRegister() {
-    const list = certs;
-    /* Layout pixels, not a bounding rect — the stage is inside FitSlide's transform
-       and a rect would come back scaled. Reads 0 before mount, hence the fallback
-       and the one redraw the ResizeObserver below triggers. */
-    const pw = regStage.clientWidth || 1600;
-    const ph = regStage.clientHeight || 700;
+  /* ============================================================== 01 REGISTER */
+  const stage1 = h('div', { class: 'cs-reg' });
+  const wire = svg('svg', { class: 'cs-arcs', 'aria-hidden': 'true' });
+  const drift = h('div', { class: 'cs-drift' }, wire);
+  const pins = [];
+  let plan = null;
+  let lastW = 0;
+  let lastH = 0;
 
-    const arcs = ARCS.map((spec) => sampleArc(spec, pw, ph));
-    const total = arcs.reduce((n, a) => n + a.span, 0);
+  function buildArcs() {
+    const w = stage1.clientWidth;
+    const ht = stage1.clientHeight;
+    if (!w || !ht) return;
+    if (Math.abs(w - lastW) < 4 && Math.abs(ht - lastH) < 4) return;
+    lastW = w;
+    lastH = ht;
 
-    /* Allotted by length, with the remainder going to the longest arc so the counts
-       always add back to exactly the number of credentials. */
-    const counts = arcs.map((a) => Math.floor((a.span / total) * list.length));
-    let left = list.length - counts.reduce((n, c) => n + c, 0);
-    while (left > 0) {
-      let best = 0;
-      for (let i = 1; i < arcs.length; i += 1) if (arcs[i].span > arcs[best].span) best = i;
-      counts[best] += 1;
-      left -= 1;
-    }
+    plan = arcLayout(w, ht, credentials.length);
+    if (!plan) return;
 
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('class', 'cs-arc__line');
-    svg.setAttribute('viewBox', '0 0 100 100');
-    svg.setAttribute('preserveAspectRatio', 'none');
-    svg.setAttribute('aria-hidden', 'true');
-    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    defs.innerHTML = '<linearGradient id="cs-silver" x1="0" y1="0" x2="1" y2="0">'
-      + '<stop offset="0%" stop-color="#c8ccd4" stop-opacity="0.15"/>'
-      + '<stop offset="22%" stop-color="#e9ecf1" stop-opacity="0.95"/>'
-      + '<stop offset="50%" stop-color="#aeb4c0" stop-opacity="1"/>'
-      + '<stop offset="78%" stop-color="#e9ecf1" stop-opacity="0.95"/>'
-      + '<stop offset="100%" stop-color="#c8ccd4" stop-opacity="0.15"/>'
-      + '</linearGradient>';
-    svg.append(defs);
+    wire.setAttribute('viewBox', `0 0 ${w} ${ht}`);
+    wire.replaceChildren(
+      svg('defs', {},
+        svg('linearGradient', { id: 'csArcGrad', x1: '0', y1: '0', x2: '1', y2: '0' },
+          svg('stop', { offset: '0%', 'stop-color': '#A99BF0', 'stop-opacity': '0' }),
+          svg('stop', { offset: '13%', 'stop-color': '#9A8AEC', 'stop-opacity': '0.45' }),
+          svg('stop', { offset: '34%', 'stop-color': '#5B57DE', 'stop-opacity': '0.95' }),
+          svg('stop', { offset: '52%', 'stop-color': '#4B54D6', 'stop-opacity': '1' }),
+          svg('stop', { offset: '70%', 'stop-color': '#7B6FE6', 'stop-opacity': '0.95' }),
+          svg('stop', { offset: '88%', 'stop-color': '#A99BF0', 'stop-opacity': '0.45' }),
+          svg('stop', { offset: '100%', 'stop-color': '#C9B6F5', 'stop-opacity': '0' }),
+        ),
+      ),
+      /* Four strokes to a line: a grey track that stays legible the whole way
+         round, a blurred bloom, the gradient filament, and a pulse running it. */
+      ...plan.rings.flatMap((g, i) => [
+        svg('path', { class: 'cs-arc__base', d: g.d, pathLength: '1000', style: { '--i': String(i) } }),
+        svg('path', { class: 'cs-arc__glow', d: g.d, pathLength: '1000', style: { '--i': String(i) } }),
+        svg('path', { class: 'cs-arc__line', d: g.d, pathLength: '1000', style: { '--i': String(i) } }),
+        svg('path', { class: 'cs-arc__pulse', d: g.d, pathLength: '1000', style: { '--i': String(i) } }),
+      ]),
+    );
 
-    const marks = [];
-    let taken = 0;
-    arcs.forEach((arc, ai) => {
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', arc.d);
-      path.setAttribute('class', `cs-arc__stroke${ai ? ' cs-arc__stroke--in' : ''}`);
-      svg.append(path);
-
-      const n = counts[ai];
-      /* Inset half a step at each end, so the first and last marks are not sitting
-         on the very tips of the stroke. */
-      const step = n > 0 ? arc.span / n : 0;
-      for (let i = 0; i < n; i += 1) {
-        const c = list[taken + i];
-        const [x, y] = arc.atLength(step * 0.5 + i * step);
-        marks.push(h('span', {
-          class: `cs-mark${ai ? ' cs-mark--in' : ''}`,
-          title: `${c.name} — ${nf(c.held)}`,
-          style: {
-            left: `${x}%`,
-            top: `${y}%`,
-            'animation-delay': REDUCED?.matches ? '0ms' : `${(taken + i) * 22}ms`,
-          },
-        }, art(c, 'cs-mark__img')));
+    pins.length = 0;
+    const holders = [];
+    plan.rings.forEach((g) => {
+      for (let j = 0; j < g.count; j += 1) {
+        const cred = credentials[(g.from + j) % credentials.length];
+        const el = h('button', {
+          class: 'cs-pin', type: 'button', title: `${cred.name} — ${nf(cred.held)} certifications`,
+          style: { width: `${plan.size}px`, '--i': String(g.from + j) },
+          onclick: () => { act = 'skills'; pick = credentials.indexOf(cred); drawSteps(); showAct(); },
+        },
+          h('span', { class: 'cs-pin__in' },
+            h('span', { class: 'cs-pin__bob' },
+              h('span', { class: 'cs-pin__art' }, badgeArt(cred, '', src)))),
+          h('span', { class: 'cs-pin__tag' },
+            h('b', {}, cred.name), h('i', {}, nf(cred.held))),
+        );
+        pins.push(el);
+        holders.push(el);
       }
-      taken += n;
     });
+    drift.replaceChildren(wire, ...holders);
+  }
 
-    arcWrap.replaceChildren(svg, ...marks);
+  /* One loop drives the travel, the fades and the pointer drift. Each badge keeps
+     its own logo and wraps round the ends, so nothing is ever re-sourced in flight
+     and the run never jumps. */
+  let hoverAt = -1;
+  const aim = { x: 0, y: 0 };
+  stage1.addEventListener('pointermove', (e) => {
+    if (still()) return;
+    const r = stage1.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    aim.x = (e.clientX - r.left) / r.width - 0.5;
+    aim.y = (e.clientY - r.top) / r.height - 0.5;
+  });
+  stage1.addEventListener('pointerleave', () => { aim.x = 0; aim.y = 0; });
 
-    regStage.replaceChildren(
+  const t0 = performance.now();
+  let px = 0;
+  let py = 0;
+  frames.push(function travel(now) {
+    if (act !== 'register' || !plan) return;
+    const elapsed = (now - t0) / 1000;
+    px += (aim.x - px) * 0.06;
+    py += (aim.y - py) * 0.06;
+    drift.style.setProperty('--px', px.toFixed(4));
+    drift.style.setProperty('--py', py.toFixed(4));
+
+    const { cx, cy, size, keepOut } = plan;
+    let slot = 0;
+    for (const g of plan.rings) {
+      const span = 2 * g.tMax + 2 * g.pitch;
+      const move = still() ? 0 : (elapsed / g.dur) * g.pitch * g.dir;
+      for (let j = 0; j < g.count; j += 1) {
+        const el = pins[slot + j];
+        if (!el) continue;
+        const raw = j * g.pitch + move;
+        const t = -g.tMax - g.pitch + (((raw % span) + span) % span);
+        const x = cx + g.r * Math.sin(t);
+        const y = cy - g.r * Math.cos(t);
+        const ends = Math.min(g.tMax + g.pitch - t, t + g.tMax + g.pitch) / g.pitch;
+        const clear = Math.max(keepOut.x0 - x, x - keepOut.x1, keepOut.y0 - y);
+        let o = clamp(ends, 0, 1) * clamp(clear / 30, 0, 1);
+        if (hoverAt >= 0 && hoverAt !== slot + j) o *= 0.28;
+        el.style.transform = `translate3d(${(x - size / 2).toFixed(1)}px, ${(y - size / 2).toFixed(1)}px, 0)`;
+        el.style.opacity = o.toFixed(3);
+        const hit = o > 0.45 ? 'auto' : 'none';
+        if (el.dataset.hit !== hit) { el.style.pointerEvents = hit; el.dataset.hit = hit; }
+      }
+      slot += g.count;
+    }
+  });
+
+  drift.addEventListener('pointerover', (e) => {
+    const el = e.target.closest('.cs-pin');
+    hoverAt = el ? pins.indexOf(el) : -1;
+  });
+  drift.addEventListener('pointerout', (e) => {
+    if (!e.relatedTarget || !drift.contains(e.relatedTarget)) hoverAt = -1;
+  });
+
+  function drawRegister() {
+    stage1.replaceChildren(
+      /* Their own cohort panorama, held right back. The reference sets this type
+         over a crowd, and using a real one of theirs beats any stock ground. */
       block.backdrop
         ? h('div', { class: 'cs-reg__back', 'aria-hidden': 'true' },
             h('img', { src: src(block.backdrop), alt: '', decoding: 'async' }))
         : null,
-      arcWrap,
+      drift,
       h('div', { class: 'cs-reg__mid' },
         h('div', { class: 'cs-figs' },
-          h('div', { class: 'cs-fig' },
+          h('div', { class: 'cs-fig', style: { '--i': '0' } },
             h('strong', {}, nf(earned)), h('span', {}, 'certifications earned')),
-          h('div', { class: 'cs-fig' },
-            h('strong', {}, nf(certs.length)), h('span', {}, 'distinct credentials')),
-          h('div', { class: 'cs-fig' },
+          h('i', { class: 'cs-figs__rule' }),
+          h('div', { class: 'cs-fig', style: { '--i': '1' } },
+            h('strong', {}, nf(credentials.length)), h('span', {}, 'distinct credentials')),
+          h('i', { class: 'cs-figs__rule' }),
+          h('div', { class: 'cs-fig', style: { '--i': '2' } },
             h('strong', {}, nf(bodies)), h('span', {}, 'awarding bodies')),
         ),
         block.quote
@@ -268,314 +383,249 @@ export function CertificationWall(block, { editing = false } = {}) {
               h('p', {}, `“${block.quote}”`),
               block.quoteBy ? h('cite', {}, block.quoteBy) : null)
           : null,
-        h('p', { class: 'cs-reg__cue' }, 'Click anywhere to open the deck'),
       ),
     );
+    lastW = 0;
+    lastH = 0;
+    requestAnimationFrame(buildArcs);
   }
-
-  /* Anywhere on the register opens act 02, with a zoom that carries the eye
-     through rather than cutting. The class drives both halves of it: the register
-     pushes back and fades, the deck arrives from underneath. */
-  regStage.addEventListener('click', () => {
-    if (REDUCED?.matches) { go('skills'); return; }
-    root.classList.add('is-zooming');
-    setTimeout(() => { go('skills'); root.classList.remove('is-zooming'); }, 420);
-  });
 
   /* ================================================================ 02 SKILLS */
-  const deck = h('div', { class: 'cs-deck' });
-  /* 'stack' — one pile. 'grid' — dealt into columns. 'one' — a single credential
-     open with its skills, the rest a filmstrip either side. */
-  let mode = 'stack';
+  const skillList = h('div', { class: 'cs-cred' });
+  const skillPane = h('div', { class: 'cs-skill' });
   let pick = 0;
-  const ranked = [...certs].sort((a, b) => b.held - a.held);
 
-  function drawDeck() {
-    deck.dataset.mode = mode;
+  function drawSkills() {
+    const sorted = [...credentials].sort((a, b) => b.held - a.held);
+    const chosen = clamp(pick, 0, sorted.length - 1);
 
-    if (mode === 'one') { drawOne(); return; }
-
-    const grid = h('div', { class: 'cs-cards' },
-      ...ranked.map((c, i) => h('button', {
-        class: 'cs-card',
-        type: 'button',
-        title: c.name,
-        /* In the stack these drive the fan; in the grid they are ignored, so the
-           same node serves both states and the change is a transition rather than
-           a rebuild. */
-        style: {
-          '--i': String(i),
-          '--d': String(Math.min(i, 7)),
-          ...(REDUCED?.matches ? {} : { 'transition-delay': mode === 'grid' ? `${Math.min(i, 24) * 18}ms` : '0ms' }),
-        },
-        onclick: (e) => {
-          e.stopPropagation();
-          if (mode === 'stack') { mode = 'grid'; drawDeck(); return; }
-          pick = i;
-          mode = 'one';
-          drawDeck();
-        },
+    /* The card: name on top, badge and count side by side beneath it, split by a
+       single hairline. Every other rule was noise once there were forty of them. */
+    skillList.replaceChildren(...sorted.map((c, i) => h('button', {
+      class: `cs-card${i === chosen ? ' is-on' : ''}`,
+      type: 'button',
+      style: still() ? {} : { '--i': String(Math.min(i, 30)) },
+      onclick: () => { pick = i; drawSkills(); },
+      onpointermove: (e) => {
+        if (still()) return;
+        const el = e.currentTarget;
+        const r = el.getBoundingClientRect();
+        if (!r.width) return;
+        const mx = (e.clientX - r.left) / r.width;
+        const my = (e.clientY - r.top) / r.height;
+        el.style.setProperty('--mx', mx.toFixed(3));
+        el.style.setProperty('--my', my.toFixed(3));
+        el.style.setProperty('--tx', (mx - 0.5).toFixed(3));
+        el.style.setProperty('--ty', (my - 0.5).toFixed(3));
       },
-        h('span', { class: 'cs-card__art' }, art(c, 'cs-card__img')),
-        h('span', { class: 'cs-card__name' }, c.name),
-        h('span', { class: 'cs-card__held' },
-          h('strong', {}, nf(c.held)),
-          h('span', {}, c.held === 1 ? 'certified' : 'certified')),
-      )),
-    );
-
-    deck.replaceChildren(
-      h('div', { class: 'cs-deck__bar' },
-        h('p', { class: 'cs-deck__cue' }, mode === 'stack'
-          ? `${ranked.length} credentials — click the deck to lay them out`
-          : `${ranked.length} credentials — click one for its skills`),
-        mode === 'grid'
-          ? h('button', {
-              class: 'cs-back', type: 'button',
-              onclick: (e) => { e.stopPropagation(); mode = 'stack'; drawDeck(); },
-            }, icon('layers', { class: 'ic ic--xs' }), 'Stack them')
-          : null,
+      onpointerleave: (e) => {
+        e.currentTarget.style.setProperty('--tx', '0');
+        e.currentTarget.style.setProperty('--ty', '0');
+      },
+    },
+      h('span', { class: 'cs-card__name' }, c.name),
+      h('span', { class: 'cs-card__foot' },
+        h('span', { class: 'cs-card__cell' },
+          h('span', { class: 'cs-card__art' }, badgeArt(c, '', src)),
+          h('span', { class: 'cs-card__lab' }, c.vendor)),
+        h('i', { class: 'cs-card__split' }),
+        h('span', { class: 'cs-card__cell' },
+          h('b', { class: 'cs-card__n' }, nf(c.held)),
+          h('span', { class: 'cs-card__lab' }, 'certifications')),
       ),
-      grid,
-    );
-  }
+    )));
 
-  /** The open credential, with its neighbours faded either side. */
-  function drawOne() {
-    const strip = h('div', { class: 'cs-film' },
-      ...ranked.map((c, i) => {
-        const away = i - pick;
-        return h('button', {
-          class: `cs-slide${away === 0 ? ' is-on' : ''}`,
-          type: 'button',
-          title: c.name,
-          'aria-hidden': Math.abs(away) > 2 ? 'true' : null,
-          style: { '--away': String(away) },
-          onclick: (e) => { e.stopPropagation(); pick = i; drawOne(); },
-        },
-          h('span', { class: 'cs-slide__art' }, art(c, 'cs-slide__img')),
-        );
-      }),
-    );
+    const c = sorted[chosen];
+    if (!c) { skillPane.replaceChildren(); return; }
 
-    const c = ranked[pick];
-    deck.replaceChildren(
-      h('div', { class: 'cs-deck__bar' },
-        h('button', {
-          class: 'cs-back', type: 'button',
-          onclick: (e) => { e.stopPropagation(); mode = 'grid'; drawDeck(); },
-        }, icon('chevron-left', { class: 'ic ic--xs' }), 'All credentials'),
-        h('p', { class: 'cs-deck__count' }, `${pick + 1} / ${ranked.length}`),
+    const words = String(c.name).split(' ').map((word, i) => h('span', {
+      class: 'cs-w', style: still() ? {} : { '--i': String(i) },
+    }, h('span', {}, word)));
+
+    skillPane.replaceChildren(
+      h('div', { class: 'cs-hero' },
+        h('span', { class: 'cs-hero__bloom', 'aria-hidden': 'true' }),
+        h('span', { class: 'cs-hero__shadow', 'aria-hidden': 'true' }),
+        h('span', { class: 'cs-hero__art' }, badgeArt(c, '', src)),
       ),
-      h('div', { class: 'cs-one' },
-        h('div', { class: 'cs-one__left' },
-          strip,
-          h('div', { class: 'cs-one__steps' },
-            h('button', {
-              class: 'cs-step__btn', type: 'button', 'aria-label': 'Previous credential',
-              disabled: pick === 0,
-              onclick: (e) => { e.stopPropagation(); pick = Math.max(0, pick - 1); drawOne(); },
-            }, icon('chevron-left', { class: 'ic ic--xs' })),
-            h('button', {
-              class: 'cs-step__btn', type: 'button', 'aria-label': 'Next credential',
-              disabled: pick === ranked.length - 1,
-              onclick: (e) => { e.stopPropagation(); pick = Math.min(ranked.length - 1, pick + 1); drawOne(); },
-            }, icon('chevron-right', { class: 'ic ic--xs' })),
-          ),
-        ),
-        h('div', { class: 'cs-one__right' },
-          h('p', { class: 'cs-one__vendor' }, `${c.vendor}${c.domain ? ` · ${c.domain}` : ''}`),
-          h('h3', { class: 'cs-one__name' }, c.name),
-          h('div', { class: 'cs-one__count' },
-            h('strong', {}, nf(c.held)),
-            h('span', {}, c.held === 1 ? 'trainee holds it' : 'trainees hold it')),
-          h('p', { class: 'cs-one__label' }, 'What it tests'),
-          h('ol', { class: 'cs-one__skills' },
-            ...(c.skills || []).map((s, i) => h('li', {
-              style: REDUCED?.matches ? {} : { '--i': String(i) },
-            }, h('em', {}, String(i + 1).padStart(2, '0')), h('span', {}, s))),
-          ),
+      h('div', { class: 'cs-cap' },
+        h('p', { class: 'cs-cap__no' },
+          h('i', {}, String(chosen + 1).padStart(2, '0')), ` / ${sorted.length}`),
+        h('p', { class: 'cs-cap__vendor' }, c.vendor),
+        h('h3', { class: 'cs-cap__name' }, ...words),
+        h('p', { class: 'cs-cap__domain' }, c.domain || ''),
+        h('i', { class: 'cs-cap__rule' }),
+        h('p', { class: 'cs-cap__held' },
+          h('b', {}, nf(c.held)),
+          h('span', {}, c.held === 1 ? 'trainee holds it' : 'trainees hold it')),
+      ),
+      h('div', { class: 'cs-learn' },
+        h('p', { class: 'cs-learn__head' }, 'Skills unlocked'),
+        h('ol', { class: 'cs-learn__list' },
+          ...(c.skills || []).map((s, i) => h('li', {
+            style: still() ? {} : { '--i': String(i) },
+          },
+            h('em', {}, String(i + 1).padStart(2, '0')),
+            h('span', { class: 'cs-learn__mask' }, h('span', {}, s)),
+          )),
         ),
       ),
     );
   }
-
-  /* A horizontal drag walks the filmstrip, which is what "side scroll" means on a
-     projector with no scrollbar to grab. Wheel too, since a trackpad sends that. */
-  let wheelLock = 0;
-  deck.addEventListener('wheel', (e) => {
-    if (mode !== 'one') return;
-    const along = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    if (!along) return;
-    e.preventDefault();
-    const now = Date.now();
-    if (now - wheelLock < 260) return;      // one credential per gesture, not thirty
-    wheelLock = now;
-    pick = Math.max(0, Math.min(ranked.length - 1, pick + (along > 0 ? 1 : -1)));
-    drawOne();
-  }, { passive: false });
 
   /* =============================================================== 03 GALLERY */
   const rail = h('nav', { class: 'cs-rail', 'aria-label': 'Certification vendors' });
-  const banner = h('div', { class: 'cs-banner' });
-  const wallStage = h('div', { class: 'cs-stage' });
+  const galHead = h('div', { class: 'cs-galhead' });
+  const columns = h('div', { class: 'cs-cols' });
   let vendor = vendors[0] || null;
-  let lastH = 0;
-  const RAIL_W = 250;
-  const STAGE_W = 1600 - 52 - RAIL_W - 22;
 
-  function drawBanner() {
-    const vs = vendor ? [vendor] : vendors;
-    const n = vs.reduce((sum, v) => sum + v.certs.length, 0);
-    banner.replaceChildren(
-      h('div', { class: 'cs-banner__id' },
-        h('div', {},
-          h('h3', { class: 'cs-banner__name' }, vendor ? vendor.name : 'Every credential'),
-          h('p', { class: 'cs-banner__meta' },
-            `${vendor ? vendor.domain || '' : `${vendors.length} vendors`} · ${n} card${n === 1 ? '' : 's'}`)),
-      ),
+  const shownVendors = () => (vendor ? [vendor] : vendors);
+
+  function drawGalHead() {
+    const list = shownVendors();
+    const n = list.reduce((sum, v) => sum + v.certs.length, 0);
+    const label = vendor ? vendor.name : 'Everyone';
+    galHead.replaceChildren(
+      h('span', { class: 'cs-galhead__pre' }, 'Certified'),
+      h('h3', { class: 'cs-galhead__name' },
+        ...String(label).split(' ').map((word, i) => h('span', {
+          class: 'cs-w', style: still() ? {} : { '--i': String(i) },
+        }, h('span', {}, word)))),
+      h('p', { class: 'cs-galhead__meta' },
+        `${n} card${n === 1 ? '' : 's'} · ${vendor ? vendor.domain || 'one vendor' : `${vendors.length} vendors`}`),
+      h('i', { class: 'cs-galhead__rule' }),
     );
   }
 
-  function drawWall() {
-    wallStage.textContent = '';
-    wallStage.scrollTop = 0;
-    const flat = (vendor ? [vendor] : vendors)
-      .flatMap((v) => v.certs.map((c) => ({ ...c, vendor: v.name })));
-    /* clientHeight is layout, not post-transform, so it is safe to solve against. */
-    lastH = wallStage.clientHeight;
-    const contentH = (lastH || 480) - 28 - GAP;
-    const rows = packRows(flat, STAGE_W, contentH);
+  /* Three columns running continuously, the middle one against the other two. The
+     set is duplicated and the track travels exactly half its height, so the loop
+     closes on itself — the gap rides on each tile's margin rather than on the flex
+     gap, or the seam lands short by one gap. */
+  function drawColumns() {
+    const flat = shownVendors().flatMap((v) => v.certs.map((c) => ({ ...c, vendor: v.name })));
+    const lanes = [[], [], []];
+    flat.forEach((it, i) => lanes[i % 3].push({ ...it, index: i }));
 
-    const totalH = rows.reduce((n, r) => n + r.height + GAP, 0) - GAP;
-    wallStage.classList.toggle('is-short', totalH <= contentH + 1);
+    columns.replaceChildren(...lanes.map((lane, col) => {
+      const tiles = lane.length ? lane : [null];
+      const build = (it, k) => (it
+        ? h('button', {
+            class: 'cs-tile', type: 'button',
+            style: { paddingTop: `${clamp((it.h / it.w) * 100, 62, 150)}%` },
+            title: `${it.label} — open full size`,
+            onclick: () => openLight(flat, it.index),
+          },
+            h('img', {
+              src: src(it.src), alt: it.label || '', width: it.w, height: it.h,
+              loading: it.index < 9 ? 'eager' : 'lazy', decoding: 'async',
+            }),
+            h('span', { class: 'cs-tile__tag' },
+              h('em', {}, it.label), vendor ? null : h('span', {}, it.vendor)),
+            h('span', { class: 'cs-tile__zoom', 'aria-hidden': 'true' },
+              icon('expand', { class: 'ic ic--xs' })),
+          )
+        : h('span', { class: 'cs-tile cs-tile--empty', style: { paddingTop: '100%' } }));
 
-    const wallW = Math.ceil(Math.max(...rows.map(
-      (r) => r.items.reduce((n, it) => n + it.dw, 0) + GAP * (r.items.length - 1))));
-    const wall = h('div', { class: 'cs-wall', style: { width: `${Math.min(wallW, STAGE_W)}px` } });
-
-    rows.forEach((row) => {
-      const rowEl = h('div', { class: 'cs-row', style: { gap: `${GAP}px`, height: `${Math.round(row.height)}px` } });
-      /* Largest-remainder widths: floor them all, then hand the leftover pixels to
-         the tiles rounded down hardest. Giving the drift to one tile put a 76px
-         card 2.4% off its own aspect ratio. */
-      const widths = row.items.map((it) => Math.floor(it.dw));
-      if (row.full) {
-        let spare = (STAGE_W - GAP * (widths.length - 1)) - widths.reduce((n, w) => n + w, 0);
-        const order = row.items.map((it, i) => ({ i, frac: it.dw - Math.floor(it.dw) }))
-          .sort((a, b) => b.frac - a.frac);
-        for (let k = 0; spare > 0 && order.length; k += 1, spare -= 1) widths[order[k % order.length].i] += 1;
-      }
-      row.items.forEach((it, col) => {
-        rowEl.appendChild(h('figure', {
-          class: 'cs-tile',
-          style: { width: `${widths[col]}px`, height: `${Math.round(it.dh)}px` },
-          title: it.label,
-        },
-          h('img', {
-            src: src(it.src), alt: it.label || '',
-            width: it.w, height: it.h, loading: 'lazy', decoding: 'async',
-          }),
-          h('figcaption', { class: 'cs-tile__tag' }, it.label),
-        ));
-      });
-      wall.appendChild(rowEl);
-    });
-    wallStage.appendChild(wall);
+      return h('div', { class: 'cs-col' },
+        h('div', {
+          class: 'cs-col__track',
+          style: {
+            '--dur': `${TILE_SPEED[col]}s`,
+            '--dir': col === 1 ? 'reverse' : 'normal',
+          },
+        }, ...tiles.map(build), ...tiles.map(build)),
+      );
+    }));
   }
 
   function drawRail() {
     rail.textContent = '';
-    const entry = (label, sub, value, count, i) => h('button', {
-      class: `cs-tab${vendor === value ? ' is-on' : ''}`,
+    const entry = (label, sub, value, count, glyph, i) => h('button', {
+      class: `cs-chip${vendor === value ? ' is-on' : ''}`,
       type: 'button', 'aria-current': vendor === value ? 'true' : 'false',
-      style: REDUCED?.matches ? {} : { 'animation-delay': `${i * 26}ms` },
-      onclick: () => { if (vendor === value) return; vendor = value; drawRail(); drawBanner(); drawWall(); },
+      style: still() ? {} : { '--i': String(i) },
+      onclick: () => {
+        if (vendor === value) return;
+        vendor = value;
+        drawRail(); drawGalHead(); drawColumns();
+      },
     },
-      h('span', { class: 'cs-tab__text' },
-        h('span', { class: 'cs-tab__name' }, label),
-        sub ? h('span', { class: 'cs-tab__sub' }, sub) : null),
-      h('span', { class: 'cs-tab__n' }, String(count)),
+      h('span', { class: 'cs-chip__glyph' }, icon(glyph, { class: 'ic ic--xs' })),
+      h('span', { class: 'cs-chip__name' }, label),
+      h('span', { class: 'cs-chip__n' }, String(count)),
     );
-    rail.appendChild(entry('Every credential', `${vendors.length} vendors`, null, cards, 0));
-    vendors.forEach((v, i) => rail.appendChild(entry(v.name, v.domain, v, v.certs.length, i + 1)));
+    rail.appendChild(entry('Everyone', `${vendors.length} vendors`, null, cards, 'grid-4', 0));
+    vendors.forEach((v, i) => rail.appendChild(
+      entry(v.name, v.domain, v, v.certs.length, GLYPH[v.key] || 'certificate', i + 1)));
   }
 
   /* =================================================================== chrome */
   const steps = h('nav', { class: 'cs-steps', role: 'tablist' });
   const acts = h('div', { class: 'cs-acts' });
 
-  function go(key) {
-    act = key;
-    acts.dataset.act = act;
-    drawSteps();
-    if (key === 'register') drawRegister();
-    if (key === 'skills') drawDeck();
-    if (key === 'gallery') { drawRail(); drawBanner(); drawWall(); }
-  }
-
   function drawSteps() {
     steps.replaceChildren(...ACTS.map((a) => h('button', {
       class: `cs-step${a.key === act ? ' is-on' : ''}`,
       type: 'button', role: 'tab', 'aria-selected': String(a.key === act),
-      onclick: () => {
-        if (a.key === act) return;
-        // Coming back to the deck always starts stacked, as it was first seen.
-        if (a.key === 'skills') mode = 'stack';
-        go(a.key);
-      },
-    }, h('em', {}, a.num), h('span', {}, a.name))));
+      onclick: () => { if (a.key !== act) { act = a.key; drawSteps(); showAct(); } },
+    },
+      h('em', {}, a.num),
+      h('span', {}, a.name),
+    )));
   }
 
-  root.append(
-    h('div', { class: 'cs-head' },
-      h('div', {},
-        block.eyebrow ? h('p', { class: 'cs-eyebrow' }, block.eyebrow) : null,
-        h('h2', { class: 'cs-title' }, block.title || 'Certifications')),
-      steps,
+  function showAct() {
+    acts.dataset.act = act;
+    if (act === 'register') drawRegister();
+    if (act === 'skills') drawSkills();
+    if (act === 'gallery') { drawRail(); drawGalHead(); drawColumns(); }
+  }
+
+  const head = h('div', { class: 'cs-head' },
+    h('div', {},
+      block.eyebrow ? h('p', { class: 'cs-eyebrow' }, block.eyebrow) : null,
+      h('h2', { class: 'cs-title' }, block.title || 'Certifications'),
     ),
-    acts,
+    steps,
   );
+
   acts.append(
-    h('section', { class: 'cs-act cs-act--register' }, regStage),
-    h('section', { class: 'cs-act cs-act--skills' }, deck),
+    h('section', { class: 'cs-act cs-act--register' }, stage1),
+    h('section', { class: 'cs-act cs-act--skills' },
+      h('div', { class: 'cs-skills' }, skillList, skillPane)),
     h('section', { class: 'cs-act cs-act--gallery' },
-      h('div', { class: 'cs-gal' }, rail, h('div', { class: 'cs-main' }, banner, wallStage))),
+      h('div', { class: 'cs-gal' },
+        h('div', { class: 'cs-galside' }, galHead, rail),
+        columns)),
   );
 
-  go('register');
-  drawDeck();
-  drawRail();
-  drawBanner();
+  root.append(head, acts);
+  drawSteps();
+  showAct();
 
-  /* The wall is watched rather than sampled once: the rail and banner settle after
-     their entrance animations, and a single measurement on the next frame committed
-     a column count against the wrong height. */
-  const watchSize = new ResizeObserver(() => {
-    if (act !== 'gallery') return;
-    if (wallStage.clientHeight && Math.abs(wallStage.clientHeight - lastH) > 8) drawWall();
+  /* One rAF for the whole block. Separate loops per effect meant the register kept
+     ticking behind the other two acts. */
+  let raf = requestAnimationFrame(function tick(now) {
+    for (const fn of frames) fn(now);
+    raf = requestAnimationFrame(tick);
   });
-  watchSize.observe(wallStage);
 
-  /* The arc is solved against the stage's pixel size, and that reads 0 until the
-     slide is in the document — so the first pass lays the marks out against the
-     1600x700 fallback and has to be redone once the real size is known. Guarded on
-     a threshold, or every resize tick would rebuild forty-five nodes. */
-  let arcW = 0;
-  let arcH = 0;
-  const watchArc = new ResizeObserver(() => {
-    const w = regStage.clientWidth;
-    const hgt = regStage.clientHeight;
-    if (!w || !hgt) return;
-    if (Math.abs(w - arcW) < 8 && Math.abs(hgt - arcH) < 8) return;
-    arcW = w;
-    arcH = hgt;
-    drawRegister();
-  });
-  watchArc.observe(regStage);
+  /* The arc geometry is solved in layout pixels: clientWidth is pre-transform, so
+     it is safe here, unlike a bounding rect, which FitSlide returns scaled. */
+  const watchSize = new ResizeObserver(() => { if (act === 'register') buildArcs(); });
+  watchSize.observe(stage1);
+  observers.push(watchSize);
 
+  /* The lightbox lives on the body, so it has to be taken down by hand when the
+     slide that owns it is replaced. */
   const watch = new MutationObserver(() => {
-    if (!root.isConnected) { watchSize.disconnect(); watchArc.disconnect(); watch.disconnect(); }
+    if (!root.isConnected) {
+      light.remove();
+      cancelAnimationFrame(raf);
+      watch.disconnect();
+      observers.forEach((o) => o.disconnect());
+      document.removeEventListener('keydown', onKey, true);
+    }
   });
   watch.observe(document.body, { childList: true, subtree: true });
 
