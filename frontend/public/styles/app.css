@@ -11647,339 +11647,526 @@ body.is-presenting .sw-root {
 }
 
 /* ==========================================================================
-   The credential register — three acts, from the reference design
+   Certifications — three acts
    ==========================================================================
    01 The Register    the badges as a constellation, the totals, the claim
    02 Skills Unlocked what each credential actually tests
-   03 The Gallery     all forty-two badges, named
+   03 The Gallery     the cohort artwork, one card per batch that passed
 
-   EASE is the reference's own curve, cubic-bezier(.16,1,.3,1), used throughout.
-   The register is set in a serif on a soft ground because it makes an argument;
-   the other two acts are quieter and denser.
+   The register is set in the serif and on a soft ground, because it is the one
+   page in this deck that is making an argument rather than presenting evidence.
+   The other two acts return to the deck's own voice.
    ========================================================================== */
 
-.cr-root {
+.cs-root {
   display: flex; flex-direction: column;
   /* `.canvas-block > *` sets `flex: 1`, whose `flex-basis: 0%` overrides `height`
-     on the main axis. Without a basis of its own this root grows to its content and
-     FitSlide scales the slide down to fit; with it, children scroll instead. */
+     on the main axis, so a min-height root grows to its content and FitSlide
+     scales the slide down to fit. A definite basis is what lets a child scroll. */
   flex: 0 0 auto; height: 860px; max-height: 860px;
   overflow: hidden; border-radius: var(--radius-lg);
   background: var(--surface);
 }
-.cr-empty { display: grid; place-items: center; min-height: 400px; gap: 10px; text-align: center; }
-.cr-hint { margin: 0; color: var(--muted); font-size: 13px; }
+.cs-empty { display: grid; place-items: center; min-height: 400px; gap: 10px; text-align: center; }
+.cs-hint { margin: 0; color: var(--muted); font-size: 13px; }
 
 /* --------------------------------------------------------------- the head -- */
-.cr-head {
-  flex: 0 0 auto; display: flex; align-items: flex-end; justify-content: space-between;
+.cs-head {
+  flex: 0 0 auto;
+  display: flex; align-items: flex-end; justify-content: space-between;
   gap: 30px; padding: 20px 30px 14px;
   border-bottom: 1px solid var(--hairline, #e5e7eb);
 }
-.cr-eyebrow {
+.cs-eyebrow {
   margin: 0 0 6px; color: var(--nav-second-ink, var(--accent-ink));
   font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
 }
-.cr-title {
+.cs-title {
   margin: 0; color: var(--nav-accent-ink, var(--accent-ink));
   font-size: 30px; font-weight: 800; letter-spacing: -0.024em; line-height: 1.05;
 }
 
-/* The act nav, numbered — a table of contents, not a row of buttons. */
-.cr-steps { display: flex; align-items: baseline; gap: 26px; padding-bottom: 4px; }
-.cr-step {
+/* The act nav, numbered. Small caps and a hairline underline on the live one —
+   this is a table of contents, not a row of buttons. */
+.cs-steps { display: flex; align-items: baseline; gap: 26px; padding-bottom: 4px; }
+.cs-step {
   display: flex; align-items: baseline; gap: 8px;
   padding: 0 0 6px; border: 0; border-bottom: 2px solid transparent;
   background: none; color: var(--muted); cursor: pointer;
-  transition: color 180ms cubic-bezier(.16,1,.3,1), border-color 180ms cubic-bezier(.16,1,.3,1);
+  transition: color 180ms ease, border-color 180ms ease;
 }
-.cr-step em {
+.cs-step em {
   font-style: normal; font-size: 11px; font-weight: 800;
   font-variant-numeric: tabular-nums; opacity: 0.55;
 }
-.cr-step span { font-family: Georgia, 'Times New Roman', serif; font-size: 19px; letter-spacing: -0.01em; }
-.cr-step:hover { color: var(--ink, #111827); }
-.cr-step.is-on {
+.cs-step span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 19px; letter-spacing: -0.01em;
+}
+.cs-step:hover { color: var(--ink, #111827); }
+.cs-step.is-on {
   color: var(--nav-accent-ink, var(--accent-ink));
   border-bottom-color: var(--brand-accent, #FFBB00);
 }
-.cr-step.is-on em { opacity: 1; color: var(--nav-second-ink, var(--accent-ink)); }
-.cr-step:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 3px; }
+.cs-step.is-on em { opacity: 1; color: var(--nav-second-ink, var(--accent-ink)); }
+.cs-step:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 3px; }
 
-/* One act at a time, kept in the DOM rather than rebuilt. */
-.cr-acts { flex: 1 1 auto; min-height: 0; position: relative; }
-.cr-act { position: absolute; inset: 0; display: none; }
-.cr-acts[data-act="register"] .cr-act--register,
-.cr-acts[data-act="skills"] .cr-act--skills,
-.cr-acts[data-act="gallery"] .cr-act--gallery { display: block; }
-
-/* A badge with no local file falls back to the vendor's initials on a plate. */
-.is-type {
-  font-style: normal; font-weight: 800; letter-spacing: 0.04em;
-  display: grid; place-items: center; width: 100%; height: 100%;
-  border-radius: 8px; background: var(--page-bg);
-  color: var(--nav-accent-ink, var(--accent-ink)); font-size: 0.62em;
-}
+/* One act visible at a time. Kept in the DOM rather than rebuilt, so returning to
+   the gallery does not re-solve the wall from scratch. */
+.cs-acts { flex: 1 1 auto; min-height: 0; position: relative; }
+.cs-act { position: absolute; inset: 0; display: none; }
+.cs-acts[data-act="register"] .cs-act--register,
+.cs-acts[data-act="skills"] .cs-act--skills,
+.cs-acts[data-act="gallery"] .cs-act--gallery { display: block; }
 
 /* ======================================================== 01 THE REGISTER == */
-.cr-reg {
+/* Two arcs running edge to edge, the badges travelling them, the totals sitting in
+   the clear space underneath. The apex is 15% down the stage so the act nav above
+   never has a badge behind it. */
+.cs-reg {
   position: relative; width: 100%; height: 100%; overflow: hidden;
-  /* A wash, not flat white — the constellation needs something to sit in. Two brand
-     tints and a cool third for depth; this is a ground, not decoration. */
   background:
-    radial-gradient(ellipse 70% 60% at 12% 8%, color-mix(in srgb, var(--nav-accent, #008638) 13%, transparent), transparent 70%),
-    radial-gradient(ellipse 62% 55% at 92% 22%, color-mix(in srgb, #7b6cff 15%, transparent), transparent 72%),
-    radial-gradient(ellipse 80% 50% at 50% 100%, color-mix(in srgb, var(--brand-accent, #FFBB00) 10%, transparent), transparent 74%),
-    #fbfbfd;
+    radial-gradient(46vw 40vw at 6% 12%, color-mix(in srgb, #CBE4D6 55%, transparent), transparent 70%),
+    radial-gradient(52vw 44vw at 96% 4%, color-mix(in srgb, #BED3F5 55%, transparent), transparent 70%),
+    radial-gradient(58vw 48vw at 88% 96%, color-mix(in srgb, #C9B6F5 52%, transparent), transparent 70%),
+    var(--surface);
+}
+.cs-reg__back { position: absolute; inset: auto 0 0 0; height: 47%; overflow: hidden; }
+.cs-reg__back img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+  opacity: 0.38; filter: saturate(0.5) contrast(0.95);
+  animation: cs-burns 52s ease-in-out infinite alternate;
+}
+.cs-reg__back::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom,
+    var(--surface) 0%,
+    color-mix(in srgb, var(--surface) 90%, transparent) 22%,
+    color-mix(in srgb, var(--surface) 66%, transparent) 58%,
+    color-mix(in srgb, var(--surface) 58%, transparent) 100%);
+}
+@keyframes cs-burns { from { transform: scale(1) } to { transform: scale(1.09) translateY(-1.5%) } }
+
+/* The badge field and its lines drift together against the pointer, so the badges
+   never come off the arcs they are riding. */
+.cs-drift {
+  position: absolute; inset: 0; z-index: 2; will-change: transform;
+  transform:
+    rotateY(calc(var(--px, 0) * 4deg)) rotateX(calc(var(--py, 0) * -3deg))
+    translate3d(calc(var(--px, 0) * -34px), calc(var(--py, 0) * -22px), 0);
+}
+.cs-arcs { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+.cs-arc__base {
+  fill: none; stroke: rgba(16, 17, 22, 0.3); stroke-width: 1.15; stroke-linecap: round;
+  stroke-dasharray: 1000; stroke-dashoffset: 1000;
+  animation: cs-draw 2400ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(200ms + var(--i) * 200ms);
+}
+.cs-arc__glow {
+  fill: none; stroke: url(#csArcGrad); stroke-width: 5.5; stroke-linecap: round;
+  filter: blur(6px); stroke-dasharray: 1000; stroke-dashoffset: 1000;
+  animation: cs-draw 2400ms cubic-bezier(0.16, 1, 0.3, 1) backwards,
+             cs-neon 6.5s ease-in-out infinite;
+  animation-delay: calc(240ms + var(--i) * 200ms), calc(var(--i) * -2s);
+}
+.cs-arc__line {
+  fill: none; stroke: url(#csArcGrad); stroke-width: 1.1; stroke-linecap: round;
+  filter: drop-shadow(0 0 3px rgba(94, 86, 226, 0.5)) drop-shadow(0 0 9px rgba(150, 120, 240, 0.3));
+  stroke-dasharray: 1000; stroke-dashoffset: 1000;
+  animation: cs-draw 2400ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(240ms + var(--i) * 200ms);
+}
+.cs-arc__pulse {
+  fill: none; stroke: #6E63E8; stroke-width: 1.7; stroke-linecap: round;
+  stroke-dasharray: 22 1000; stroke-dashoffset: 1022; opacity: 0.9;
+  filter: drop-shadow(0 0 5px rgba(110, 99, 232, 0.9)) drop-shadow(0 0 13px rgba(163, 133, 255, 0.55));
+  animation: cs-flow 9s linear infinite; animation-delay: calc(2600ms + var(--i) * 1400ms);
+}
+@keyframes cs-draw { to { stroke-dashoffset: 0 } }
+@keyframes cs-neon { 0%, 100% { opacity: 0.22 } 50% { opacity: 0.48 } }
+@keyframes cs-flow { from { stroke-dashoffset: 1022 } to { stroke-dashoffset: 0 } }
+
+/* Position and opacity are written by the loop; everything else is CSS, so the
+   frame only ever touches two composited properties. */
+.cs-pin {
+  position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none;
+  aspect-ratio: 1; cursor: pointer; will-change: transform, opacity;
+}
+.cs-pin__in {
+  display: block; width: 100%; height: 100%;
+  animation: cs-pinin 1000ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(600ms + var(--i) * 30ms);
+}
+@keyframes cs-pinin { from { opacity: 0; transform: scale(0.2) rotate(-30deg); filter: blur(6px) } }
+.cs-pin__bob {
+  display: block; width: 100%; height: 100%;
+  animation: cs-bob 9s ease-in-out infinite; animation-delay: calc(var(--i) * -420ms);
+}
+@keyframes cs-bob { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+.cs-pin__art {
+  display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cs-pin__art img {
+  max-width: 100%; max-height: 100%; width: auto; height: auto; display: block;
+  filter: drop-shadow(0 7px 13px rgba(40, 42, 80, 0.22));
+}
+.cs-pin__art em {
+  font-style: normal; font-size: 12px; font-weight: 800; color: var(--muted);
+}
+.cs-pin:hover .cs-pin__art { transform: scale(1.34); }
+.cs-pin__tag {
+  position: absolute; left: 50%; top: calc(100% + 9px);
+  transform: translateX(-50%) translateY(-5px);
+  display: flex; align-items: center; gap: 7px; white-space: nowrap;
+  padding: 5px 11px; border-radius: 100px;
+  background: color-mix(in srgb, var(--surface) 95%, transparent);
+  border: 1px solid var(--hairline, #e5e7eb);
+  box-shadow: 0 10px 22px rgba(40, 42, 80, 0.14);
+  opacity: 0; pointer-events: none; z-index: 4;
+  transition: opacity 400ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cs-pin:hover .cs-pin__tag { opacity: 1; transform: translateX(-50%) translateY(0); }
+.cs-pin__tag b { font-size: 10.5px; font-weight: 650; max-width: 230px; overflow: hidden; text-overflow: ellipsis; }
+.cs-pin__tag i {
+  font-style: normal; font-size: 8.5px; font-weight: 750; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--nav-second-ink, var(--accent-ink));
 }
 
-/* The photograph, faded into the ground rather than placed on it. */
-.cr-reg__back { position: absolute; inset: auto 0 0 0; height: 30%; overflow: hidden; }
-.cr-reg__back img {
-  width: 100%; height: 100%; object-fit: cover; object-position: 50% 46%;
-  opacity: 0.38; filter: saturate(0.5) contrast(0.9);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 58%, #000 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 58%, #000 100%);
+/* The type sits in the clear band the badges are told to avoid. */
+.cs-reg__mid {
+  position: absolute; z-index: 5; left: 50%; bottom: 42px; transform: translateX(-50%);
+  width: min(860px, calc(100% - 96px));
+  display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center;
 }
-
-.cr-sky { position: absolute; inset: 0; }
-.cr-sky__b {
-  position: absolute; display: grid; place-items: center;
-  transform: translate(-50%, -50%);
-  animation: cr-rise 900ms cubic-bezier(.16,1,.3,1) both;
+.cs-figs { display: flex; align-items: stretch; justify-content: center; gap: clamp(26px, 5vw, 76px); }
+.cs-figs__rule { width: 1px; background: var(--hairline, #e5e7eb); }
+.cs-fig {
+  text-align: center;
+  animation: cs-rise 1200ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(900ms + var(--i) * 130ms);
 }
-@keyframes cr-rise {
-  from { opacity: 0; transform: translate(-50%, -40%) scale(0.86); }
+.cs-fig strong {
+  display: block; font-size: clamp(30px, 3.4vw, 54px); font-weight: 800; line-height: 1;
+  letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+  color: var(--nav-accent-ink, var(--accent-ink));
 }
-.cr-sky__img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 14px rgb(20 24 40 / 0.16)); }
-.cr-sky__b .is-type { font-size: 11px; background: rgb(255 255 255 / 0.8); box-shadow: 0 4px 12px rgb(20 24 40 / 0.12); }
-
-/* The clear band the arc leaves, filled rather than top-stacked. */
-.cr-reg__mid {
-  position: absolute; inset: auto 0 0 0; top: 40%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 30px; padding: 0 60px 34px; text-align: center;
+.cs-fig span {
+  display: block; margin-top: 11px; color: var(--muted);
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.19em; text-transform: uppercase;
 }
-/* A veil under the type, not over the picture — the cite is small grey caps and it
-   lands squarely on the crowd. */
-.cr-reg__mid::before {
-  content: ''; position: absolute; inset: -6% -4% -2% -4%; z-index: -1;
-  background: radial-gradient(ellipse 58% 62% at 50% 56%,
-    rgb(251 251 253 / 0.93) 0%, rgb(251 251 253 / 0.72) 58%, rgb(251 251 253 / 0) 100%);
+.cs-quote { margin: 0; max-width: 660px; animation: cs-rise 1400ms 1250ms cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+.cs-quote p { margin: 0; font-size: clamp(15px, 1.5vw, 21px); font-style: italic; line-height: 1.5; }
+.cs-quote cite {
+  display: block; margin-top: 14px; font-style: normal; color: var(--muted);
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.19em; text-transform: uppercase;
 }
-
-.cr-figs { display: flex; align-items: flex-start; }
-.cr-fig { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 44px; }
-.cr-fig + .cr-fig { border-left: 1px solid rgb(20 24 40 / 0.12); }
-.cr-fig strong {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 58px; font-weight: 400; line-height: 0.95;
-  letter-spacing: -0.01em; color: #1b1e2b; font-variant-numeric: tabular-nums;
-}
-.cr-fig span {
-  max-width: 15ch; color: #5b6070; line-height: 1.5;
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.17em; text-transform: uppercase;
-}
-
-.cr-quote { margin: 0; max-width: 62ch; }
-.cr-quote p {
-  margin: 0; font-family: Georgia, 'Times New Roman', serif;
-  font-size: 25px; font-style: italic; line-height: 1.45;
-  color: #23262f; letter-spacing: -0.005em;
-}
-.cr-quote cite {
-  display: block; margin-top: 14px; font-style: normal; color: #6b7080;
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-}
+@keyframes cs-rise { from { opacity: 0; transform: translateY(16px); filter: blur(6px) } }
 
 /* ==================================================== 02 SKILLS UNLOCKED == */
-.cr-split {
-  height: 100%; display: grid; grid-template-columns: 470px minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr); column-gap: 26px; padding: 18px 30px 22px;
-}
-.cr-list {
-  min-height: 0; display: flex; flex-direction: column; gap: 4px;
-  overflow-y: auto; scrollbar-width: thin; padding-right: 6px;
-}
-.cr-list::-webkit-scrollbar { width: 6px; }
-.cr-list::-webkit-scrollbar-thumb { background: #d8dce1; border-radius: 999px; }
-
-.cr-row {
-  flex: 0 0 auto;
-  display: grid; grid-template-columns: 34px minmax(0, 1fr) auto;
-  align-items: center; gap: 11px;
-  padding: 7px 11px; border: 1px solid transparent; border-radius: var(--radius-sm);
-  background: transparent; color: var(--ink, #111827); text-align: left; cursor: pointer;
-  transition: background 160ms cubic-bezier(.16,1,.3,1), border-color 160ms cubic-bezier(.16,1,.3,1);
-  animation: cr-row-in 420ms cubic-bezier(.16,1,.3,1) both;
-  animation-delay: calc(var(--i, 0) * 18ms);
-}
-@keyframes cr-row-in {
-  from { opacity: 0; transform: translateX(-10px); }
-  to { opacity: 1; transform: none; }
-}
-.cr-row:hover { background: var(--page-bg); }
-.cr-row.is-on {
-  background: color-mix(in srgb, var(--nav-accent, #008638) 8%, transparent);
-  border-color: color-mix(in srgb, var(--nav-accent, #008638) 30%, transparent);
-}
-.cr-row__mark { display: grid; place-items: center; width: 34px; height: 34px; }
-.cr-row__img { width: 100%; height: 100%; object-fit: contain; }
-.cr-row__mark .is-type { font-size: 10px; }
-.cr-row__text { min-width: 0; display: flex; flex-direction: column; }
-.cr-row__name {
-  font-size: 12.5px; font-weight: 700; line-height: 1.25;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.cr-row__vendor { margin-top: 1px; font-size: 10.5px; font-weight: 650; color: var(--muted); }
-.cr-row__held {
-  font-size: 12.5px; font-weight: 800; font-variant-numeric: tabular-nums;
-  color: var(--nav-accent-ink, var(--accent-ink));
+.cs-skills {
+  display: grid; grid-template-columns: 290px minmax(0, 1fr) 330px;
+  gap: 22px; height: 100%; padding: 20px 30px 24px;
 }
 
-.cr-pane {
-  min-height: 0; display: flex; flex-direction: column; gap: 16px;
-  padding: 22px 26px; border-radius: var(--radius);
-  border: 1px solid var(--hairline, #e5e7eb);
-  background:
-    radial-gradient(ellipse 60% 50% at 88% 6%, color-mix(in srgb, var(--nav-accent, #008638) 7%, transparent), transparent 70%),
-    var(--surface);
-  overflow-y: auto; scrollbar-width: thin;
+/* The picker, as cards: name on top, badge and count beneath, one hairline. */
+.cs-cred { overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 6px; }
+.cs-card {
+  --mx: 0.5; --my: 0.5; --tx: 0; --ty: 0;
+  position: relative; display: flex; flex-direction: column; gap: 13px;
+  padding: 13px 14px 12px; border-radius: 11px; text-align: left; overflow: hidden;
+  background: color-mix(in srgb, var(--surface) 66%, transparent);
+  border: 1px solid color-mix(in srgb, var(--surface) 90%, transparent);
+  box-shadow: 0 10px 24px rgba(40, 42, 80, 0.07); cursor: pointer;
+  transform: perspective(900px) rotateX(calc(var(--ty) * -6deg)) rotateY(calc(var(--tx) * 7deg));
+  transition: box-shadow 550ms ease, border-color 550ms ease, background 550ms ease,
+              transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: cs-cardin 800ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--i) * 22ms);
 }
-.cr-pane__head { display: flex; align-items: center; gap: 16px; }
-.cr-pane__mark { display: grid; place-items: center; width: 62px; height: 62px; flex: 0 0 auto; }
-.cr-pane__img { width: 100%; height: 100%; object-fit: contain; }
-.cr-pane__mark .is-type { font-size: 17px; border-radius: 12px; }
-.cr-pane__vendor {
-  margin: 0 0 4px; font-size: 11px; font-weight: 750;
-  letter-spacing: 0.13em; text-transform: uppercase;
-  color: var(--nav-second-ink, var(--accent-ink));
+@keyframes cs-cardin { from { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(6px) } }
+.cs-card::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(190px circle at calc(var(--mx) * 100%) calc(var(--my) * 100%),
+    color-mix(in srgb, var(--nav-accent, #008638) 16%, transparent), transparent 72%);
+  transition: opacity 450ms ease;
 }
-.cr-pane__name {
-  margin: 0; font-family: Georgia, 'Times New Roman', serif;
-  font-size: 25px; line-height: 1.2; letter-spacing: -0.012em; color: #1b1e2b;
+.cs-card::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--nav-accent, #008638), transparent);
+  transform: scaleX(0); transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.cr-pane__count { display: flex; align-items: baseline; gap: 10px; }
-.cr-pane__count strong {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 40px; font-weight: 400; line-height: 1;
-  font-variant-numeric: tabular-nums; color: var(--nav-accent-ink, var(--accent-ink));
-}
-.cr-pane__count span {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--muted);
-}
-.cr-pane__bar {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding-top: 4px; border-top: 1px solid var(--hairline, #e5e7eb);
-}
-.cr-pane__label {
-  margin: 0; font-size: 10.5px; font-weight: 800;
-  letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
-}
-
-/* The auto-tour: DWELL from the reference, drawn as a bar under the label. */
-.cr-tour {
-  position: relative; overflow: hidden;
-  padding: 5px 12px; border: 1px solid var(--hairline, #e5e7eb);
-  border-radius: 999px; background: var(--surface); color: var(--muted);
-  font-size: 10.5px; font-weight: 750; letter-spacing: 0.1em; text-transform: uppercase;
-  cursor: pointer; white-space: nowrap;
-  transition: color 160ms cubic-bezier(.16,1,.3,1), border-color 160ms cubic-bezier(.16,1,.3,1),
-              background 160ms cubic-bezier(.16,1,.3,1);
-}
-.cr-tour:hover {
-  color: var(--nav-accent-ink, var(--accent-ink));
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-}
-.cr-tour.is-on {
-  color: var(--nav-accent-ink, var(--accent-ink));
+.cs-card:hover { box-shadow: 0 26px 46px rgba(40, 42, 80, 0.16); }
+.cs-card:hover::before { opacity: 1; }
+.cs-card:hover::after, .cs-card.is-on::after { transform: scaleX(1); }
+.cs-card.is-on {
+  background: color-mix(in srgb, var(--surface) 96%, transparent);
   border-color: color-mix(in srgb, var(--nav-accent, #008638) 40%, transparent);
-  background: color-mix(in srgb, var(--nav-accent, #008638) 7%, transparent);
 }
-.cr-tour__run {
-  position: absolute; left: 0; bottom: 0; height: 2px; width: 100%;
-  transform-origin: left center; background: var(--brand-accent, #FFBB00);
-  animation: cr-dwell linear both;
+.cs-card__name {
+  font-size: 11.5px; font-weight: 650; line-height: 1.42; min-height: 2.84em;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-@keyframes cr-dwell { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.cs-card__foot { display: flex; align-items: center; }
+.cs-card__cell {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center;
+  gap: 7px; text-align: center;
+}
+.cs-card__split {
+  width: 1px; height: 26px; flex: none; margin: 0 10px;
+  background: rgba(16, 17, 22, 0.07); transition: background 500ms ease;
+}
+.cs-card:hover .cs-card__split { background: rgba(16, 17, 22, 0.13); }
+.cs-card__art {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; padding: 9px; border-radius: 50%; flex: none;
+  background: color-mix(in srgb, var(--nav-accent, #008638) 6%, transparent);
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), background 500ms ease;
+}
+.cs-card:hover .cs-card__art { transform: scale(1.08); }
+.cs-card__art img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+.cs-card__art em { font-style: normal; font-size: 13px; font-weight: 800; color: var(--muted); }
+.cs-card__n {
+  font-size: 25px; font-weight: 800; line-height: 42px; height: 42px;
+  font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  transition: color 450ms ease, transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cs-card:hover .cs-card__n { color: var(--nav-accent-ink, var(--accent-ink)); transform: translateY(-2px); }
+.cs-card__lab {
+  color: var(--muted); font-size: 7.5px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 100%;
+}
 
-.cr-skills {
-  flex: 1 1 auto; min-height: 0; margin: 0; padding: 4px 0 0; list-style: none;
-  display: flex; flex-direction: column; justify-content: space-evenly; gap: 10px;
+/* The chosen credential: the badge floating over its own shadow, the caption
+   beneath it, and what it tests down the right. */
+.cs-skill { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 26px; min-height: 0; }
+.cs-hero { position: relative; grid-column: 1; display: grid; place-items: center; min-height: 0; }
+.cs-hero__bloom {
+  position: absolute; width: 420px; height: 420px; border-radius: 50%;
+  background: radial-gradient(circle,
+    color-mix(in srgb, #C9B6F5 55%, transparent) 0%,
+    color-mix(in srgb, #BED3F5 22%, transparent) 42%, transparent 70%);
+  animation: cs-bloom 1900ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
-.cr-skills li {
-  display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; align-items: baseline;
-  padding-bottom: 10px; border-bottom: 1px solid var(--hairline, #e5e7eb);
-  animation: cr-skill-in 460ms cubic-bezier(.16,1,.3,1) both;
-  animation-delay: calc(var(--i, 0) * 70ms + 90ms);
+@keyframes cs-bloom { 0% { opacity: 0; transform: scale(0.72) } 30% { opacity: 0.95 } 100% { opacity: 0.22; transform: scale(1.06) } }
+.cs-hero__shadow {
+  position: absolute; bottom: 16%; width: 40%; height: 26px; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(42, 44, 86, 0.26) 0%, rgba(42, 44, 86, 0) 70%);
+  filter: blur(9px); animation: cs-contact 12s ease-in-out infinite;
 }
-.cr-skills li:last-child { border-bottom: 0; padding-bottom: 0; }
-@keyframes cr-skill-in {
-  from { opacity: 0; transform: translateY(9px); }
-  to { opacity: 1; transform: none; }
+@keyframes cs-contact { 0%, 100% { opacity: 0.85; transform: scale(1) } 50% { opacity: 0.5; transform: scale(0.86) } }
+.cs-hero__art { position: relative; display: grid; place-items: center; animation: cs-breathe 12s ease-in-out infinite; }
+@keyframes cs-breathe { 0%, 100% { transform: translateY(0) scale(1) } 50% { transform: translateY(-12px) scale(1.036) } }
+.cs-hero__art img {
+  max-width: 300px; max-height: 300px; width: auto; height: auto; display: block;
+  filter: drop-shadow(0 34px 46px rgba(40, 42, 80, 0.17)) drop-shadow(0 4px 10px rgba(40, 42, 80, 0.06));
 }
-.cr-skills em {
-  font-style: normal; font-size: 12px; font-weight: 800;
-  font-variant-numeric: tabular-nums; color: var(--brand-accent, #FFBB00);
-  -webkit-text-stroke: 0.4px color-mix(in srgb, var(--nav-second-ink, #8c6700) 60%, transparent);
+.cs-hero__art em { font-style: normal; font-size: 64px; font-weight: 800; color: var(--muted); }
+
+.cs-cap { grid-column: 1; align-self: end; padding: 0 6px 4px; }
+.cs-cap__no, .cs-cap__vendor {
+  margin: 0 0 12px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.19em;
+  text-transform: uppercase; color: var(--muted); font-variant-numeric: tabular-nums;
+  animation: cs-mono 1200ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
-.cr-skills span { font-size: 16.5px; line-height: 1.4; color: var(--ink, #111827); }
+.cs-cap__no i { font-style: normal; color: var(--nav-accent-ink, var(--accent-ink)); }
+.cs-cap__vendor { color: var(--nav-second-ink, var(--accent-ink)); animation-delay: 100ms; }
+@keyframes cs-mono { from { opacity: 0; letter-spacing: 0.34em; transform: translateY(8px) } }
+.cs-cap__name {
+  margin: 0 0 12px; font-size: clamp(24px, 2.5vw, 38px); font-weight: 800;
+  line-height: 1.1; letter-spacing: -0.026em;
+}
+/* Each word rises out of its own mask, so the name unfurls instead of fading. */
+.cs-w {
+  display: inline-block; overflow: hidden; vertical-align: bottom;
+  padding: 0.06em 0.04em 0.16em 0; margin: 0 0.2em -0.16em 0;
+}
+.cs-w > span {
+  display: inline-block;
+  animation: cs-word 1250ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(180ms + var(--i, 0) * 52ms);
+}
+@keyframes cs-word { from { transform: translate3d(0, 112%, 0) rotate(2.2deg) } }
+.cs-cap__domain {
+  margin: 0 0 18px; color: var(--muted); font-size: 15px; font-style: italic;
+  animation: cs-rise 1300ms 360ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.cs-cap__rule {
+  display: block; height: 1px; max-width: 330px; background: var(--hairline, #e5e7eb);
+  transform-origin: left; margin-bottom: 14px;
+  animation: cs-rule 1500ms 420ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+@keyframes cs-rule { from { transform: scaleX(0); opacity: 0 } }
+.cs-cap__held { margin: 0; display: flex; align-items: baseline; gap: 10px;
+  animation: cs-rise 1300ms 500ms cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+.cs-cap__held b { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.cs-cap__held span { color: var(--muted); font-size: 12.5px; }
+
+.cs-learn { grid-column: 2; grid-row: 1 / -1; align-self: center; }
+.cs-learn__head {
+  margin: 0 0 22px; color: var(--nav-second-ink, var(--accent-ink));
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.19em; text-transform: uppercase;
+  animation: cs-mono 1200ms 240ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.cs-learn__list { list-style: none; margin: 0; padding: 0; }
+.cs-learn__list li { position: relative; padding: 13px 0 13px 34px; }
+.cs-learn__list li::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px;
+  background: var(--hairline, #e5e7eb); transform-origin: left;
+  animation: cs-rule 1100ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(360ms + var(--i, 0) * 95ms);
+}
+.cs-learn__list em {
+  position: absolute; left: 0; top: 15px; font-style: normal; font-size: 9.5px; font-weight: 800;
+  letter-spacing: 0.14em; color: var(--nav-second-ink, var(--accent-ink)); opacity: 0.6;
+  animation: cs-mono 1000ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(400ms + var(--i, 0) * 95ms);
+}
+.cs-learn__mask { display: block; overflow: hidden; padding-bottom: 0.18em; margin-bottom: -0.18em; }
+.cs-learn__mask > span {
+  display: block; font-size: 13px; line-height: 1.5;
+  animation: cs-word 1150ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(430ms + var(--i, 0) * 95ms);
+}
 
 /* ======================================================= 03 THE GALLERY === */
-/* auto-fit, never auto-fill: auto-fill keeps a phantom empty column and a short
-   row ends up filling 60% of the width. */
-.cr-gal {
-  height: 100%; display: grid;
-  grid-template-columns: repeat(auto-fit, 176px);
-  grid-auto-rows: 158px;
-  align-content: start; justify-content: center;
-  gap: 14px; padding: 18px 30px 22px;
-  overflow-y: auto; scrollbar-width: thin;
+.cs-gal { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; height: 100%; padding: 22px 30px 24px; }
+.cs-galside { display: flex; flex-direction: column; min-height: 0; }
+.cs-galhead__pre { display: block; font-size: clamp(17px, 1.7vw, 26px); font-style: italic; color: var(--muted); line-height: 1; margin-bottom: 6px; }
+.cs-galhead__name { margin: 0; font-size: clamp(28px, 3.2vw, 46px); font-weight: 800; line-height: 1.02; letter-spacing: -0.03em; }
+.cs-galhead__meta { margin: 16px 0 0; color: var(--muted); font-size: 12.5px; }
+.cs-galhead__rule {
+  display: block; height: 1px; background: var(--hairline, #e5e7eb); margin: 22px 0 18px;
+  transform-origin: left; animation: cs-rule 1300ms 300ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
-.cr-gal::-webkit-scrollbar { width: 7px; }
-.cr-gal::-webkit-scrollbar-thumb { background: #d8dce1; border-radius: 999px; }
+.cs-rail { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 7px 8px; overflow-y: auto; }
+.cs-chip {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 100px;
+  border: 1px solid var(--hairline, #e5e7eb); background: none; color: var(--muted); cursor: pointer;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  transition: color 400ms ease, border-color 400ms ease, background 400ms ease;
+  animation: cs-rise 800ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+.cs-chip:hover { color: var(--ink, inherit); border-color: color-mix(in srgb, var(--nav-accent, #008638) 45%, transparent); }
+.cs-chip.is-on {
+  color: #fff; background: var(--nav-accent, #008638);
+  border-color: var(--nav-accent, #008638);
+}
+.cs-chip__glyph { display: grid; place-items: center; opacity: 0.8; }
+.cs-chip__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px; }
+.cs-chip__n { font-variant-numeric: tabular-nums; opacity: 0.7; }
 
-.cr-cell {
-  margin: 0; display: flex; flex-direction: column; align-items: center;
-  gap: 8px; padding: 12px 10px;
-  border: 1px solid var(--hairline, #e5e7eb); border-radius: var(--radius-sm);
-  background: var(--surface); text-align: center; overflow: hidden;
-  transition: border-color 180ms cubic-bezier(.16,1,.3,1), box-shadow 180ms cubic-bezier(.16,1,.3,1);
-  animation: cr-cell-in 460ms cubic-bezier(.16,1,.3,1) both;
-  animation-delay: calc(var(--i, 0) * 16ms);
+/* Three columns running continuously, the middle one against the other two. The
+   set is duplicated and the track travels exactly half its height, so the loop
+   closes on itself — the gap rides on each tile's margin, not on a flex gap, or
+   the seam lands one gap short. */
+.cs-cols {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
 }
-@keyframes cr-cell-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.98); }
-  to { opacity: 1; transform: none; }
+.cs-col { position: relative; overflow: hidden; }
+.cs-col__track {
+  will-change: transform;
+  animation: cs-scroll var(--dur, 50s) linear infinite;
+  animation-direction: var(--dir, normal);
 }
-.cr-cell:hover {
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-  box-shadow: 0 12px 26px rgb(0 0 0 / 0.12);
+@keyframes cs-scroll { from { transform: translateY(0) } to { transform: translateY(-50%) } }
+.cs-col:hover .cs-col__track { animation-play-state: paused; }
+
+.cs-tile {
+  position: relative; display: block; width: 100%; margin: 0 0 14px; padding: 0;
+  border: 1px solid color-mix(in srgb, var(--surface) 75%, transparent);
+  border-radius: 10px; overflow: hidden; background: var(--surface); cursor: pointer;
+  box-shadow: 0 12px 26px rgba(40, 42, 80, 0.08);
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 600ms ease;
 }
-/* `flex: 0 0` and an explicit height, not `aspect-ratio`: a box sized by ratio off
-   a percentage width contributes nothing to intrinsic height, and as a flex child a
-   plain height still loses to flex-shrink. */
-.cr-cell__shot {
-  flex: 0 0 66px; height: 66px; width: 66px;
-  display: grid; place-items: center;
+.cs-tile:hover { transform: translateY(-3px); box-shadow: 0 22px 40px rgba(40, 42, 80, 0.18); }
+.cs-tile--empty { cursor: default; box-shadow: none; }
+.cs-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.cs-tile__tag {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 24px 11px 10px; text-align: left;
+  color: #fff; background: linear-gradient(to top, rgba(16, 17, 22, 0.66), transparent);
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 450ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.cr-cell__img { width: 100%; height: 100%; object-fit: contain; }
-.cr-cell__shot .is-type { font-size: 18px; border-radius: 12px; }
-.cr-cell figcaption { display: flex; flex-direction: column; gap: 3px; min-width: 0; width: 100%; }
-.cr-cell__name {
-  font-size: 11px; font-weight: 700; line-height: 1.28; color: var(--ink, #111827);
-  /* Three lines then an ellipsis: some of these names run very long. */
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+.cs-tile__tag em {
+  font-style: normal; font-size: 11px; font-weight: 750; line-height: 1.25;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-.cr-cell__meta {
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em;
-  color: var(--nav-accent-ink, var(--accent-ink)); opacity: 0.8;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.cs-tile__tag span {
+  display: block; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--brand-accent, #FFBB00);
 }
+.cs-tile__zoom {
+  position: absolute; top: 8px; right: 8px; display: grid; place-items: center;
+  width: 24px; height: 24px; border-radius: 7px;
+  background: var(--brand-accent, #FFBB00); color: #1a1a1a;
+  opacity: 0; transform: scale(0.86);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+.cs-tile:hover .cs-tile__tag, .cs-tile:focus-visible .cs-tile__tag { opacity: 1; transform: translateY(0); }
+.cs-tile:hover .cs-tile__zoom, .cs-tile:focus-visible .cs-tile__zoom { opacity: 1; transform: none; }
+
+/* ---------------------------------------------------------- the lightbox -- */
+.cs-light {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center; padding: 3vh 3vw;
+  background: rgb(9 11 14 / 0.92);
+  opacity: 0; transition: opacity 220ms ease;
+}
+.cs-light.is-on { opacity: 1; }
+.cs-light[hidden] { display: none; }
+.cs-light__frame {
+  margin: 0; display: flex; flex-direction: column; gap: 12px;
+  max-width: calc(100% - 160px); max-height: 100%;
+  transform: scale(0.97); transition: transform 260ms cubic-bezier(.2,.7,.3,1);
+}
+.cs-light.is-on .cs-light__frame { transform: none; }
+.cs-light__img {
+  display: block; max-width: 100%; max-height: calc(100vh - 14vh);
+  width: auto; height: auto; object-fit: contain;
+  border-radius: var(--radius); background: #111;
+}
+.cs-light__foot { display: flex; width: 100%; align-items: baseline; gap: 12px; color: #e5e7eb; }
+.cs-light__cap { margin: 0; font-size: 15px; font-weight: 700; }
+.cs-light__meta { color: #9ca3af; font-size: 12px; font-variant-numeric: tabular-nums; }
+.cs-light__count {
+  margin-left: auto; color: var(--brand-accent, #FFBB00);
+  font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.cs-light__close {
+  position: absolute; top: 18px; right: 20px;
+  display: grid; place-items: center; width: 40px; height: 40px;
+  border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.12);
+  color: #fff; cursor: pointer; transition: background 160ms ease;
+}
+.cs-light__close:hover { background: rgb(255 255 255 / 0.22); }
+.cs-light__nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  display: grid; place-items: center; width: 56px; height: 56px;
+  border: 0; border-radius: 999px; background: rgb(255 255 255 / 0.12);
+  color: #fff; cursor: pointer; transition: background 160ms ease, transform 160ms ease;
+}
+.cs-light__nav:hover { background: color-mix(in srgb, var(--nav-accent, #008638) 62%, transparent); }
+.cs-light__nav:active { transform: translateY(-50%) scale(0.94); }
+.cs-light__nav[hidden] { display: none; }
+.cs-light__nav .ic { width: 28px; height: 28px; }
+.cs-light__nav--prev { left: 22px; }
+.cs-light__nav--next { right: 22px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .cr-sky__b, .cr-row, .cr-skills li, .cr-cell { animation: none; }
-  .cr-step, .cr-row, .cr-tour, .cr-cell { transition: none; }
-  .cr-tour__run { animation: none; }
+  .cs-arc__base, .cs-arc__glow, .cs-arc__line, .cs-arc__pulse,
+  .cs-pin__in, .cs-pin__bob, .cs-hero__art, .cs-hero__bloom, .cs-hero__shadow,
+  .cs-fig, .cs-quote, .cs-card, .cs-chip, .cs-w > span, .cs-learn__list li::before,
+  .cs-learn__list em, .cs-learn__mask > span, .cs-cap__no, .cs-cap__vendor,
+  .cs-cap__domain, .cs-cap__rule, .cs-cap__held, .cs-galhead__rule,
+  .cs-reg__back img, .cs-col__track { animation: none; }
+  .cs-tile, .cs-tile__tag, .cs-tile__zoom, .cs-step, .cs-card,
+  .cs-card__art, .cs-card__n, .cs-pin__art, .cs-pin__tag { transition: none; }
+  .cs-tile:hover, .cs-drift { transform: none; }
+  .cs-light, .cs-light__frame, .cs-light__nav { transition: none; }
 }

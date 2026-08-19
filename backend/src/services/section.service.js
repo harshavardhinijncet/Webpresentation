@@ -41,7 +41,7 @@ export const BLOCK_TYPES = [
   'testimonial-wall',
   'placement-wall',
   'event-reel',
-  'credential-register',
+  'certification-wall',
   'video-resume',
 ];
 
@@ -599,35 +599,55 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         .slice(0, 400);
       break;
 
-    case 'credential-register':
+    case 'certification-wall':
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 160);
+      block.lead = text(raw.lead, 400);
       block.quote = text(raw.quote, 400);
       block.quoteBy = text(raw.quoteBy, 160);
-      /* A wide photograph held far back behind the register's type. */
+      /* A wide cohort photograph held far back behind the register's type. */
       block.backdrop = text(raw.backdrop, 240);
-      /* The three headline figures, verbatim from the reference design rather than
-         derived. `value` is a string on purpose — the reference writes them as
-         "32,000+" and "~2", which are claims about scale, not sums to recompute. */
-      block.stats = (Array.isArray(raw.stats) ? raw.stats : [])
-        .map((f) => ({ value: text(f?.value, 24), label: text(f?.label, 80) }))
-        .filter((f) => f.value && f.label)
-        .slice(0, 4);
+      /* The catalogue: named credentials, who awards them, how many hold each and
+         what the exam tests. Counts come from the workbook via the publisher, so
+         nothing here is recomputed. */
       block.credentials = (Array.isArray(raw.credentials) ? raw.credentials : [])
         .map((c) => ({
           name: text(c?.name, 160),
           vendor: text(c?.vendor, 80),
           domain: text(c?.domain, 80),
           held: clampInt(c?.held, 0, 1000000, 0),
-          /* A file under /uploads. The catalogue points at eight different CDNs
-             and this deck presents with no network, so badges are downloaded
-             locally; one the CDN refuses carries none and falls back to type. */
+          /* A file under /uploads. The badges are downloaded locally because this
+             deck presents with no network; one the CDN refuses carries none and
+             falls back to the vendor set in type. */
           badge: text(c?.badge, 240),
           skills: (Array.isArray(c?.skills) ? c.skills : [])
             .map((k) => text(k, 140)).filter(Boolean).slice(0, 8),
         }))
         .filter((c) => c.name && c.vendor)
         .slice(0, 200);
+      /* The cohort artwork, one folder per vendor. Every card carries its real
+         pixel size so the wall can solve justified rows before a byte of image
+         data has landed — and so nothing is ever cropped or stretched. */
+      block.vendors = (Array.isArray(raw.vendors) ? raw.vendors : [])
+        .map((v) => ({
+          key: text(v?.key, 60),
+          name: text(v?.name, 80),
+          domain: text(v?.domain, 80),
+          skills: (Array.isArray(v?.skills) ? v.skills : [])
+            .map((k) => text(k, 140)).filter(Boolean).slice(0, 8),
+          certs: (Array.isArray(v?.certs) ? v.certs : [])
+            .map((c) => ({
+              src: text(c?.src, 240),
+              label: text(c?.label, 160),
+              w: clampInt(c?.w, 1, 20000, 0),
+              h: clampInt(c?.h, 1, 20000, 0),
+            }))
+            // No dimensions means no row height can be solved for it.
+            .filter((c) => c.src && c.w && c.h)
+            .slice(0, 120),
+        }))
+        .filter((v) => v.key && v.certs.length)
+        .slice(0, 40);
       break;
 
     case 'event-reel':

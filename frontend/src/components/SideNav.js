@@ -49,8 +49,7 @@ const NAVIGATION_GROUPS = [
   /* One section, no subsections. "Events", "Workshops" and "Project Arena" were
      placeholders for pages nobody built, and the whole film library is one page. */
   ['achievements', 'Events', 'calendar', []],
-  /* Built from the credential catalogue in tools/data/certifications.json. */
-  ['credentials', 'Credentials', 'certificate', []],
+  ['certifications', 'Certifications', 'certificate', []],
   /* Was Testimonials. It carries the student video resumes now. */
   ['testimonials', 'Video Resumes', 'user-badge', []],
 ];
