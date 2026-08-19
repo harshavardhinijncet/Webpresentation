@@ -8,7 +8,8 @@ The backend must be up on `127.0.0.1:4173` before any of these run.
 
 | Script | Section | Reads from |
 | --- | --- | --- |
-| `publish-certifications.cjs` | Certifications (`sec_69c6554f56bd453e`) | `backend/uploads/certifications/` — `badges/`, `Certification Images  Sorted/`, `Certification Logos/Logos.xlsx`, `register-crowd.jpg` |
+| `fetch-certification-logos.cjs` | — | `tools/data/logos.json` -> `backend/uploads/certifications/logos/` |
+| `publish-certifications.cjs` | Certifications (resolved by key) | `backend/uploads/certifications/` — `badges/`, `Certification Images  Sorted/`, `Certification Logos/Logos.xlsx`, `register-crowd.jpg` |
 | `import-leadership-photos.cjs` | Leadership Journey (two sections) | `incoming/Leadership/Leadership Journey/` |
 | `presenter-visibility.cjs` | — | toggles what the presenter side shows |
 
@@ -22,6 +23,10 @@ node tools/publish-certifications.cjs             # publish
 Three sources, deliberately split:
 
 - **counts** — `Logos.xlsx`, joined on the certification name
+- **logos** — `Logos.xlsx` links, downloaded once by
+  `fetch-certification-logos.cjs` into `certifications/logos/`. Preferred over
+  `badges/`, because the workbook is the file the user maintains and its links
+  resolve for all forty-five rows.
 - **artwork** — the badge folder and the nineteen cohort folders, with real pixel
   dimensions read from each file's header
 - **prose** — vendor names, fields, and what each exam tests. Authored, so it lives
