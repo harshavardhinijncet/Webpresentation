@@ -435,11 +435,20 @@ export function CertificationWall(block, { editing = false } = {}) {
           style: { '--i': String(Math.min(i, 35)), '--card-accent': accent },
           onclick: () => { pick = i; viewMode = 'detail'; drawSkills(); },
         },
-          /* Top-Right Pill Tab showing ONLY the Count of Certifications Done */
-          h('span', { class: 'cs-grid-card__badge', style: { background: accent }, title: `${nf(c.held)} Certifications Completed` }, nf(c.held)),
-          h('div', { class: 'cs-grid-card__top' },
-            h('span', { class: 'cs-grid-card__art' }, badgeArt(c, '', src)),
+          /* Top: Certification Name */
+          h('div', { class: 'cs-grid-card__head' },
             h('h4', { class: 'cs-grid-card__title' }, c.name),
+          ),
+          /* Horizontal Grey Line */
+          h('i', { class: 'cs-grid-card__hrule' }),
+          /* Body: Left Logo | Vertical Grey Line | Right Count */
+          h('div', { class: 'cs-grid-card__body' },
+            h('div', { class: 'cs-grid-card__art' }, badgeArt(c, '', src)),
+            h('i', { class: 'cs-grid-card__vrule' }),
+            h('div', { class: 'cs-grid-card__count-meta' },
+              h('strong', { class: 'cs-grid-card__count-val', style: { color: accent } }, nf(c.held)),
+              h('span', { class: 'cs-grid-card__count-lbl' }, 'Certifications Done'),
+            ),
           ),
         );
       }));
