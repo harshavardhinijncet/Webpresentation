@@ -357,7 +357,7 @@ export function PlacementWall(block, { editing = false } = {}) {
        layout that ran out. Only when it fits: centring a scrolling stage would
        clip its first row. */
     const totalH = rows.reduce((n, r) => n + r.height + GAP, 0) - GAP;
-    stage.classList.toggle('is-short', totalH <= contentH + 1);
+    stage.classList.toggle('is-short', !journey && totalH <= contentH + 1);
 
     const tiles = [];
     let ordinal = 0;
@@ -450,15 +450,21 @@ export function PlacementWall(block, { editing = false } = {}) {
      if it actually differs, or every chapter change would draw twice. */
   const settle = () => {
     if (!root.isConnected) { requestAnimationFrame(settle); return; }
-    if (stage.clientHeight && Math.abs(stage.clientHeight - lastStageH) > 8) drawStage();
+    if (stage.clientHeight && Math.abs(stage.clientHeight - lastStageH) > 4) drawStage();
   };
   requestAnimationFrame(settle);
+
+  const ro = new ResizeObserver(() => {
+    if (stage.clientHeight && Math.abs(stage.clientHeight - lastStageH) > 4) drawStage();
+  });
+  ro.observe(stage);
 
   /* The lightbox lives on the body, so it has to be taken down by hand when the
      slide it belongs to is replaced. */
   const observer = new MutationObserver(() => {
     if (!root.isConnected) {
       light.remove();
+      ro.disconnect();
       observer.disconnect();
       document.removeEventListener('keydown', onLightKey, true);
     }
