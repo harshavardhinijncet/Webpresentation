@@ -408,6 +408,7 @@ export function CertificationWall(block, { editing = false } = {}) {
   const skillPane = h('div', { class: 'cs-detail-view' });
   let viewMode = 'grid'; // 'grid' | 'detail'
   let pick = 0;
+  let autoPlay = true;
 
   const ACCENTS = ['#F59E0B', '#EF4444', '#8B5CF6', '#10B981', '#06B6D4', '#3B82F6', '#64748B', '#A855F7', '#EC4899'];
 
@@ -427,14 +428,17 @@ export function CertificationWall(block, { editing = false } = {}) {
           style: { '--i': String(Math.min(i, 35)), '--card-accent': accent },
           onclick: () => { pick = i; viewMode = 'detail'; drawSkills(); },
         },
-          h('span', { class: 'cs-grid-card__badge', style: { background: accent } }, String(i + 1)),
+          /* Right side pill tab showing the count of certifications done */
+          h('span', { class: 'cs-grid-card__badge', style: { background: accent }, title: `${nf(c.held)} Certifications Done` }, nf(c.held)),
           h('div', { class: 'cs-grid-card__top' },
             h('span', { class: 'cs-grid-card__art' }, badgeArt(c, '', src)),
-            h('span', { class: 'cs-grid-card__vendor' }, c.vendor || 'Certification'),
+            h('div', { class: 'cs-grid-card__meta' },
+              h('span', { class: 'cs-grid-card__vendor' }, c.vendor || 'Certification'),
+              h('h4', { class: 'cs-grid-card__title' }, c.name),
+            ),
           ),
-          h('h4', { class: 'cs-grid-card__title' }, c.name),
           h('div', { class: 'cs-grid-card__foot' },
-            h('span', { class: 'cs-grid-card__count' }, `${nf(c.held)} Trainees`),
+            h('span', { class: 'cs-grid-card__count' }, `${nf(c.held)} Certified`),
             c.domain ? h('span', { class: 'cs-grid-card__domain' }, c.domain) : null,
           ),
         );
@@ -449,84 +453,83 @@ export function CertificationWall(block, { editing = false } = {}) {
       const prevCred = sorted[prevIdx];
       const nextCred = sorted[nextIdx];
 
-      const backBtn = h('button', {
-        class: 'cs-detail__back',
+      /* Top Left: Home Button */
+      const homeBtn = h('button', {
+        class: 'cs-detail__home',
         type: 'button',
         onclick: () => { viewMode = 'grid'; drawSkills(); },
-      }, icon('chevron-left', { class: 'ic ic--xs' }), 'Back to Cards Grid');
+      }, icon('chevron-left', { class: 'ic ic--xs' }), 'HOME');
 
-      const prevBtn = h('button', {
-        class: 'cs-diag__nav cs-diag__nav--prev',
-        type: 'button',
-        title: `Previous: ${prevCred.name}`,
-        onclick: () => { pick = prevIdx; drawSkills(); },
-      }, icon('chevron-left', { class: 'ic' }));
+      /* Top Right: Total Completed Count */
+      const totalHeader = h('div', { class: 'cs-detail__total' },
+        h('strong', {}, nf(earned)),
+        h('span', {}, 'CERTIFICATIONS COMPLETED'),
+      );
 
-      const nextBtn = h('button', {
-        class: 'cs-diag__nav cs-diag__nav--next',
-        type: 'button',
-        title: `Next: ${nextCred.name}`,
-        onclick: () => { pick = nextIdx; drawSkills(); },
-      }, icon('chevron-right', { class: 'ic' }));
+      /* Left Side: Index, Vendor, Serif Title, Domain, Count, Accent line */
+      const leftCol = h('div', { class: 'cs-detail__left' },
+        h('p', { class: 'cs-detail__idx' },
+          h('span', { class: 'cs-detail__idx-num' }, String(chosen + 1).padStart(2, '0')),
+          ` / ${sorted.length}`
+        ),
+        h('p', { class: 'cs-detail__vendor-tag' }, (c.vendor || '').toUpperCase()),
+        h('h2', { class: 'cs-detail__serif-title' }, c.name),
+        c.domain ? h('p', { class: 'cs-detail__italic-domain' }, c.domain) : null,
+        h('div', { class: 'cs-detail__held-box' },
+          h('div', { class: 'cs-detail__held-num' },
+            h('strong', {}, nf(c.held)),
+            h('span', {}, 'certifications completed')
+          ),
+          h('i', { class: 'cs-detail__accent-bar' }),
+        ),
+      );
 
-      /* Diagonal Stacked Carousel */
-      const diagonalCarousel = h('div', { class: 'cs-diag-stage' },
-        /* Previous Logo (Diagonal Top-Left Offset) */
-        h('div', {
-          class: 'cs-diag-item cs-diag-item--prev',
+      /* Center Stage: Focal Logo with Halo Glow + Floating Secondary Logo */
+      const centerStage = h('div', { class: 'cs-detail__center-stage' },
+        /* Floating background blurred badge (Screenshot 2 effect) */
+        h('div', { class: 'cs-detail__bg-float' },
+          badgeArt(nextCred, 'cs-detail__bg-float-img', src),
+        ),
+        /* Main Centered Badge with Glowing Halo Rings */
+        h('div', { class: 'cs-detail__main-badge' },
+          h('span', { class: 'cs-detail__halo-ring' }),
+          h('span', { class: 'cs-detail__halo-ring cs-detail__halo-ring--outer' }),
+          badgeArt(c, 'cs-detail__badge-img', src),
+        ),
+      );
+
+      /* Right Side: Skills Unlocked List */
+      const rightCol = h('div', { class: 'cs-detail__right' },
+        h('h4', { class: 'cs-detail__skills-head' }, 'SKILLS UNLOCKED'),
+        h('ol', { class: 'cs-detail__skills-ol' },
+          ...(c.skills || []).map((skillText, idx) => h('li', {},
+            h('span', { class: 'cs-detail__skill-num' }, String(idx + 1).padStart(2, '0')),
+            h('span', { class: 'cs-detail__skill-txt' }, skillText),
+          )),
+        ),
+      );
+
+      /* Bottom Right Navigation Controls: < || > */
+      const navControls = h('div', { class: 'cs-detail__nav-bar' },
+        h('button', {
+          class: 'cs-detail__nav-btn', type: 'button', title: `Previous: ${prevCred.name}`,
           onclick: () => { pick = prevIdx; drawSkills(); },
-          title: prevCred.name,
-        },
-          badgeArt(prevCred, 'cs-diag-item__img', src),
-          h('span', { class: 'cs-diag-item__label' }, prevCred.name),
-        ),
-        /* Main Active Logo (Center Stage) */
-        h('div', { class: 'cs-diag-item cs-diag-item--main' },
-          h('span', { class: 'cs-diag-main__glow' }),
-          badgeArt(c, 'cs-diag-main__img', src),
-        ),
-        /* Next Logo (Diagonal Bottom-Right Offset) */
-        h('div', {
-          class: 'cs-diag-item cs-diag-item--next',
+        }, icon('chevron-left', { class: 'ic ic--xs' })),
+        h('button', {
+          class: `cs-detail__nav-btn${autoPlay ? ' is-active' : ''}`, type: 'button',
+          title: autoPlay ? 'Pause' : 'Play',
+          onclick: () => { autoPlay = !autoPlay; drawSkills(); },
+        }, icon(autoPlay ? 'pause' : 'play', { class: 'ic ic--xs' })),
+        h('button', {
+          class: 'cs-detail__nav-btn', type: 'button', title: `Next: ${nextCred.name}`,
           onclick: () => { pick = nextIdx; drawSkills(); },
-          title: nextCred.name,
-        },
-          badgeArt(nextCred, 'cs-diag-item__img', src),
-          h('span', { class: 'cs-diag-item__label' }, nextCred.name),
-        ),
-        prevBtn,
-        nextBtn,
+        }, icon('chevron-right', { class: 'ic ic--xs' })),
       );
 
       skillPane.replaceChildren(
-        h('div', { class: 'cs-detail__header' }, backBtn),
-        h('div', { class: 'cs-detail__content' },
-          /* Left Side: Name, Vendor, Count */
-          h('div', { class: 'cs-detail__left' },
-            h('span', { class: 'cs-detail__tag' }, `Credential ${String(chosen + 1).padStart(2, '0')} / ${sorted.length}`),
-            h('h3', { class: 'cs-detail__name' }, c.name),
-            h('div', { class: 'cs-detail__meta' },
-              h('span', { class: 'cs-detail__vendor' }, c.vendor),
-              c.domain ? h('span', { class: 'cs-detail__domain' }, c.domain) : null,
-            ),
-            h('div', { class: 'cs-detail__count-card' },
-              h('strong', {}, nf(c.held)),
-              h('span', {}, 'Trainees Certified'),
-            ),
-          ),
-          /* Center: Diagonal Stack Carousel */
-          h('div', { class: 'cs-detail__center' }, diagonalCarousel),
-          /* Right Side: Skills Unlocked */
-          h('div', { class: 'cs-detail__right' },
-            h('h4', { class: 'cs-detail__skills-title' }, 'Skills Unlocked'),
-            h('ol', { class: 'cs-detail__skills-list' },
-              ...(c.skills || []).map((skillText, idx) => h('li', {},
-                h('em', {}, String(idx + 1).padStart(2, '0')),
-                h('span', {}, skillText),
-              )),
-            ),
-          ),
-        ),
+        h('div', { class: 'cs-detail__top-bar' }, homeBtn, totalHeader),
+        h('div', { class: 'cs-detail__main-grid' }, leftCol, centerStage, rightCol),
+        navControls,
       );
     }
   }
