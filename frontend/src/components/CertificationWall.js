@@ -482,7 +482,7 @@ export function CertificationWall(block, { editing = false } = {}) {
         ),
       );
 
-      /* Center Stage: Multi-Icon Synchronized 3D Stage */
+      /* Center Stage: Main Active Badge + Falling-from-Sky Background Badge */
       const centerStage = h('div', {
         class: 'cs-detail__center-stage',
         onwheel: (e) => {
@@ -495,33 +495,19 @@ export function CertificationWall(block, { editing = false } = {}) {
           }
         },
       },
-        /* Previous Icon (Sliding out to the left) */
-        h('div', {
-          class: 'cs-icon-node cs-icon-node--prev',
-          onclick: () => { pick = prevIdx; drawSkills(); },
-          title: `Previous: ${prevCred.name}`,
-        },
-          badgeArt(prevCred, 'cs-icon-node__img', src),
-          h('span', { class: 'cs-icon-node__label' }, prevCred.name),
+        /* Secondary Badge Descending / Falling from the Sky (Top Right Background) */
+        h('div', { class: 'cs-detail__bg-float' },
+          badgeArt(nextCred, 'cs-sky-fall-img', src),
         ),
-        /* Main Active Centered Icon (Soft blur-to-focus & breathing scale) */
-        h('div', { class: 'cs-icon-node cs-icon-node--main' },
+        /* Main Active Centered Badge with Blur-to-Focus & Breathing Scale Glow */
+        h('div', { class: 'cs-detail__main-badge' },
           h('span', { class: 'cs-detail__halo-ring' }),
           h('span', { class: 'cs-detail__halo-ring cs-detail__halo-ring--outer' }),
           badgeArt(c, 'cs-detail__badge-img cs-morph-img', src),
         ),
-        /* Next Incoming Icon (Sliding in from the right) */
-        h('div', {
-          class: 'cs-icon-node cs-icon-node--next',
-          onclick: () => { pick = nextIdx; drawSkills(); },
-          title: `Next: ${nextCred.name}`,
-        },
-          badgeArt(nextCred, 'cs-icon-node__img', src),
-          h('span', { class: 'cs-icon-node__label' }, nextCred.name),
-        ),
       );
 
-      /* Right Side: Skills Unlocked (clean list without box wrapper) */
+      /* Right Side: Skills Unlocked (Pure text list without any cards or box layouts) */
       const rightCol = h('div', { class: 'cs-detail__right' },
         h('h4', { class: 'cs-detail__skills-head' }, 'SKILLS UNLOCKED'),
         h('ol', { class: 'cs-detail__skills-ol' },
