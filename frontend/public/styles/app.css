@@ -12643,77 +12643,414 @@ body.is-presenting .vc {
 
 /* ==================================================== 02 SKILLS UNLOCKED == */
 .cs-skills {
-  display: grid; grid-template-columns: 290px minmax(0, 1fr) 330px;
-  gap: 22px; height: 100%; padding: 20px 30px 24px;
+  height: 100%; padding: 20px 30px 24px; overflow: hidden; position: relative;
 }
 
-/* The picker, as cards: name on top, badge and count beneath, one hairline. */
-.cs-cred { overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 6px; }
-.cs-card {
-  --mx: 0.5; --my: 0.5; --tx: 0; --ty: 0;
-  position: relative; display: flex; flex-direction: column; gap: 13px;
-  padding: 13px 14px 12px; border-radius: 11px; text-align: left; overflow: hidden;
-  background: color-mix(in srgb, var(--surface) 66%, transparent);
-  border: 1px solid color-mix(in srgb, var(--surface) 90%, transparent);
-  box-shadow: 0 10px 24px rgba(40, 42, 80, 0.07); cursor: pointer;
-  transform: perspective(900px) rotateX(calc(var(--ty) * -6deg)) rotateY(calc(var(--tx) * 7deg));
-  transition: box-shadow 550ms ease, border-color 550ms ease, background 550ms ease,
-              transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
-  animation: cs-cardin 800ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
-  animation-delay: calc(var(--i) * 22ms);
+/* Row and Column Grid View (inspired by user reference image) */
+.cs-grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 6px 12px 24px 6px;
 }
-@keyframes cs-cardin { from { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(6px) } }
-.cs-card::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0;
-  background: radial-gradient(190px circle at calc(var(--mx) * 100%) calc(var(--my) * 100%),
-    color-mix(in srgb, var(--nav-accent, #008638) 16%, transparent), transparent 72%);
-  transition: opacity 450ms ease;
+
+.cs-grid-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  background: var(--surface, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  text-align: left;
+  overflow: hidden;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 320ms ease, border-color 320ms ease;
+  animation: cs-cardin 600ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--i) * 18ms);
 }
-.cs-card::after {
-  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px;
-  background: linear-gradient(90deg, transparent, var(--nav-accent, #008638), transparent);
-  transform: scaleX(0); transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+
+.cs-grid-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.12);
+  border-color: var(--card-accent, #71BD1F);
 }
-.cs-card:hover { box-shadow: 0 26px 46px rgba(40, 42, 80, 0.16); }
-.cs-card:hover::before { opacity: 1; }
-.cs-card:hover::after, .cs-card.is-on::after { transform: scaleX(1); }
-.cs-card.is-on {
-  background: color-mix(in srgb, var(--surface) 96%, transparent);
-  border-color: color-mix(in srgb, var(--nav-accent, #008638) 40%, transparent);
+
+.cs-grid-card__badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 38px;
+  height: 48px;
+  border-bottom-left-radius: 12px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.12);
 }
-.cs-card__name {
-  font-size: 11.5px; font-weight: 650; line-height: 1.42; min-height: 2.84em;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+
+.cs-grid-card__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-right: 36px;
 }
-.cs-card__foot { display: flex; align-items: center; }
-.cs-card__cell {
-  flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center;
-  gap: 7px; text-align: center;
+
+.cs-grid-card__art {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  flex-shrink: 0;
 }
-.cs-card__split {
-  width: 1px; height: 26px; flex: none; margin: 0 10px;
-  background: rgba(16, 17, 22, 0.07); transition: background 500ms ease;
-}
-.cs-card:hover .cs-card__split { background: rgba(16, 17, 22, 0.13); }
-.cs-card__art {
-  position: relative; display: flex; align-items: center; justify-content: center;
-  width: 42px; height: 42px; padding: 9px; border-radius: 50%; flex: none;
-  background: color-mix(in srgb, var(--nav-accent, #008638) 6%, transparent);
-  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), background 500ms ease;
-}
-.cs-card:hover .cs-card__art { transform: scale(1.08); }
-.cs-card__art img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
-.cs-card__art em { font-style: normal; font-size: 13px; font-weight: 800; color: var(--muted); }
-.cs-card__n {
-  font-size: 25px; font-weight: 800; line-height: 42px; height: 42px;
-  font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
-  transition: color 450ms ease, transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.cs-card:hover .cs-card__n { color: var(--nav-accent-ink, var(--accent-ink)); transform: translateY(-2px); }
-.cs-card__lab {
-  color: var(--muted); font-size: 7.5px; font-weight: 700; letter-spacing: 0.14em;
-  text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+
+.cs-grid-card__art img {
   max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.cs-grid-card__vendor {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted, #6b7280);
+}
+
+.cs-grid-card__title {
+  margin: 4px 0 0;
+  font-size: 14.5px;
+  font-weight: 750;
+  line-height: 1.35;
+  color: var(--ink, #111827);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cs-grid-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.cs-grid-card__count {
+  font-size: 13px;
+  font-weight: 800;
+  color: #71BD1F;
+}
+
+.cs-grid-card__domain {
+  font-size: 10px;
+  font-weight: 650;
+  color: var(--muted, #6b7280);
+  background: rgba(0, 0, 0, 0.05);
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 110px;
+}
+
+/* Detail Single Card View with 3D Diagonal Carousel */
+.cs-detail-view {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  padding-bottom: 16px;
+  animation: cs-fadein 400ms ease;
+}
+
+@keyframes cs-fadein { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+.cs-detail__header {
+  display: flex;
+  align-items: center;
+}
+
+.cs-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--ink, #111827);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+.cs-detail__back:hover {
+  background: #71BD1F;
+  color: #ffffff;
+  transform: translateX(-3px);
+}
+
+.cs-detail__content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 280px 1fr 300px;
+  gap: 24px;
+  align-items: center;
+  min-height: 0;
+}
+
+/* Left Side: Meta & Count */
+.cs-detail__left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cs-detail__tag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #71BD1F;
+}
+
+.cs-detail__name {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--ink, #111827);
+}
+
+.cs-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cs-detail__vendor {
+  font-size: 12px;
+  font-weight: 750;
+  color: var(--muted, #4b5563);
+}
+
+.cs-detail__domain {
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(113, 189, 31, 0.12);
+  color: #52A310;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.cs-detail__count-card {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--surface, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.cs-detail__count-card strong {
+  font-size: 32px;
+  font-weight: 800;
+  color: #71BD1F;
+  line-height: 1;
+}
+
+.cs-detail__count-card span {
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted, #6b7280);
+  margin-top: 6px;
+}
+
+/* Center Stage: Diagonal Stacked Carousel */
+.cs-diag-stage {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cs-diag-item {
+  position: absolute;
+  transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cs-diag-item--prev {
+  transform: translate(-140px, -60px) scale(0.68) rotate(-10deg);
+  opacity: 0.45;
+  z-index: 1;
+}
+
+.cs-diag-item--prev:hover {
+  opacity: 0.8;
+  transform: translate(-140px, -60px) scale(0.74) rotate(-10deg);
+}
+
+.cs-diag-item--next {
+  transform: translate(140px, 60px) scale(0.68) rotate(10deg);
+  opacity: 0.45;
+  z-index: 1;
+}
+
+.cs-diag-item--next:hover {
+  opacity: 0.8;
+  transform: translate(140px, 60px) scale(0.74) rotate(10deg);
+}
+
+.cs-diag-item--main {
+  position: relative;
+  transform: translate(0, 0) scale(1.1);
+  z-index: 3;
+}
+
+.cs-diag-main__glow {
+  position: absolute;
+  inset: -30px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(113, 189, 31, 0.25) 0%, rgba(113, 189, 31, 0) 70%);
+  filter: blur(12px);
+  animation: cs-glow-pulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes cs-glow-pulse { from { opacity: 0.6; transform: scale(0.95); } to { opacity: 1; transform: scale(1.1); } }
+
+.cs-diag-main__img {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
+}
+
+.cs-diag-item__img {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.12));
+}
+
+.cs-diag-item__label {
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 750;
+  color: var(--muted, #6b7280);
+  max-width: 140px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cs-diag__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+.cs-diag__nav:hover {
+  background: #71BD1F;
+  color: #ffffff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.cs-diag__nav--prev { left: 10px; }
+.cs-diag__nav--next { right: 10px; }
+
+/* Right Side: Skills Unlocked */
+.cs-detail__right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--surface, #ffffff);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.cs-detail__skills-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink, #111827);
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.cs-detail__skills-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cs-detail__skills-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink, #111827);
+}
+
+.cs-detail__skills-list em {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 800;
+  color: #71BD1F;
+  background: rgba(113, 189, 31, 0.12);
+  padding: 2px 7px;
+  border-radius: 6px;
+  flex-shrink: 0;
 }
 
 /* The chosen credential: the badge floating over its own shadow, the caption

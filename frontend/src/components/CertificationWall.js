@@ -288,7 +288,7 @@ export function CertificationWall(block, { editing = false } = {}) {
         const el = h('button', {
           class: 'cs-pin', type: 'button',
           style: { width: `${plan.size}px`, '--i': String(g.from + j) },
-          onclick: () => { act = 'skills'; pick = credentials.indexOf(cred); drawSteps(); showAct(); },
+          onclick: () => { act = 'skills'; pick = credentials.indexOf(cred); viewMode = 'detail'; drawSteps(); showAct(); },
         },
           h('span', { class: 'cs-pin__in' },
             h('span', { class: 'cs-pin__bob' },
@@ -371,6 +371,15 @@ export function CertificationWall(block, { editing = false } = {}) {
   });
 
   function drawRegister() {
+    stage1.onclick = (e) => {
+      if (!e.target.closest('.cs-pin')) {
+        act = 'skills';
+        viewMode = 'grid';
+        drawSteps();
+        showAct();
+      }
+    };
+
     stage1.replaceChildren(
       /* Their own cohort panorama, held right back. The reference sets this type
          over a crowd, and using a real one of theirs beats any stock ground. */
@@ -394,87 +403,132 @@ export function CertificationWall(block, { editing = false } = {}) {
     requestAnimationFrame(buildArcs);
   }
 
-  /* ================================================================ 02 SKILLS */
-  const skillList = h('div', { class: 'cs-cred' });
-  const skillPane = h('div', { class: 'cs-skill' });
+  /* ================================================================ 02 SKILLS & CARDS GRID */
+  const skillList = h('div', { class: 'cs-grid-view' });
+  const skillPane = h('div', { class: 'cs-detail-view' });
+  let viewMode = 'grid'; // 'grid' | 'detail'
   let pick = 0;
+
+  const ACCENTS = ['#F59E0B', '#EF4444', '#8B5CF6', '#10B981', '#06B6D4', '#3B82F6', '#64748B', '#A855F7', '#EC4899'];
 
   function drawSkills() {
     const sorted = [...credentials].sort((a, b) => b.held - a.held);
     const chosen = clamp(pick, 0, sorted.length - 1);
 
-    /* The card: name on top, badge and count side by side beneath it, split by a
-       single hairline. Every other rule was noise once there were forty of them. */
-    skillList.replaceChildren(...sorted.map((c, i) => h('button', {
-      class: `cs-card${i === chosen ? ' is-on' : ''}`,
-      type: 'button',
-      style: still() ? {} : { '--i': String(Math.min(i, 30)) },
-      onclick: () => { pick = i; drawSkills(); },
-      onpointermove: (e) => {
-        if (still()) return;
-        const el = e.currentTarget;
-        const r = el.getBoundingClientRect();
-        if (!r.width) return;
-        const mx = (e.clientX - r.left) / r.width;
-        const my = (e.clientY - r.top) / r.height;
-        el.style.setProperty('--mx', mx.toFixed(3));
-        el.style.setProperty('--my', my.toFixed(3));
-        el.style.setProperty('--tx', (mx - 0.5).toFixed(3));
-        el.style.setProperty('--ty', (my - 0.5).toFixed(3));
-      },
-      onpointerleave: (e) => {
-        e.currentTarget.style.setProperty('--tx', '0');
-        e.currentTarget.style.setProperty('--ty', '0');
-      },
-    },
-      h('span', { class: 'cs-card__name' }, c.name),
-      h('span', { class: 'cs-card__foot' },
-        h('span', { class: 'cs-card__cell' },
-          h('span', { class: 'cs-card__art' }, badgeArt(c, '', src)),
-          h('span', { class: 'cs-card__lab' }, c.vendor)),
-        h('i', { class: 'cs-card__split' }),
-        h('span', { class: 'cs-card__cell' },
-          h('b', { class: 'cs-card__n' }, nf(c.held)),
-          h('span', { class: 'cs-card__lab' }, 'certifications')),
-      ),
-    )));
+    if (viewMode === 'grid') {
+      skillList.style.display = 'grid';
+      skillPane.style.display = 'none';
 
-    const c = sorted[chosen];
-    if (!c) { skillPane.replaceChildren(); return; }
+      skillList.replaceChildren(...sorted.map((c, i) => {
+        const accent = ACCENTS[i % ACCENTS.length];
+        return h('button', {
+          class: 'cs-grid-card',
+          type: 'button',
+          style: { '--i': String(Math.min(i, 35)), '--card-accent': accent },
+          onclick: () => { pick = i; viewMode = 'detail'; drawSkills(); },
+        },
+          h('span', { class: 'cs-grid-card__badge', style: { background: accent } }, String(i + 1)),
+          h('div', { class: 'cs-grid-card__top' },
+            h('span', { class: 'cs-grid-card__art' }, badgeArt(c, '', src)),
+            h('span', { class: 'cs-grid-card__vendor' }, c.vendor || 'Certification'),
+          ),
+          h('h4', { class: 'cs-grid-card__title' }, c.name),
+          h('div', { class: 'cs-grid-card__foot' },
+            h('span', { class: 'cs-grid-card__count' }, `${nf(c.held)} Trainees`),
+            c.domain ? h('span', { class: 'cs-grid-card__domain' }, c.domain) : null,
+          ),
+        );
+      }));
+    } else {
+      skillList.style.display = 'none';
+      skillPane.style.display = 'flex';
 
-    const words = String(c.name).split(' ').map((word, i) => h('span', {
-      class: 'cs-w', style: still() ? {} : { '--i': String(i) },
-    }, h('span', {}, word)));
+      const c = sorted[chosen];
+      const prevIdx = (chosen - 1 + sorted.length) % sorted.length;
+      const nextIdx = (chosen + 1) % sorted.length;
+      const prevCred = sorted[prevIdx];
+      const nextCred = sorted[nextIdx];
 
-    skillPane.replaceChildren(
-      h('div', { class: 'cs-hero' },
-        h('span', { class: 'cs-hero__bloom', 'aria-hidden': 'true' }),
-        h('span', { class: 'cs-hero__shadow', 'aria-hidden': 'true' }),
-        h('span', { class: 'cs-hero__art' }, badgeArt(c, '', src)),
-      ),
-      h('div', { class: 'cs-cap' },
-        h('p', { class: 'cs-cap__no' },
-          h('i', {}, String(chosen + 1).padStart(2, '0')), ` / ${sorted.length}`),
-        h('p', { class: 'cs-cap__vendor' }, c.vendor),
-        h('h3', { class: 'cs-cap__name' }, ...words),
-        h('p', { class: 'cs-cap__domain' }, c.domain || ''),
-        h('i', { class: 'cs-cap__rule' }),
-        h('p', { class: 'cs-cap__held' },
-          h('b', {}, nf(c.held)),
-          h('span', {}, c.held === 1 ? 'trainee holds it' : 'trainees hold it')),
-      ),
-      h('div', { class: 'cs-learn' },
-        h('p', { class: 'cs-learn__head' }, 'Skills unlocked'),
-        h('ol', { class: 'cs-learn__list' },
-          ...(c.skills || []).map((s, i) => h('li', {
-            style: still() ? {} : { '--i': String(i) },
-          },
-            h('em', {}, String(i + 1).padStart(2, '0')),
-            h('span', { class: 'cs-learn__mask' }, h('span', {}, s)),
-          )),
+      const backBtn = h('button', {
+        class: 'cs-detail__back',
+        type: 'button',
+        onclick: () => { viewMode = 'grid'; drawSkills(); },
+      }, icon('chevron-left', { class: 'ic ic--xs' }), 'Back to Cards Grid');
+
+      const prevBtn = h('button', {
+        class: 'cs-diag__nav cs-diag__nav--prev',
+        type: 'button',
+        title: `Previous: ${prevCred.name}`,
+        onclick: () => { pick = prevIdx; drawSkills(); },
+      }, icon('chevron-left', { class: 'ic' }));
+
+      const nextBtn = h('button', {
+        class: 'cs-diag__nav cs-diag__nav--next',
+        type: 'button',
+        title: `Next: ${nextCred.name}`,
+        onclick: () => { pick = nextIdx; drawSkills(); },
+      }, icon('chevron-right', { class: 'ic' }));
+
+      /* Diagonal Stacked Carousel */
+      const diagonalCarousel = h('div', { class: 'cs-diag-stage' },
+        /* Previous Logo (Diagonal Top-Left Offset) */
+        h('div', {
+          class: 'cs-diag-item cs-diag-item--prev',
+          onclick: () => { pick = prevIdx; drawSkills(); },
+          title: prevCred.name,
+        },
+          badgeArt(prevCred, 'cs-diag-item__img', src),
+          h('span', { class: 'cs-diag-item__label' }, prevCred.name),
         ),
-      ),
-    );
+        /* Main Active Logo (Center Stage) */
+        h('div', { class: 'cs-diag-item cs-diag-item--main' },
+          h('span', { class: 'cs-diag-main__glow' }),
+          badgeArt(c, 'cs-diag-main__img', src),
+        ),
+        /* Next Logo (Diagonal Bottom-Right Offset) */
+        h('div', {
+          class: 'cs-diag-item cs-diag-item--next',
+          onclick: () => { pick = nextIdx; drawSkills(); },
+          title: nextCred.name,
+        },
+          badgeArt(nextCred, 'cs-diag-item__img', src),
+          h('span', { class: 'cs-diag-item__label' }, nextCred.name),
+        ),
+        prevBtn,
+        nextBtn,
+      );
+
+      skillPane.replaceChildren(
+        h('div', { class: 'cs-detail__header' }, backBtn),
+        h('div', { class: 'cs-detail__content' },
+          /* Left Side: Name, Vendor, Count */
+          h('div', { class: 'cs-detail__left' },
+            h('span', { class: 'cs-detail__tag' }, `Credential ${String(chosen + 1).padStart(2, '0')} / ${sorted.length}`),
+            h('h3', { class: 'cs-detail__name' }, c.name),
+            h('div', { class: 'cs-detail__meta' },
+              h('span', { class: 'cs-detail__vendor' }, c.vendor),
+              c.domain ? h('span', { class: 'cs-detail__domain' }, c.domain) : null,
+            ),
+            h('div', { class: 'cs-detail__count-card' },
+              h('strong', {}, nf(c.held)),
+              h('span', {}, 'Trainees Certified'),
+            ),
+          ),
+          /* Center: Diagonal Stack Carousel */
+          h('div', { class: 'cs-detail__center' }, diagonalCarousel),
+          /* Right Side: Skills Unlocked */
+          h('div', { class: 'cs-detail__right' },
+            h('h4', { class: 'cs-detail__skills-title' }, 'Skills Unlocked'),
+            h('ol', { class: 'cs-detail__skills-list' },
+              ...(c.skills || []).map((skillText, idx) => h('li', {},
+                h('em', {}, String(idx + 1).padStart(2, '0')),
+                h('span', {}, skillText),
+              )),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   /* =============================================================== 03 GALLERY */
