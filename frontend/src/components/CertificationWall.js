@@ -382,19 +382,11 @@ export function CertificationWall(block, { editing = false } = {}) {
       h('div', { class: 'cs-reg__mid' },
         h('div', { class: 'cs-figs' },
           h('div', { class: 'cs-fig', style: { '--i': '0' } },
-            h('strong', {}, nf(earned)), h('span', {}, 'certifications earned')),
+            h('strong', {}, nf(earned)), h('span', {}, 'Certifications')),
           h('i', { class: 'cs-figs__rule' }),
           h('div', { class: 'cs-fig', style: { '--i': '1' } },
-            h('strong', {}, nf(credentials.length)), h('span', {}, 'distinct credentials')),
-          h('i', { class: 'cs-figs__rule' }),
-          h('div', { class: 'cs-fig', style: { '--i': '2' } },
-            h('strong', {}, nf(bodies)), h('span', {}, 'awarding bodies')),
+            h('strong', {}, '16,000+'), h('span', {}, 'Trainees Certified')),
         ),
-        block.quote
-          ? h('blockquote', { class: 'cs-quote' },
-              h('p', {}, `“${block.quote}”`),
-              block.quoteBy ? h('cite', {}, block.quoteBy) : null)
-          : null,
       ),
     );
     lastW = 0;
@@ -594,9 +586,9 @@ export function CertificationWall(block, { editing = false } = {}) {
   }
 
   const head = h('div', { class: 'cs-head' },
-    h('div', {},
-      block.eyebrow ? h('p', { class: 'cs-eyebrow' }, block.eyebrow) : null,
-      h('h2', { class: 'cs-title' }, block.title || 'Certifications'),
+    h('div', { class: 'cs-head__center' },
+      block.eyebrow ? h('p', { class: 'cs-eyebrow' }, block.eyebrow) : h('p', { class: 'cs-eyebrow' }, 'GLOBAL SKILLING & CREDENTIALS'),
+      h('h2', { class: 'cs-title' }, block.title || 'Empowering Minds, Certifying Excellence'),
     ),
     steps,
   );

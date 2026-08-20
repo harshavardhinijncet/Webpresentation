@@ -12450,23 +12450,27 @@ body.is-presenting .vc {
 
 /* --------------------------------------------------------------- the head -- */
 .cs-head {
-  flex: 0 0 auto;
-  display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 30px; padding: 20px 30px 14px;
+  flex: 0 0 auto; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  padding: 18px 30px 14px;
   border-bottom: 1px solid var(--hairline, #e5e7eb);
 }
+.cs-head__center { text-align: center; }
 .cs-eyebrow {
-  margin: 0 0 6px; color: var(--nav-second-ink, var(--accent-ink));
+  margin: 0 0 4px; color: var(--nav-second-ink, var(--accent-ink));
   font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
 }
 .cs-title {
   margin: 0; color: var(--nav-accent-ink, var(--accent-ink));
-  font-size: 30px; font-weight: 800; letter-spacing: -0.024em; line-height: 1.05;
+  font-size: 28px; font-weight: 800; letter-spacing: -0.024em; line-height: 1.05;
 }
 
 /* The act nav, numbered. Small caps and a hairline underline on the live one —
    this is a table of contents, not a row of buttons. */
-.cs-steps { display: flex; align-items: baseline; gap: 26px; padding-bottom: 4px; }
+.cs-steps {
+  position: absolute; right: 30px; bottom: 14px;
+  display: flex; align-items: baseline; gap: 26px; padding-bottom: 4px;
+}
 .cs-step {
   display: flex; align-items: baseline; gap: 8px;
   padding: 0 0 6px; border: 0; border-bottom: 2px solid transparent;
