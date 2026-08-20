@@ -78,9 +78,9 @@ export function filmStage({ label = 'Film' } = {}) {
   }, icon('chevron-right', { class: 'ic' }));
 
   const closeBtn = h('button', {
-    class: 'fs-close', type: 'button', 'aria-label': 'Close',
+    class: 'fs-close', type: 'button', 'aria-label': 'Close and back to page',
     onclick: (e) => { e.stopPropagation(); close(); },
-  }, icon('close', { class: 'ic ic--sm' }));
+  }, icon('chevron-left', { class: 'ic ic--sm' }), h('span', { class: 'fs-close__text' }, 'BACK TO GALLERY'));
 
   const root = h('div', {
     class: 'fs-root', hidden: true,

@@ -134,75 +134,79 @@ export function EventReel(block, { editing = false } = {}) {
   /* ------------------------------------------------------------------ grid */
   const grid = h('div', { class: 'ev-grid' });
 
+  grid.addEventListener('wheel', (e) => {
+    if (grid.scrollHeight > grid.clientHeight) {
+      const canScrollUp = grid.scrollTop > 0;
+      const canScrollDown = grid.scrollTop + grid.clientHeight < grid.scrollHeight - 1;
+      if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
+        e.preventDefault();
+        e.stopPropagation();
+        grid.scrollTop += e.deltaY;
+      }
+    }
+  }, { passive: false });
+
   function drawGrid() {
     grid.textContent = '';
     grid.scrollTop = 0;
 
     const groups = chapter.groups;
-    const hasFlow = groups.some((g) => g.films.length > 1);
-    /* clientHeight is layout, not post-transform, so it is safe to solve against.
-       It reads 0 before the first mount, hence the fallback and the observer. */
-    lastH = grid.clientHeight;
-    const box = solveGrid(groups.length, hasFlow, STAGE_W, (lastH || 520) - 4);
 
-    grid.style.setProperty('--ev-cols', String(box.cols));
-    grid.style.setProperty('--ev-card', `${Math.floor(box.w)}px`);
-    /* The row height has to be handed over explicitly, not left to `auto`.
-       `.ev-card__shot` sizes itself with `aspect-ratio` off a percentage width,
-       and a box like that contributes *nothing* to intrinsic height — so an auto
-       row measured the foot alone, came out 137px, and the poster overflowed into
-       `overflow: hidden`. The height is already solved here; publishing it makes
-       the track definite and the aspect ratio resolves inside a known box. */
-    grid.style.setProperty('--ev-cardh', `${Math.ceil(box.cardH)}px`);
-    grid.classList.toggle('is-short', box.total <= (lastH || 520) - 4);
+    // Chunk cards into rows of max 4 cards for funnel alignment
+    const rows = [];
+    for (let i = 0; i < groups.length; i += 4) {
+      rows.push(groups.slice(i, i + 4));
+    }
 
-    groups.forEach((g, gi) => {
-      const many = g.films.length > 1;
-      const shot = h('span', { class: 'ev-card__shot' },
-        posterImg(g.films[0]?.youtube, { eager: gi < 8 }),
-        h('span', { class: 'ev-card__play', 'aria-hidden': 'true' },
-          icon('play', { class: 'ic ic--sm' })),
-      );
+    let globalIndex = 0;
+    rows.forEach((rowGroups) => {
+      const rowEl = h('div', { class: 'ev-row' });
+      rowGroups.forEach((g) => {
+        const gi = globalIndex++;
+        const many = g.films.length > 1;
+        const shot = h('span', { class: 'ev-card__shot' },
+          posterImg(g.films[0]?.youtube, { eager: gi < 8 }),
+          h('span', { class: 'ev-card__play', 'aria-hidden': 'true' },
+            icon('play', { class: 'ic ic--sm' })),
+        );
 
-      /* The run of parts. Each chip opens its own film, so a presenter can go
-         straight to part 6 of T-News without walking the first five. */
-      const flow = many
-        ? h('div', { class: 'ev-flow' }, ...g.films.flatMap((f, fi) => {
-            const chip = h('button', {
-              class: 'ev-flow__part', type: 'button',
-              title: f.label || `Part ${fi + 1}`,
-              'aria-label': `${g.title}, part ${fi + 1}`,
-              style: REDUCED?.matches ? {} : { '--i': String(fi) },
-              onclick: (e) => { e.stopPropagation(); openFilm(gi, fi); },
-            }, ordinal(fi + 1));
-            return fi === g.films.length - 1 ? [chip] : [chip,
-              h('span', { class: 'ev-flow__arrow', 'aria-hidden': 'true' },
-                icon('arrow-right', { class: 'ic ic--xs' }))];
-          }))
-        : null;
+        /* The run of parts. Each chip opens its own film. */
+        const flow = many
+          ? h('div', { class: 'ev-flow' }, ...g.films.flatMap((f, fi) => {
+              const chip = h('button', {
+                class: 'ev-flow__part', type: 'button',
+                title: f.label || `Part ${fi + 1}`,
+                'aria-label': `${g.title}, part ${fi + 1}`,
+                style: REDUCED?.matches ? {} : { '--i': String(fi) },
+                onclick: (e) => { e.stopPropagation(); openFilm(gi, fi); },
+              }, ordinal(fi + 1));
+              return fi === g.films.length - 1 ? [chip] : [chip,
+                h('span', { class: 'ev-flow__arrow', 'aria-hidden': 'true' },
+                  icon('arrow-right', { class: 'ic ic--xs' }))];
+            }))
+          : null;
 
-      const card = h('article', {
-        class: `ev-card${many ? ' ev-card--flow' : ''}`,
-        style: REDUCED?.matches ? {} : { '--i': String(Math.min(gi, 24)) },
-      },
-        h('button', {
-          class: 'ev-card__hit', type: 'button', title: g.title,
-          onclick: () => openFilm(gi, 0),
-        }, shot),
-        h('div', { class: 'ev-card__foot' },
-          h('h3', { class: 'ev-card__title' }, g.title),
-          many
-            ? flow
-            : h('span', { class: 'ev-card__one' }, 'One film'),
-        ),
-      );
-      grid.appendChild(card);
+        const card = h('article', {
+          class: `ev-card${many ? ' ev-card--flow' : ''}`,
+          style: REDUCED?.matches ? {} : { '--i': String(Math.min(gi, 24)) },
+        },
+          h('button', {
+            class: 'ev-card__hit', type: 'button', title: g.title,
+            onclick: () => openFilm(gi, 0),
+          }, shot),
+          h('div', { class: 'ev-card__foot' },
+            h('h3', { class: 'ev-card__title' }, g.title),
+            flow,
+          ),
+        );
+        rowEl.appendChild(card);
+      });
+      grid.appendChild(rowEl);
     });
   }
 
   /* ------------------------------------------------------------------ tabs */
   const tabs = h('div', { class: 'ev-tabs', role: 'tablist' });
-  const blurb = h('p', { class: 'ev-blurb' });
 
   function drawTabs() {
     tabs.replaceChildren(...chapters.map((c, i) => h('button', {
@@ -216,44 +220,22 @@ export function EventReel(block, { editing = false } = {}) {
       },
     },
       icon(c.icon || 'calendar', { class: 'ic ic--sm' }),
-      h('span', { class: 'ev-tab__name' }, c.name),
-      h('span', { class: 'ev-tab__n' }, String(filmsIn(c))),
+      h('span', { class: 'ev-tab__name' }, (c.name || '').toUpperCase()),
     )));
-
-    blurb.replaceChildren(
-      h('span', { class: 'ev-blurb__text' }, chapter.blurb || ''),
-      h('span', { class: 'ev-blurb__n' },
-        `${chapter.groups.length} ${chapter.groups.length === 1 ? 'entry' : 'entries'}`,
-        h('em', {}, '·'),
-        `${filmsIn(chapter)} films`),
-    );
   }
 
   /* ------------------------------------------------------------------ head */
-  const head = h('div', { class: 'ev-head' },
-    h('div', { class: 'ev-head__text' },
-      block.eyebrow ? h('p', { class: 'ev-eyebrow' }, block.eyebrow) : null,
-      h('h2', { class: 'ev-title' }, block.title || 'Events'),
-      h('span', { class: 'ev-rule' }),
-    ),
-    block.lead ? h('p', { class: 'ev-lead' }, block.lead) : null,
-    h('div', { class: 'ev-stats' },
-      h('div', { class: 'ev-stat' }, h('strong', {}, String(total)), h('span', {}, 'films')),
-      h('div', { class: 'ev-stat' }, h('strong', {}, String(chapters.length)), h('span', {}, 'chapters')),
-    ),
+  const head = h('div', { class: 'ev-head ev-head--clean' },
+    h('h2', { class: 'ev-title ev-title--center' }, (block.title || 'NINE YEARS, ON FILM').toUpperCase()),
   );
 
   root.appendChild(head);
   root.appendChild(tabs);
-  root.appendChild(blurb);
   root.appendChild(grid);
 
   drawTabs();
   drawGrid();
 
-  /* The grid is watched rather than sampled once: the tab row and the blurb settle
-     after their entrance animations, and a single measurement on the next frame
-     committed a column count against the wrong height. */
   const watchSize = new ResizeObserver(() => {
     if (grid.clientHeight && Math.abs(grid.clientHeight - lastH) > 8) drawGrid();
   });
