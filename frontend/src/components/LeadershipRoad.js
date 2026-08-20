@@ -153,8 +153,18 @@ export function LeadershipRoad(block, { editing = false } = {}) {
   const rOuter = R + BAND / 2;
   const rInner = R - BAND / 2;
 
-  /* The arc each title has to live inside, less a margin at both ends. */
-  const titleRoom = n2(R * rad(span) * 0.84);
+  /* Build curved path defs for each segment arc so text curves along the inverted U arc */
+  const defs = svg('defs', {},
+    ...panels.map((panel, i) => {
+      const s = seg(i);
+      const [ax, ay] = pt(R, s.from + 0.3);
+      const [bx, by] = pt(R, s.to - 0.3);
+      return svg('path', {
+        id: `ja-text-path-${i}`,
+        d: `M ${n2(ax)} ${n2(ay)} A ${R} ${R} 0 0 1 ${n2(bx)} ${n2(by)}`,
+      });
+    })
+  );
 
   /* ------------------------------------------------------------------- the band */
   const bands = panels.map((panel, i) => {
@@ -168,22 +178,19 @@ export function LeadershipRoad(block, { editing = false } = {}) {
   });
 
   const titles = panels.map((panel, i) => {
-    const s = seg(i);
-    const [x, y] = pt(R, s.mid);
-    /* `textLength` with spacingAndGlyphs is what stops a long title running past its own
-       segment into the one next door: given the room, the renderer condenses. */
+    const textPathEl = svg('textPath', {
+      href: `#ja-text-path-${i}`,
+      startOffset: '50%',
+      'text-anchor': 'middle',
+    }, (panel.title || `Chapter ${i + 1}`).toUpperCase());
+
     return svg('text', {
       class: 'ja-seg__label',
-      x: n2(x),
-      y: n2(y),
-      textLength: titleRoom,
-      lengthAdjust: 'spacingAndGlyphs',
-      'text-anchor': 'middle',
       'dominant-baseline': 'central',
-      transform: `rotate(${n2(s.mid - 270)} ${n2(x)} ${n2(y)})`,
+      dy: '2px',
       style: `--i:${i}`,
       onclick: () => open(i),
-    }, panel.title || `Chapter ${i + 1}`);
+    }, textPathEl);
   });
 
   /* A dotted leader per chapter, drawn under the band so a stray end is covered. Its ends are
@@ -194,7 +201,7 @@ export function LeadershipRoad(block, { editing = false } = {}) {
     class: 'ja-svg',
     viewBox: `0 0 ${VB.w} ${VB.h}`,
     preserveAspectRatio: 'xMidYMid meet',
-  }, ...leads, ...bands, ...titles);
+  }, defs, ...leads, ...bands, ...titles);
 
   /* -------------------------------------------------------------- the cards
      Built now, shown on click. Each is anchored outside its own segment and turned to it. */
@@ -245,29 +252,11 @@ export function LeadershipRoad(block, { editing = false } = {}) {
 
     const labels = titles.map((label) => {
       const b = label.getBBox();
-      const m = label.transform.baseVal.consolidate();
-      if (!m) {
-        return {
-          left: b.x / toVB,
-          right: (b.x + b.width) / toVB,
-          top: b.y / toVB,
-          bottom: (b.y + b.height) / toVB,
-        };
-      }
-      /* The title is turned to its segment, so its own box is turned with it. */
-      const t = m.matrix;
-      const xs = [];
-      const ys = [];
-      [[b.x, b.y], [b.x + b.width, b.y], [b.x + b.width, b.y + b.height], [b.x, b.y + b.height]]
-        .forEach(([x, y]) => {
-          xs.push(t.a * x + t.c * y + t.e);
-          ys.push(t.b * x + t.d * y + t.f);
-        });
       return {
-        left: Math.min(...xs) / toVB,
-        right: Math.max(...xs) / toVB,
-        top: Math.min(...ys) / toVB,
-        bottom: Math.max(...ys) / toVB,
+        left: b.x / toVB,
+        right: (b.x + b.width) / toVB,
+        top: b.y / toVB,
+        bottom: (b.y + b.height) / toVB,
       };
     });
 
@@ -290,21 +279,13 @@ export function LeadershipRoad(block, { editing = false } = {}) {
       });
     });
 
-    /* Seat one card: on the slide, and off any title.
-
-       The arc's ends run down into the corners, so the space radially outside them is off the
-       slide and a card seated there drops onto the band — over the very title it belongs to.
-       Above the end segments the stage is empty, which is where it goes instead. */
     const seat = (b) => {
       for (let pass = 0; pass < 6; pass += 1) {
         let moved = false;
-
-        /* Off the band, radially — so the leader has room to be seen and no card sits on the
-           very title it points at. */
         const dx = b.x - hub.x;
         const dy = b.y - hub.y;
         const d = Math.hypot(dx, dy) || 1e-6;
-        const need = (rOuter + LEAD + reachOf(Math.atan2(dy, dx) * 180 / Math.PI, b.tilt)) / toVB;
+        const need = (rOuter + LEAD + reachOf((Math.atan2(dy, dx) * 180) / Math.PI, b.tilt)) / toVB;
         if (d < need) {
           b.x = hub.x + (dx / d) * need;
           b.y = hub.y + (dy / d) * need;
