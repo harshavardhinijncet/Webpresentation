@@ -10512,26 +10512,30 @@ body.is-presenting .pg-player { z-index: 30; }
 /* ------------------------------------------------------------- the stage -- */
 /* Rows are centred when they fit and top-aligned when they scroll — a centred
    scroll container hides its own first row above the fold. */
+.pw-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  padding: 18px 20px 22px;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  scroll-behavior: smooth;
+  pointer-events: auto;
+  touch-action: pan-y;
+}
+.pw-stage:not(.is-short) {
+  display: block !important;
+}
 .pw-stage.is-short {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 .pw-stage.is-short .pw-row:last-child { margin-bottom: 0; }
-
-.pw-stage {
-  flex: 1 1 auto;
-  min-height: 0;
-  padding: 18px 20px 22px;
-  overflow-y: auto !important;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
-  scroll-behavior: smooth;
-  pointer-events: auto;
-}
 .pw-stage::-webkit-scrollbar { width: 6px; }
-.pw-stage::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.22); border-radius: 4px; }
+.pw-stage::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.25); border-radius: 4px; }
 
 .pw-row { display: flex; align-items: stretch; justify-content: space-between; margin-bottom: 12px; width: 100%; }
 .pw-row--short { justify-content: space-between; }

@@ -262,11 +262,33 @@ export function PlacementWall(block, { editing = false } = {}) {
 
   /* --------------------------------------------------------------- header */
   const stage = h('div', { class: 'pw-stage' });
+
+  // Direct wheel scrolling for smooth, reliable trackpad/mouse scroll across all 3 tabs
   stage.addEventListener('wheel', (e) => {
-    const canScrollUp = stage.scrollTop > 0;
-    const canScrollDown = stage.scrollTop + stage.clientHeight < stage.scrollHeight - 2;
-    if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
-      e.stopPropagation();
+    if (stage.scrollHeight > stage.clientHeight) {
+      const canScrollUp = stage.scrollTop > 0;
+      const canScrollDown = stage.scrollTop + stage.clientHeight < stage.scrollHeight - 1;
+      if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
+        e.preventDefault();
+        e.stopPropagation();
+        stage.scrollTop += e.deltaY;
+      }
+    }
+  }, { passive: false });
+
+  // Touch drag scrolling for touchpads and touchscreens
+  let touchStartY = 0;
+  let touchStartScrollTop = 0;
+  stage.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      touchStartY = e.touches[0].pageY;
+      touchStartScrollTop = stage.scrollTop;
+    }
+  }, { passive: true });
+  stage.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 1 && stage.scrollHeight > stage.clientHeight) {
+      const deltaY = touchStartY - e.touches[0].pageY;
+      stage.scrollTop = touchStartScrollTop + deltaY;
     }
   }, { passive: true });
   const chips = h('div', { class: 'pw-chips' });
