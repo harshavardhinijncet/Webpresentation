@@ -365,6 +365,7 @@ export function PlacementWall(block, { editing = false } = {}) {
             // The intrinsic size, so the browser reserves the right box.
             width: it.w, height: it.h,
             loading: 'lazy', decoding: 'async',
+            onerror: (e) => { e.target.closest('.pw-tile')?.remove(); },
           }),
           it.label ? h('span', { class: 'pw-tile__tag' }, it.label) : null,
         );
@@ -397,7 +398,6 @@ export function PlacementWall(block, { editing = false } = {}) {
   function drawRail() {
     rail.textContent = '';
     chapters.forEach((c, i) => {
-      const n = c.groups.reduce((sum, g) => sum + g.images.length, 0);
       const btn = h('button', {
         class: `pw-tab${c === activeChapter ? ' is-on' : ''}`,
         type: 'button',
@@ -410,10 +410,7 @@ export function PlacementWall(block, { editing = false } = {}) {
         },
       },
         icon(c.icon || 'images', { class: 'ic ic--sm' }),
-        h('span', { class: 'pw-tab__text' },
-          h('span', { class: 'pw-tab__name' }, c.name),
-          h('span', { class: 'pw-tab__n' }, countLabel(n, c.kind)),
-        ),
+        h('span', { class: 'pw-tab__name' }, (c.name || '').toUpperCase()),
       );
       rail.appendChild(btn);
     });

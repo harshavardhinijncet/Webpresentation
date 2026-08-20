@@ -1753,7 +1753,7 @@
                   "name": "",
                   "images": [
                     {
-                      "src": "Campus Placements/Autodesk.jpg",
+                      "src": "Open Drive\\Autodesk.jpg",
                       "label": "Autodesk",
                       "w": 1536,
                       "h": 1536
@@ -1765,7 +1765,7 @@
                       "h": 1536
                     },
                     {
-                      "src": "Campus Placements/Congolmerate.jpg",
+                      "src": "Open Drive\\Congolmerate.jpg",
                       "label": "Conglomerate",
                       "w": 2048,
                       "h": 1152
@@ -1837,7 +1837,7 @@
                       "h": 1536
                     },
                     {
-                      "src": "Campus Placements/Japan.jpg",
+                      "src": "Open Drive\\Japan.jpg",
                       "label": "Japan",
                       "w": 1536,
                       "h": 1536
@@ -1861,19 +1861,19 @@
                       "h": 2000
                     },
                     {
-                      "src": "Campus Placements/LG.jpg",
+                      "src": "Open Drive\\LG.jpg",
                       "label": "LG",
                       "w": 2048,
                       "h": 1152
                     },
                     {
-                      "src": "Campus Placements/maersk.jpg",
+                      "src": "Open Drive\\maersk.jpg",
                       "label": "Maersk",
                       "w": 800,
                       "h": 450
                     },
                     {
-                      "src": "Campus Placements/O9.jpg",
+                      "src": "Open Drive\\O9.jpg",
                       "label": "O",
                       "w": 2000,
                       "h": 2000
@@ -1995,7 +1995,7 @@
                       "h": 1536
                     },
                     {
-                      "src": "Open Drive/ball.jpg",
+                      "src": "Campus Placements\\ball.jpg",
                       "label": "Ball",
                       "w": 800,
                       "h": 800
@@ -2019,13 +2019,13 @@
                       "h": 800
                     },
                     {
-                      "src": "Open Drive/FreshBus.jpg",
+                      "src": "Campus Placements\\FreshBus.jpg",
                       "label": "FreshBus",
                       "w": 800,
                       "h": 800
                     },
                     {
-                      "src": "Open Drive/ISRO Intern.jpg",
+                      "src": "Campus Placements\\ISRO Intern.jpg",
                       "label": "ISRO Intern",
                       "w": 1536,
                       "h": 1536
@@ -2043,13 +2043,13 @@
                       "h": 1536
                     },
                     {
-                      "src": "Open Drive/NorthernArc.jpg",
+                      "src": "Campus Placements\\NorthernArc.jpg",
                       "label": "Northern Arc",
                       "w": 1536,
                       "h": 1536
                     },
                     {
-                      "src": "Open Drive/Redhat.jpg",
+                      "src": "Campus Placements\\Redhat.jpg",
                       "label": "Red Hat",
                       "w": 800,
                       "h": 800
@@ -2073,7 +2073,7 @@
                       "h": 1536
                     },
                     {
-                      "src": "Open Drive/UIPath.jpg",
+                      "src": "Campus Placements\\UIPath.jpg",
                       "label": "UiPath",
                       "w": 1536,
                       "h": 1536
@@ -2115,13 +2115,13 @@
                       "h": 800
                     },
                     {
-                      "src": "Open Drive/Wissada.jpg",
+                      "src": "Campus Placements\\Wissada.jpg",
                       "label": "Wissada",
                       "w": 1536,
                       "h": 1536
                     },
                     {
-                      "src": "Open Drive/Wissda.jpg",
+                      "src": "Campus Placements\\Wissda.jpg",
                       "label": "Wissda",
                       "w": 2000,
                       "h": 2000
