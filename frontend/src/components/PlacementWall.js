@@ -54,58 +54,44 @@ export function justifyRows(items, width, targetH, gap = GAP, maxH = Infinity) {
   let row = [];
   let arSum = 0;
 
-  const solveRow = (items_, partial, allowFill) => {
+  const solveRow = (items_) => {
+    if (!items_.length) return null;
     const avail = width - gap * (items_.length - 1);
-    const arTotal = items_.reduce((n, it) => n + it.w / it.h, 0);
-    const solved = avail / arTotal;
-    /* A leftover tail holding one wide photo would solve to something enormous
-       beside the rows above it, so a partial row normally keeps the target
-       height. `allowFill` is the exception: when the whole selection is a single
-       row there is nothing above it to tower over, and capping it left a company
-       with two photographs sitting 242px tall in 592px of stage. */
-    const height = Math.min(
-      partial && !allowFill ? Math.min(solved, targetH * 1.08) : solved,
-      maxH,
-    );
+    const arTotal = items_.reduce((n, it) => n + (it.w / it.h || 1), 0);
+    const solved = arTotal > 0 ? avail / arTotal : targetH;
+    // Cap height at maxH (stage height) so super tall single images don't overflow the viewport
+    const height = Math.min(solved, maxH > 0 ? maxH : solved);
     return {
       height,
-      full: height >= solved - 0.5 && height < maxH + 0.5,
-      items: items_.map((it) => ({ ...it, dw: height * (it.w / it.h), dh: height })),
+      full: true,
+      items: items_.map((it) => ({ ...it, dw: height * (it.w / it.h || 1), dh: height })),
     };
-  };
-
-  const flush = (partial) => {
-    if (!row.length) return;
-    rows.push(solveRow(row, partial, false));
-    row = [];
-    arSum = 0;
   };
 
   items.forEach((it) => {
     if (!it.w || !it.h) return;
     row.push(it);
     arSum += it.w / it.h;
-    // Close the row once scaling to the target height would overflow the width.
-    if (arSum * targetH + gap * (row.length - 1) >= width) flush(false);
+    if (arSum * targetH + gap * (row.length - 1) >= width) {
+      const res = solveRow(row);
+      if (res) rows.push(res);
+      row = [];
+      arSum = 0;
+    }
   });
-  flush(true);
-
-  /* One row for the whole selection — a short chapter, or a company with two
-     photographs. Re-solve it filling the width, which is what "fill the screen"
-     means when the aspect ratios have to be honoured: the height follows from
-     the width, and only the stage can cap it. */
-  if (rows.length === 1) {
-    const only = rows[0].items;
-    if (only.length) return [solveRow(only, true, true)];
+  if (row.length) {
+    const res = solveRow(row);
+    if (res) rows.push(res);
   }
+
   return rows;
 }
 
 /** A row height that suits the material: cards read small, photographs larger. */
 const targetHeightFor = (kind, count) => {
-  if (kind === 'journey') return 580;
-  if (kind === 'poster') return count > 24 ? 260 : 340;
-  return 340;
+  if (kind === 'journey') return 520;
+  if (kind === 'poster') return count > 18 ? 220 : (count > 6 ? 280 : 340);
+  return 300;
 };
 
 const countLabel = (n, kind) => {

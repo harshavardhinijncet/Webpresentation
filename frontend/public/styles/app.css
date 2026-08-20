@@ -10531,13 +10531,11 @@ body.is-presenting .pg-player { z-index: 30; }
 }
 .pw-stage::-webkit-scrollbar { width: 0; height: 0; }
 
-.pw-row { display: flex; align-items: stretch; margin-bottom: 12px; }
-/* A row the solver could not fill — three tall infographics, or a short tail.
-   Centred, because a half-width row flush left reads as a mistake. */
-.pw-row--short { justify-content: center; }
+.pw-row { display: flex; align-items: stretch; justify-content: space-between; margin-bottom: 12px; width: 100%; }
+.pw-row--short { justify-content: space-between; }
 
 .pw-tile {
-  position: relative; flex: 0 0 auto; padding: 0;
+  position: relative; flex: 1 1 auto; padding: 0;
   border: 0; border-radius: var(--radius-sm); overflow: hidden;
   background: #f3f4f6; cursor: zoom-in;
   opacity: 0; transform: translateY(16px) scale(0.985);
