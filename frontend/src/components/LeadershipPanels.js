@@ -129,13 +129,24 @@ const DEFAULT_STAGES = [
 ];
 
 const COLORS = [
-  { accent: '#16181A', deep: '#000000', tint: '#E7E8E6', on: '#FFFFFF' },
-  { accent: '#2C3136', deep: '#16181A', tint: '#E8E9EA', on: '#FFFFFF' },
-  { accent: '#12A150', deep: '#0B7A3B', tint: '#E2F3E9', on: '#FFFFFF' },
-  { accent: '#0B7A3B', deep: '#065C2B', tint: '#DFF0E6', on: '#FFFFFF' },
-  { accent: '#5C6168', deep: '#3A4046', tint: '#E9EAEB', on: '#FFFFFF' },
-  { accent: '#9AA09A', deep: '#5C6168', tint: '#EEEFED', on: '#16181A' },
-  { accent: '#E9EAE4', deep: '#5C6168', tint: '#F2F3EF', on: '#16181A' },
+  /* One ramp, all of it the brand green, darkest first.
+   
+     It used to run near-black, charcoal, green, green, then three greys - five of the
+     seven tones were neutral, so a section about this organization's leadership opened
+     looking like it belonged to a different deck. These are Technical Hub's #008638
+     stepped down to #003C19 and up to a pale wash, so the rail reads as one colour
+     family and each card is a different depth of it rather than a different colour.
+   
+     `on` stays white until the tone is light enough that it would not read - the last
+     two carry the ink instead. `deep` is the ground a photograph is blended onto and
+     `tint` the wash behind an empty one. */
+  { accent: '#003C19', deep: '#001F0D', tint: '#D8EADF', on: '#FFFFFF' },
+  { accent: '#005C27', deep: '#003C19', tint: '#DCECE2', on: '#FFFFFF' },
+  { accent: '#008638', deep: '#005C27', tint: '#E2F3E9', on: '#FFFFFF' },
+  { accent: '#0A9E48', deep: '#003C19', tint: '#E5F5EB', on: '#FFFFFF' },
+  { accent: '#2FB463', deep: '#008638', tint: '#E9F7EE', on: '#FFFFFF' },
+  { accent: '#71BD1F', deep: '#003C19', tint: '#EDF6E4', on: '#16281C' },
+  { accent: '#C7E3CE', deep: '#005C27', tint: '#F1F7F2', on: '#0E2A18' },
 ];
 
 const BRAND = '#12A150';

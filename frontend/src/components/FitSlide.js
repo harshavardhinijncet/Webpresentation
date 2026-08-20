@@ -57,7 +57,14 @@ export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false }
     // already been given the screen's height would be reading back the answer
     // this is trying to decide, and on the frames before the grid settles that
     // reads long and the slide gives up filling for no reason.
+    // Cleared alongside the height, and for the same reason. Sections whose
+    // root needs a definite height read this to get the slide's, and measuring
+    // while it is set would be measuring the answer this pass is about to give:
+    // the height it produced last time feeds straight back into the decision and
+    // the slide flips between filling and not on every resize. Cleared, every
+    // pass measures the same baseline — each root's own fallback height.
     inner.style.height = '';
+    inner.style.removeProperty('--slide-h');
     const contentHeight = inner.scrollHeight;
     if (!contentHeight) return;
 
@@ -73,7 +80,19 @@ export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false }
     const screenShaped = Math.max(1, Math.round(nominalWidth * (availHeight / availWidth)));
     const filled = wantsFill(fill) && contentHeight <= screenShaped + OVERFLOW_SLACK;
     const natural = filled ? screenShaped : contentHeight;
-    if (filled) inner.style.height = `${screenShaped}px`;
+    if (filled) {
+      inner.style.height = `${screenShaped}px`;
+      // The slide's height in its own nominal pixels, for the sections that
+      // cannot use a percentage. `.canvas-block > *` sets `flex: 1`, and its
+      // `flex-basis: 0%` beats `height` on the main axis, so those roots need a
+      // definite length or they grow to their content and this decides against
+      // filling. 860 was that length, and it is only correct on a 16:9 screen —
+      // a 16:10 display makes the slide 1000 nominal rows and the section stopped
+      // 140 short, which reads from the room as the page missing its bottom.
+      // Only set when filling: an unfilled slide is its content's height, and a
+      // section stretched past that would hang off the end of it.
+      inner.style.setProperty('--slide-h', `${screenShaped}px`);
+    }
     const scale = filled ? availWidth / nominalWidth : Math.min(availWidth / nominalWidth, availHeight / natural);
     frame.dataset.fill = String(filled);
     // Centre the slide ourselves rather than leaning on the frame's alignment.
@@ -86,6 +105,14 @@ export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false }
     const offsetY = (availHeight - natural * scale) / 2;
     inner.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
     frame.dataset.scale = scale.toFixed(3);
+    // Published for the same reason as the height. Anything that has to clear a
+    // fixed-size chrome element — the deck bar is 83 real pixels whatever the
+    // slide is scaled to — needs to convert real pixels into the slide's own,
+    // and the slide's own are `scale` times smaller. A clearance written as a
+    // flat nominal figure is only ever right at one screen size: 83 real pixels
+    // is 69 nominal at scale 1.2 and 92 at scale 0.9, so a padding that clears
+    // the bar on a 1920 display leaves the controls under it on a 1440 one.
+    inner.style.setProperty('--slide-scale', scale.toFixed(4));
   };
 
   const schedule = () => {

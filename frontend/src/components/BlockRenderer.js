@@ -8,6 +8,7 @@ import { HeroBox } from './HeroBox.js';
 import { LeaderHero } from './LeaderHero.js';
 import { MilestoneTimeline } from './MilestoneTimeline.js';
 import { LeadershipPanels } from './LeadershipPanels.js';
+import { LeadershipRoad } from './LeadershipRoad.js';
 import { GalleryWall } from './GalleryWall.js';
 import { CourseDeck } from './CourseDeck.js';
 import { DriftWall } from './DriftWall.js';
@@ -107,7 +108,9 @@ export function renderBlock(block, options = {}) {
       return MilestoneTimeline(block, options);
 
     case 'leadership-panels':
-      return LeadershipPanels(block, options);
+      /* The road, not the accordion. LeadershipPanels is still in the tree and still
+         reads the same block, so switching this one line back restores the bars. */
+      return LeadershipRoad(block, options);
 
     case 'gallery-wall':
       return GalleryWall(block, options);

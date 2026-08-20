@@ -17,6 +17,9 @@ import { OrgSelectPage } from './pages/OrgSelectPage.js';
 import { PresentPage } from './pages/PresentPage.js';
 import { toastError } from './components/Toast.js';
 import { startBuildWatch, flushPendingReload } from './utils/buildWatch.js';
+import { installTooltips } from './utils/tooltip.js';
+
+installTooltips();
 
 const container = document.getElementById('app');
 

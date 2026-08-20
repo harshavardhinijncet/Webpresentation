@@ -50,6 +50,27 @@ export function inkFor(hex) {
   return candidate;
 }
 
+/**
+ * Steps a brand colour toward black until it is dark enough to carry white.
+ *
+ * The collapsed rail leads with the colour the logo leads with rather than a flat
+ * black, but a brand green at full strength is too light for white icons — 3.3:1.
+ * Deepened to a luminance of 0.05 it measures better than 11:1 and is still
+ * unmistakably the brand hue. A primary that is already black comes back
+ * unchanged, which is what Torii wants.
+ */
+export function deepen(hex, target = 0.05) {
+  const { r, g, b } = toRgb(hex);
+  let scale = 1;
+  let candidate = hex;
+  while (luminance(candidate) > target && scale > 0.15) {
+    scale -= 0.03;
+    const clamp = (value) => Math.max(0, Math.min(255, Math.round(value * scale)));
+    candidate = `#${[clamp(r), clamp(g), clamp(b)].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
+  }
+  return candidate;
+}
+
 export function rgba(hex, alpha) {
   const { r, g, b } = toRgb(hex);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
@@ -101,6 +122,14 @@ export function applyTheme(org) {
   set('--nav-on-accent', onColorFor(lead));
   set('--nav-second', second);
   set('--nav-second-ink', inkFor(second));
+
+  /* Collapsed, the pane is a brand rail rather than a black one. It takes the
+     primary — Technical Hub's green, Torii's black — deepened until white icons
+     sit comfortably on it, and marks the selected section in the second brand
+     colour: gold on green, which is the pairing the logo itself uses. */
+  const railBase = luminance(theme.primary) > 0.88 ? lead : theme.primary;
+  set('--nav-rail-bg', deepen(railBase));
+  set('--nav-rail-active', second);
   set('--accent-soft', rgba(theme.accent, 0.12));
   set('--accent-line', rgba(theme.accent, 0.32));
   set('--primary-soft', rgba(theme.primary, 0.06));

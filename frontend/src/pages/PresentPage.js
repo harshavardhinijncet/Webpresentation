@@ -2,6 +2,7 @@ import { h, render, append } from '../utils/dom.js';
 import { state, isAdmin, visibleSections, deckSections, setSections } from '../context/appStore.js';
 import { SideNav } from '../components/SideNav.js';
 import { TopBar } from '../components/TopBar.js';
+import { icon } from '../utils/icons.js';
 import { SlideView } from '../components/SlideView.js';
 import { FitSlide } from '../components/FitSlide.js';
 import { DeckControls } from '../components/DeckControls.js';
@@ -85,18 +86,46 @@ export function PresentPage(container, { org, section, onLogout }) {
   const actions = [
     h(
       'button',
-      { class: 'btn btn--ghost btn--sm', title: 'Previous section (←)', onclick: () => go(-1) },
+      {
+        class: 'btn btn--ghost btn--sm',
+        'data-tip': 'Previous section',
+        'aria-label': 'Previous section',
+        onclick: () => go(-1),
+      },
       '‹ Prev',
     ),
     h(
       'button',
-      { class: 'btn btn--ghost btn--sm', title: 'Next section (→)', onclick: () => go(1) },
+      {
+        class: 'btn btn--ghost btn--sm',
+        'data-tip': 'Next section',
+        'aria-label': 'Next section',
+        onclick: () => go(1),
+      },
       'Next ›',
     ),
     h(
       'button',
-      { class: 'btn btn--dark btn--sm', title: 'Fullscreen presentation (F)', onclick: enterPresenting },
+      {
+        class: 'btn btn--dark btn--sm',
+        'data-tip': 'Present fullscreen',
+        'aria-label': 'Present fullscreen',
+        onclick: enterPresenting,
+      },
       '▶ Present',
+    ),
+    /* Beside Present, because that is where a presenter's hand already is when they
+       have finished. The same control is in the navigation head; a presenter running
+       the deck with the pane collapsed would otherwise have to open it to leave. */
+    h(
+      'button',
+      {
+        class: 'btn btn--ghost btn--sm btn--icon',
+        'data-tip': 'Sign out',
+        'aria-label': 'Sign out',
+        onclick: onLogout,
+      },
+      icon('logout', { class: 'ic ic--sm' }),
     ),
   ];
 

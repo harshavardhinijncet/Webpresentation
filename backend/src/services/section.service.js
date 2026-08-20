@@ -321,7 +321,21 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         .filter((tag) => tag.label)
         .slice(0, 6);
       block.links = (Array.isArray(raw.links) ? raw.links : [])
-        .map((link) => ({ label: text(link?.label, 40), href: safeHref(link?.href), icon: iconKey(link?.icon) }))
+        .map((link) => ({
+          label: text(link?.label, 40),
+          href: safeHref(link?.href),
+          icon: iconKey(link?.icon),
+          /* What the in-place panel says about the destination. The sites these point
+             at all refuse to be framed and the deck presents offline, so the note is
+             the only thing on that panel a presenter can talk to. */
+          note: text(link?.note, 240),
+          /* Supplied brand artwork, drawn instead of a library glyph. A real logo keeps
+             its own colours, which is the whole point of supplying one. */
+          logo: text(link?.logo, 220),
+          /* A wordmark rather than a glyph, so it needs an oblong instead of a circle -
+             ORACLE squeezed into 40px round is a red smudge. */
+          wide: Boolean(link?.wide),
+        }))
         .filter((link) => link.href)
         .slice(0, 6);
       break;
@@ -744,6 +758,16 @@ function normalizeBlock(raw, index = 0, depth = 0) {
                the video workbook was folded in, which is one film away from
                silently losing one. */
             .slice(0, 24),
+          /* A programme may be evidenced by photographs rather than film — Ignite
+             Coder has five and no reel. They sit in the same gallery as the films
+             and open the same way, so a programme is never a dead card. */
+          photos: (Array.isArray(p?.photos) ? p.photos : [])
+            .map((x) => ({
+              src: text(x?.src, 200),
+              caption: text(x?.caption, 160),
+            }))
+            .filter((x) => x.src)
+            .slice(0, 40),
         }))
         .filter((p) => p.key && p.name)
         .slice(0, 24);

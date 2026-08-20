@@ -5,10 +5,70 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------- typography
-   Agency FB is the primary face. `local()` uses the copy installed with
-   Windows/Office when present (no download); the bundled file covers machines
-   without it. Saira Condensed / Oswald / Arial Narrow are the fallbacks if
-   neither is available — all condensed, so layout stays predictable. */
+   Oswald for display, Open Sans for text - the pairing the user supplied. Both are
+   bundled as woff2 under /fonts and neither is fetched at run time: there is no
+   network at presentation time, so a webfont link would leave the deck in a fallback
+   face on the night.
+
+   font-display is block rather than swap. A projector deck is read once, from the back
+   of a room; a flash of Arial reflowing into Oswald mid-sentence is worse than a few
+   hundred milliseconds of nothing, and these are 12-19kB each off local disk.
+
+   Oswald is condensed with real weights, so unlike the face this replaced it can carry
+   a genuine 600 - no synthesised bold, and headings can go back to a heavier setting
+   where the design wants one.
+
+   Agency FB is declared below, used by exactly one thing: the CEO's name on the
+   Leadership hero, drawn as outlined SVG letterforms tuned to that face. */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/Oswald-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: block;
+  src: url('/fonts/Oswald-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/OpenSans-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('/fonts/OpenSans-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: block;
+  src: url('/fonts/OpenSans-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: block;
+  src: url('/fonts/OpenSans-700.woff2') format('woff2');
+}
+
+/* Kept for the CEO's name only — see .leader-hero__draw text. */
 @font-face {
   font-family: 'Agency FB';
   font-style: normal;
@@ -62,8 +122,17 @@
   --shadow-md: 0 4px 14px rgba(17, 24, 39, 0.06), 0 1px 4px rgba(17, 24, 39, 0.03);
   --shadow-lg: 0 18px 40px rgba(17, 24, 39, 0.1), 0 4px 12px rgba(17, 24, 39, 0.04);
   --gap: 18px;
-  --font: "Segoe UI", Arial, sans-serif;
-  /* Agency FB is narrow with a small x-height, so body copy gets a nudge. */
+  /* Text and display, the two faces the whole deck uses. Fallbacks are the nearest
+     shapes available without a download, so a machine missing the woff2 still lays
+     out at roughly the same width. */
+  /* What the player bar takes out of the bottom-right corner: its own width, the
+     inset it sits at, and the gap between the two bars. The presenter bar subtracts
+     this when it centres, so the two sit side by side rather than on each other. */
+  --player-reserve: 246px;
+  --font: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+  --display: 'Oswald', 'Arial Narrow', 'Segoe UI', sans-serif;
+  /* Montserrat is wider and taller in the x-height than the condensed face this
+     replaced, so body copy no longer needs the nudge it used to get. */
   --text-scale: 1;
 }
 
@@ -78,6 +147,25 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
+}
+
+/* Headings take the display face, body copy the text face — the pairing as supplied.
+   Twenty-six rules already named the display face directly; everything else inherited
+   from body, which meant most slide headings were setting in the text face. A semantic
+   heading is display type by definition, so they are claimed here rather than one
+   component at a time.
+
+   Bebas Neue is caps-only and tightly set, so it needs the tracking opened up and the
+   line height pulled in; at its default both a two-line title and a wide one look
+   wrong. It also has no bold, hence the flat weight: asking for 700 gets a synthesised
+   smear on some machines. */
+h1, h2, h3 {
+  font-family: var(--display);
+  /* Oswald has real weights, so this is a drawn 600 rather than the synthesised bold
+     the previous face was being asked for. */
+  font-weight: 600;
+  letter-spacing: 0.008em;
+  line-height: 1.08;
 }
 
 body {
@@ -451,11 +539,11 @@ a {
 
 /* ==========================================================================
    App shell + navigation pane
-   White is the surface. Rows are pills; a group's subsections sit on a light
-   tinted panel under it; the accent marks only what is active, hovered or
-   primary — and nothing here uses a gradient.
-   Collapsed, the pane becomes a black icon rail: no labels, no counts, and a
-   section's subsections open in a card beside it.
+   White is the surface. A row is a slide; the deck is flat. Selected turns the
+   title and its mark brand green and shows a bar at the left edge — no fill, and
+   nothing here uses a gradient. Hover is the only tint.
+   Collapsed, the pane becomes an icon rail in the deepened brand colour: white
+   glyphs, and the selected one in gold.
    ========================================================================== */
 :root {
   --nav-w: 300px;
@@ -537,31 +625,36 @@ a {
   letter-spacing: -0.01em;
 }
 
-/* Rail-only square mark: a wordmark is unreadable at 44px. */
+/* Rail-only square mark: a wordmark is unreadable at 44px.
+
+   No plate behind it. The artwork is a 512px PNG that is transparent everywhere
+   except its strokes — nothing was ever sitting on white — so the white square
+   was the plate alone, and on the black rail it read as a sticker rather than a
+   logo. The dark green measures 4.1:1 against the rail. */
 .sidenav__mark {
   display: none;
   width: 46px;
   height: 46px;
-  border-radius: 13px;
   object-fit: contain;
-  background: #ffffff;
+  background: transparent;
 }
 
 .sidenav__mark--text {
   place-items: center;
+  border-radius: 13px;
   background: var(--nav-accent-ink, var(--accent-ink));
   color: #ffffff;
   font-size: 18px;
   font-weight: 800;
 }
 
+.sidenav__head-act,
 .sidenav__collapse {
   display: grid;
   place-items: center;
   width: 30px;
   height: 30px;
   flex: 0 0 auto;
-  margin-left: auto;
   padding: 0;
   border: 0;
   border-radius: 999px;
@@ -571,9 +664,38 @@ a {
   transition: background 0.16s ease, color 0.16s ease;
 }
 
+/* One auto margin, not two: with it on both, the free space split between them
+   and the magnifier drifted into the middle of the head. */
+.sidenav__head-act {
+  margin-left: auto;
+}
+
+.sidenav__head-act:hover,
 .sidenav__collapse:hover {
   background: color-mix(in srgb, var(--nav-accent, var(--brand-accent)) 18%, #ffffff);
   color: var(--nav-accent-ink, var(--accent-ink));
+}
+
+/* Signing out reads as an exit, not as another navigation control. */
+.sidenav__head-act--exit {
+  color: var(--nav-ink-soft);
+}
+
+.sidenav__head-act--exit:hover {
+  background: color-mix(in srgb, var(--error) 12%, #ffffff);
+  color: var(--error);
+}
+
+/* The rail keeps it. Leaving is the one thing still worth reaching there, and the
+   pane it used to hide is no longer where it lives. */
+.sidenav--rail .sidenav__head-act--exit {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.sidenav--rail .sidenav__head-act--exit:hover {
+  background: var(--error);
+  color: #ffffff;
 }
 
 
@@ -635,83 +757,23 @@ a {
   color: var(--nav-accent-ink, var(--accent-ink));
 }
 
-/* ---------------------------------------------------------- quick actions */
-.snav-quick {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  gap: 4px;
-  padding: 0 12px;
-}
-
-.snav-quick__btn {
-  display: grid;
-  justify-items: center;
-  gap: 5px;
-  padding: 8px 2px;
-  border: 0;
-  border-radius: 14px;
-  background: transparent;
-  color: var(--nav-ink);
-  font: inherit;
-  cursor: pointer;
-  transition: background 0.16s ease;
-}
-
-.snav-quick__btn:hover {
-  background: color-mix(in srgb, var(--nav-accent, var(--brand-accent)) 9%, #ffffff);
-}
-
-.snav-quick__chip {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--nav-accent, var(--brand-accent)) 13%, #ffffff);
-  color: var(--nav-accent-ink, var(--accent-ink));
-  transition: background 0.16s ease, color 0.16s ease, transform 0.2s cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.snav-quick__btn:hover .snav-quick__chip {
-  background: var(--nav-accent, var(--brand-accent));
-  color: var(--nav-on-accent, var(--on-accent));
-  transform: translateY(-2px);
-}
-
-.snav-quick__btn--exit .snav-quick__chip {
-  background: var(--nav-sunken);
-  color: var(--nav-ink-soft);
-}
-
-.snav-quick__btn--exit:hover .snav-quick__chip {
-  background: color-mix(in srgb, var(--error) 14%, #ffffff);
-  color: var(--error);
-}
-
-.snav-quick__label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
 /* ----------------------------------------------------------- scroll body */
 .sidenav__scroll {
   position: relative;
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 0 12px 14px;
-  scrollbar-width: thin;
-  scrollbar-color: #d8d4ce transparent;
+  padding: 10px 12px 14px;
+  /* Invisible scroll: it still scrolls, it just does not draw a bar down the
+     side of the pane. A projector deck should not show furniture. */
+  scrollbar-width: none;
 }
 
 .sidenav__scroll::-webkit-scrollbar {
-  width: 8px;
-}
-
-.sidenav__scroll::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: #d8d4ce;
+  width: 0;
+  height: 0;
 }
 
 .snav-search {
@@ -751,8 +813,45 @@ a {
 
 /* ------------------------------------------------------ organization guide */
 .nav-tree {
-  display: grid;
-  gap: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  /* Never shorter than the rows inside it. With `min-height: 0` the flex parent was
+     free to squeeze this box below its content: the rows spilled out of it without
+     scrolling anything, and the workspace card was then laid out over the top of
+     them. Below 800px of viewport the card sat 51px above the last row and as much
+     as 199px on a short window. min-content keeps the box honest, so the pane
+     scrolls instead - invisibly, as everything here does. */
+  min-height: min-content;
+}
+
+/* With nothing open the ten rows shared out the height rather than stacking at
+   the top over a third of a pane of nothing. `:has` is what keeps this to the
+   closed state: the moment a group opens, the tree goes back to sizing itself to
+   its content and the pane scrolls, which is the behaviour the open state wants.
+
+   Capped, because four sections would otherwise each be 180px tall; whatever the
+   cap leaves over is dealt out as gaps rather than pooling at the bottom. */
+.nav-tree:not(:has(.nav-tree__group.is-open)) {
+  /* Grows to fill a tall pane, never shrinks on a short one. */
+  flex: 1 0 auto;
+  justify-content: space-between;
+}
+
+/* A column, emphatically. As a flex row the group laid its button out beside its
+   own (closed, zero-height) subsection panel, so the two groups that have
+   subsections stopped filling the width and their titles ellipsised to "Or..."
+   and "Lea...". */
+.nav-tree:not(:has(.nav-tree__group.is-open)) > .nav-tree__group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 44px;
+  max-height: 66px;
+}
+
+.nav-tree:not(:has(.nav-tree__group.is-open)) > .nav-tree__group > .nav-tree__parent {
+  flex: 1 1 auto;
 }
 
 .nav-tree__group.is-filtered,
@@ -777,8 +876,8 @@ a {
   grid-template-columns: 22px minmax(0, 1fr) auto;
   align-items: center;
   gap: 11px;
-  min-height: 40px;
-  padding: 7px 14px;
+  min-height: 44px;
+  padding: 9px 14px 9px 16px;
   border-radius: 999px;
   color: var(--nav-ink);
   font-size: 14px;
@@ -789,16 +888,34 @@ a {
 .nav-tree__badge {
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 23px;
+  height: 23px;
   color: inherit;
   transition: transform 0.22s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
+/* The supplied artwork, painted rather than drawn.
+
+   `background: currentColor` through a mask is what makes one file serve every
+   state: the same glyph is ink on a normal row, brand green on the selected one and
+   white on the rail, with no second copy and no filter hacks. `contain` keeps the
+   mixed viewBoxes (some are 24, some 32) at one visual size. */
+.nav-glyph {
+  display: block;
+  background: currentColor;
+  -webkit-mask: var(--glyph) center / contain no-repeat;
+  mask: var(--glyph) center / contain no-repeat;
+}
+
+/* One weight for the whole family. These fourteen carry real detail — a clasp, a
+   lens, a flag — and 2.1 closed the gaps inside them into solid blobs; 1.7 is the
+   library's own stroke, so the pane matches every other icon in the app. 21px
+   rather than 19 because the rows are 47px tall and the extra two pixels are what
+   let the busier glyphs hold together. */
 .nav-tree__icon {
-  width: 19px;
-  height: 19px;
-  stroke-width: 2.1;
+  width: 21px;
+  height: 21px;
+  stroke-width: 1.7;
 }
 
 .sec-icon {
@@ -831,9 +948,33 @@ a {
   background: color-mix(in srgb, var(--nav-accent, var(--brand-accent)) 10%, #ffffff);
 }
 
+/* Selected reads as colour, not as a fill: the title and the mark turn brand
+   green and a short bar appears at the left edge. A solid pill on whichever row
+   you were last on made the pane look like a list of buttons with one pressed,
+   and it fought the row's own icon for attention. The bar is the quieter signal
+   and it lines up down the whole pane. */
 .nav-tree__parent.is-active {
-  background: var(--nav-accent-ink, var(--accent-ink));
-  color: #ffffff;
+  background: transparent;
+  color: var(--nav-accent-ink, var(--accent-ink));
+  font-weight: 700;
+}
+
+.nav-tree__parent.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 56%;
+  border-radius: 999px;
+  background: var(--nav-accent, var(--brand-accent));
+  transform: translateY(-50%);
+}
+
+/* The mark follows the title rather than staying ink-black, and grows a touch —
+   at 19px a colour change alone is easy to miss. */
+.nav-tree__parent.is-active .nav-tree__badge {
+  transform: scale(1.08);
 }
 
 .nav-tree__title {
@@ -853,9 +994,10 @@ a {
   text-transform: uppercase;
 }
 
+/* No fill behind it any more, so the draft chip keeps its ordinary colours. */
 .nav-tree__parent.is-active .nav-tree__flag {
-  background: rgba(255, 255, 255, 0.26);
-  color: #ffffff;
+  background: var(--nav-sunken);
+  color: var(--nav-ink-quiet);
 }
 
 .nav-tree__chevron {
@@ -868,7 +1010,7 @@ a {
 }
 
 .nav-tree__parent.is-active .nav-tree__chevron {
-  color: #ffffff;
+  color: var(--nav-accent-ink, var(--accent-ink));
 }
 
 .nav-tree__group.is-open .nav-tree__chevron {
@@ -891,17 +1033,27 @@ a {
     margin 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
+/* The vertical padding belongs to the open state only. A 0fr track zeroes the
+   rows inside it but not this element's own padding, so a closed panel still
+   measured 14px and every group with subsections sat 14px lower than one
+   without — the pitch down the pane visibly wandered. */
 .nav-tree__children-inner {
   display: grid;
   gap: 2px;
   min-height: 0;
-  padding: 6px 8px 8px 34px;
+  padding: 0 8px 0 34px;
+  transition: padding 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .nav-tree__group.is-open > .nav-tree__children {
   grid-template-rows: 1fr;
   margin: 3px 0 8px;
   opacity: 1;
+}
+
+.nav-tree__group.is-open > .nav-tree__children > .nav-tree__children-inner {
+  padding-top: 6px;
+  padding-bottom: 8px;
 }
 
 /* Each row arrives just after the one above it. */
@@ -981,9 +1133,14 @@ a {
 }
 
 /* -------------------------------------------------- workspace destinations */
+/* The tree above stretches to fill the pane, so without a margin here the card's
+   ground sits flush against the last row and the two read as one overlapping
+   thing. The tree gives the space back by shrinking, not by scrolling. */
 .snav-card {
   display: grid;
   gap: 2px;
+  flex: 0 0 auto;
+  margin-top: 14px;
   padding: 6px;
   border-radius: 18px;
   background: var(--nav-sunken);
@@ -1028,6 +1185,23 @@ a {
   white-space: nowrap;
 }
 
+.snav-card__row--exit {
+  color: var(--nav-ink-soft);
+}
+
+.snav-card__row--exit .snav-card__mark {
+  color: var(--nav-ink-soft);
+}
+
+.snav-card__row--exit:hover {
+  background: color-mix(in srgb, var(--error) 10%, #ffffff);
+  color: var(--error);
+}
+
+.snav-card__row--exit:hover .snav-card__mark {
+  color: var(--error);
+}
+
 .snav-card__row--add {
   margin-top: 3px;
   padding-top: 7px;
@@ -1044,60 +1218,9 @@ a {
   color: var(--nav-on-accent, var(--on-accent));
 }
 
-/* --------------------------------------------------------- primary action */
-.sidenav__foot {
-  padding: 10px 12px 14px;
-}
-
-.snav-cta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 11px 13px;
-  border: 0;
-  border-radius: 18px;
-  background: #000000;
-  color: #ffffff;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.16s ease;
-}
-
-.snav-cta:hover {
-  background: #1c1a19;
-}
-
-.snav-cta__fab {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 auto;
-  border-radius: 999px;
-  background: var(--nav-accent, var(--brand-accent));
-  color: var(--nav-on-accent, var(--on-accent));
-}
-
-.snav-cta__text {
-  display: grid;
-  min-width: 0;
-}
-
-.snav-cta__title {
-  font-size: 14.5px;
-  font-weight: 700;
-}
-
-.snav-cta__hint {
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 11.5px;
-}
-
 /* ================================================================= the rail
-   Black, 78px, icons only: the brand mark, every section within one click, and
-   the primary action. Labels, counts and cards all belong to the open pane. */
+   Black, 78px, icons only: the brand mark and every section within one click.
+   Labels, counts and cards all belong to the open pane. */
 .snav-rail__list {
   display: none;
 }
@@ -1244,7 +1367,6 @@ a {
 .sidenav--rail .sidenav__logo,
 .sidenav--rail .sidenav__name,
 .sidenav--rail .snav-label,
-.sidenav--rail .snav-quick,
 .sidenav--rail .sidenav__scroll {
   display: none;
 }
@@ -1260,8 +1382,8 @@ a {
 }
 
 .sidenav--rail .sidenav__collapse:hover {
-  background: var(--nav-accent, var(--brand-accent));
-  color: var(--nav-on-accent, var(--on-accent));
+  background: var(--nav-rail-active, var(--nav-second, var(--brand-accent)));
+  color: #14161a;
 }
 
 .sidenav--rail .snav-rail__list {
@@ -1278,10 +1400,12 @@ a {
 }
 
 .sidenav--rail .snav-rail__list::-webkit-scrollbar {
+  width: 0;
   display: none;
 }
 
 .snav-rail__btn {
+  position: relative;
   display: grid;
   place-items: center;
   width: 40px;
@@ -1297,19 +1421,34 @@ a {
 }
 
 .snav-rail__btn:hover {
-  background: color-mix(in srgb, var(--nav-accent, var(--brand-accent)) 40%, transparent);
+  background: rgba(255, 255, 255, 0.16);
   transform: scale(1.08);
 }
 
+/* Gold, not a filled disc. The rail ground is already the brand green, so a green
+   pill on it disappeared; the selected glyph changing colour is the whole signal,
+   with the same left bar the open pane uses so the two states agree. */
 .snav-rail__btn.is-active {
-  background: var(--nav-accent, var(--brand-accent));
-  color: var(--nav-on-accent, var(--on-accent));
+  background: transparent;
+  color: var(--nav-rail-active, var(--nav-second, var(--brand-accent)));
+}
+
+.snav-rail__btn.is-active::before {
+  content: '';
+  position: absolute;
+  left: -13px;
+  top: 50%;
+  width: 3px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--nav-rail-active, var(--nav-second, var(--brand-accent)));
+  transform: translateY(-50%);
 }
 
 .snav-rail__icon {
-  width: 19px;
-  height: 19px;
-  stroke-width: 2.1;
+  width: 21px;
+  height: 21px;
+  stroke-width: 1.7;
 }
 
 .snav-rail__icon.sec-icon--asset {
@@ -1320,31 +1459,117 @@ a {
   background: rgba(255, 255, 255, 0.92);
 }
 
-.sidenav--rail .sidenav__foot {
-  padding: 0 0 14px;
-}
+/* ------------------------------------------------------------- themed tooltip
+   A pill in the brand colour with white type and a caret, to the design supplied.
+   One node, parented to <body> by utils/tooltip.js and positioned per hover, which is
+   what lets it work over a scrolling pane, over FitSlide's transform, and on elements
+   that cannot carry a pseudo-element at all.
 
-.sidenav--rail .snav-cta {
-  width: 44px;
-  height: 44px;
-  padding: 0;
+   Two motions, as asked: it pops in - scale with a little overshoot, so it arrives
+   rather than fades - and then floats, a 2px rise and fall that keeps it feeling live
+   without pulling the eye off the thing it is labelling. Both off under
+   prefers-reduced-motion.
+
+   Fill is `--nav-accent` with `--nav-on-accent` on it, the pair the theme computes for
+   exactly this: green with white here, orange with white for Torii. Never the raw
+   accent as text, which is the rule the rest of this file keeps. */
+.tipx {
+  position: fixed;
+  z-index: 90;
+  max-width: 280px;
+  padding: 8px 15px;
   border-radius: 999px;
   background: var(--nav-accent, var(--brand-accent));
-  place-items: center;
+  box-shadow: 0 10px 26px rgba(20, 22, 26, 0.24);
+  color: var(--nav-on-accent, var(--on-accent));
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.92);
+  transform-origin: var(--tip-caret, 50%) 100%;
 }
 
-.sidenav--rail .snav-cta:hover {
-  background: var(--brand-highlight);
-}
-
-.sidenav--rail .snav-cta__text {
+.tipx[hidden] {
   display: none;
 }
 
-.sidenav--rail .snav-cta__fab {
-  width: 44px;
-  height: 44px;
-  background: transparent;
+/* The caret, sitting on whichever edge faces the control, at the control's centre
+   rather than the pill's - the pill slides sideways to stay on screen. */
+.tipx::after {
+  content: '';
+  position: absolute;
+  left: var(--tip-caret, 50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: inherit;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.tipx[data-side='top']::after {
+  bottom: -4px;
+}
+
+.tipx[data-side='bottom']::after {
+  top: -4px;
+}
+
+.tipx[data-side='bottom'] {
+  transform-origin: var(--tip-caret, 50%) 0;
+}
+
+.tipx.is-on {
+  animation:
+    tip-pop 0.24s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+    tip-float 2.8s 0.24s ease-in-out infinite;
+}
+
+@keyframes tip-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tip-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2.5px) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tipx.is-on {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The rail had a tooltip of its own before this one existed. Same pill, so the product
+   has one tooltip design rather than two that nearly match. */
+.snav-tip {
+  border-radius: 999px;
+  background: var(--nav-accent, var(--brand-accent));
+  color: var(--nav-on-accent, var(--on-accent));
+}
+
+/* An icon on its own needs a square, not a pill sized for a word. */
+.btn--icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  padding: 0;
 }
 
 /* --------------------------------------------------------------- topbar */
@@ -2078,8 +2303,14 @@ a {
 .deck-bar {
   position: fixed;
   bottom: 22px;
-  left: 50%;
+  /* Centred in the space left over once the player bar's corner is reserved, not in
+     the whole window. Measured while presenting at 1600x900: this bar ran 210..1390
+     and the player bar 1370..1586, so dead centre laid 20px of one over the other.
+     The reserve is the player bar's width plus its inset plus the gap between them. */
+  left: calc(50% - (var(--player-reserve) / 2));
   transform: translateX(-50%);
+  /* Never pushed off the left edge on a narrow window, whatever the reserve costs. */
+  max-width: calc(100vw - var(--player-reserve) - 24px);
   z-index: 40;
   display: flex;
   align-items: center;
@@ -2594,30 +2825,9 @@ body.is-presenting .gallery {
   .sidenav--rail .snav-label {
     display: flex;
   }
-  .sidenav--rail .snav-quick {
-    display: grid;
-  }
   .sidenav--rail .sidenav__scroll {
     display: block;
     max-height: 46vh;
-  }
-  .sidenav--rail .sidenav__foot {
-    padding: 10px 12px 14px;
-  }
-  .sidenav--rail .snav-cta {
-    width: 100%;
-    height: auto;
-    padding: 11px 13px;
-    border-radius: 18px;
-    background: #000000;
-  }
-  .sidenav--rail .snav-cta__text {
-    display: grid;
-  }
-  .sidenav--rail .snav-cta__fab {
-    width: 36px;
-    height: 36px;
-    background: var(--brand-accent);
   }
   .sidenav__scroll {
     max-height: 46vh;
@@ -5534,16 +5744,299 @@ body.is-presenting .fit-slide__inner .profile-box__frame {
   gap: 12px;
 }
 
+/* Yellow, as asked. The glyph carries the brand gold on a white disc rather than the
+   gold becoming the disc: gold behind a white glyph measures 1.7:1, which is the one
+   thing the palette rule in this file forbids. On white the same gold reads as the
+   brand and the ring gives it an edge. */
 .leader-hero__social {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(32, 30, 29, 0.12);
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 1.5px solid color-mix(in srgb, var(--brand-accent) 42%, rgba(32, 30, 29, 0.12));
   border-radius: 999px;
   background: #ffffff;
+  color: var(--brand-accent);
+  font: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* Hover lifts and rings it in gold rather than filling the disc: a gold fill behind a
+   full-colour brand logo muddies every one of them. */
+.leader-hero__social:hover {
+  border-color: var(--brand-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-accent) 26%, transparent);
+  transform: translateY(-2px);
+}
+
+/* Supplied artwork, fitted to the disc. `contain` because these arrive at five
+   different aspect ratios - LinkedIn and Facebook are circular badges, YouTube is a
+   rounded oblong, Oracle is a wide wordmark - and a crop would clip the ones that are
+   not square. */
+/* Nearly filling the disc. At 24px in a 40px disc these read as specks on a slide seen
+   from the back of a room - the logo is the thing being recognised, so it gets the
+   space and the ring is just an edge. */
+.lh-logo {
+  display: block;
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+/* The wordmark gets the width it needs. At 24px square ORACLE is a red smudge; on the
+   oblong it is legible at the same height as the glyphs beside it. */
+.leader-hero__social--word .lh-logo {
+  width: 92px;
+  height: 24px;
+}
+
+/* Oracle is set as type, so its disc is a rounded oblong rather than a circle -
+   a six-letter word cannot be squeezed into 40px round and stay legible. */
+.leader-hero__social--word {
+  width: auto;
+  padding: 0 15px;
+  border-radius: 999px;
+}
+
+.lh-oracle {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+/* ------------------------------------------------------- the in-place viewer
+   Covers the hero rather than replacing the slide, so the deck does not navigate and
+   the back button is the only way out - which is what makes it feel like a panel
+   rather than a page. Absolute inside .leader-hero, which is the positioned ancestor.
+
+   It holds a card about the destination rather than the destination itself. All five
+   of these sites refuse to be framed - Instagram and Facebook answer
+   X-Frame-Options: DENY, YouTube SAMEORIGIN, LinkedIn blocks bots outright and
+   academy.oracle.com 403s - so an iframe here would be a blank rectangle. The deck
+   also presents with no network, which settles it. */
+.lh-view {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  /* Bar, then the frame, then the strip that explains a blank one. */
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: rgba(247, 246, 243, 0.97);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(10px) scale(0.995);
+  transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.lh-view[hidden] {
+  display: none;
+}
+
+.lh-view.is-open {
+  opacity: 1;
+  transform: none;
+}
+
+.lh-view__bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 26px;
+  border-bottom: 1px solid rgba(32, 30, 29, 0.1);
+}
+
+.lh-view__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px 8px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: #201e1d;
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.lh-view__back:hover {
+  background: var(--brand-accent);
   color: #201e1d;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  transform: translateX(-2px);
+}
+
+.lh-view__crumb {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.lh-view__host {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.lh-view__out {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #201e1d;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.18s ease;
+}
+
+.lh-view__out:hover {
+  background: var(--brand-accent);
+  color: #201e1d;
+}
+
+/* The frame's own ground. White rather than the panel's warm grey, so a site that does
+   render is not tinted by the deck, and a site that refuses reads as plainly empty
+   instead of looking like a styling mistake. */
+.lh-view__stage {
+  min-height: 0;
+  margin: 0 18px;
+  border: 1px solid rgba(32, 30, 29, 0.12);
+  border-radius: 14px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.lh-view__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Shown when the frame is refused. The site is not coming, so this says which site,
+   why, and gives the one control that does work - rather than leaving a white
+   rectangle that looks like a bug in the deck. */
+.lh-view__blocked {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 15px;
+  height: 100%;
+  padding: 30px;
+  text-align: center;
+}
+
+.lh-view__blocked .lh-logo {
+  width: 64px;
+  height: 64px;
+}
+
+.lh-view__blocked-word .lh-logo {
+  width: 150px;
+  height: 40px;
+}
+
+.lh-view__blocked h3 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.lh-view__blocked p {
+  max-width: 56ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.lh-view__blocked .lh-view__out {
+  margin-left: 0;
+  padding: 12px 22px;
+  font-size: 15px;
+}
+
+.lh-view__url {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  word-break: break-all;
+}
+
+.lh-view__hint {
+  margin: 0;
+  padding: 11px 22px 15px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.lh-view__mark {
+  display: grid;
+  place-items: center;
+  min-width: 62px;
+  height: 62px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--brand-accent);
+  color: #201e1d;
+}
+
+/* In the bar it is a badge beside the crumb, not the hero of a card. White, because a
+   brand logo on the accent gold fights it. */
+.lh-view__mark--sm {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 7px;
+  border: 1px solid rgba(32, 30, 29, 0.12);
+  background: #ffffff;
+}
+
+.lh-view__mark--sm .lh-logo {
+  width: 18px;
+  height: 18px;
+}
+
+.lh-view__mark--sm.lh-view__mark--word {
+  padding: 0 10px;
+}
+
+.lh-view__mark--sm.lh-view__mark--word .lh-logo {
+  width: 48px;
+  height: 13px;
+}
+
+.lh-view__mark .ic {
+  width: 26px;
+  height: 26px;
+}
+
+.lh-view__mark--sm .ic {
+  width: 15px;
+  height: 15px;
+}
+
+.lh-view__mark--sm .lh-oracle {
+  font-size: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lh-view {
+    transition: none;
+  }
 }
 
 .leader-hero__social:hover {
@@ -5594,7 +6087,7 @@ body.is-presenting .fit-slide__inner .profile-box__frame {
   font-size: 200px; /* probe value; replaced once the block is measured */
   font-weight: 800;
   line-height: 0.78;
-  font-family: 'Playfair Display', 'Georgia', serif;
+  font-family: var(--display);
   white-space: nowrap;
 }
 
@@ -5980,7 +6473,7 @@ body.is-presenting .fit-slide__inner .profile-box__frame {
   min-width: 0.58em;
   text-align: center;
   color: var(--ms-ink);
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 340px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -5994,8 +6487,75 @@ body.is-presenting .fit-slide__inner .profile-box__frame {
   padding-left: 40px;
 }
 
+/* The panel arrives when the year rolls. It used to share the deck's generic 16px
+   rise, which read as the same fade every other block does; the odometer beside it is
+   travelling sideways, so the text now comes in from the same direction and settles
+   slightly late, as though the year pushed it into place.
+
+   The rule down the left edge draws itself at the same time, which is what ties the
+   two halves together rather than leaving the text sliding against a static line. */
 .milestones__detail.is-in .milestones__title {
-  animation: block-in 0.5s cubic-bezier(0.22, 0.68, 0, 1) both;
+  animation: ms-text-in 0.62s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+}
+
+@keyframes ms-text-in {
+  from {
+    opacity: 0;
+    transform: translate3d(34px, 6px, 0);
+    filter: blur(4px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* Each bullet swings in a touch further than the heading and a touch later, so the
+   list reads top to bottom rather than arriving as one slab. */
+@keyframes ms-bullet-in {
+  from {
+    opacity: 0;
+    transform: translate3d(26px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The left rule wipes down from the top as the panel lands. `scaleY` from the top
+   edge rather than a height animation: a transform does not touch layout, so the
+   text beside it is not reflowed mid-flight. */
+.milestones__detail.is-in {
+  animation: ms-rule-draw 0.66s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+}
+
+@keyframes ms-rule-draw {
+  from { border-left-color: transparent; }
+  to { border-left-color: var(--ms-line); }
+}
+
+/* The dash beside each bullet draws outward from the text, after its line has landed. */
+.milestones__detail.is-in .milestones__bullets li::before {
+  animation: ms-dash 0.4s ease-out var(--bullet-delay, 0.12s) both;
+}
+
+@keyframes ms-dash {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .milestones__detail.is-in,
+  .milestones__detail.is-in .milestones__title,
+  .milestones__detail.is-in .milestones__bullets li,
+  .milestones__detail.is-in .milestones__bullets li::before {
+    animation: none;
+  }
 }
 
 .milestones__title {
@@ -6026,7 +6586,7 @@ body.is-presenting .fit-slide__inner .profile-box__frame {
 }
 
 .milestones__detail.is-in .milestones__bullets li {
-  animation: block-in 0.5s cubic-bezier(0.22, 0.68, 0, 1) var(--bullet-delay, 0.12s) both;
+  animation: ms-bullet-in 0.54s cubic-bezier(0.22, 0.9, 0.16, 1) var(--bullet-delay, 0.12s) both;
 }
 
 /* A drawn rule rather than a disc: the accent is reserved for what is active,
@@ -6038,6 +6598,8 @@ body.is-presenting .fit-slide__inner .profile-box__frame {
   top: 0.62em;
   width: 12px;
   height: 2px;
+  /* Grows away from the margin, not out from its own middle. */
+  transform-origin: left center;
   background: var(--ms-lead);
 }
 
@@ -6411,9 +6973,28 @@ body.is-presenting .milestones__inner {
 
 .milestones--dark .milestones__glyph {
   color: #ffffff;
-  font-size: 246px;
+  /* 246px of Oswald inside a 216px plate left 17px of air above the digit and
+     overhung the bottom edge by 7px - measured, which is why the digits looked
+     dropped in their boxes. 186px brings the whole numeral inside the plate with
+     room to spare on both sides. */
+  font-size: 210px;
+  /* Half-leading hangs the baseline from the middle of the line box, and a numeral
+     has no descender to fill the space below it, so a line box the height of the
+     plate sits the ink low. Pulling the line box in lifts the baseline; the residual
+     is trimmed by the nudge below. */
+  line-height: 170px;
   min-width: 0.66em;
   text-shadow: 0 4px 26px rgba(0, 0, 0, 0.5);
+}
+
+/* The last few pixels, solved rather than guessed. At 210px the numeral's ink is
+   176px tall inside a 216px plate, so 20px belongs above it and 20px below; measured
+   against the line box the ink was sitting 37px down and 3px up, so it comes up 17px.
+   Applied to the glyph rather than the cell, because the roll translates the stack the
+   cells live in and a nudge there would ride along with it. */
+.milestones--dark .milestones__glyph {
+  position: relative;
+  top: 13px;
 }
 
 /* ------------------------------------------------------------- rail, dark */
@@ -6515,7 +7096,7 @@ body.is-presenting .milestones__inner {
 }
 
 .lj-warp-text {
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
   font-size: 74px;
   letter-spacing: -1px;
@@ -6662,7 +7243,7 @@ body.is-presenting .milestones__inner {
 .lj-plate-num {
   grid-area: 1 / 1;
   color: color-mix(in srgb, var(--accent) 26%, #ffffff);
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 260px;
   font-weight: 700;
   line-height: 1;
@@ -6825,6 +7406,56 @@ body.is-presenting .milestones__inner {
 }
 
 .lj-next:focus-visible { outline-color: var(--lj-ink); }
+
+/* ------------------------------------------------- the photographs, in the theme
+   Each panel's picture is rendered in that panel's own green rather than sitting in
+   the rail as a full-colour rectangle. `mix-blend-mode: luminosity` keeps only the
+   lightness of the photograph and takes its hue from the ground behind it, which is
+   the card's accent - so the same treatment tracks the ramp automatically and there
+   is no second palette to keep in step.
+
+   Grayscale first, because luminosity alone still lets a saturated shirt or a lanyard
+   pull the blend off-hue. Contrast is nudged up to hold the faces open after the
+   channel is flattened.
+
+   `isolation: isolate` matters: without it the blend reaches past the card and mixes
+   with whatever the rail is sitting on. */
+.lj-media {
+  isolation: isolate;
+  background: var(--deep, #003C19);
+}
+
+.lj-photo--whole,
+.lj-media .lj-photo {
+  filter: grayscale(1) contrast(1.08) brightness(1.04);
+  mix-blend-mode: luminosity;
+}
+
+/* A wash over the picture in the same green, heaviest where the text sits beside it, so
+   the join between photograph and panel is a gradient rather than a hard edge. */
+.lj-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(90deg, transparent 55%, color-mix(in srgb, var(--deep, #003C19) 62%, transparent) 100%),
+    linear-gradient(0deg, color-mix(in srgb, var(--deep, #003C19) 38%, transparent), transparent 58%);
+  pointer-events: none;
+}
+
+/* A photograph reduced to one hue loses the thing that told you where it ended, so the
+   edge is drawn back in. */
+.lj-media {
+  border-right: 1px solid color-mix(in srgb, #ffffff 16%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lj-photo--whole,
+  .lj-media .lj-photo {
+    transition: none;
+  }
+}
 
 .lj-root--empty {
   display: grid;
@@ -7082,7 +7713,7 @@ body.is-presenting .milestones__inner {
 .th-hero__title {
   margin: 0;
   color: #ffffff;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 84px;
   font-weight: 700;
   line-height: 0.95;
@@ -7135,7 +7766,7 @@ body.is-presenting .milestones__inner {
 
 .th-decade__mark {
   color: #ffffff;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 168px;
   font-weight: 700;
   line-height: 0.8;
@@ -7145,7 +7776,7 @@ body.is-presenting .milestones__inner {
 .th-decade__years {
   margin: 0;
   color: #ffffff;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 64px;
   font-weight: 700;
   line-height: 0.9;
@@ -7216,8 +7847,7 @@ body.is-presenting .milestones__inner {
   --ink: #16181A; --card: #FBFAF6; --line: #E2E0D6;
   --gray: #6B7069; --brand: #12A150; --brand-lt: #3DDC84;
   --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --display: 'Agency FB', 'Saira Condensed', system-ui, sans-serif;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font);
   color: var(--ink); background: var(--ink);
   position: relative; overflow: hidden; height: 100%; width: 100%;
   min-height: 860px;
@@ -7435,7 +8065,7 @@ body.is-presenting .milestones__inner {
   padding: 32px 40px;
   overflow-y: auto;
   border-radius: var(--radius-lg);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font);
   box-sizing: border-box;
 }
 
@@ -7489,7 +8119,7 @@ body.is-presenting .milestones__inner {
 
 .are-hero__title {
   margin: 10px 0 12px;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', sans-serif;
+  font-family: var(--display);
   font-size: clamp(38px, 4vw, 56px);
   font-weight: 800;
   letter-spacing: 2px;
@@ -7530,7 +8160,7 @@ body.is-presenting .milestones__inner {
 }
 
 .are-stat-badge strong {
-  font-family: 'Agency FB', 'Saira Condensed', sans-serif;
+  font-family: var(--display);
   font-size: 24px;
   font-weight: 700;
   color: var(--are-green-bright);
@@ -7793,7 +8423,7 @@ body.is-presenting .milestones__inner {
 .cd-title {
   margin: 0;
   display: grid;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 116px;
   font-weight: 700;
   line-height: 0.92;
@@ -7827,7 +8457,7 @@ body.is-presenting .milestones__inner {
 
 .cd-stat__value {
   color: var(--cd-gold);
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 54px;
   font-weight: 700;
   line-height: 1;
@@ -7978,7 +8608,7 @@ body.is-presenting .milestones__inner {
 
 .cd-line--last {
   color: #ffffff;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 64px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -8256,7 +8886,10 @@ body.is-presenting .milestones__inner {
   left: 50%;
   z-index: 6;
   transform: translate(-50%, -50%);
-  padding: 54px 96px;
+  /* The scrim behind the title is sized by this padding, so it comes down with the
+     type. At 54/96 around a 104px line the plate covered 43% of the slide width and
+     29% of its height, which buried the photographs it is supposed to sit over. */
+  padding: 34px 62px;
   text-align: center;
   pointer-events: none;
   background: radial-gradient(ellipse 116% 132% at 50% 50%,
@@ -8265,11 +8898,14 @@ body.is-presenting .milestones__inner {
 
 .dw-hero__title {
   margin: 0;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
-  font-size: 104px;
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: 1px;
+  font-family: var(--display);
+  /* Medium: 104px was the height of six rows of the wall behind it. 64 still leads the
+     slide without being the only thing on it. */
+  font-size: 64px;
+  /* A drawn weight now, not a synthesised one. */
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 
@@ -8277,11 +8913,12 @@ body.is-presenting .milestones__inner {
 .dw-hero__bottom { color: #FFC42E; }
 
 .dw-hero__tagline {
-  margin: 16px 0 0;
+  margin: 11px 0 0;
   color: #c2d3c8;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 5px;
+  /* Scaled with the title so the pair keeps its proportion. */
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 3.6px;
   text-transform: uppercase;
 }
 
@@ -8917,7 +9554,7 @@ body.is-presenting .milestones__inner {
    a longer line at a larger size without wrapping. */
 .coe-title {
   margin: 0;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 58px; font-weight: 700; letter-spacing: 0.005em; line-height: 1.02;
   text-transform: uppercase;
 }
@@ -9147,13 +9784,13 @@ body.is-presenting .milestones__inner {
 }
 .coe-hub img { max-width: 132px; max-height: 116px; object-fit: contain; }
 .coe-hub b {
-  font-family: 'Agency FB', 'Oswald', sans-serif; font-size: 54px;
+  font-family: var(--display); font-size: 54px;
   color: var(--nav-accent-ink, var(--accent-ink));
 }
 
 .coe-orbit__cue {
   margin: 0; padding-bottom: 4px; text-align: center; max-width: none; white-space: nowrap;
-  font-family: 'Agency FB', 'Oswald', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 36px; font-weight: 700; letter-spacing: 0.012em; text-transform: uppercase;
   color: var(--text);
 }
@@ -9350,7 +9987,7 @@ body.is-presenting .coe-detail { bottom: 104px; }
   font-size: 11.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
 }
 .pg-cover__title {
-  margin: 0; font-family: 'Agency FB', 'Oswald', 'Saira Condensed', sans-serif;
+  margin: 0; font-family: var(--display);
   font-size: 62px; font-weight: 700; line-height: 1.02; text-transform: uppercase;
   color: var(--nav-accent-ink, var(--accent-ink));
 }
@@ -9398,20 +10035,26 @@ body.is-presenting .coe-detail { bottom: 104px; }
 .pg-card__mark img, .pg-card__mark b { transition: transform .34s cubic-bezier(.22,1,.36,1); }
 .pg-root.is-fanned .pg-card:hover .pg-card__mark img,
 .pg-root.is-fanned .pg-card:hover .pg-card__mark b { transform: scale(1.1); }
-.pg-root.is-fanned .pg-card:hover .pg-card__count { color: var(--nav-accent-ink, var(--accent-ink)); }
-.pg-card__count { transition: color .3s ease; }
 .pg-card:focus-visible { outline: 3px solid var(--nav-accent, var(--brand-accent)); outline-offset: 3px; }
 .pg-card__mark { display: grid; place-items: center; flex: 1 1 auto; min-height: 0; width: 100%; }
 .pg-card__mark img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .pg-card__mark b { font-size: 40px; font-weight: 800; color: var(--nav-accent-ink, var(--accent-ink)); }
 .pg-card__name { flex: 0 0 auto; font-size: 14px; font-weight: 800; line-height: 1.25; }
-.pg-card__count { flex: 0 0 auto; color: var(--muted); font-size: 11.5px; font-weight: 700; }
 
 /* ------------------------------------------------------- gallery & player */
 .pg-gallery, .pg-player {
   position: absolute; inset: 0; display: none; background: #000000;
 }
-.pg-root.is-gallery .pg-gallery { display: grid; }
+.pg-root.is-gallery .pg-gallery { display: grid; grid-template-rows: auto minmax(0, 1fr); }
+/* The gallery's way back is not floated and not conditional. Only the *player's*
+   bar had a reason to hide — it sits on the footage — and the shared rule left
+   this one at zero opacity with nothing to reveal it, so the panel had a back
+   button that never appeared. */
+.pg-gallery .pg-bar {
+  position: relative; opacity: 1;
+  background: none;
+  border-bottom: 1px solid rgb(255 255 255 / 0.08);
+}
 .pg-root.is-playing .pg-gallery { display: none; }
 .pg-root.is-playing .pg-player { display: grid; }
 
@@ -9424,7 +10067,10 @@ body.is-presenting .coe-detail { bottom: 104px; }
   background: linear-gradient(rgba(0,0,0,.55), transparent);
   opacity: 0; transition: opacity .25s ease;
 }
-.pg-player:hover .pg-bar, .pg-bar:focus-within { opacity: 1; }
+/* Lit on open, and again on any movement over the film — see `lightBar`. */
+.pg-player:hover .pg-bar,
+.pg-player.is-lit .pg-bar,
+.pg-bar:focus-within { opacity: 1; }
 .pg-back {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px;
@@ -9432,7 +10078,12 @@ body.is-presenting .coe-detail { bottom: 104px; }
   font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer;
 }
 .pg-back:hover { border-color: var(--nav-accent, var(--brand-accent)); }
-.pg-gal__title, .pg-player__title { font-size: 19px; font-weight: 800; }
+/* Both bars sit on black — the gallery panel and the film behind it — so these
+   cannot inherit the page ink or they are a dark label on a dark ground. */
+.pg-gal__title, .pg-player__title {
+  font-size: 19px; font-weight: 800;
+  color: #FFFFFF;
+}
 
 /* The films fill what is left of the slide. Two films are two half-screens,
    three are three — not a strip of thumbnails along the top. */
@@ -9468,6 +10119,35 @@ body.is-presenting .coe-detail { bottom: 104px; }
 }
 .pg-vid:hover .pg-shot { transform: translateY(-3px); border-color: var(--nav-accent, var(--brand-accent)); }
 
+/* --- opening a card ------------------------------------------------------- */
+/* The panel used to be there the instant the class landed, which read as a cut
+   rather than as a card opening. It rises off the row and its tiles arrive in
+   reading order behind it, so the eye is led from the card that was clicked to
+   the thing it contained. `display` flips from none to grid on the same frame,
+   which is what starts these without anything to trigger them in script. */
+@keyframes pg-panel-in {
+  from { opacity: 0; transform: scale(0.975) translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.pg-root.is-gallery .pg-gallery {
+  animation: pg-panel-in .38s cubic-bezier(.2,.75,.3,1) both;
+  transform-origin: 50% 55%;
+}
+@keyframes pg-tile-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.965); }
+  to   { opacity: 1; transform: none; }
+}
+.pg-root.is-gallery .pg-gal__grid > .pg-vid {
+  animation: pg-tile-in .5s cubic-bezier(.2,.75,.3,1) both;
+  /* Held back past the panel's own arrival, or the tiles race the frame they
+     are supposed to be arriving inside. */
+  animation-delay: calc(var(--i, 0) * 55ms + 120ms);
+}
+/* The film or photograph fades up out of black rather than cutting to it. */
+@keyframes pg-viewer-in { from { opacity: 0; } to { opacity: 1; } }
+.pg-root.is-playing .pg-player,
+.pg-player.is-portal { animation: pg-viewer-in .3s ease both; }
+
 .pg-player__frame { position: absolute; inset: 0; background: #000000; }
 /* Swallows clicks on the film. Clicking an embed pauses it, and a paused
    YouTube player draws its title, its channel and a grid of More videos over
@@ -9475,6 +10155,23 @@ body.is-presenting .coe-detail { bottom: 104px; }
    pause, none of that ever appears. */
 .pg-player__frame::after { content: ''; position: absolute; inset: 0; z-index: 2; }
 .pg-player__yt, .pg-player__file { width: 100%; height: 100%; border: 0; display: block; }
+/* A photograph is the content, so it is shown whole on the black ground rather
+   than cropped to the shape of the screen. */
+/* The box fills the frame, the picture is contained inside it, and script caps
+   the box at twice the file's own pixels. `width: auto` was the bug: max-width
+   only ever limits an intrinsically-sized image, it never stretches one, so an
+   800px file sat at 800px in the middle of a 1600px display however generous the
+   cap was. */
+.pg-player__img {
+  position: absolute; inset: 0; margin: auto;
+  width: 100%; height: 100%;
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+}
+/* Nothing to pause, so nothing to swallow — and the click-catcher would take the
+   pointer events the bar needs to re-light itself. */
+.pg-player.is-still .pg-player__frame::after { content: none; }
+.pg-shot__play--still { width: 58px; height: 58px; }
 
 .canvas-block--program-deck {
   min-height: 860px !important; max-height: 860px !important; height: 100% !important;
@@ -9492,6 +10189,10 @@ body.is-presenting .coe-detail { bottom: 104px; }
 
 @media (prefers-reduced-motion: reduce) {
   .pg-card, .pg-shot, .pg-cover { transition: none !important; }
+  .pg-root.is-gallery .pg-gallery,
+  .pg-root.is-gallery .pg-gal__grid > .pg-vid,
+  .pg-root.is-playing .pg-player,
+  .pg-player.is-portal { animation: none !important; }
 }
 
 /* ==========================================================================
@@ -9519,7 +10220,7 @@ body.is-presenting .coe-detail { bottom: 104px; }
   font-size: 11.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
 }
 .tw-title {
-  margin: 0; font-family: 'Agency FB', 'Oswald', 'Saira Condensed', sans-serif;
+  margin: 0; font-family: var(--display);
   font-size: 58px; font-weight: 700; line-height: 1.02; text-transform: uppercase;
   color: var(--nav-accent-ink, var(--accent-ink));
 }
@@ -10412,7 +11113,7 @@ body.is-presenting .pg-player { z-index: 30; }
    first uses it wherever it is installed, and the condensed fallbacks still
    catch a machine that has neither. */
 .pf-title {
-  font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-size: 46px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.04;
   text-transform: none;
 }
@@ -10594,7 +11295,7 @@ body.is-presenting .pg-player { z-index: 30; }
 .lp-title {
   margin: 24px 0 0;
   max-width: 20ch;
-  font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   font-weight: 500;
   font-size: clamp(38px, 6vw, 78px);
   line-height: 1.06;
@@ -10751,7 +11452,18 @@ body.is-presenting .pg-player { z-index: 30; }
      section fills the slide: the deck band is what is left after the head and
      the controls, and a card shorter than that band leaves a hole under it. */
   --sw-card-w: 396px;
-  --sw-shot-h: 424px;
+  --sw-shot-h: 388px;
+  /* Where the lowest point of the hanging line sits inside the deck. Both the
+     wire and the cards are placed off it, and it has to clear the climb at the
+     wire's ends — otherwise the line runs up out of the deck and into the head. */
+  --sw-trough: 96px;
+  /* The anchor is the trough, pushed down to centre the hanging composition in
+     the band the deck actually got. Presenting sizes the slide off the screen, so
+     that band is 538 rows on one display and 659 on the next, and a composition
+     pinned to the top of it reads as hanging in the upper half of the page.
+     Floored at the trough: on a band too short to centre in, the extra goes under
+     the cards rather than pulling the wire's ends up out of sight. */
+  --sw-anchor: max(var(--sw-trough), calc(50% - (var(--sw-shot-h) + 78px) / 2));
   --sw-green: #008638;
   --sw-ink: #0B1220;
 
@@ -10766,7 +11478,7 @@ body.is-presenting .pg-player { z-index: 30; }
     radial-gradient(70% 55% at 88% 4%, rgb(255 187 0 / 0.10) 0%, transparent 60%),
     linear-gradient(180deg, #FFFFFF 0%, #F4F7F9 52%, #E8EEF2 100%);
   color: var(--sw-ink);
-  font-family: 'Oswald', 'Agency FB', 'Saira Condensed', 'Arial Narrow', sans-serif;
+  font-family: var(--display);
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
 }
@@ -10779,37 +11491,54 @@ body.is-presenting .pg-player { z-index: 30; }
 
 /* --- the header ---------------------------------------------------------- */
 .sw-head { padding: 34px 56px 0; text-align: center; }
+/* Set as a poster line: one weight, all caps, tracked in tight and stacked two
+   deep with the subject's name on the second line. Oswald's 600 is the heaviest
+   real cut in the build — 700 and up would be the browser smearing the 600, which
+   at this size is visible as a furred edge. */
 .sw-title {
   margin: 0;
-  display: inline-flex; align-items: baseline; gap: 0.26em;
-  flex-wrap: wrap; justify-content: center;
+  display: flex; align-items: baseline; justify-content: center;
+  /* A real row gap, not a squeezed line-height: the name is its own line and the
+     two want measured air between them, not the leading of one paragraph. */
+  flex-wrap: wrap;
+  column-gap: 0.3em; row-gap: 10px;
+  line-height: 1;
 }
 .sw-title__lead,
+.sw-title__accent,
 .sw-title__name {
-  font-family: Georgia, 'Times New Roman', 'Iowan Old Style', serif;
-  font-style: italic; font-weight: 400;
-  font-size: clamp(28px, 3.2vw, 50px);
-  letter-spacing: -0.015em;
+  font-family: var(--display);
+  font-style: normal; font-weight: 600;
+  text-transform: uppercase;
+  font-size: clamp(38px, 4.5vw, 70px);
+  letter-spacing: -0.008em;
   animation: sw-in 780ms cubic-bezier(.2,.7,.3,1) both;
 }
 .sw-title__accent {
-  font-weight: 500;
-  font-size: clamp(32px, 3.8vw, 58px);
   /* The brand green, not the lime: on white the lime measures far too pale to
      carry a headline. */
   color: var(--sw-green);
-  animation: sw-in 780ms 90ms cubic-bezier(.2,.7,.3,1) both;
+  animation-delay: 90ms;
 }
-.sw-title__name { animation-delay: 180ms; }
+/* The name takes the whole row, which is what puts it on a line of its own, and
+   is set a size down so the two lines read as headline and subject rather than
+   as one run of caps. */
+.sw-title__name {
+  flex: 0 0 100%;
+  font-size: clamp(21px, 2.4vw, 36px);
+  /* Tracked out, where the line above is tracked in: a name read as a byline
+     wants the letters apart, and the contrast is what separates the two lines
+     into headline and subject rather than one long run of caps. */
+  letter-spacing: 0.11em;
+  /* The tracking adds its space to the right of the last letter too, so the line
+     hangs left of centre unless that much is given back. */
+  text-indent: 0.11em;
+  color: rgb(11 18 32 / 0.58);
+  animation-delay: 180ms;
+}
 @keyframes sw-in {
   from { opacity: 0; transform: translateY(16px); filter: blur(5px); }
   to   { opacity: 1; transform: none; filter: none; }
-}
-.sw-lead {
-  margin: 10px 0 0;
-  color: #5B6570;
-  font-size: 13px; letter-spacing: 0.02em;
-  animation: sw-in 780ms 300ms cubic-bezier(.2,.7,.3,1) both;
 }
 .sw-open {
   display: inline-flex; align-items: center; gap: 8px;
@@ -10828,18 +11557,37 @@ body.is-presenting .pg-player { z-index: 30; }
 .sw-root.is-open .sw-open { display: none; }
 
 /* --- the wire and the deck ------------------------------------------------ */
+/* A definite height and auto block margins, so the deck sits in the middle of
+   whatever band it is given. Presenting hands the section a taller slide than the
+   admin canvas does, and without this the whole composition stays pinned to the
+   top of the band and the extra height lands as a dead strip under the cards.
+   The height is derived from the card rather than typed: trough, the clip's bite,
+   the picture, and the foot with room for the sway to swing into. */
 .sw-deck { position: relative; min-height: 0; }
 
+/* Sized in its own pixels and centred, not stretched to the deck: a
+   `preserveAspectRatio` fit would scale the stroke with the box and the line
+   would thicken or vanish with the slide's width. The box is lifted by the height
+   of its own climb, which puts the trough of the curve exactly on the cards'
+   anchor line — the figure comes from the component, which is the only place the
+   bend is defined. */
 .sw-wire {
   position: absolute;
-  left: 0; right: 0; top: 30px;
-  height: 1px;
-  background: linear-gradient(to right,
-    transparent, rgb(11 18 32 / 0.16) 10%, rgb(11 18 32 / 0.16) 90%, transparent);
+  left: 50%; top: var(--sw-anchor);
+  translate: -50% calc(-1 * var(--wire-lift, 64px));
   opacity: 0;
   transition: opacity .5s ease .16s;
   pointer-events: none;
+  overflow: visible;
+  /* The ends are far off the slide, where a line that simply stopped would read
+     as a cut. */
+  /* The fade has to be narrow. Held at 26% the mask was hiding the whole steep
+     part of the curve and showing only its flattest half, which read as a slack
+     straight line however deep the bend underneath it actually was. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 11%, #000 89%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 11%, #000 89%, transparent 100%);
 }
+.sw-wire path { stroke: rgb(11 18 32 / 0.22); stroke-width: 1.5; }
 .sw-root.is-open .sw-wire { opacity: 1; }
 
 .sw-c {
@@ -10847,32 +11595,47 @@ body.is-presenting .pg-player { z-index: 30; }
   /* Top-anchored with the origin on the top edge, so every card's top lands on
      the same line and a scaled-down neighbour shrinks downward from its pin
      rather than lifting away from the wire. */
-  top: 30px; left: 50%;
+  top: var(--sw-anchor); left: 50%;
   transform-origin: 50% 0;
   width: var(--sw-card-w);
-  padding-top: 26px;                /* the cord's length */
+  /* Enough for the clip to bite: the wire runs across the top of this box and
+     the card starts just below it, so the clip can hold both. */
+  padding-top: 14px;
   cursor: pointer;
   will-change: transform, opacity;
   transition: transform .72s cubic-bezier(.22,.68,0,1), opacity .46s ease;
 }
 
-.sw-c__pin {
-  position: absolute; top: -5px; left: 50%;
-  width: 11px; height: 11px; margin-left: -5.5px;
-  border-radius: 50%;
+/* A bulldog clip, not a dot: a green tab that straddles the wire above and the
+   card's top edge below, so the line visibly carries the picture. Its top corners
+   are rounder than its bottom ones, which is the whole of the read — a rectangle
+   with four equal corners looks like a swatch. */
+.sw-c__clip {
+  position: absolute; top: -14px; left: 50%;
+  width: 19px; height: 40px; margin-left: -9.5px;
+  border-radius: 7px 7px 4px 4px;
   background: var(--sw-green);
-  box-shadow: 0 0 0 3px rgb(0 134 56 / 0.14), 0 2px 5px rgb(11 18 32 / 0.35);
+  box-shadow: 0 3px 7px -1px rgb(11 18 32 / 0.34);
   opacity: 0; transition: opacity .4s ease .2s;
-  z-index: 2;
+  z-index: 3;
 }
-.sw-c__cord {
-  position: absolute; top: 2px; left: 50%;
-  width: 1px; height: 26px; margin-left: -0.5px;
-  background: rgb(11 18 32 / 0.22);
-  opacity: 0; transition: opacity .4s ease .2s;
+/* The spring: one pale line across the throat of the clip, at the height where
+   the two halves meet. */
+.sw-c__clip::before {
+  content: ''; position: absolute;
+  left: 3px; right: 3px; top: 12px; height: 2px;
+  border-radius: 1px;
+  background: rgb(255 255 255 / 0.42);
 }
-.sw-root.is-open .sw-c__pin,
-.sw-root.is-open .sw-c__cord { opacity: 1; }
+/* The jaw, a shade deeper than the body, so the bottom third reads as the part
+   that is actually gripping. */
+.sw-c__clip::after {
+  content: ''; position: absolute;
+  left: 0; right: 0; bottom: 0; height: 15px;
+  border-radius: 3px 3px 4px 4px;
+  background: rgb(0 0 0 / 0.18);
+}
+.sw-root.is-open .sw-c__clip { opacity: 1; }
 
 /* The card swings from the pin. The sway is on this body and not on .sw-c,
    because .sw-c's transform is rewritten by script on every move and an
@@ -11008,15 +11771,17 @@ body.is-presenting .pg-player { z-index: 30; }
 .sw-view__close:hover { background: rgb(255 255 255 / 0.26); }
 
 /* --- filling the display ------------------------------------------------- */
-/* 860px is the canvas budget with a head above it; presenting has no head, so the
-   section gets the whole slide and the cards grow with it. */
-body.is-presenting .sw-root {
-  min-height: 900px; max-height: 900px;
-  --sw-shot-h: 456px;
-}
+/* Presenting has no head above the section, so the pictures can be larger than
+   they are in the admin canvas. The height itself is handled by the shared rule
+   for every fixed-height root — see "sections must not be shorter than their
+   slide" at the end of this file. */
+/* The pictures stay the size they are in the admin canvas. Presenting is taller
+   on a 16:10 screen but no taller on 16:9, and the hanging deck has to fit the
+   band on both — the extra height on a taller screen goes to the air around the
+   cards, which is what `.sw-deck`'s auto margins are for. */
 
 @media (prefers-reduced-motion: reduce) {
-  .sw-title__lead, .sw-title__accent, .sw-title__name, .sw-lead, .sw-open { animation: none; }
+  .sw-title__lead, .sw-title__accent, .sw-title__name, .sw-open { animation: none; }
   .sw-c, .sw-c__body, .sw-nav, .sw-view, .sw-view__frame, .sw-nav__btn { transition: none; }
   .sw-root.is-open .sw-c__body { animation: none; }
 }
@@ -11029,27 +11794,33 @@ body.is-presenting .sw-root {
    of that surface, so it never covers a picture nobody is pointing at. */
 .vc {
   position: absolute;
-  /* Dead centre of whatever it drives, not pinned to the bottom. Along the foot
-     it sat right on top of the presenter bar — the two overlapped and the skip
-     buttons landed on the section icons. The middle of the picture is also where
-     the pointer already is when someone reaches for pause. */
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(0.94);
+  /* Bottom right, and always on show.
+
+     It was centred once because pinning it along the foot put it under the
+     presenter bar and dropped the skip buttons onto the section icons. The corner
+     avoids both: the presenter bar is fixed at bottom *centre*, and the section
+     rail is on the left. Centred, it also sat over the middle of the picture,
+     which on the hero is exactly where the headline is. */
+  right: 14px; bottom: 14px;
+  transform: scale(1);
   display: flex; align-items: center; gap: 8px;
   padding: 8px 10px;
   border-radius: 999px;
   background: rgb(8 10 13 / 0.72);
   border: 1px solid rgb(255 255 255 / 0.14);
   backdrop-filter: blur(10px);
-  opacity: 0;
-  pointer-events: none;
+  /* Visible without hovering: a presenter should be able to see that the film can
+     be paused before they need to pause it. Hover only brightens it. */
+  opacity: 0.88;
+  pointer-events: auto;
   z-index: 6;
   transition: opacity .2s ease, transform .28s cubic-bezier(.2,.7,.3,1);
 }
 @supports not (backdrop-filter: blur(10px)) { .vc { background: rgb(8 10 13 / 0.9); } }
 
-/* Shown when the player's own surface is hovered — or the bar itself, so it does
-   not vanish out from under the pointer on the way to a button. */
+/* Full strength when the player's surface or the bar itself is under the pointer.
+   The translate these rules used to restore went with the centring; leaving it in
+   would have thrown the bar half its own size off the corner on hover. */
 .has-vc:hover > .vc,
 .has-vc:focus-within > .vc,
 .pf-win:hover .vc,
@@ -11060,7 +11831,7 @@ body.is-presenting .sw-root {
 .vc:hover, .vc:focus-within {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1);
+  transform: scale(1.03);
 }
 
 .vc__btn {
@@ -11094,6 +11865,13 @@ body.is-presenting .sw-root {
   z-index: 4;
 }
 .hero__vc .vc { pointer-events: auto; }
+
+/* While presenting, the slide fills the display, so the player bar lines up with the
+   presenter bar by taking the same offset. Off it, the bar belongs to its own frame
+   and keeps the tighter inset. Without this the two sat 8px apart vertically. */
+body.is-presenting .vc {
+  bottom: 22px;
+}
 .hero:hover .hero__vc .vc { opacity: 1; }
 
 /* Nothing to offset any more: a centred bar clears the presenter bar by the
@@ -11700,7 +12478,7 @@ body.is-presenting .sw-root {
   font-variant-numeric: tabular-nums; opacity: 0.55;
 }
 .cs-step span {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: var(--font);
   font-size: 19px; letter-spacing: -0.01em;
 }
 .cs-step:hover { color: var(--ink, #111827); }
@@ -12169,4 +12947,346 @@ body.is-presenting .sw-root {
   .cs-card__art, .cs-card__n, .cs-pin__art, .cs-pin__tag { transition: none; }
   .cs-tile:hover, .cs-drift { transform: none; }
   .cs-light, .cs-light__frame, .cs-light__nav { transition: none; }
+}
+
+/* ==========================================================================
+   Leadership Journey — the process arc
+   The slide opens as the arc and its titles. Clicking a segment brings that
+   chapter's card in; the ones already open stay put, so the picture builds.
+   The band, the titles and the card anchors are all solved from one circle in
+   the component — this file styles them and never positions them.
+   ========================================================================== */
+.ja-root {
+  --ja-ink: #0d1a12;
+  --ja-band: #14251a;
+  --ja-lime: var(--brand-highlight, #71bd1f);
+  --ja-gold: var(--brand-accent, #ffbb00);
+  --ja-paper: #f4f6f2;
+  position: relative;
+  display: block;
+  /* `.canvas-block > *` sets flex: 1, and its flex-basis: 0% beats height on the main axis
+     — hence flex: 0 0 auto, which restores an auto basis so the height below is honoured.
+     100% of the block rather than the deck's 860: presenting, the slide is 1600x900 and those
+     last 40 rows showed as a white band under the ground. The floor keeps the arc whole if a
+     block ever hands down an indefinite height, where a percentage would collapse. */
+  flex: 0 0 auto;
+  height: 100%;
+  min-height: 860px;
+  /* Edge to edge. No radius and no padding, so the ground runs to the end of the slide
+     instead of sitting on it as a rounded panel with paper showing around it. */
+  border-radius: 0;
+  padding: 0;
+  background: var(--ja-paper);
+  color: var(--ja-ink);
+  overflow: hidden;
+}
+
+/* Over the top-left, where the arc leaves room. */
+.ja-title {
+  position: absolute;
+  top: 30px;
+  left: 38px;
+  z-index: 3;
+  margin: 0;
+  font-size: 46px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.ja-stage {
+  /* The arc is solved in a 1600x860 viewBox and the cards are placed as percentages of the
+     stage, so the stage has to hold that aspect or the two drift apart as the ground grows.
+     It centres in whatever height the ground has, and the ground fills the rest itself. */
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  aspect-ratio: 1600 / 860;
+}
+
+.ja-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------------ the band */
+.ja-seg {
+  fill: var(--ja-band);
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ja-seg-in 0.62s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.09s);
+  transition: fill 0.34s ease, filter 0.34s ease;
+}
+
+.ja-seg:hover {
+  fill: #1c3524;
+}
+
+/* An opened chapter keeps its colour, so the band itself records how far the presenter has
+   got without any numbering to read. */
+.ja-seg.is-open {
+  fill: var(--brand-primary, #008638);
+  filter: drop-shadow(0 6px 18px rgba(0, 134, 56, 0.34));
+}
+
+@keyframes ja-seg-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+
+.ja-seg__label {
+  fill: #ffffff;
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  animation: ja-fade 0.5s ease both;
+  animation-delay: calc(0.24s + var(--i, 0) * 0.09s);
+}
+
+@keyframes ja-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---------------------------------------------------------------- the leaders
+   A dotted run from the band to the card it belongs to, so a card reads as that chapter's own
+   note rather than as loose paper near it. Aimed in the component, which knows where the card
+   was seated; drawn under the band, so the end that starts inside it is covered. */
+.ja-lead {
+  stroke: color-mix(in srgb, var(--brand-primary, #008638) 62%, transparent);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-dasharray: 0.1 11;
+  opacity: 0;
+}
+
+/* The dots run outward from the band to the card, arriving just ahead of it. */
+.ja-lead.is-in {
+  animation: ja-lead-in 0.52s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+}
+
+@keyframes ja-lead-in {
+  from { opacity: 0; stroke-dashoffset: 46; }
+  to { opacity: 1; stroke-dashoffset: 0; }
+}
+
+/* ----------------------------------------------------------------- the cards
+   Hidden until their segment is clicked, then they stay. Turned to the segment they belong
+   to, so the content leans the way the band does. */
+.ja-card {
+  position: absolute;
+  z-index: 2;
+  /* One size for all five. Matches CARD in the component, which fits each chapter's words to
+     this box — the height is fixed and the text gives, rather than five cards each as tall as
+     its own paragraph. */
+  width: 252px;
+  height: 322px;
+  padding: 15px 17px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ja-ink) 12%, transparent);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(13, 26, 18, 0.13);
+  color: var(--ja-ink);
+  text-align: left;
+  /* Height comes from the content: nothing is clipped and nothing is cut off mid-sentence,
+     which is what a max-height was doing before. */
+  transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(0.82);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ja-card[hidden] { display: none; }
+
+/* The one just opened sits above any it overlaps. */
+.ja-card.is-last { z-index: 4; }
+
+/* Arriving: it grows out of the band with a little overshoot and settles, the shadow
+   deepening as it comes forward — one motion rather than a fade. The rotation is held
+   through the whole animation so the card never straightens up on the way in. */
+.ja-card.is-in {
+  animation: ja-card-in 0.66s cubic-bezier(0.22, 1.3, 0.32, 1) both;
+}
+
+@keyframes ja-card-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(0.8);
+    box-shadow: 0 2px 6px rgba(13, 26, 18, 0.06);
+    filter: blur(3px);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  72% {
+    transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(1.035);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(1);
+    box-shadow: 0 14px 34px rgba(13, 26, 18, 0.13);
+    filter: blur(0);
+  }
+}
+
+/* The lines arrive after the card that holds them, in reading order. */
+.ja-card.is-in .ja-card__role {
+  animation: ja-line-in 0.42s cubic-bezier(0.22, 0.9, 0.16, 1) 0.2s both;
+}
+
+.ja-card.is-in .ja-card__list li {
+  animation: ja-line-in 0.42s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+  animation-delay: calc(0.3s + var(--n, 0) * 0.08s);
+}
+
+@keyframes ja-line-in {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.ja-card__role {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--brand-primary, #008638);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ja-card__list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ja-card__list li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.ja-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.56em;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ja-lime);
+}
+
+.ja-root--empty {
+  display: grid;
+  place-items: center;
+  color: color-mix(in srgb, var(--ja-ink) 55%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ja-seg,
+  .ja-seg__label,
+  .ja-lead,
+  .ja-lead.is-in,
+  .ja-card,
+  .ja-card.is-in,
+  .ja-card.is-in .ja-card__role,
+  .ja-card.is-in .ja-card__list li {
+    animation: none;
+    transition: none;
+  }
+
+  .ja-card.is-in {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--tilt, 0deg));
+  }
+
+  .ja-lead.is-in {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+
+/* ==========================================================================
+   Sections must not be shorter than their slide
+   ==========================================================================
+   A slide in presentation mode is not 16:9 — it is the *screen's* shape. FitSlide
+   gives the slide `1600 × (screenHeight / screenWidth)` nominal rows, so a 16:10
+   display hands the section 1000 rows where the admin canvas has 860.
+
+   Seven section roots carry a definite `height: 860px`, and they need it:
+   `.canvas-block > *` sets `flex: 1`, whose `flex-basis: 0%` beats `height` on the
+   main axis, so without a basis of their own they grow to their content and the
+   whole slide is scaled down to fit. What is right at 860 is wrong at 1000 — the
+   section stops short and leaves a dead band the room reads as the page failing
+   to reach the bottom. It is invisible to FitSlide, which correctly reports the
+   *slide* as filled; the gap is inside it.
+
+   A percentage cannot do it. FitSlide takes its measurement with the slide's
+   height cleared — it has to, or it would be reading back its own answer — and a
+   percentage of nothing is `auto`, so the root grows to its full content during
+   exactly the pass that decides whether to fill. Placements measured 1483 rows
+   that way and gave up filling altogether.
+
+   So FitSlide publishes the number instead, as `--slide-h` on the slide, and
+   these roots take it as a definite length. It is only set while the slide is
+   filling; unfilled, each root falls back to the 860 it always had. And because
+   the property is cleared before the measurement for the same reason the height
+   is, the value can never feed back into the decision that produced it.
+   ========================================================================== */
+body.is-presenting .fit-slide__inner .sw-root,
+body.is-presenting .fit-slide__inner .pg-root,
+body.is-presenting .fit-slide__inner .tw-root,
+body.is-presenting .fit-slide__inner .ev-root,
+body.is-presenting .fit-slide__inner .vr-root,
+body.is-presenting .fit-slide__inner .cs-root,
+body.is-presenting .fit-slide__inner .pw-root {
+  /* !important because the per-section rules use it, and !important beats
+     specificity however deep this selector is. */
+  height: var(--slide-h, 860px) !important;
+  min-height: var(--slide-h, 860px) !important;
+  max-height: var(--slide-h, 860px) !important;
+}
+
+/* ==========================================================================
+   Clearance for the deck bar
+   ==========================================================================
+   The bar floats over the slide. Over a full-bleed photograph that is the design
+   and it carries its own scrim; over a card's caption, a credential's name or a
+   student's tile it is just content covered up. These sections reserve the bar's
+   own height at the bottom — the same 104px the wall of centres and the
+   testimonial wall already reserve — which the section's ground still paints
+   through, so the page reaches the edge and only the content steps back.
+   ========================================================================== */
+/* The bar's real height plus a little air, converted into the slide's own
+   pixels. Written once here so no section has to know the arithmetic. */
+body.is-presenting .fit-slide__inner {
+  --deck-bar-clear: calc(96px / var(--slide-scale, 1));
+}
+body.is-presenting .fit-slide__inner .cs-root,
+body.is-presenting .fit-slide__inner .vr-root,
+body.is-presenting .fit-slide__inner .ev-root,
+body.is-presenting .fit-slide__inner .pw-root,
+body.is-presenting .fit-slide__inner .sw-root,
+body.is-presenting .fit-slide__inner .pf-root {
+  padding-bottom: var(--deck-bar-clear);
+}
+/* The head can give up some of its padding once the bar has taken a strip off
+   the bottom — the deck between them is what has a card in it. */
+body.is-presenting .fit-slide__inner .sw-head {
+  padding-top: 16px;
 }

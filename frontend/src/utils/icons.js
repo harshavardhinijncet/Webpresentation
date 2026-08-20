@@ -13,6 +13,233 @@ import { svg } from './dom.js';
 
 const ICONS = {
   /* ------------------------------------------------ organization & content */
+  /* The pane control. Four arrows to the corners to open it, four back to the
+     middle to close it — a chevron alone was the same glyph every row uses to
+     mean "open me", which said the wrong thing about a control that acts on the
+     navigation itself. Each arrow is a shaft plus a two-stroke head, so it holds
+     together at 16px in the head and at the heavier rail stroke alike. */
+  'panel-expand': [
+    'M10.2 10.2 4.4 4.4', 'M4.4 9V4.4H9',
+    'm13.8 10.2 5.8-5.8', 'M15 4.4h4.6V9',
+    'M10.2 13.8 4.4 19.6', 'M4.4 15v4.6H9',
+    'm13.8 13.8 5.8 5.8', 'M15 19.6h4.6V15',
+  ],
+  'panel-collapse': [
+    'M4.4 4.4l5.8 5.8', 'M10.2 5.6v4.6H5.6',
+    'm19.6 4.4-5.8 5.8', 'M13.8 5.6v4.6h4.6',
+    'M4.4 19.6l5.8-5.8', 'M5.6 13.8h4.6v4.6',
+    'm19.6 19.6-5.8-5.8', 'M18.4 13.8h-4.6v4.6',
+  ],
+
+  /* ----------------------------------------------- the presentation deck
+     One glyph per section, in deck order, drawn from the references the user
+     supplied. They arrived from several different icon sets at several different
+     weights, so none of them keeps its own: same 24x24 box, one stroke, no fills,
+     round caps and joins. A column of fourteen has to look drawn, not collected.
+
+     Where a reference carried a word — CEO, JOB, EVENT, WWW, AI — the container is
+     kept and the lettering is not, except on the globe. Four letters inside a shape
+     inside a 19px row is about two screen pixels per letter; it reads as dirt, and
+     dirt in one row makes the whole column look unfinished. */
+  /* 1. Executive Summary — a team inside a cycle. Four figures, as
+     supplied; the three at the back merge below about 20px and the front one
+     carries the reading from there down. */
+  'team-cycle': [
+    'M4 6.6A9.6 9.6 0 1 1 19.6 17.9',
+    'M19.8 15.4L19.6 17.9L22 17.1',
+    'M17.4 20A9.6 9.6 0 0 1 2.6 10',
+    'M3.5 12.3L2.6 10L0.8 11.7',
+    'c 12 6.5 1.3',
+    'M9.7 11.9v-1.5a2.1 2.1 0 0 1 4.6 0v1.5Z',
+    'c 7.1 11 1.3',
+    'M4.8 16.2v-1.3a2.1 2.1 0 0 1 4.6 0v1.3Z',
+    'c 16.9 11 1.3',
+    'M14.6 16.2v-1.3a2.1 2.1 0 0 1 4.6 0v1.3Z',
+    'c 12 12.4 1.75',
+    'M8.5 19.7v-1.8a3.2 3.2 0 0 1 7 0v1.8Z',
+  ],
+
+  /* 2. Organization Snapshot — a camera with a print tucked behind it. */
+  'camera-photo': [
+    'M6.3 9.4 7.9 3.7a1.3 1.3 0 0 1 1.6-.9l7.3 2a1.3 1.3 0 0 1 .9 1.6l-.6 2.2',
+    'M7.4 8.1l2.1-2.1 2.4 2.4 1.3-1.3 1.7 1.7',
+    'c 11.2 4.7 .9',
+    'M2.6 9.4h6.1l.7-1.5h5l.7 1.5h6.3v9.9a1.8 1.8 0 0 1-1.8 1.8H4.4a1.8 1.8 0 0 1-1.8-1.8z',
+    'c 14.1 15.1 3.6',
+    'c 14.1 15.1 1.5',
+    'c 5.9 12.3 .85',
+  ],
+
+  /* 3. History & Milestones — the road, its stops, and the flag at the end.
+     The supplied glyph also carried a target; four objects will not fit a nav row,
+     so the pin marks the start and the flag the finish. */
+  roadmap: [
+    'M4.3 15.4a3.5 3.5 0 1 1 7 0c0 2.4-3.5 6-3.5 6s-3.5-3.6-3.5-6Z',
+    'c 7.8 15.2 1.35',
+    'M18.1 3.2v6.7',
+    'M18.1 3.6h4.1l-1.2 1.5 1.2 1.5h-4.1z',
+    'M18.1 9.9h-2.6',
+    'c 13.9 9.9 1.6',
+    'M12.3 9.9H9.1a3.1 3.1 0 0 0 0 6.2h3.3',
+    'c 14 16.1 1.6',
+    'M15.6 16.1h1.5a2.6 2.6 0 0 1 0 5.2h-5.3',
+  ],
+
+  /* 4. CEO Profile — the figure at the lectern. The nameplate keeps its
+     shape and loses its three letters, which would be two screen pixels tall here. */
+  'ceo-podium': [
+    'M8.4 8.6a3.7 3.7 0 0 1 7.3 0',
+    'c 12 8.9 3.5',
+    'M6.6 17.5c.3-2.6 1.9-4.4 4.2-5',
+    'M17.4 17.5c-.3-2.6-1.9-4.4-4.2-5',
+    'M12 12.5l-1.5 1.6 1.5 3.4 1.5-3.4z',
+    'M3.4 17.5h17.2v1.4l-1.1 3.1H4.5l-1.1-3.1z',
+    'r 9.8 19.5 4.4 2.2 .6',
+  ],
+
+  /* 5. Leadership Journey — the climb, the steps, the flag planted at the top. */
+  'climb-steps': [
+    'M2.5 21.5h19',
+    'M3 21.5v-2.1a.8.8 0 0 1 .8-.8h2.9',
+    'M6.7 21.5v-4.1a.8.8 0 0 1 .8-.8h2.9',
+    'M10.4 21.5v-6.6a.9.9 0 0 1 .9-.9h3',
+    'M14.3 21.5V11.2a.9.9 0 0 1 .9-.9h2.4v11.2',
+    'M18.6 21.5V3.4',
+    'M18.6 3.8h3.9l-1.2 1.5 1.2 1.5h-3.9z',
+    'c 9.8 6.9 1.15',
+    'M9 8.1l-1.3 2.6',
+    'M8.3 10.2l1.4 4.1 1.9 3.5',
+    'M10.3 14.6l-.6 3.9',
+    'M9.4 9.5l3-1.4 5.4-3.1',
+  ],
+
+  /* 6. Success Stories — the rosette. */
+  rosette: [
+    'c 12 9 6.1',
+    'M12 5.4l1.7 3.5 3.8.5-2.8 2.7.7 3.8-3.4-1.8-3.4 1.8.7-3.8-2.8-2.7 3.8-.5z',
+    'M8.4 14.2l-2 6.4 3-1.3 1.6 2.5 1.6-4.6',
+    'M15.6 14.2l2 6.4-3-1.3-1.6 2.5-1.6-4.6',
+  ],
+
+  /* Platforms — the hand on the network. */
+  'tap-network': [
+    'c 5.2 5.6 2.2',
+    'c 17.4 5.4 2.4',
+    'c 20 12.2 2.1',
+    'c 3.6 12.6 1.9',
+    'M7.3 6.7l2.6 1.6',
+    'M15.2 6.8l-2.3 1.5',
+    'M13.5 9.9l4.5.9',
+    'M5.5 12.4h.7',
+    'M8.9 9.1a2.6 2.6 0 0 1 4.3 1.2',
+    'M9.3 16.3v-5.5a1.5 1.5 0 0 1 3 0v3.3',
+    'M12.3 14.4v-1a1.4 1.4 0 0 1 2.8 0v1',
+    'M15.1 14.5v-.6a1.4 1.4 0 0 1 2.8 0v3.6a4.4 4.4 0 0 1-4.4 4.4h-3a3.6 3.6 0 0 1-3-1.6l-2.6-4a1.5 1.5 0 0 1 2.4-1.8l1.1 1.4',
+  ],
+
+  /* 8. Centers of Excellence — the handshake, agreed. Two forearms
+     arriving from the edges into a clasp: drawn as free-floating cuffs the pair read
+     as two diamonds with fingers between them. */
+  'handshake-check': [
+    'c 12 4.8 2.7',
+    'M10.8 4.8l1 1 1.5-1.9',
+    'M2.2 12.4l2.5-2.5 3.4 3.4-2.5 2.5z',
+    'M21.8 12.4l-2.5-2.5-3.4 3.4 2.5 2.5z',
+    'M8.1 13.3l1.7-1.7h2.6l3.5 2.9',
+    'M15.8 13.5l-1.6 1.6',
+    'M9.5 14.1l2 1.7',
+    'M8.3 15.6l1.9 1.6',
+    'M11.6 16.4a1.5 1.5 0 0 1 2.1 2.1',
+    'M13.7 18.5a1.5 1.5 0 0 0 2.1 0l3.3-3.3',
+  ],
+
+  /* 9. Certifications — the scalloped seal, eight lobes on one continuous edge. */
+  'seal-check': [
+    'M12 2.6a2.6 2.6 0 0 1 1.9.8 2.6 2.6 0 0 0 1.9.8 2.6 2.6 0 0 1 2.7 2.7 2.6 2.6 0 0 0 .8 1.9a2.6 2.6 0 0 1 0 3.7 2.6 2.6 0 0 0-.8 1.9 2.6 2.6 0 0 1-2.7 2.7 2.6 2.6 0 0 0-1.9.8a2.6 2.6 0 0 1-3.7 0 2.6 2.6 0 0 0-1.9-.8 2.6 2.6 0 0 1-2.7-2.7 2.6 2.6 0 0 0-.8-1.9a2.6 2.6 0 0 1 0-3.7 2.6 2.6 0 0 0 .8-1.9 2.6 2.6 0 0 1 2.7-2.7 2.6 2.6 0 0 0 1.9-.8A2.6 2.6 0 0 1 12 2.6Z',
+    'M8.4 11.4l2.6 2.6 5-5.4',
+  ],
+
+  /* 10. Placements — the job on the map. A briefcase inside the pin rather
+     than the supplied J-O-B, which at this size read as three tally marks. */
+  'job-pin': [
+    'M12 2.4a7.1 7.1 0 0 1 5.4 11.7L12 20.4l-5.4-6.3A7.1 7.1 0 0 1 12 2.4Z',
+    'c 12 9.5 4.6',
+    'M4.1 18.4c-1 .4-1.6 1-1.6 1.6 0 1.2 4.2 2.2 9.5 2.2s9.5-1 9.5-2.2c0-.6-.6-1.2-1.6-1.6',
+    'r 8.2 7.9 7.6 5.2 1',
+    'M10.4 7.9V7a.9.9 0 0 1 .9-.9h1.4a.9.9 0 0 1 .9.9v.9',
+  ],
+
+  /* 11. Events — the sign, hung. Two rules stand in for the word on it. */
+  'event-sign': [
+    'c 12 3.6 1.1',
+    'M11.3 4.5L4.6 7.9',
+    'M12.7 4.5l6.7 3.4',
+    'r 3.4 7.9 17.2 12.2 1.7',
+    'M6 10.8h12',
+    'M6 17h12',
+  ],
+
+  /* 12. Video Resumes — the clapperboard. */
+  clapper: [
+    'M3.2 9.5h17.6v9.6a1.9 1.9 0 0 1-1.9 1.9H5.1a1.9 1.9 0 0 1-1.9-1.9z',
+    'M3.9 6.2l14.6-3.1a1.5 1.5 0 0 1 1.8 1.2l.5 2.4-16.6 3.5-.5-2.3a1.5 1.5 0 0 1 1.2-1.7Z',
+    'M8 4.4l1.1 4.5',
+    'M12.2 3.5l1.1 4.5',
+    'M16.4 2.6l1.1 4.5',
+    'M3.2 13.4h17.6',
+    'M10.6 15.4l3.9 2.2-3.9 2.2z',
+  ],
+
+  /* 13. AI Ready Engineer — the figure whose thinking is the lamp. A spark
+     in the head rather than the letters A and I, for the same reason as the nameplate. */
+  'ai-figure': [
+    'c 12 8.7 3.7',
+    'M12 2.1v1.8',
+    'M6.2 4.6l1.3 1.3',
+    'M17.8 4.6l-1.3 1.3',
+    'M2.9 10.2h1.8',
+    'M21.1 10.2h-1.8',
+    'M12 6.9l1.1 2.3 2.3 1.1-2.3 1.1L12 13.7l-1.1-2.3-2.3-1.1 2.3-1.1z',
+    'c 12 14 1.5',
+    'M12 15.5l-1.1 1.3.6 4.9h1l.6-4.9z',
+    'M10.7 14.5L6.9 17v4.7',
+    'M13.3 14.5l3.8 2.5v4.7',
+  ],
+
+  /* Programs & Learning — the web.
+
+     The band interrupts the globe rather than sitting on top of it. Drawn the first
+     way — a whole circle, two full latitudes, two pole-to-pole meridians, then the
+     band laid across the middle — six lines crossed the band and the lettering sat
+     among them, which at 21px is a dark bar and not a globe. The reference fills its
+     band white to hide what is behind it; that is not available here, because the
+     pane is white, the rail is dark green and the selected row is green, so a white
+     plate would be a white block on two grounds out of three. Clipping the geometry
+     to the band edges costs nothing and works on all three.
+
+     Every stop is solved, not eyeballed: the circle meets the band at x=2.82 and
+     21.18, the meridians at 7.6 and 16.4. */
+  'www-globe': [
+    'M2.82 9.2A9.6 9.6 0 0 1 21.18 9.2',
+    'M21.18 14.8A9.6 9.6 0 0 1 2.82 14.8',
+    'M4.2 6.4H19.8',
+    'M4.2 17.6H19.8',
+    'M12 2.4A4.6 9.6 0 0 0 7.6 9.2',
+    'M12 2.4A4.6 9.6 0 0 1 16.4 9.2',
+    'M7.6 14.8A4.6 9.6 0 0 0 12 21.6',
+    'M16.4 14.8A4.6 9.6 0 0 1 12 21.6',
+    'r 2.5 9.2 19 5.6 1.5',
+    'M5.3 10.7l.85 2.6.85-2.6.85 2.6.85-2.6',
+    'M9.9 10.7l.85 2.6.85-2.6.85 2.6.85-2.6',
+    'M14.5 10.7l.85 2.6.85-2.6.85 2.6.85-2.6',
+  ],
+
+  /* Oracle. A wordmark, set as type rather than traced: the house rule is not to
+     hand-draw a vendor's logo, and Oracle's mark *is* its wordmark, so type is also
+     the closest honest rendering of it. Drop an official SVG into the assets and this
+     can be swapped for it. */
+  'oracle-word': [],
+
   layers: ['M12 3 3.6 7.4 12 11.8l8.4-4.4z', 'M4 12.4 12 16.6l8-4.2', 'M4 16.7 12 20.9l8-4.2'],
   document: [
     'M7.2 3h6.3L18 7.4V20a1 1 0 0 1-1 1H7.2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z',

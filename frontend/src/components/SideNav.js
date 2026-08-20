@@ -1,6 +1,6 @@
 import { h, render, clear } from '../utils/dom.js';
 import { initials } from '../utils/format.js';
-import { state, isAdmin, visibleSections, deckSections, childSections, sectionById, sectionOrdinal, setSections } from '../context/appStore.js';
+import { state, isAdmin, visibleSections, childSections, sectionById, sectionOrdinal, setSections } from '../context/appStore.js';
 import { navigate, refresh } from '../utils/router.js';
 import { icon, iconForTitle, hasIcon } from '../utils/icons.js';
 import { updateSection } from '../services/contentService.js';
@@ -23,36 +23,96 @@ import { SectionIconGlyph } from './IconChooser.js';
  * announced as Strategic Foundation. A presenter never receives the full list,
  * so position cannot identify a section for them. The key can.
  */
-/* The deck, in the order a presenter walks it. Ten sections, and every one of
-   them has something on it — the seven that never got content have been removed
-   rather than left as blank slides a presenter can walk into.
+/* The deck, in the order a presenter walks it. Fourteen sections, flat: every
+   row is a slide, none of them is a folder.
+
+   Organization Overview and Leadership used to be groups whose rows opened a
+   list. Two folders among twelve slides is a rule the deck does not otherwise
+   follow, and Leadership held no content of its own at all — its row opened an
+   empty page. Their pages came up a level (`tools/flatten-navigation.cjs`), so
+   Executive Summary, Organization Snapshot, History & Milestones, CEO Profile,
+   Leadership Journey and Success Stories now each stand on their own.
 
    A curated label wins over the stored title, so this list is the presenter-facing
-   naming. Three of them were actively wrong: "Talent Acquisition" was the label on
-   the Certifications page, which is why nobody could find the certifications;
-   "Events & Milestones" carried three subsection labels for pages that do not
-   exist; and Testimonials is now the video resumes. */
+   naming. The icons are the same ones the sections themselves carry: fourteen
+   distinct glyphs, because a repeated glyph is a row the eye cannot tell from its
+   neighbour in the collapsed rail, where the glyph is all there is. */
 const NAVIGATION_GROUPS = [
-  ['company-profile', 'Organization Overview', 'layers', ['Executive Summary', 'Organization Snapshot', 'History & Milestones']],
-  ['ceo-message', 'Leadership', 'users', ['CEO Profile', 'Leadership Journey', 'Success Stories', 'CEO Vision']],
-  // One page, not a tree. Ignite Coder, Moon Coder, SkillUp, Become, Bamboo,
-  // Owl, Drive Ready and PEGA are all programmes and belong on the Programs
-  // page together. AI Ready Engineer has left for a section of its own.
-  ['programs', 'Programs & Learning', 'book', []],
-  ['ai-ready-engineer', 'AI Ready Engineer', 'brain', []],
-  ['platforms', 'Platforms', 'grid-4', []],
-  // One page, like Programs. The four strands read as one story about where the
-  // centres invest, and splitting them across four nav rows made the reader open
-  // four pages to see a single picture.
-  ['team', 'Centers of Excellence', 'beaker', []],
-  ['placements', 'Placements', 'trend-up', []],
-  /* One section, no subsections. "Events", "Workshops" and "Project Arena" were
-     placeholders for pages nobody built, and the whole film library is one page. */
-  ['achievements', 'Events', 'calendar', []],
-  ['certifications', 'Certifications', 'certificate', []],
-  /* Was Testimonials. It carries the student video resumes now. */
-  ['testimonials', 'Video Resumes', 'user-badge', []],
+  ['company-profile', 'Executive Summary', 'team-cycle', []],
+  ['organization-snapshot', 'Organization Snapshot', 'camera-photo', []],
+  ['history-milestones', 'History & Milestones', 'roadmap', []],
+  ['ceo-profile', 'CEO Profile', 'ceo-podium', []],
+  ['leadership-journey', 'Leadership Journey', 'climb-steps', []],
+  ['success-stories', 'Success Stories', 'rosette', []],
+  ['programs', 'Programs', 'www-globe', []],
+  ['team', 'Centers of Excellence', 'handshake-check', []],
+  ['certifications', 'Certifications', 'seal-check', []],
+  ['placements', 'Placements', 'job-pin', []],
+  ['achievements', 'Events', 'event-sign', []],
+  ['testimonials', 'Video Resumes', 'clapper', []],
+  ['ai-ready-engineer', 'AI Ready Engineer', 'ai-figure', []],
+  ['platforms', 'Platforms', 'tap-network', []],
 ];
+
+/**
+ * The artwork the user supplied, one file per row, drawn as a CSS mask.
+ *
+ * They are solid-fill SVGs at mixed viewBoxes with no fill attributes of their own.
+ * An <img> cannot be recoloured and inlining the path data would put 35kB into the
+ * icon library, so each one is painted as a mask instead: the element's background
+ * is `currentColor`, so the glyph takes whatever colour the row already has — ink
+ * normally, brand green when selected, white on the rail, gold when selected there.
+ * No second copy of the artwork, and nothing to keep in step.
+ *
+ * A key with no file here falls through to the line library in `utils/icons.js`.
+ */
+const NAV_ARTWORK = {
+  'company-profile': 'Executive Summary.svg',
+  'organization-snapshot': 'Organization Snapshot.svg',
+  'history-milestones': 'History and Milestones.svg',
+  'ceo-profile': 'CEO Profile.svg',
+  'leadership-journey': 'Leadership Journery.svg',
+  'success-stories': 'Sucess Stories.svg',
+  programs: 'Programs and Learnings.svg',
+  team: 'Center of Excellence.svg',
+  certifications: 'Certifications.svg',
+  placements: 'Placements.svg',
+  achievements: 'Events.svg',
+  testimonials: 'Video Resumes.svg',
+  'ai-ready-engineer': 'AI Ready Engineer.svg',
+  platforms: 'Platforms.svg',
+};
+
+/** The three that are not sections: the sign-out row and the pane control. */
+const CHROME_ARTWORK = {
+  signout: 'Signout.svg',
+  collapse: 'collapse.svg',
+  expand: 'expand.svg',
+};
+
+/* Straight from the folder the user drops them in, unmodified.
+
+   There was a pass that wrote weight-evened copies into navicons-fit/ — the files are
+   drawn at 0.44 to 1.40 px of stroke at 21px, a 3.2x spread, and evening that out
+   meant dilating the thin ones. It ruined them: Events is a banner with EVENT lettered
+   across it and +19 units of stroke on its 512 viewBox filled the letters in and
+   merged the two poles into a blob. The chip pins on AI Ready Engineer went the same
+   way. An uneven column beats a column of blobs, so the artwork is used as supplied.
+   tools/normalise-navicons.cjs still exists if a future set needs it. */
+const artworkUrl = (file) => `/uploads/navicons/${encodeURIComponent(file)}`;
+
+/**
+ * A masked glyph. `--glyph` carries the url so the shorthand stays in the
+ * stylesheet; -webkit-mask is set too, because the unprefixed property is still
+ * not universal and a pane of invisible icons is not a graceful degradation.
+ */
+function artworkGlyph(file, { class: className = 'nav-tree__icon' } = {}) {
+  return h('span', {
+    class: `${className} nav-glyph`,
+    style: { '--glyph': `url("${artworkUrl(file)}")` },
+    'aria-hidden': 'true',
+  });
+}
 
 /**
  * Releases a section to the presenter, or takes it back.
@@ -267,28 +327,12 @@ function navigationState(orgId, activeIndex) {
 /** A section's own mark wins over the curated one — admins can restyle any row. */
 function sectionGlyph(section, fallbackKey, { class: className = 'nav-tree__icon' } = {}) {
   if (section?.iconAsset?.url) return SectionIconGlyph(section, { class: className });
+  const art = NAV_ARTWORK[section?.key];
+  if (art) return artworkGlyph(art, { class: className });
   const key = hasIcon(section?.iconKey)
     ? section.iconKey
     : fallbackKey || iconForTitle(section?.title);
   return icon(key, { class: className });
-}
-
-/**
- * "Sections: 16" — the word and the count are separate elements so the rail can
- * drop the label wholesale rather than clipping the line.
- */
-function labelRow(text, count, action) {
-  return h(
-    'div',
-    { class: 'snav-label' },
-    h(
-      'span',
-      { class: 'snav-label__text' },
-      h('span', { class: 'snav-label__word' }, `${text}:`),
-      h('b', { class: 'snav-label__count' }, String(count)),
-    ),
-    action || null,
-  );
 }
 
 export function SideNav(org, activeSectionId, { onLogout } = {}) {
@@ -306,8 +350,27 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
   // survive a search and come back untouched when the box is cleared.
   const records = [];
 
+  /* Deciding which group is open and painting it are separate, so one group can
+     close another. Keyed by the same index the state Set uses. */
+  const groupControls = new Map();
+
+  /**
+   * Opens one group and closes the rest — an accordion, not ten switches.
+   *
+   * Every group that had been visited stayed open, so by the third click the
+   * tree ran well past the bottom of the pane and the reader had to scroll to
+   * find where they were. Pass -1 to close everything, which is what a group
+   * with no subsections does: it is a page in its own right, so it takes the
+   * selection without leaving somebody else's list hanging open behind it.
+   */
+  const openOnly = (index) => {
+    navState.expanded.clear();
+    if (index >= 0) navState.expanded.add(index);
+    for (const [i, paint] of groupControls) paint(navState.expanded.has(i));
+  };
+
   const openChild = (index, section, rowIndex, row) => {
-    navState.expanded.add(index);
+    openOnly(index);
     // A real subsection has its own page; a curated label can only open the group.
     const target = row?.sectionId || section.id;
     if (row?.sectionId) navState.selectedChildren.delete(index);
@@ -338,25 +401,33 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
   const groupNode = (section, index, title, iconKey, children) => {
     const active = section.id === activeGroupId;
     const rows = childRows(children);
-    const group = h('div', { class: `nav-tree__group${navState.expanded.has(index) ? ' is-open' : ''}` });
-    const setExpanded = (isExpanded) => {
-      navState.expanded[isExpanded ? 'add' : 'delete'](index);
-      group.classList.toggle('is-open', isExpanded);
-      parent.setAttribute('aria-expanded', String(isExpanded));
+    /* Programs, Placements, Events, Certifications and the rest are single
+       pages. There is no list to open, so they get no panel at all: an empty one
+       still drew its sunken plate and its padding, and that band of colour read
+       as a subsection with nothing written on it. */
+    const hasRows = rows.length > 0;
+    const open = hasRows && navState.expanded.has(index);
+    const group = h('div', { class: `nav-tree__group${open ? ' is-open' : ''}` });
+    const paint = (isOpen) => {
+      const on = hasRows && isOpen;
+      group.classList.toggle('is-open', on);
+      parent.setAttribute('aria-expanded', String(on));
     };
+    groupControls.set(index, paint);
     const parent = h(
       'button',
       {
         class: `nav-tree__parent${active ? ' is-active' : ''}`,
         type: 'button',
         title,
-        'aria-expanded': String(navState.expanded.has(index)),
+        'aria-expanded': String(open),
         onclick: () => {
           if (active) {
-            setExpanded(!navState.expanded.has(index));
+            // Toggling means nothing when there is no list behind the row.
+            if (hasRows) openOnly(navState.expanded.has(index) ? -1 : index);
             return;
           }
-          setExpanded(true);
+          openOnly(hasRows ? index : -1);
           /* A group with no content of its own is a heading, not a page.
              Leadership holds nothing and CEO Profile is the first thing under
              it, so opening Leadership showed an empty slide and the presenter
@@ -389,17 +460,23 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
       return node;
     });
 
-    // The inner wrapper is what makes the open/close animate: a grid row of
-    // 0fr → 1fr interpolates, where `display: none` cannot.
-    group.append(
-      parent,
-      h('div', { class: 'nav-tree__children' }, h('div', { class: 'nav-tree__children-inner' }, ...childNodes)),
-    );
+    group.append(parent);
+    if (hasRows) {
+      // The inner wrapper is what makes the open/close animate: a grid row of
+      // 0fr → 1fr interpolates, where `display: none` cannot.
+      group.append(
+        h('div', { class: 'nav-tree__children' }, h('div', { class: 'nav-tree__children-inner' }, ...childNodes)),
+      );
+    }
+    /* The index, not a snapshot of the open flag: clearing the search box puts
+       back whatever is open now, and with an accordion that is rarely the group
+       that was open when the row was built. */
     records.push({
       group,
+      index,
+      hasRows,
       haystack: `${title} ${rows.map((row) => row.label).join(' ')}`.toLowerCase(),
       children: childNodes.map((node, i) => ({ node, haystack: rows[i].label.toLowerCase() })),
-      wasOpen: navState.expanded.has(index),
     });
     return group;
   };
@@ -417,110 +494,6 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
     const children = title ? mergeChildren(curated, built) : built;
     return groupNode(section, index, title || section.title, iconKey, children);
   });
-
-  /* --------------------------------------------------------- nav search */
-  const search = h('input', {
-    class: 'snav-search__input',
-    type: 'search',
-    placeholder: 'Search sections…',
-    'aria-label': 'Search sections',
-    oninput: () => {
-      const term = search.value.trim().toLowerCase();
-      for (const record of records) {
-        const groupHit = !term || record.haystack.includes(term);
-        record.group.classList.toggle('is-filtered', !groupHit);
-        if (!term) {
-          record.group.classList.toggle('is-open', record.wasOpen);
-          for (const child of record.children) child.node.classList.remove('is-filtered');
-          continue;
-        }
-        const childHits = record.children.filter((child) => child.haystack.includes(term));
-        for (const child of record.children) {
-          child.node.classList.toggle('is-filtered', childHits.length > 0 && !child.haystack.includes(term));
-        }
-        record.group.classList.toggle('is-open', childHits.length > 0);
-      }
-    },
-  });
-
-  const searchBox = h('div', { class: 'snav-search' }, icon('search', { class: 'snav-search__icon' }), search);
-
-  const setSearchOpen = (open) => {
-    searchBox.classList.toggle('is-open', open);
-    if (open) search.focus();
-    else {
-      search.value = '';
-      search.dispatchEvent(new Event('input'));
-    }
-  };
-
-  /* -------------------------------------------------------- deck actions */
-  const startPresenting = () => {
-    const deck = deckSections();
-    const target = deck.find((section) => section.id === activeSectionId) || deck[0];
-    if (!target) return;
-    state.presenting = true;
-    document.body.classList.add('is-presenting');
-    document.documentElement.requestFullscreen?.().catch(() => {});
-    if (target.id === activeSectionId) refresh();
-    else navigate(`/o/${org.id}/${target.id}`);
-  };
-
-  let allOpen = false;
-  const setAllGroups = (open) => {
-    allOpen = open;
-    for (const [index, record] of records.entries()) {
-      record.wasOpen = open;
-      record.group.classList.toggle('is-open', open);
-      navState.expanded[open ? 'add' : 'delete'](index);
-    }
-  };
-
-  /* ------------------------------------------------------ workspace card */
-  const workspaceRows = [
-    ['Present deck', 'present', startPresenting],
-    state.orgs.length > 1 ? ['Switch organization', 'swap', () => navigate('/orgs')] : null,
-  ].filter(Boolean);
-
-  const workspaceCard = h(
-    'div',
-    { class: 'snav-card' },
-    ...workspaceRows.map(([label, iconKey, onClick]) =>
-      h(
-        'button',
-        { class: 'snav-card__row', type: 'button', title: label, onclick: onClick },
-        h('span', { class: 'snav-card__mark' }, icon(iconKey, { class: 'ic' })),
-        h('span', { class: 'snav-card__label' }, label),
-      ),
-    ),
-  );
-
-  /* --------------------------------------------------------- quick actions
-     Round targets with their names under them — no guessing what an icon does,
-     and they are the first thing in reach. */
-  const quickActions = [
-    ['Search', 'search', () => setSearchOpen(!searchBox.classList.contains('is-open'))],
-    ['Groups', 'sliders', () => setAllGroups(!allOpen)],
-    ['Sign out', 'logout', onLogout],
-  ].filter(Boolean);
-
-  const quickGrid = h(
-    'div',
-    { class: 'snav-quick' },
-    ...quickActions.map(([label, iconKey, onClick]) =>
-      h(
-        'button',
-        {
-          class: `snav-quick__btn${iconKey === 'logout' ? ' snav-quick__btn--exit' : ''}`,
-          type: 'button',
-          title: label,
-          onclick: onClick,
-        },
-        h('span', { class: 'snav-quick__chip' }, icon(iconKey, { class: 'ic' })),
-        h('span', { class: 'snav-quick__label' }, label),
-      ),
-    ),
-  );
 
   /* ----------------------------------------------------------- rail flyout
      The rail keeps every section within one click; its subsections open beside
@@ -648,41 +621,7 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
   const guide = h(
     'nav',
     { class: 'sidenav__scroll', 'aria-label': 'Organization guide' },
-    labelRow(
-      'Sections',
-      sections.length,
-      h(
-        'button',
-        {
-          class: 'snav-label__act',
-          type: 'button',
-          title: 'Search sections',
-          'aria-label': 'Search sections',
-          onclick: () => setSearchOpen(!searchBox.classList.contains('is-open')),
-        },
-        icon('search', { class: 'ic ic--xs' }),
-      ),
-    ),
-    searchBox,
     h('div', { class: 'nav-tree' }, ...tree),
-    labelRow(
-      'Workspace',
-      workspaceRows.length + (admin ? 1 : 0),
-      admin
-        ? h(
-            'button',
-            {
-              class: 'snav-label__act',
-              type: 'button',
-              title: 'Manage sections',
-              'aria-label': 'Manage sections',
-              onclick: () => navigate(`/o/${org.id}/settings`),
-            },
-            icon('pencil', { class: 'ic ic--xs' }),
-          )
-        : null,
-    ),
-    workspaceCard,
   );
 
   /* -------------------------------------------------------------- shell */
@@ -694,19 +633,36 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
       title: 'Collapse the navigation',
       'aria-label': 'Collapse the navigation',
     },
-    icon(railCollapsed() ? 'chevron-right' : 'chevron-left', { class: 'ic ic--sm' }),
+    artworkGlyph(railCollapsed() ? CHROME_ARTWORK.expand : CHROME_ARTWORK.collapse,
+      { class: 'ic ic--sm' }),
   );
 
   collapse.addEventListener('click', () => {
     const next = !railCollapsed();
     setRail(next);
     aside.classList.toggle('sidenav--rail', next);
-    render(collapse, icon(next ? 'chevron-right' : 'chevron-left', { class: 'ic ic--sm' }));
+    render(collapse, artworkGlyph(next ? CHROME_ARTWORK.expand : CHROME_ARTWORK.collapse,
+      { class: 'ic ic--sm' }));
     collapse.title = next ? 'Expand the navigation' : 'Collapse the navigation';
     collapse.setAttribute('aria-label', collapse.title);
     closeFlyout();
-    if (next) setSearchOpen(false);
   });
+
+  /* Signing out is the one thing in the pane that is not navigation, so it sits in
+     the head rather than in a card at the foot competing with the last section for
+     the eye. This slot used to hold Manage sections, which was the only door to the
+     settings page - that page is now reachable by its route only. */
+  const signOut = h(
+    'button',
+    {
+      class: 'sidenav__head-act sidenav__head-act--exit',
+      type: 'button',
+      title: 'Sign out',
+      'aria-label': 'Sign out',
+      onclick: onLogout,
+    },
+    artworkGlyph(CHROME_ARTWORK.signout, { class: 'ic ic--sm' }),
+  );
 
   const brandMark = org.mark?.url
     ? h('img', { class: 'sidenav__mark', src: org.mark.url, alt: `${org.name} mark` })
@@ -722,29 +678,11 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
         ? h('img', { class: 'sidenav__logo', src: org.logo.url, alt: `${org.name} logo` })
         : h('div', { class: 'sidenav__name' }, org.name),
       brandMark,
+      signOut,
       collapse,
     ),
-    labelRow('Quick actions', quickActions.length),
-    quickGrid,
     guide,
     railTree,
-    // The deck is a fixed set of sections, so the one thing worth a primary
-    // action here is starting the presentation.
-    h(
-      'div',
-      { class: 'sidenav__foot' },
-      h(
-        'button',
-        { class: 'snav-cta', type: 'button', onclick: startPresenting },
-        h('span', { class: 'snav-cta__fab' }, icon('present', { class: 'ic' })),
-        h(
-          'span',
-          { class: 'snav-cta__text' },
-          h('span', { class: 'snav-cta__title' }, 'Present deck'),
-          h('span', { class: 'snav-cta__hint' }, 'Fullscreen, no controls'),
-        ),
-      ),
-    ),
     flyout,
     railTip,
   );

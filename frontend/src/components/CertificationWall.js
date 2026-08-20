@@ -98,10 +98,13 @@ function arcLayout(w, height, count) {
     const full = Math.acos(clamp((cy - height) / g.r, -1, 1));
     const ex = cx + g.r * Math.sin(full);
     const ey = cy - g.r * Math.cos(full);
+    /* pitch = arc-span / (m-1): first icon sits at -tMax, last at +tMax,
+       every slot equally spaced with no dead gap at either end. */
+    const pitch = (2 * g.tMax) / Math.max(1, m - 1);
     const ring = {
       r: g.r,
       tMax: g.tMax,
-      pitch: (2 * g.tMax) / (m - 2),
+      pitch,
       count: m,
       from,
       dur: RINGS[i].dur,
@@ -113,10 +116,10 @@ function arcLayout(w, height, count) {
     return ring;
   });
 
-  const halfBox = Math.min(430, a - 46) + size * 0.5;
+  const halfBox = Math.min(380, a - 90);
   return {
     cx, cy, size, rings,
-    keepOut: { x0: cx - halfBox, x1: cx + halfBox, y0: 0.5 * height - size * 0.5 },
+    keepOut: { x0: cx - halfBox, x1: cx + halfBox, y0: height - 200 },
   };
 }
 
@@ -328,18 +331,29 @@ export function CertificationWall(block, { editing = false } = {}) {
     const { cx, cy, size, keepOut } = plan;
     let slot = 0;
     for (const g of plan.rings) {
-      const span = 2 * g.tMax + 2 * g.pitch;
+      const halfPitch = g.pitch * 0.5;
+      const span = 2 * g.tMax + g.pitch;
       const move = still() ? 0 : (elapsed / g.dur) * g.pitch * g.dir;
       for (let j = 0; j < g.count; j += 1) {
         const el = pins[slot + j];
         if (!el) continue;
-        const raw = j * g.pitch + move;
-        const t = -g.tMax - g.pitch + (((raw % span) + span) % span);
+        const raw = -g.tMax + j * g.pitch + move;
+        const t = ((raw + g.tMax + halfPitch) % span + span) % span - (g.tMax + halfPitch);
         const x = cx + g.r * Math.sin(t);
         const y = cy - g.r * Math.cos(t);
-        const ends = Math.min(g.tMax + g.pitch - t, t + g.tMax + g.pitch) / g.pitch;
-        const clear = Math.max(keepOut.x0 - x, x - keepOut.x1, keepOut.y0 - y);
-        let o = clamp(ends, 0, 1) * clamp(clear / 30, 0, 1);
+
+        /* Smooth fade at the extreme ends of the arc */
+        const ends = clamp((g.tMax + halfPitch - Math.abs(t)) / g.pitch, 0, 1);
+
+        /* Fade if icon enters the central text box near the bottom */
+        let clear = 1;
+        if (y > keepOut.y0 && x > keepOut.x0 && x < keepOut.x1) {
+          const dx = Math.min(x - keepOut.x0, keepOut.x1 - x);
+          const dy = y - keepOut.y0;
+          clear = clamp(Math.min(dx, dy) / 30, 0, 1);
+        }
+
+        let o = ends * clear;
         if (hoverAt >= 0 && hoverAt !== slot + j) o *= 0.28;
         el.style.transform = `translate3d(${(x - size / 2).toFixed(1)}px, ${(y - size / 2).toFixed(1)}px, 0)`;
         el.style.opacity = o.toFixed(3);

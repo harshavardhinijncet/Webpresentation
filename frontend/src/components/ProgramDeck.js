@@ -5,9 +5,15 @@ import { videoControls } from '../utils/videoControls.js';
 
 /**
  * Programs: one card that opens into the whole set, each of those into its
- * films, each film into the screen.
+ * films and photographs, each of those into the screen.
  *
- * Four states on one slide — cover, row, gallery, player.
+ * Four states on one slide — cover, row, gallery, viewer.
+ *
+ * A programme's evidence is not always film. Ignite Coder has five photographs
+ * and no reel, so the gallery holds both kinds and they open the same way: the
+ * viewer takes a film or a photograph, and the only difference is what it mounts.
+ * That is also why the cards no longer carry a count — a card reading "—" told
+ * the room a programme had nothing, when it had five pictures.
  *
  * The fan-out is a FLIP. The row is the cards' real layout; the stack is a
  * transform measured off it, so opening is just releasing every card back to
@@ -48,14 +54,18 @@ export function ProgramDeck(block, { editing = false } = {}) {
   }
   const root = h('div', { class: 'pg-root ph-root' });
 
-  /* ------------------------------------------------------------ the player */
+  /* ------------------------------------------------------------ the viewer */
   const frame = h('div', { class: 'pg-player__frame' });
   const playerTitle = h('span', { class: 'pg-player__title' });
+  /* Named for where it goes back to, not for what it leaves. "Back to films"
+     was wrong in front of a wall of photographs, and a presenter reads the
+     destination. */
+  const playerBackText = h('span', {}, 'Back');
 
   const closePlayer = () => {
     // Unmount, don't hide — a hidden iframe keeps playing behind the gallery.
     frame.replaceChildren();
-    player.classList.remove('is-portal');
+    player.classList.remove('is-portal', 'is-still', 'is-lit');
     if (player.parentNode !== root) root.appendChild(player);
     root.classList.remove('is-playing');
   };
@@ -63,14 +73,35 @@ export function ProgramDeck(block, { editing = false } = {}) {
   const player = h('div', { class: 'pg-player' },
     h('div', { class: 'pg-bar' },
       h('button', { class: 'pg-back', type: 'button', onclick: closePlayer },
-        icon('chevron-left', { class: 'ic ic--xs' }), h('span', {}, 'Back to films')),
+        icon('chevron-left', { class: 'ic ic--xs' }), playerBackText),
       playerTitle,
     ),
     frame,
   );
 
+  /**
+   * The way out has to be visible.
+   *
+   * The bar was drawn at zero opacity and revealed on `:hover` alone, which is
+   * no help to a presenter who has just opened a film with a click and now sees
+   * a full-screen picture and no way back — the control existed but nothing said
+   * so. It is lit on open and stays lit for a few seconds, and any movement over
+   * the film brings it back; it still fades so it is not sitting on the footage
+   * for the whole run. A photograph keeps it for good, since there is no footage
+   * for it to be in the way of.
+   */
+  let litTimer = null;
+  const lightBar = () => {
+    player.classList.add('is-lit');
+    clearTimeout(litTimer);
+    if (player.classList.contains('is-still')) return;
+    litTimer = setTimeout(() => player.classList.remove('is-lit'), 3400);
+  };
+  player.addEventListener('pointermove', lightBar);
+
   const play = (video) => {
     playerTitle.textContent = video.title || '';
+    player.classList.remove('is-still');
     /* Built first, so the control bar can be handed the element it drives: it
        has to know whether it is talking to a <video> it can call directly or to
        a cross-origin frame it can only post messages at. */
@@ -93,10 +124,55 @@ export function ProgramDeck(block, { editing = false } = {}) {
        the body it answers to the viewport and covers the display. The deck bar
        is fixed in the body too, at a higher z-index, so Prev / Next / Exit stay
        on top and clickable. */
+    portal();
+  };
+
+  /**
+   * A photograph, opened the same way a film is: same viewer, same way back.
+   * Contained rather than cropped — a photograph is the content here, not a
+   * backdrop, and `cover` would slice the ends off the two landscape files.
+   */
+  const show = (photo, label) => {
+    /* The programme's name when the picture has no caption of its own: the bar is
+       the only thing naming what is on screen once the gallery is behind it. */
+    playerTitle.textContent = photo.caption || label || '';
+    const still = h('img', {
+      class: 'pg-player__img', src: media(`/uploads/${encodeURI(photo.src)}`),
+      alt: photo.caption || label || '',
+    });
+    /* Capped at twice its own pixels once the file has decoded. The sources are
+       800px wide, so at natural size they sit as a small rectangle in the middle
+       of a 1600px display, and unbounded they would be blown up to whatever the
+       screen is and go soft. Two-up puts an 800px file at 1600 — full width, and
+       the last size it is still honestly sharp at. */
+    const cap = () => {
+      const { naturalWidth: nw, naturalHeight: nh } = still;
+      if (!nw || !nh) return;
+      still.style.maxWidth = `min(100%, ${nw * 2}px)`;
+      still.style.maxHeight = `min(100%, ${nh * 2}px)`;
+    };
+    /* Both, not just the event: the second time a photograph is opened it comes
+       from cache and is `complete` before the listener is attached, so `load`
+       never fires again and the cap is never applied. */
+    still.addEventListener('load', cap);
+    if (still.complete) cap();
+    frame.replaceChildren(still);
+    player.classList.add('is-still');
+    portal();
+  };
+
+  /* Out of the slide entirely. FitSlide scales the slide with a transform, which
+     becomes the containing block for anything fixed inside it — so a viewer that
+     lives in the section can only ever fill the slide, and when the window is not
+     16:9 the slide itself is letterboxed. On the body it answers to the viewport
+     and covers the display. The deck bar is fixed in the body too, at a higher
+     z-index, so Prev / Next / Exit stay on top and clickable. */
+  function portal() {
     if (player.parentNode !== document.body) document.body.appendChild(player);
     player.classList.add('is-portal');
     root.classList.add('is-playing');
-  };
+    lightBar();
+  }
 
   /* ----------------------------------------------------------- the gallery */
   const galleryTitle = h('h3', { class: 'pg-gal__title' });
@@ -113,23 +189,50 @@ export function ProgramDeck(block, { editing = false } = {}) {
     galleryGrid,
   );
 
+  /** One tile, whichever kind of thing it stands for. */
+  const tile = (item, i, program) => {
+    const shot = h('span', { class: 'pg-shot' });
+    if (item.kind === 'film') {
+      if (item.video.youtube) {
+        /* No poster may be load-bearing: they come from i.ytimg.com and there is
+           no network at presentation time, so a failed one takes itself out and
+           the tile falls back to type on a dark plate. */
+        const img = h('img', { src: ytPoster(item.video.youtube), alt: '', loading: 'lazy' });
+        img.addEventListener('error', () => img.remove());
+        shot.appendChild(img);
+      }
+      shot.appendChild(h('span', { class: 'pg-shot__play' }, icon('play-circle', { class: 'ic' })));
+    } else {
+      shot.appendChild(h('img', {
+        src: media(`/uploads/${encodeURI(item.photo.src)}`),
+        alt: item.title, loading: i < 6 ? 'eager' : 'lazy', decoding: 'async',
+      }));
+      shot.appendChild(h('span', { class: 'pg-shot__play pg-shot__play--still' },
+        icon('expand', { class: 'ic' })));
+    }
+    if (item.title) shot.appendChild(h('span', { class: 'pg-shot__name' }, item.title));
+    return h('button', {
+      class: `pg-vid pg-vid--${item.kind}`, type: 'button',
+      /* Read by the tile's entrance animation, so they arrive in reading order
+         rather than all at once. */
+      style: { '--i': String(i) },
+      onclick: () => (item.kind === 'film' ? play(item.video) : show(item.photo, program.name)),
+    }, shot);
+  };
+
   const openGallery = (program) => {
     galleryTitle.textContent = program.name;
-    const videos = program.videos || [];
-    galleryGrid.style.setProperty('--pg-cols', String(galleryShape(videos.length)));
-    galleryGrid.replaceChildren(...(videos.length
-      ? videos.map((v) => {
-          const shot = h('span', { class: 'pg-shot' });
-          if (v.youtube) {
-            const img = h('img', { src: ytPoster(v.youtube), alt: '', loading: 'lazy' });
-            img.addEventListener('error', () => img.remove());
-            shot.appendChild(img);
-          }
-          shot.appendChild(h('span', { class: 'pg-shot__play' }, icon('play-circle', { class: 'ic' })));
-          shot.appendChild(h('span', { class: 'pg-shot__name' }, v.title || program.name));
-          return h('button', { class: 'pg-vid', type: 'button', onclick: () => play(v) }, shot);
-        })
-      : [h('p', { class: 'pg-gal__none' }, `No films for ${program.name} yet.`)]));
+    playerBackText.textContent = `Back to ${program.name}`;
+    /* Films first, then photographs: where a programme has both, the film is the
+       thing to open. */
+    const items = [
+      ...(program.videos || []).map((v) => ({ kind: 'film', video: v, title: v.title || program.name })),
+      ...(program.photos || []).map((p) => ({ kind: 'still', photo: p, title: p.caption || '' })),
+    ];
+    galleryGrid.style.setProperty('--pg-cols', String(galleryShape(items.length)));
+    galleryGrid.replaceChildren(...(items.length
+      ? items.map((item, i) => tile(item, i, program))
+      : [h('p', { class: 'pg-gal__none' }, `Nothing for ${program.name} yet.`)]));
     root.classList.add('is-gallery');
   };
 
@@ -140,9 +243,6 @@ export function ProgramDeck(block, { editing = false } = {}) {
         ? h('img', { src: media(`/uploads/${encodeURI(p.logo)}`), alt: p.name })
         : h('b', {}, p.name.slice(0, 2).toUpperCase())),
       h('span', { class: 'pg-card__name' }, p.name),
-      h('span', { class: 'pg-card__count' }, (p.videos || []).length
-        ? `${p.videos.length} film${p.videos.length === 1 ? '' : 's'}`
-        : '—'),
     );
     card.addEventListener('click', () => {
       if (root.classList.contains('is-fanned')) openGallery(p);

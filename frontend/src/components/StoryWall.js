@@ -1,4 +1,4 @@
-import { h } from '../utils/dom.js';
+import { h, svg } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
 
@@ -34,15 +34,45 @@ const STEP = 438;
 const WINGS = 1;
 const MAX_ENLARGE = 2;
 
-/** The headline, split so each line can be set differently. */
+/* The line the cards hang from is a shallow parabola that *sags* — its lowest
+   point is the middle of the slide and it climbs away to both ends, which is what
+   a wire strung between two walls actually does. `riseAt` gives the climb above
+   the trough at a given distance out from the centre. Wire and cards are both
+   drawn from this one number, which is what keeps every card's top edge on the
+   curve without anything being measured. */
+const BEND = 0.000164;
+const riseAt = (x) => BEND * x * x;
+/* Half the tangent, not the whole of it: the true slope at one step out is 3.6°
+   and reads as a card blown over rather than one hung on a sloping line. Cards
+   lean into the valley, so the sign is against the direction of travel. */
+const TILT = 2.8;
+/* Half the drawn length of the wire, and the stroke room kept above its ends. */
+const WIRE_SPAN = 740;
+const WIRE_LIP = 6;
+
+/**
+ * The headline, split so each line can be set differently.
+ *
+ * It breaks at a dash or at the joining word — "The Legacy of Babji Neelam" sets
+ * as "THE LEGACY" over "OF BABJI NEELAM", and the joining word stays with the
+ * second line where it belongs. The last word before the break takes the accent
+ * colour, which puts the weight on the subject rather than on the article in
+ * front of it.
+ */
 function titleLines(raw) {
   const text = String(raw || 'Success Stories').replace(/[—–-]/g, '—');
-  const [head, tail] = text.split('—').map((s) => s.trim());
+  const dash = text.indexOf('—');
+  const joiner = /\s(of|for|at|in)\s/i.exec(text);
+  const cut = dash >= 0
+    ? { at: dash, resume: dash + 1 }
+    : (joiner ? { at: joiner.index, resume: joiner.index + 1 } : null);
+  const head = (cut ? text.slice(0, cut.at) : text).trim();
+  const name = cut ? text.slice(cut.resume).trim() : '';
   const words = (head || 'Success Stories').split(/\s+/);
   return {
     lead: words.length > 1 ? words.slice(0, -1).join(' ') : '',
     accent: words[words.length - 1] || '',
-    name: tail || '',
+    name,
   };
 }
 
@@ -116,12 +146,13 @@ export function StoryWall(block, { editing = false } = {}) {
       shot.style.maxHeight = `min(100%, ${nh * MAX_ENLARGE}px)`;
     });
 
-    /* The pin and its cord stay outside the swaying body, because a pin does not
-       swing — the card hangs from it. Putting them inside would have the whole
-       fixture rock, which reads as the wall moving rather than the picture. */
+    /* The clip stays outside the swaying body, because a clip does not swing —
+       the card hangs from it. Putting it inside would have the whole fixture
+       rock, which reads as the wall moving rather than the picture. It straddles
+       the wire and the card's top edge, so there is no cord: the card is held
+       against the line, not suspended below it. */
     const card = h('article', { class: 'sw-c' },
-      h('span', { class: 'sw-c__pin', 'aria-hidden': 'true' }),
-      h('span', { class: 'sw-c__cord', 'aria-hidden': 'true' }),
+      h('span', { class: 'sw-c__clip', 'aria-hidden': 'true' }),
       h('div', {
         class: 'sw-c__body',
         style: REDUCED?.matches ? {} : {
@@ -152,9 +183,30 @@ export function StoryWall(block, { editing = false } = {}) {
   });
 
   /* The wire, drawn once behind the row. It only shows when the deck is dealt —
-     folded, every pin is in the same place and a rail through one point is just a
-     line across the slide. */
-  const wire = h('span', { class: 'sw-wire', 'aria-hidden': 'true' });
+     folded, every clip is in the same place and a rail through one point is just
+     a line across the slide.
+
+     A quadratic Bézier whose control point sits twice the sag below its two ends
+     passes through exactly the parabola `riseAt` describes — not an approximation
+     of it — so the drawn line and the placed cards cannot drift apart.
+
+     The lift is handed to CSS rather than written there, because the height of the
+     box above its trough is `riseAt(WIRE_SPAN)` and only this file knows it. Write
+     it twice and one copy goes stale the first time the bend is tuned. */
+  const wireRise = riseAt(WIRE_SPAN);
+  const wire = svg('svg', {
+    class: 'sw-wire', 'aria-hidden': 'true',
+    width: WIRE_SPAN * 2, height: wireRise + WIRE_LIP * 2,
+    viewBox: `0 0 ${WIRE_SPAN * 2} ${wireRise + WIRE_LIP * 2}`,
+    style: { '--wire-lift': `${(wireRise + WIRE_LIP).toFixed(1)}px` },
+  },
+    svg('path', {
+      d: `M 0 ${WIRE_LIP}`
+        + ` Q ${WIRE_SPAN} ${(WIRE_LIP + wireRise * 2).toFixed(1)}`
+        + ` ${WIRE_SPAN * 2} ${WIRE_LIP}`,
+      fill: 'none',
+    }),
+  );
   const deck = h('div', { class: 'sw-deck' }, wire, ...cards);
 
   /**
@@ -180,11 +232,16 @@ export function StoryWall(block, { editing = false } = {}) {
         card.classList.toggle('is-centre', away === 0);
         return;
       }
-      /* No vertical translate and the origin is the top edge, so scaling a
-         neighbour shrinks it downward from its pin rather than about its middle —
-         which is what keeps every top edge on the wire. */
+      /* The origin is the top edge, so scaling a neighbour shrinks it downward
+         from its clip rather than about its middle, and the vertical offset lifts
+         each card by the curve's own climb at that card's distance out — the
+         centre card sits in the trough and the wings ride up the sides. Rotation
+         comes last in the string and so is applied about that same top-centre
+         point: the clip stays on the line and the card swings under it. */
+      const lift = riseAt(d * STEP);
       card.style.transform =
-        `translateX(-50%) translateX(${d * STEP}px) rotate(0deg) scale(${away === 0 ? 1 : 0.84})`;
+        `translateX(-50%) translateX(${d * STEP}px) translateY(${(-lift).toFixed(1)}px)`
+        + ` rotate(${(-d * TILT).toFixed(2)}deg) scale(${away === 0 ? 1 : 0.84})`;
       card.style.opacity = away <= WINGS ? (away === 0 ? '1' : '0.5') : '0';
       card.style.zIndex = String(40 - away);
       card.style.pointerEvents = away <= WINGS ? 'auto' : 'none';
@@ -232,7 +289,6 @@ export function StoryWall(block, { editing = false } = {}) {
       accent ? h('span', { class: 'sw-title__accent' }, accent) : null,
       name ? h('span', { class: 'sw-title__name' }, name) : null,
     ),
-    h('p', { class: 'sw-lead' }, `${count} moments from ten years of building Technical Hub.`),
     h('button', {
       class: 'sw-open', type: 'button',
       onclick: () => (open ? fold() : deal()),

@@ -44,8 +44,8 @@ export const THEMES = {
 export const FONTS = {
   sans: {
     id: 'sans',
-    label: 'Clean sans serif',
-    stack: '"Segoe UI", Arial, sans-serif',
+    label: 'Open Sans',
+    stack: "'Open Sans', 'Segoe UI', Arial, sans-serif",
     scale: 1,
   },
 };

@@ -1,4 +1,4 @@
-import { h, svg } from '../utils/dom.js';
+import { h, svg, render } from '../utils/dom.js';
 import { inlineRich } from '../utils/format.js';
 import { icon } from '../utils/icons.js';
 
@@ -209,6 +209,35 @@ function nameLine(text, { tone, strokeDelay, fillDelay }) {
   return node;
 }
 
+/**
+ * Hosts that refuse to be shown inside another site.
+ *
+ * Measured, not guessed: Instagram and Facebook answer with X-Frame-Options: DENY,
+ * YouTube with SAMEORIGIN, LinkedIn blocks framing (and answers a bot with HTTP 999),
+ * and academy.oracle.com 403s a direct fetch.
+ *
+ * Checked before the frame is built rather than after. The obvious approach - create the
+ * frame, wait for `load`, fall back if it never fires - does not work: Chrome loads its
+ * own error page into the refused frame and fires `load` for that, so the frame sits
+ * there showing a broken-document icon and looks like a fault in the deck. Deciding up
+ * front means the panel is right immediately, with no blank second.
+ *
+ * A host is only here because it was checked. Take one out and it gets a real frame.
+ */
+const REFUSES_FRAMING = [
+  'facebook.com',
+  'instagram.com',
+  'linkedin.com',
+  'youtube.com',
+  'academy.oracle.com',
+];
+
+const framingRefused = (href) => {
+  let host;
+  try { host = new URL(href).hostname.replace(/^www\./, ''); } catch { return false; }
+  return REFUSES_FRAMING.some((h) => host === h || host.endsWith('.' + h));
+};
+
 export function LeaderHero(block, { editing = false } = {}) {
   const tags = (block.tags || []).slice(0, TAG_SPOTS.length);
   const portraitUrl = block.asset?.url || '/uploads/babji_hero_crop.png';
@@ -241,6 +270,156 @@ export function LeaderHero(block, { editing = false } = {}) {
       : null,
   );
 
+  /* ------------------------------------------------------------- the links
+     Each one opens in place with a back button, rather than throwing the presenter
+     out to a browser tab mid-deck.
+
+     What it opens is a local card, not the live site. Every one of these five refuses
+     to be framed - measured, not assumed: Instagram and Facebook send
+     X-Frame-Options: DENY, YouTube sends SAMEORIGIN, LinkedIn answers a bot with 999
+     and blocks framing anyway, and academy.oracle.com 403s. An iframe would be five
+     blank rectangles. And the deck presents with no network at all, so even a
+     permissive site would be blank on the night.
+
+     So the panel carries what is worth saying about the destination and offers the
+     real URL for anyone with a connection. The interaction is the one asked for; the
+     content is the part that can survive a room with no internet. */
+  const viewer = h('div', { class: 'lh-view', hidden: true });
+  let openLink = null;
+
+  const closeViewer = () => {
+    openLink = null;
+    viewer.classList.remove('is-open');
+    /* Drop the src, not just the panel: a frame left loaded keeps the site running -
+       audio, timers, network - behind a slide the presenter has already moved past. */
+    const frame = viewer.querySelector('.lh-view__frame');
+    if (frame) frame.removeAttribute('src');
+    window.setTimeout(() => { if (!viewer.classList.contains('is-open')) viewer.hidden = true; }, 240);
+  };
+
+  const openViewer = (link) => {
+    openLink = link;
+    const host = (() => {
+      try { return new URL(link.href).hostname.replace(/^www\./, ''); } catch { return link.href; }
+    })();
+
+    /* A real frame onto the site, built the same way the Platforms stage builds its
+       one: same sandbox, same referrer policy, same New-tab escape. allow-same-origin
+       is in the list because without it the site cannot set its own cookie and any
+       login inside the frame fails.
+
+       Worth knowing what it will do: all five of these destinations send a header that
+       forbids framing - Instagram and Facebook DENY, YouTube SAMEORIGIN, LinkedIn
+       blocks it outright, academy.oracle.com 403s - so the frame will come up empty
+       for them, and there is no network at presentation time either. The strip under
+       the frame says so, and New tab is the way out. Any URL that does permit framing
+       renders here properly. */
+    const refused = framingRefused(link.href);
+
+    /* What the site will not let us do, said plainly, with the control that does work.
+       No empty frame and no waiting: the host list above is checked first. */
+    const blockedPanel = () => h(
+      'div',
+      { class: 'lh-view__blocked' + (link.wide ? ' lh-view__blocked-word' : '') },
+      linkGlyph(link, 'ic'),
+      h('h3', {}, link.label || host),
+      h(
+        'p',
+        {},
+        (link.note ? link.note + ' ' : '')
+          + host + ' does not allow its pages to be shown inside another site, '
+          + 'so it opens in a browser instead.',
+      ),
+      h(
+        'a',
+        {
+          class: 'lh-view__out',
+          href: link.href,
+          target: '_blank',
+          rel: 'noopener noreferrer',
+        },
+        icon('arrow-up-right', { class: 'ic ic--xs' }),
+        h('span', {}, 'Open ' + host),
+      ),
+      h('p', { class: 'lh-view__url' }, link.href),
+    );
+
+    const frame = refused ? null : h('iframe', {
+      class: 'lh-view__frame',
+      title: link.label || host,
+      src: link.href,
+      sandbox: 'allow-same-origin allow-scripts allow-forms allow-popups'
+        + ' allow-top-navigation-by-user-activation',
+      referrerpolicy: 'no-referrer-when-downgrade',
+      loading: 'lazy',
+    });
+
+    render(
+      viewer,
+      h(
+        'div',
+        { class: 'lh-view__bar' },
+        h(
+          'button',
+          { class: 'lh-view__back', type: 'button', 'data-tip': 'Back to the profile', onclick: closeViewer },
+          icon('chevron-left', { class: 'ic ic--sm' }),
+          h('span', {}, 'Back'),
+        ),
+        h('span', {
+          class: 'lh-view__mark lh-view__mark--sm'
+            + (link.wide ? ' lh-view__mark--word' : ''),
+        }, linkGlyph(link, 'ic--xs')),
+        h('span', { class: 'lh-view__crumb' }, link.label || host),
+        h('span', { class: 'lh-view__host' }, host),
+        h(
+          'a',
+          {
+            class: 'lh-view__out',
+            href: link.href,
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            'data-tip': 'Open in a new tab if the site refuses to run in a frame',
+          },
+          icon('arrow-up-right', { class: 'ic ic--xs' }),
+          h('span', {}, 'New tab'),
+        ),
+      ),
+      h('div', { class: 'lh-view__stage' }, frame || blockedPanel()),
+      h('p', { class: 'lh-view__hint' }, link.note || ''),
+    );
+    viewer.hidden = false;
+    requestAnimationFrame(() => viewer.classList.add('is-open'));
+
+    /* A backstop for a host that is not on the list but still refuses, or is simply
+       unreachable - which every one of them is at presentation time, since the deck
+       runs with no network. Chrome fires `load` for its own error page, so a frame that
+       loaded is not proof of anything; what this catches is the frame that never
+       resolves at all. */
+    if (frame) {
+      let landed = false;
+      frame.addEventListener('load', () => { landed = true; });
+      window.setTimeout(() => {
+        if (landed || openLink !== link) return;
+        const stage = viewer.querySelector('.lh-view__stage');
+        if (stage) render(stage, blockedPanel());
+      }, 2600);
+    }
+  };
+
+  /* The supplied brand artwork if there is any, the library glyph if not. Drawn as an
+     image rather than masked to the accent: masking would flatten LinkedIn blue,
+     YouTube red and Instagram's gradient to one flat colour, which is the opposite of
+     what supplying a real logo is for. */
+  const linkGlyph = (link, size) => (link.logo
+    ? h('img', {
+        class: 'lh-logo',
+        src: `/uploads/${link.logo.split('/').map(encodeURIComponent).join('/')}`,
+        alt: '',
+        loading: 'lazy',
+        decoding: 'async',
+      })
+    : icon(link.icon || 'link', { class: 'ic ' + size }));
+
   const socials = (block.links || []).length
     ? h(
         'div',
@@ -249,20 +428,47 @@ export function LeaderHero(block, { editing = false } = {}) {
         h(
           'div',
           { class: 'leader-hero__socials' },
-          ...block.links.map((link) =>
-            h(
-              'a',
+          /* One click, one destination. A host that can be framed opens here, in the
+             panel, with a back button. A host that cannot is a plain link that goes
+             straight to the page — there is no point standing a panel in front of it
+             whose only content is a second button saying "open this page".
+
+             So the element itself differs: an anchor for the ones that leave, a button
+             for the ones that stay. Not a button that sometimes navigates, which reads
+             wrong to a keyboard and to a screen reader both. */
+          ...block.links.map((link) => {
+            const glyph = linkGlyph(link, 'ic--sm');
+            const cls = 'leader-hero__social ph-social'
+              + (link.wide ? ' leader-hero__social--word' : '');
+            const tip = link.label || 'Profile';
+
+            if (framingRefused(link.href)) {
+              return h(
+                'a',
+                {
+                  class: cls,
+                  href: link.href,
+                  target: '_blank',
+                  rel: 'noopener noreferrer',
+                  'data-tip': tip,
+                  'aria-label': tip,
+                },
+                glyph,
+              );
+            }
+
+            return h(
+              'button',
               {
-                class: 'leader-hero__social ph-social',
-                href: link.href,
-                target: '_blank',
-                rel: 'noopener noreferrer',
-                title: link.label || undefined,
-                'aria-label': link.label || 'Social profile',
+                class: cls,
+                type: 'button',
+                'data-tip': tip,
+                'aria-label': tip,
+                onclick: () => (openLink === link ? closeViewer() : openViewer(link)),
               },
-              icon(link.icon || 'link', { class: 'ic ic--sm' }),
-            ),
-          ),
+              glyph,
+            );
+          }),
         ),
       )
     : null;
@@ -356,5 +562,5 @@ export function LeaderHero(block, { editing = false } = {}) {
     figure,
   );
 
-  return h('div', { class: 'leader-hero ph-root' }, stage);
+  return h('div', { class: 'leader-hero ph-root' }, stage, viewer);
 }
