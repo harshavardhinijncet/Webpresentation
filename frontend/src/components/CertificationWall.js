@@ -482,7 +482,7 @@ export function CertificationWall(block, { editing = false } = {}) {
         ),
       );
 
-      /* Center Stage: Enlarged Logo with Morph Animation & Halo Glow */
+      /* Center Stage: Multi-Icon Synchronized 3D Stage */
       const centerStage = h('div', {
         class: 'cs-detail__center-stage',
         onwheel: (e) => {
@@ -495,15 +495,29 @@ export function CertificationWall(block, { editing = false } = {}) {
           }
         },
       },
-        /* Floating background blurred badge */
-        h('div', { class: 'cs-detail__bg-float' },
-          badgeArt(nextCred, 'cs-detail__bg-float-img', src),
+        /* Previous Icon (Sliding out to the left) */
+        h('div', {
+          class: 'cs-icon-node cs-icon-node--prev',
+          onclick: () => { pick = prevIdx; drawSkills(); },
+          title: `Previous: ${prevCred.name}`,
+        },
+          badgeArt(prevCred, 'cs-icon-node__img', src),
+          h('span', { class: 'cs-icon-node__label' }, prevCred.name),
         ),
-        /* Main Centered Badge with Morph Transition and Halo Rings */
-        h('div', { class: 'cs-detail__main-badge cs-detail__main-badge--morph' },
+        /* Main Active Centered Icon (Soft blur-to-focus & breathing scale) */
+        h('div', { class: 'cs-icon-node cs-icon-node--main' },
           h('span', { class: 'cs-detail__halo-ring' }),
           h('span', { class: 'cs-detail__halo-ring cs-detail__halo-ring--outer' }),
           badgeArt(c, 'cs-detail__badge-img cs-morph-img', src),
+        ),
+        /* Next Incoming Icon (Sliding in from the right) */
+        h('div', {
+          class: 'cs-icon-node cs-icon-node--next',
+          onclick: () => { pick = nextIdx; drawSkills(); },
+          title: `Next: ${nextCred.name}`,
+        },
+          badgeArt(nextCred, 'cs-icon-node__img', src),
+          h('span', { class: 'cs-icon-node__label' }, nextCred.name),
         ),
       );
 
