@@ -12225,9 +12225,12 @@ body.is-presenting .vc {
    every presentation.
    ========================================================================== */
 
+/* ==========================================================================
+   Video Resumes — a hundred and sixteen students, by name
+   ========================================================================== */
+
 .vr-root {
   display: flex; flex-direction: column;
-  /* Same flex-basis trap as the reel — see `.ev-root`. */
   flex: 0 0 auto; height: 860px; max-height: 860px;
   overflow: hidden;
   border-radius: var(--radius-lg);
@@ -12238,42 +12241,21 @@ body.is-presenting .vc {
 
 .vr-head {
   flex: 0 0 auto;
-  display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
-  align-items: end; column-gap: 30px; padding: 24px 30px 16px;
+  padding: 20px 30px 10px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.vr-eyebrow {
-  margin: 0 0 8px; color: var(--nav-second-ink, var(--accent-ink));
-  font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
-}
-.vr-title {
-  margin: 0; color: var(--nav-accent-ink, var(--accent-ink));
-  font-size: 40px; font-weight: 800; letter-spacing: -0.028em; line-height: 1.03;
-}
-.vr-rule {
-  display: block; height: 4px; width: 88px; margin-top: 12px; border-radius: 2px;
-  background: linear-gradient(to right,
-    var(--nav-accent, #008638) 0 58%, var(--brand-accent, #FFBB00) 58% 100%);
-  transform-origin: left center;
-  animation: ev-draw 640ms cubic-bezier(.2,.7,.3,1) both;
-}
-.vr-lead {
-  margin: 0 0 6px; max-width: 56ch; color: var(--muted);
-  font-size: 15px; line-height: 1.5;
-}
-.vr-stats { display: flex; gap: 14px; }
-.vr-stat {
-  display: flex; flex-direction: column; align-items: center; line-height: 1;
-  padding: 10px 18px; border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--nav-accent, #008638) 7%, transparent);
-}
-.vr-stat strong {
-  font-size: 32px; font-weight: 800; letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums; color: var(--nav-accent-ink, var(--accent-ink));
-}
-.vr-stat span {
-  margin-top: 6px; font-size: 11px; font-weight: 700;
-  letter-spacing: 0.09em; text-transform: uppercase;
-  color: var(--nav-accent-ink, var(--accent-ink)); opacity: 0.75;
+.vr-title--center {
+  margin: 0;
+  color: var(--nav-accent-ink, #008638);
+  font-family: 'Open Sans', var(--font), sans-serif;
+  font-size: 34px;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 /* -------------------------------------------------------------- the tools -- */
@@ -12287,109 +12269,81 @@ body.is-presenting .vc {
   border-radius: 999px; background: var(--surface); color: var(--muted);
 }
 .vr-search:focus-within {
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-  color: var(--nav-accent-ink, var(--accent-ink));
+  border-color: var(--nav-accent-ink, #008638);
+  color: var(--nav-accent-ink, #008638);
 }
 .vr-search__input {
-  width: 190px; border: 0; background: none; outline: none;
+  width: 170px; border: 0; background: none; outline: none;
   color: var(--ink, #111827); font: inherit; font-size: 14px;
 }
 .vr-search__input::-webkit-search-cancel-button { filter: grayscale(1); }
 
-.vr-strip { display: flex; gap: 4px; flex-wrap: wrap; min-width: 0; }
+.vr-strip { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
 .vr-letter {
-  min-width: 30px; padding: 5px 8px; border: 1px solid transparent;
-  border-radius: 8px; background: transparent; color: var(--muted);
+  min-width: 26px; padding: 4px 7px; border: 1px solid transparent;
+  border-radius: 7px; background: transparent; color: var(--muted);
+  font-family: 'Open Sans', var(--font), sans-serif;
   font-size: 13px; font-weight: 800; cursor: pointer;
   transition: color 140ms ease, background 140ms ease, border-color 140ms ease;
 }
 .vr-letter:hover { color: var(--ink, #111827); background: var(--page-bg); }
-.vr-letter.is-on {
-  color: #fff; background: var(--nav-accent-ink, var(--accent-ink));
-  border-color: var(--nav-accent-ink, var(--accent-ink));
+.vr-letter.is-on, .vr-letter.is-scroll-active {
+  color: #fff; background: var(--nav-accent-ink, #008638);
+  border-color: var(--nav-accent-ink, #008638);
+  box-shadow: 0 4px 12px rgba(0, 134, 56, 0.35);
 }
-.vr-letter:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
-
-.vr-note {
-  margin: 0 0 0 auto; flex: 0 0 auto; display: flex; align-items: center; gap: 12px;
-  color: var(--muted); font-size: 13px; white-space: nowrap;
-}
-.vr-note strong {
-  color: var(--nav-accent-ink, var(--accent-ink));
-  font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums;
-}
-.vr-note__clear {
-  display: flex; align-items: center; gap: 5px;
-  padding: 5px 11px; border: 1px solid var(--hairline, #e5e7eb);
-  border-radius: 999px; background: var(--surface); color: var(--muted);
-  font-size: 11.5px; font-weight: 700; cursor: pointer;
-  transition: color 140ms ease, border-color 140ms ease;
-}
-.vr-note__clear:hover {
-  color: var(--nav-accent-ink, var(--accent-ink));
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-}
+.vr-sep { color: #d1d5db; font-size: 12px; opacity: 0.6; user-select: none; }
 
 /* --------------------------------------------------------------- the wall -- */
-/* auto-fit, never auto-fill: auto-fill keeps a phantom empty column and a short
-   filtered result ends up filling 60% of the width. */
 .vr-wall {
   flex: 1 1 auto; min-height: 0;
-  /* Fixed track width, so the poster's height is an exact ratio of a known
-     number rather than something the grid has to infer. */
-  /* 176px is the track that lets eight of them plus their gaps fit the width the
-     wall really has. Not 1540: the vertical scrollbar takes 7px off it, and at
-     178px that was enough to drop the eighth column and leave 190px unused. */
-  display: grid; grid-template-columns: repeat(auto-fit, 176px);
-  /* Definite rows. Left on `auto` the track sized itself to the name alone and
-     every card came out 22px tall — 105px poster plus the name band and the two
-     borders is the real number, so it is stated rather than inferred. */
-  grid-auto-rows: 139px;
-  align-content: start; justify-content: center;
-  gap: 16px; padding: 18px 30px 22px;
-  overflow-y: auto; scrollbar-width: thin;
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 18px 30px 24px;
+  overflow-y: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none;
+  touch-action: pan-y;
 }
-.vr-wall::-webkit-scrollbar { width: 7px; }
-.vr-wall::-webkit-scrollbar-thumb { background: #d8dce1; border-radius: 999px; }
-.vr-none { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 14px; }
+.vr-wall::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.vr-none { margin: 0; color: var(--muted); font-size: 14px; text-align: center; }
+
+.vr-row {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+}
 
 .vr-card {
+  flex: 0 0 calc((100% - 5 * 16px) / 6);
+  width: calc((100% - 5 * 16px) / 6);
+  max-width: calc((100% - 5 * 16px) / 6);
   display: flex; flex-direction: column; min-width: 0; padding: 0;
   border: 1px solid var(--hairline, #e5e7eb); border-radius: var(--radius-sm);
   background: var(--surface); overflow: hidden; cursor: pointer; text-align: left;
-  transition: border-color 180ms ease, box-shadow 180ms ease;
-  animation: vr-card-in 460ms cubic-bezier(.2,.7,.3,1) both;
-  animation-delay: calc(var(--i, 0) * 22ms);
-}
-@keyframes vr-card-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
 }
 .vr-card:hover {
-  border-color: var(--nav-accent-ink, var(--accent-ink));
-  box-shadow: 0 12px 26px rgb(0 0 0 / 0.12);
+  border-color: var(--nav-accent-ink, #008638);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.14);
+  z-index: 2;
 }
-.vr-card:focus-visible { outline: 2px solid var(--nav-accent-ink, var(--accent-ink)); outline-offset: 2px; }
 
-/* An explicit height, not `aspect-ratio`. A box sized by aspect ratio off a
-   percentage width contributes nothing to intrinsic height, and the grid row
-   collapsed to the name — every card came out 28px tall with a 5px poster.
-   105px is 16:9 of the 186px track, so the ratio is still exact. */
-/* `flex: 0 0 105px`, not a plain height. The card is a flex column, so a height
-   alone still had `flex-shrink: 1` against it and the poster was squeezed to zero
-   before the name gave up a single pixel. 105px is 16:9 of the 186px track, so the
-   ratio stays exact. */
 .vr-card__shot {
-  position: relative; display: block; width: 100%;
-  flex: 0 0 99px; height: 99px;
+  position: relative; display: block; width: 100%; aspect-ratio: 16 / 9;
   background: #0f1216; overflow: hidden;
 }
-/* Under the poster, so it shows through when the thumbnail host is unreachable.
-   The poster is painted over it by document order. */
 .vr-card__mono {
   position: absolute; inset: 0; display: grid; place-items: center;
   color: var(--brand-accent, #FFBB00);
-  font-size: 30px; font-weight: 800; letter-spacing: 0.04em;
+  font-size: 26px; font-weight: 800; letter-spacing: 0.04em;
 }
 .vr-card__shot .fs-poster {
   position: relative; z-index: 1;
@@ -12404,11 +12358,11 @@ body.is-presenting .vc {
   width: 40px; height: 40px; padding: 10px; border-radius: 999px;
   background: var(--nav-accent, #008638); color: #fff;
 }
-.vr-card:hover .vr-card__play, .vr-card:focus-visible .vr-card__play { opacity: 1; }
+.vr-card:hover .vr-card__play { opacity: 1; }
 .vr-card__name {
-  padding: 9px 11px 11px; font-size: 13.5px; font-weight: 750; line-height: 1.25;
+  padding: 10px 12px 12px; font-size: 14px; font-weight: 800; line-height: 1.25;
   color: var(--ink, #111827);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center;
 }
 
 @media (prefers-reduced-motion: reduce) {

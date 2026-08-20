@@ -74,52 +74,87 @@ export function VideoResumes(block, { editing = false } = {}) {
 
   /* --------------------------------------------------------------- the wall */
   const wall = h('div', { class: 'vr-wall' });
-  const note = h('p', { class: 'vr-note' });
+  let currentScrollLetter = null;
+
+  wall.addEventListener('wheel', (e) => {
+    if (wall.scrollHeight > wall.clientHeight) {
+      const canScrollUp = wall.scrollTop > 0;
+      const canScrollDown = wall.scrollTop + wall.clientHeight < wall.scrollHeight - 1;
+      if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
+        e.preventDefault();
+        e.stopPropagation();
+        wall.scrollTop += e.deltaY;
+      }
+    }
+  }, { passive: false });
+
+  wall.addEventListener('scroll', () => {
+    if (letter !== null) return;
+    const cards = Array.from(wall.querySelectorAll('.vr-card'));
+    const containerTop = wall.getBoundingClientRect().top;
+    for (const card of cards) {
+      const rect = card.getBoundingClientRect();
+      if (rect.bottom > containerTop + 60) {
+        const char = card.dataset.letter;
+        if (char && char !== currentScrollLetter) {
+          currentScrollLetter = char;
+          updateActiveStripLetter(char);
+        }
+        break;
+      }
+    }
+  }, { passive: true });
+
+  function updateActiveStripLetter(activeChar) {
+    const letterBtns = strip.querySelectorAll('.vr-letter');
+    letterBtns.forEach((btn) => {
+      const isMatch = btn.dataset.letter === activeChar;
+      btn.classList.toggle('is-scroll-active', isMatch);
+    });
+  }
 
   function drawWall() {
     const list = shown();
     wall.textContent = '';
     wall.scrollTop = 0;
 
-    /* Filtered before it goes in: `replaceChildren` turns a null into the literal
-       text "null", where the `h` helper drops it. The count line read
-       "116 students null" until this was filtered. */
-    note.replaceChildren(...[
-      h('strong', {}, String(list.length)),
-      h('span', {}, list.length === 1 ? ' student' : ' students'),
-      letter || term ? h('button', {
-        class: 'vr-note__clear', type: 'button',
-        onclick: () => { letter = null; term = ''; search.value = ''; drawStrip(); drawWall(); },
-      }, icon('close', { class: 'ic ic--xs' }), 'Show all') : null,
-    ].filter(Boolean));
-
     if (!list.length) {
       wall.appendChild(h('p', { class: 'vr-none' }, 'No student matches that.'));
       return;
     }
 
-    list.forEach((p, i) => {
-      const shot = h('span', { class: 'vr-card__shot' },
-        posterImg(p.youtube, { eager: i < 18 }),
-        /* Under the poster, not instead of it: this is what the card falls back to
-           when the thumbnail host is unreachable, which is every presentation. */
-        h('span', { class: 'vr-card__mono', 'aria-hidden': 'true' }, initialsOf(p.display)),
-        h('span', { class: 'vr-card__play', 'aria-hidden': 'true' },
-          icon('play', { class: 'ic ic--sm' })),
-      );
-      const card = h('button', {
-        class: 'vr-card', type: 'button',
-        title: `Play ${p.display}`,
-        style: REDUCED?.matches ? {} : { '--i': String(Math.min(i, 30)) },
-        // The arrows walk what the wall is showing, so the index is into `list`.
-        onclick: () => stage.open(list.map((q) => ({
-          youtube: q.youtube, src: q.src, title: q.display, sub: 'Video resume',
-        })), i),
-      },
-        shot,
-        h('span', { class: 'vr-card__name' }, p.display),
-      );
-      wall.appendChild(card);
+    // Chunk into rows of 6 cards
+    const rows = [];
+    for (let i = 0; i < list.length; i += 6) {
+      rows.push(list.slice(i, i + 6));
+    }
+
+    rows.forEach((rowItems) => {
+      const rowEl = h('div', { class: 'vr-row' });
+      rowItems.forEach((p) => {
+        const origIndex = sorted.indexOf(p);
+        const firstLetter = p.display[0].toUpperCase();
+        const shot = h('span', { class: 'vr-card__shot' },
+          posterImg(p.youtube, { eager: origIndex < 18 }),
+          h('span', { class: 'vr-card__mono', 'aria-hidden': 'true' }, initialsOf(p.display)),
+          h('span', { class: 'vr-card__play', 'aria-hidden': 'true' },
+            icon('play', { class: 'ic ic--sm' })),
+        );
+        const card = h('button', {
+          class: 'vr-card',
+          type: 'button',
+          // NO title attribute so native tooltips never pop up!
+          'data-letter': firstLetter,
+          onclick: () => stage.open(list.map((q) => ({
+            youtube: q.youtube, src: q.src, title: q.display, sub: 'Video resume',
+          })), list.indexOf(p)),
+        },
+          shot,
+          h('span', { class: 'vr-card__name' }, p.display),
+        );
+        rowEl.appendChild(card);
+      });
+      wall.appendChild(rowEl);
     });
   }
 
@@ -127,16 +162,23 @@ export function VideoResumes(block, { editing = false } = {}) {
   const strip = h('div', { class: 'vr-strip' });
 
   function drawStrip() {
-    strip.replaceChildren(
+    const items = [
       h('button', {
         class: `vr-letter${letter === null ? ' is-on' : ''}`, type: 'button',
         onclick: () => { letter = null; drawStrip(); drawWall(); },
-      }, 'All'),
-      ...letters.map((l) => h('button', {
+      }, 'ALL'),
+    ];
+
+    letters.forEach((l) => {
+      items.push(h('span', { class: 'vr-sep' }, '|'));
+      items.push(h('button', {
         class: `vr-letter${letter === l ? ' is-on' : ''}`, type: 'button',
+        'data-letter': l,
         onclick: () => { letter = letter === l ? null : l; drawStrip(); drawWall(); },
-      }, l)),
-    );
+      }, l));
+    });
+
+    strip.replaceChildren(...items);
   }
 
   const search = h('input', {
@@ -144,33 +186,20 @@ export function VideoResumes(block, { editing = false } = {}) {
     placeholder: 'Find a student…', 'aria-label': 'Find a student',
     oninput: () => {
       term = search.value.trim().toLowerCase();
-      /* A typed name should search every student, not just the letter that happens
-         to be selected — otherwise searching "ram" under "A" finds nothing and
-         reads as a broken box. */
       if (term) letter = null;
       drawStrip(); drawWall();
     },
   });
 
   /* ------------------------------------------------------------------ head */
-  const head = h('div', { class: 'vr-head' },
-    h('div', { class: 'vr-head__text' },
-      block.eyebrow ? h('p', { class: 'vr-eyebrow' }, block.eyebrow) : null,
-      h('h2', { class: 'vr-title' }, block.title || 'Video Resumes'),
-      h('span', { class: 'vr-rule' }),
-    ),
-    block.lead ? h('p', { class: 'vr-lead' }, block.lead) : null,
-    h('div', { class: 'vr-stats' },
-      h('div', { class: 'vr-stat' },
-        h('strong', {}, String(people.length)), h('span', {}, 'video resumes')),
-    ),
+  const head = h('div', { class: 'vr-head ev-head--clean' },
+    h('h2', { class: 'vr-title vr-title--center' }, (block.title || 'MEET THEM FOR YOURSELF').toUpperCase()),
   );
 
   root.appendChild(head);
   root.appendChild(h('div', { class: 'vr-tools' },
     h('div', { class: 'vr-search' }, icon('search', { class: 'ic ic--xs' }), search),
     strip,
-    note,
   ));
   root.appendChild(wall);
 
