@@ -10521,15 +10521,17 @@ body.is-presenting .pg-player { z-index: 30; }
 
 .pw-stage {
   flex: 1 1 auto;
-  /* Without min-height:0 a flex child refuses to shrink below its content and
-     scrolls the whole slide instead of itself. */
   min-height: 0;
   padding: 18px 20px 22px;
-  overflow-y: auto; overflow-x: hidden;
-  scrollbar-width: none;                 /* the reveal is the scroll cue */
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
   scroll-behavior: smooth;
+  pointer-events: auto;
 }
-.pw-stage::-webkit-scrollbar { width: 0; height: 0; }
+.pw-stage::-webkit-scrollbar { width: 6px; }
+.pw-stage::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.22); border-radius: 4px; }
 
 .pw-row { display: flex; align-items: stretch; justify-content: space-between; margin-bottom: 12px; width: 100%; }
 .pw-row--short { justify-content: space-between; }

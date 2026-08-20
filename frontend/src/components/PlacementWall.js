@@ -262,6 +262,13 @@ export function PlacementWall(block, { editing = false } = {}) {
 
   /* --------------------------------------------------------------- header */
   const stage = h('div', { class: 'pw-stage' });
+  stage.addEventListener('wheel', (e) => {
+    const canScrollUp = stage.scrollTop > 0;
+    const canScrollDown = stage.scrollTop + stage.clientHeight < stage.scrollHeight - 2;
+    if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
+      e.stopPropagation();
+    }
+  }, { passive: true });
   const chips = h('div', { class: 'pw-chips' });
   const rail = h('div', { class: 'pw-rail' });
 
