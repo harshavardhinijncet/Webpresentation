@@ -409,8 +409,15 @@ export function CertificationWall(block, { editing = false } = {}) {
   let viewMode = 'grid'; // 'grid' | 'detail'
   let pick = 0;
   let autoPlay = true;
+  let swipeCooldown = false;
 
-  const ACCENTS = ['#F59E0B', '#EF4444', '#8B5CF6', '#10B981', '#06B6D4', '#3B82F6', '#64748B', '#A855F7', '#EC4899'];
+  function getCountColor(count) {
+    if (count >= 5000) return '#F59E0B'; // > 5000: Gold
+    if (count >= 1500) return '#71BD1F'; // 1500-5000: Brand Green
+    if (count >= 600)  return '#06B6D4'; // 600-1500: Cyan / Electric Teal
+    if (count >= 300)  return '#3B82F6'; // 300-600: Royal Blue
+    return '#8B5CF6';                    // < 300: Purple
+  }
 
   function drawSkills() {
     const sorted = [...credentials].sort((a, b) => b.held - a.held);
@@ -421,25 +428,18 @@ export function CertificationWall(block, { editing = false } = {}) {
       skillPane.style.display = 'none';
 
       skillList.replaceChildren(...sorted.map((c, i) => {
-        const accent = ACCENTS[i % ACCENTS.length];
+        const accent = getCountColor(c.held);
         return h('button', {
           class: 'cs-grid-card',
           type: 'button',
           style: { '--i': String(Math.min(i, 35)), '--card-accent': accent },
           onclick: () => { pick = i; viewMode = 'detail'; drawSkills(); },
         },
-          /* Right side pill tab showing the count of certifications done */
-          h('span', { class: 'cs-grid-card__badge', style: { background: accent }, title: `${nf(c.held)} Certifications Done` }, nf(c.held)),
+          /* Top-Right Pill Tab showing ONLY the Count of Certifications Done */
+          h('span', { class: 'cs-grid-card__badge', style: { background: accent }, title: `${nf(c.held)} Certifications Completed` }, nf(c.held)),
           h('div', { class: 'cs-grid-card__top' },
             h('span', { class: 'cs-grid-card__art' }, badgeArt(c, '', src)),
-            h('div', { class: 'cs-grid-card__meta' },
-              h('span', { class: 'cs-grid-card__vendor' }, c.vendor || 'Certification'),
-              h('h4', { class: 'cs-grid-card__title' }, c.name),
-            ),
-          ),
-          h('div', { class: 'cs-grid-card__foot' },
-            h('span', { class: 'cs-grid-card__count' }, `${nf(c.held)} Certified`),
-            c.domain ? h('span', { class: 'cs-grid-card__domain' }, c.domain) : null,
+            h('h4', { class: 'cs-grid-card__title' }, c.name),
           ),
         );
       }));
@@ -466,15 +466,13 @@ export function CertificationWall(block, { editing = false } = {}) {
         h('span', {}, 'CERTIFICATIONS COMPLETED'),
       );
 
-      /* Left Side: Index, Vendor, Serif Title, Domain, Count, Accent line */
+      /* Left Side: Index, Oswald Title, Count, Accent line */
       const leftCol = h('div', { class: 'cs-detail__left' },
         h('p', { class: 'cs-detail__idx' },
           h('span', { class: 'cs-detail__idx-num' }, String(chosen + 1).padStart(2, '0')),
           ` / ${sorted.length}`
         ),
-        h('p', { class: 'cs-detail__vendor-tag' }, (c.vendor || '').toUpperCase()),
-        h('h2', { class: 'cs-detail__serif-title' }, c.name),
-        c.domain ? h('p', { class: 'cs-detail__italic-domain' }, c.domain) : null,
+        h('h2', { class: 'cs-detail__oswald-title' }, c.name),
         h('div', { class: 'cs-detail__held-box' },
           h('div', { class: 'cs-detail__held-num' },
             h('strong', {}, nf(c.held)),
@@ -484,25 +482,36 @@ export function CertificationWall(block, { editing = false } = {}) {
         ),
       );
 
-      /* Center Stage: Focal Logo with Halo Glow + Floating Secondary Logo */
-      const centerStage = h('div', { class: 'cs-detail__center-stage' },
-        /* Floating background blurred badge (Screenshot 2 effect) */
+      /* Center Stage: Enlarged Logo with Morph Animation & Halo Glow */
+      const centerStage = h('div', {
+        class: 'cs-detail__center-stage',
+        onwheel: (e) => {
+          if (swipeCooldown) return;
+          if (Math.abs(e.deltaX) > 20) {
+            swipeCooldown = true;
+            setTimeout(() => { swipeCooldown = false; }, 350);
+            pick = e.deltaX > 0 ? nextIdx : prevIdx;
+            drawSkills();
+          }
+        },
+      },
+        /* Floating background blurred badge */
         h('div', { class: 'cs-detail__bg-float' },
           badgeArt(nextCred, 'cs-detail__bg-float-img', src),
         ),
-        /* Main Centered Badge with Glowing Halo Rings */
-        h('div', { class: 'cs-detail__main-badge' },
+        /* Main Centered Badge with Morph Transition and Halo Rings */
+        h('div', { class: 'cs-detail__main-badge cs-detail__main-badge--morph' },
           h('span', { class: 'cs-detail__halo-ring' }),
           h('span', { class: 'cs-detail__halo-ring cs-detail__halo-ring--outer' }),
-          badgeArt(c, 'cs-detail__badge-img', src),
+          badgeArt(c, 'cs-detail__badge-img cs-morph-img', src),
         ),
       );
 
-      /* Right Side: Skills Unlocked List */
+      /* Right Side: Skills Unlocked (clean list without box wrapper) */
       const rightCol = h('div', { class: 'cs-detail__right' },
         h('h4', { class: 'cs-detail__skills-head' }, 'SKILLS UNLOCKED'),
         h('ol', { class: 'cs-detail__skills-ol' },
-          ...(c.skills || []).map((skillText, idx) => h('li', {},
+          ...(c.skills || []).map((skillText, idx) => h('li', { style: { '--i': String(idx) } },
             h('span', { class: 'cs-detail__skill-num' }, String(idx + 1).padStart(2, '0')),
             h('span', { class: 'cs-detail__skill-txt' }, skillText),
           )),
