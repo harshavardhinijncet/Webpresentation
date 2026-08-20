@@ -61,7 +61,7 @@ function arcLayout(w, height, count) {
   if (!w || !height || !count) return null;
   const a = w / 2;
   const cx = a;
-  const size = clamp(w / 44, 24, 40);
+  const size = clamp(w / 44, 26, 42);
   const k = height - 0.15 * height;
   const u = (a * a - k * k) / (2 * k);
   const r0 = u + k;
@@ -261,13 +261,13 @@ export function CertificationWall(block, { editing = false } = {}) {
     wire.replaceChildren(
       svg('defs', {},
         svg('linearGradient', { id: 'csArcGrad', x1: '0', y1: '0', x2: '1', y2: '0' },
-          svg('stop', { offset: '0%', 'stop-color': '#A99BF0', 'stop-opacity': '0' }),
-          svg('stop', { offset: '13%', 'stop-color': '#9A8AEC', 'stop-opacity': '0.45' }),
-          svg('stop', { offset: '34%', 'stop-color': '#5B57DE', 'stop-opacity': '0.95' }),
-          svg('stop', { offset: '52%', 'stop-color': '#4B54D6', 'stop-opacity': '1' }),
-          svg('stop', { offset: '70%', 'stop-color': '#7B6FE6', 'stop-opacity': '0.95' }),
-          svg('stop', { offset: '88%', 'stop-color': '#A99BF0', 'stop-opacity': '0.45' }),
-          svg('stop', { offset: '100%', 'stop-color': '#C9B6F5', 'stop-opacity': '0' }),
+          svg('stop', { offset: '0%', 'stop-color': '#71BD1F', 'stop-opacity': '0' }),
+          svg('stop', { offset: '13%', 'stop-color': '#71BD1F', 'stop-opacity': '0.45' }),
+          svg('stop', { offset: '34%', 'stop-color': '#52A310', 'stop-opacity': '0.95' }),
+          svg('stop', { offset: '52%', 'stop-color': '#71BD1F', 'stop-opacity': '1' }),
+          svg('stop', { offset: '70%', 'stop-color': '#52A310', 'stop-opacity': '0.95' }),
+          svg('stop', { offset: '88%', 'stop-color': '#71BD1F', 'stop-opacity': '0.45' }),
+          svg('stop', { offset: '100%', 'stop-color': '#71BD1F', 'stop-opacity': '0' }),
         ),
       ),
       /* Four strokes to a line: a grey track that stays legible the whole way
@@ -286,15 +286,13 @@ export function CertificationWall(block, { editing = false } = {}) {
       for (let j = 0; j < g.count; j += 1) {
         const cred = credentials[(g.from + j) % credentials.length];
         const el = h('button', {
-          class: 'cs-pin', type: 'button', title: `${cred.name} — ${nf(cred.held)} certifications`,
+          class: 'cs-pin', type: 'button',
           style: { width: `${plan.size}px`, '--i': String(g.from + j) },
           onclick: () => { act = 'skills'; pick = credentials.indexOf(cred); drawSteps(); showAct(); },
         },
           h('span', { class: 'cs-pin__in' },
             h('span', { class: 'cs-pin__bob' },
               h('span', { class: 'cs-pin__art' }, badgeArt(cred, '', src)))),
-          h('span', { class: 'cs-pin__tag' },
-            h('b', {}, cred.name), h('i', {}, nf(cred.held))),
         );
         pins.push(el);
         holders.push(el);
