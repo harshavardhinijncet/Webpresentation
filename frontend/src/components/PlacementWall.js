@@ -103,9 +103,9 @@ export function justifyRows(items, width, targetH, gap = GAP, maxH = Infinity) {
 
 /** A row height that suits the material: cards read small, photographs larger. */
 const targetHeightFor = (kind, count) => {
-  if (kind === 'journey') return 520;
-  if (kind === 'poster') return count > 24 ? 196 : 232;
-  return 224;
+  if (kind === 'journey') return 580;
+  if (kind === 'poster') return count > 24 ? 260 : 340;
+  return 340;
 };
 
 const countLabel = (n, kind) => {
@@ -419,18 +419,9 @@ export function PlacementWall(block, { editing = false } = {}) {
     });
   }
 
-  /* Centred, and the navigation comes first. The old head put a left-aligned
-     title over a left-aligned row of tabs, which left the page reading as three
-     things stacked in a corner. One column down the middle — title, then the
-     chapter pill, then the company chips — gives the gallery beneath it a centre
-     line to sit on. */
+  /* --------------------------------------------------------------- header */
   const head = h('div', { class: 'pw-head' },
-    h('div', { class: 'pw-head__top' },
-      block.eyebrow ? h('p', { class: 'pw-eyebrow' }, block.eyebrow) : null,
-      h('h2', { class: 'pw-title' }, block.title || 'Placements'),
-      h('span', { class: 'pw-rule' }),
-      block.lead ? h('p', { class: 'pw-lead' }, block.lead) : null,
-    ),
+    /* Top header text removed per user request; buttons stay above */
     h('div', { class: 'pw-navwrap' }, rail),
     chips,
   );

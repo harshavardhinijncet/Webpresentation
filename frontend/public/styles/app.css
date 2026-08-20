@@ -10434,7 +10434,7 @@ body.is-presenting .pg-player { z-index: 30; }
 /* One centred column: title, then the chapter pill, then the company chips. The
    left-aligned version stacked three things in a corner and left the gallery
    with no centre line to sit on. */
-.pw-head { flex: 0 0 auto; padding: 22px 30px 0; text-align: center; }
+.pw-head { flex: 0 0 auto; padding: 14px 20px 8px; text-align: center; }
 .pw-head__top { margin-bottom: 16px; }
 .pw-eyebrow {
   margin: 0 0 8px; color: var(--nav-accent-ink, var(--accent-ink));
