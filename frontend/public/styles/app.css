@@ -13355,30 +13355,24 @@ body.is-presenting .vc {
 }
 
 /* ==========================================================================
-   Leadership Journey — the process arc
-   The slide opens as the arc and its titles. Clicking a segment brings that
-   chapter's card in; the ones already open stay put, so the picture builds.
-   The band, the titles and the card anchors are all solved from one circle in
-   the component — this file styles them and never positions them.
+   Leadership Journey — an arc down the left edge that plays itself
+   The arc is a `)` bulging in from the left, one chapter per segment; the
+   right of the slide is one reading panel holding the current chapter. The
+   arc and the leader are solved from one circle in the component — this file
+   styles them and never positions them.
    ========================================================================== */
 .ja-root {
   --ja-ink: #0d1a12;
   --ja-band: #14251a;
   --ja-lime: var(--brand-highlight, #71bd1f);
-  --ja-gold: var(--brand-accent, #ffbb00);
   --ja-paper: #f4f6f2;
   position: relative;
   display: block;
   /* `.canvas-block > *` sets flex: 1, and its flex-basis: 0% beats height on the main axis
-     — hence flex: 0 0 auto, which restores an auto basis so the height below is honoured.
-     100% of the block rather than the deck's 860: presenting, the slide is 1600x900 and those
-     last 40 rows showed as a white band under the ground. The floor keeps the arc whole if a
-     block ever hands down an indefinite height, where a percentage would collapse. */
+     — hence flex: 0 0 auto, which restores an auto basis so the height below is honoured. */
   flex: 0 0 auto;
   height: 100%;
   min-height: 860px;
-  /* Edge to edge. No radius and no padding, so the ground runs to the end of the slide
-     instead of sitting on it as a rounded panel with paper showing around it. */
   border-radius: 0;
   padding: 0;
   background: var(--ja-paper);
@@ -13386,23 +13380,24 @@ body.is-presenting .vc {
   overflow: hidden;
 }
 
-/* Over the top-left, where the arc leaves room. */
+/* Top-right corner, flush with the panel's right edge (PANEL.right in the component), so the
+   arc has the whole left side from top to bottom. */
 .ja-title {
   position: absolute;
-  top: 30px;
-  left: 38px;
+  top: 18px;
+  right: 3.5%;
   z-index: 3;
   margin: 0;
-  font-size: 46px;
+  font-size: 44px;
+  text-align: right;
   letter-spacing: 0.01em;
   text-transform: uppercase;
   pointer-events: none;
 }
 
 .ja-stage {
-  /* The arc is solved in a 1600x860 viewBox and the cards are placed as percentages of the
-     stage, so the stage has to hold that aspect or the two drift apart as the ground grows.
-     It centres in whatever height the ground has, and the ground fills the rest itself. */
+  /* The arc is solved in a 1600x860 viewBox and the panel is placed in percentages of the
+     stage, so the stage holds that aspect or the leader stops meeting the panel. */
   position: absolute;
   left: 0;
   right: 0;
@@ -13416,184 +13411,383 @@ body.is-presenting .vc {
   inset: 0;
   width: 100%;
   height: 100%;
+  /* The arc's ends run past the viewBox into the corners; the root clips them at its own edge. */
+  overflow: visible;
 }
 
-/* ------------------------------------------------------------------ the band */
+/* ------------------------------------------------------------------- the arc */
 .ja-seg {
   fill: var(--ja-band);
   cursor: pointer;
   transform-box: fill-box;
   transform-origin: center;
+  /* Top to bottom, one after the other, so the arc draws itself down the edge. */
   animation: ja-seg-in 0.62s cubic-bezier(0.22, 0.9, 0.16, 1) both;
-  animation-delay: calc(var(--i, 0) * 0.09s);
-  transition: fill 0.34s ease, filter 0.34s ease;
+  animation-delay: calc(var(--i, 0) * 0.11s);
+  transition: fill 0.4s ease, filter 0.4s ease, translate 0.5s cubic-bezier(0.22, 0.9, 0.16, 1);
 }
 
-.ja-seg:hover {
-  fill: #1c3524;
-}
+.ja-seg:hover { fill: #1c3524; }
 
-/* An opened chapter keeps its colour, so the band itself records how far the presenter has
-   got without any numbering to read. */
-.ja-seg.is-open {
+/* The chapter on screen: brand green, stepped out along its own radius. `translate` rather
+   than `transform`, which the entrance animation holds. */
+.ja-seg.is-active {
   fill: var(--brand-primary, #008638);
-  filter: drop-shadow(0 6px 18px rgba(0, 134, 56, 0.34));
+  filter: drop-shadow(0 8px 20px rgba(0, 134, 56, 0.34));
+  translate: var(--dx, 0) var(--dy, 0);
 }
 
 @keyframes ja-seg-in {
-  from { opacity: 0; transform: scale(0.94); }
+  from { opacity: 0; transform: translateX(-40px); }
   to { opacity: 1; transform: none; }
 }
 
+.ja-num {
+  fill: rgb(255 255 255 / 0.72);
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  animation: ja-fade 0.5s ease both;
+  animation-delay: calc(0.2s + var(--i, 0) * 0.11s);
+  transition: fill 0.3s ease;
+}
+
+.ja-num.is-active { fill: #ffffff; }
+
 .ja-seg__label {
-  fill: #ffffff;
+  fill: color-mix(in srgb, var(--ja-ink) 52%, transparent);
   cursor: pointer;
   font-family: var(--display);
-  font-size: 15.5px;
+  font-size: 21px;
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   animation: ja-fade 0.5s ease both;
-  animation-delay: calc(0.24s + var(--i, 0) * 0.09s);
+  animation-delay: calc(0.28s + var(--i, 0) * 0.11s);
+  transition: fill 0.35s ease;
 }
+
+.ja-seg__label:hover { fill: var(--ja-ink); }
+.ja-seg__label.is-past { fill: color-mix(in srgb, var(--ja-ink) 72%, transparent); }
+.ja-seg__label.is-active { fill: var(--accent-ink, #006b2c); font-weight: 700; }
 
 @keyframes ja-fade {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* ---------------------------------------------------------------- the leaders
-   A dotted run from the band to the card it belongs to, so a card reads as that chapter's own
-   note rather than as loose paper near it. Aimed in the component, which knows where the card
-   was seated; drawn under the band, so the end that starts inside it is covered. */
+/* ---------------------------------------------------------------- the leader
+   Dotted, from the end of the lit title to the panel; it redraws on every change. */
 .ja-lead {
-  stroke: color-mix(in srgb, var(--brand-primary, #008638) 62%, transparent);
+  fill: none;
+  stroke: color-mix(in srgb, var(--brand-primary, #008638) 70%, transparent);
   stroke-width: 2.6;
   stroke-linecap: round;
-  stroke-dasharray: 0.1 11;
-  opacity: 0;
+  stroke-dasharray: 0.1 10;
 }
 
-/* The dots run outward from the band to the card, arriving just ahead of it. */
-.ja-lead.is-in {
-  animation: ja-lead-in 0.52s cubic-bezier(0.22, 0.9, 0.16, 1) both;
-}
+.ja-lead.is-in { animation: ja-lead-in 0.6s cubic-bezier(0.22, 0.9, 0.16, 1) both; }
 
 @keyframes ja-lead-in {
-  from { opacity: 0; stroke-dashoffset: 46; }
+  from { opacity: 0; stroke-dashoffset: 60; }
   to { opacity: 1; stroke-dashoffset: 0; }
 }
 
-/* ----------------------------------------------------------------- the cards
-   Hidden until their segment is clicked, then they stay. Turned to the segment they belong
-   to, so the content leans the way the band does. */
-.ja-card {
+.ja-lead__dot { fill: var(--brand-primary, #008638); }
+
+/* ----------------------------------------------------------------- the panel */
+.ja-panel {
   position: absolute;
   z-index: 2;
-  /* One size for all five. Matches CARD in the component, which fits each chapter's words to
-     this box — the height is fixed and the text gives, rather than five cards each as tall as
-     its own paragraph. */
-  width: 252px;
-  height: 322px;
-  padding: 15px 17px;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 48px 26px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--ja-ink) 12%, transparent);
-  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--ja-ink) 9%, transparent);
+  border-left: 5px solid var(--brand-primary, #008638);
+  border-radius: 22px;
   background: #ffffff;
-  box-shadow: 0 14px 34px rgba(13, 26, 18, 0.13);
-  color: var(--ja-ink);
-  text-align: left;
-  /* Height comes from the content: nothing is clipped and nothing is cut off mid-sentence,
-     which is what a max-height was doing before. */
-  transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(0.82);
-  opacity: 0;
-  pointer-events: none;
+  box-shadow: 0 24px 60px -24px rgba(13, 26, 18, 0.28);
+  animation: ja-panel-in 0.7s cubic-bezier(0.22, 0.9, 0.16, 1) 0.45s both;
 }
 
-.ja-card[hidden] { display: none; }
-
-/* The one just opened sits above any it overlaps. */
-.ja-card.is-last { z-index: 4; }
-
-/* Arriving: it grows out of the band with a little overshoot and settles, the shadow
-   deepening as it comes forward — one motion rather than a fade. The rotation is held
-   through the whole animation so the card never straightens up on the way in. */
-.ja-card.is-in {
-  animation: ja-card-in 0.66s cubic-bezier(0.22, 1.3, 0.32, 1) both;
-}
-
-@keyframes ja-card-in {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(0.8);
-    box-shadow: 0 2px 6px rgba(13, 26, 18, 0.06);
-    filter: blur(3px);
-  }
-  55% {
-    opacity: 1;
-    filter: blur(0);
-  }
-  72% {
-    transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(1.035);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(1);
-    box-shadow: 0 14px 34px rgba(13, 26, 18, 0.13);
-    filter: blur(0);
-  }
-}
-
-/* The lines arrive after the card that holds them, in reading order. */
-.ja-card.is-in .ja-card__role {
-  animation: ja-line-in 0.42s cubic-bezier(0.22, 0.9, 0.16, 1) 0.2s both;
-}
-
-.ja-card.is-in .ja-card__list li {
-  animation: ja-line-in 0.42s cubic-bezier(0.22, 0.9, 0.16, 1) both;
-  animation-delay: calc(0.3s + var(--n, 0) * 0.08s);
-}
-
-@keyframes ja-line-in {
-  from { opacity: 0; transform: translateX(10px); }
+@keyframes ja-panel-in {
+  from { opacity: 0; transform: translateX(40px); }
   to { opacity: 1; transform: none; }
 }
 
-.ja-card__role {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--brand-primary, #008638);
-  font-size: 11.5px;
+/* The chapter number, large and faint, in the corner behind the words. */
+.ja-panel__ghost {
+  position: absolute;
+  top: -18px;
+  right: 26px;
+  font-family: var(--display);
+  font-size: 190px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  line-height: 1;
+  color: color-mix(in srgb, var(--brand-primary, #008638) 8%, transparent);
+  pointer-events: none;
 }
 
-.ja-card__list {
-  display: grid;
-  gap: 7px;
+.ja-panel__body {
+  --ja-fs: 1;
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ja-panel__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: calc(14px * var(--ja-fs));
+  font-size: calc(14px * var(--ja-fs));
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-ink, #006b2c);
+}
+
+.ja-panel__eyebrow i {
+  font-style: normal;
+  color: color-mix(in srgb, var(--ja-ink) 40%, transparent);
+}
+
+.ja-panel__year {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 10%, #ffffff);
+  color: var(--ja-ink);
+  letter-spacing: 0.06em;
+}
+
+.ja-panel__title {
   margin: 0;
+  font-family: var(--display);
+  font-size: calc(48px * var(--ja-fs));
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--ja-ink);
+}
+
+.ja-panel__role {
+  margin: calc(10px * var(--ja-fs)) 0 0;
+  font-size: calc(18px * var(--ja-fs));
+  font-weight: 700;
+  color: var(--accent-ink, #006b2c);
+}
+
+.ja-panel__summary {
+  margin: calc(20px * var(--ja-fs)) 0 0;
+  max-width: 62ch;
+  font-size: calc(19px * var(--ja-fs));
+  line-height: 1.62;
+  color: color-mix(in srgb, var(--ja-ink) 86%, transparent);
+}
+
+.ja-panel__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: calc(22px * var(--ja-fs)) 0 0;
   padding: 0;
   list-style: none;
 }
 
-.ja-card__list li {
-  position: relative;
-  padding-left: 14px;
-  font-size: 12px;
-  line-height: 1.45;
+.ja-panel__tags li {
+  padding: calc(8px * var(--ja-fs)) 16px;
+  border: 1px solid color-mix(in srgb, var(--brand-primary, #008638) 30%, transparent);
+  border-radius: 999px;
+  font-size: calc(14px * var(--ja-fs));
+  font-weight: 700;
+  color: var(--ja-ink);
 }
 
-.ja-card__list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.56em;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--ja-lime);
+/* --------------------------------------------------------------- the stepper */
+.ja-steps {
+  --n: 5;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), 1fr);
+  flex: 0 0 auto;
+  margin-top: 16px;
+  padding-top: 20px;
+  border-top: 1px solid color-mix(in srgb, var(--ja-ink) 8%, transparent);
 }
+
+/* Runs node centre to node centre: half a column in from each end. Its height is the icon row
+   plus the gap plus half a node, less half its own thickness. */
+.ja-steps__track {
+  position: absolute;
+  top: calc(20px + 28px + 10px + 15px - 2px);
+  left: calc(50% / var(--n));
+  right: calc(50% / var(--n));
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ja-ink) 10%, transparent);
+}
+
+.ja-steps__fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--brand-primary, #008638);
+  transition: width 0.6s cubic-bezier(0.22, 0.9, 0.16, 1);
+}
+
+.ja-step {
+  position: relative;
+  display: grid;
+  grid-template-rows: 28px 30px auto auto;
+  justify-items: center;
+  align-content: start;
+  gap: 10px 0;
+  padding: 0 6px;
+  border: 0;
+  background: none;
+  color: color-mix(in srgb, var(--ja-ink) 40%, transparent);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+.ja-step__icon { display: grid; place-items: center; transition: color 0.3s ease, transform 0.3s ease; }
+.ja-step__icon .ic { width: 26px; height: 26px; }
+
+.ja-step__node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 3px solid color-mix(in srgb, var(--ja-ink) 16%, transparent);
+  border-radius: 50%;
+  background: #ffffff;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ja-step__tick { width: 15px; height: 15px; color: #ffffff; opacity: 0; transition: opacity 0.3s ease; }
+
+.ja-step__year {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.ja-step__name {
+  max-width: 15ch;
+  margin-top: -6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.ja-step:hover { color: color-mix(in srgb, var(--ja-ink) 70%, transparent); }
+
+/* Done: a solid green node with a tick, and readable labels. */
+.ja-step.is-done { color: color-mix(in srgb, var(--ja-ink) 72%, transparent); }
+.ja-step.is-done .ja-step__node {
+  border-color: var(--brand-primary, #008638);
+  background: var(--brand-primary, #008638);
+}
+.ja-step.is-done .ja-step__tick { opacity: 1; }
+
+/* Current: a ring with a green heart and a soft halo that breathes. */
+.ja-step.is-active { color: var(--ja-ink); }
+.ja-step.is-active .ja-step__icon { color: var(--brand-primary, #008638); transform: translateY(-2px); }
+.ja-step.is-active .ja-step__node {
+  border-color: var(--brand-primary, #008638);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand-primary, #008638) 16%, transparent);
+  animation: ja-step-halo 1.8s ease-in-out infinite;
+}
+.ja-step.is-active .ja-step__node::after {
+  content: '';
+  grid-area: 1 / 1;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--brand-primary, #008638);
+}
+.ja-step.is-active .ja-step__tick { display: none; }
+.ja-step.is-active .ja-step__year { color: var(--accent-ink, #006b2c); }
+.ja-step.is-active .ja-step__name { font-weight: 700; }
+
+@keyframes ja-step-halo {
+  0%, 100% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--brand-primary, #008638) 18%, transparent); }
+  50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--brand-primary, #008638) 6%, transparent); }
+}
+
+.ja-panel__foot {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding-top: 18px;
+}
+
+/* How much of this chapter's hold is left. */
+.ja-panel__track {
+  position: relative;
+  flex: 1 1 auto;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ja-ink) 9%, transparent);
+}
+
+.ja-panel__bar {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--brand-primary, #008638);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.ja-panel__bar.is-run { animation: ja-bar var(--ja-hold, 7000ms) linear both; }
+
+@keyframes ja-bar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.ja-panel__ctls { display: flex; gap: 10px; }
+
+.ja-ctl {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid color-mix(in srgb, var(--ja-ink) 14%, transparent);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--ja-ink);
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.ja-ctl:hover {
+  border-color: var(--brand-primary, #008638);
+  background: color-mix(in srgb, var(--brand-primary, #008638) 8%, #ffffff);
+}
+
+.ja-ctl:active { transform: scale(0.94); }
+
+.ja-ctl--play {
+  border-color: var(--brand-primary, #008638);
+  background: var(--brand-primary, #008638);
+  color: #ffffff;
+}
+
+.ja-ctl--play:hover { background: var(--brand-primary, #008638); filter: brightness(1.08); }
 
 .ja-root--empty {
   display: grid;
@@ -13603,25 +13797,15 @@ body.is-presenting .vc {
 
 @media (prefers-reduced-motion: reduce) {
   .ja-seg,
+  .ja-num,
   .ja-seg__label,
-  .ja-lead,
   .ja-lead.is-in,
-  .ja-card,
-  .ja-card.is-in,
-  .ja-card.is-in .ja-card__role,
-  .ja-card.is-in .ja-card__list li {
+  .ja-panel,
+  .ja-panel__bar.is-run,
+  .ja-steps__fill,
+  .ja-step.is-active .ja-step__node {
     animation: none;
     transition: none;
-  }
-
-  .ja-card.is-in {
-    opacity: 1;
-    transform: translate(-50%, -50%) rotate(var(--tilt, 0deg));
-  }
-
-  .ja-lead.is-in {
-    opacity: 1;
-    stroke-dashoffset: 0;
   }
 }
 
@@ -13694,4 +13878,47 @@ body.is-presenting .fit-slide__inner .pf-root {
    the bottom — the deck between them is what has a card in it. */
 body.is-presenting .fit-slide__inner .sw-head {
   padding-top: 16px;
+}
+
+/* ==========================================================================
+   Auto-sliding photographs — see utils/autoSlide.js
+   ========================================================================== */
+
+/* Each new picture slides in from the side it came from. `backwards` fill only:
+   a held end state would pin `transform` over anything set inline later. */
+@keyframes as-in-next { from { opacity: 0; transform: translateX(56px); } to { opacity: 1; transform: none; } }
+@keyframes as-in-prev { from { opacity: 0; transform: translateX(-56px); } to { opacity: 1; transform: none; } }
+.as-in--next { animation: as-in-next 560ms cubic-bezier(.2,.7,.3,1) backwards; }
+.as-in--prev { animation: as-in-prev 560ms cubic-bezier(.2,.7,.3,1) backwards; }
+
+/* The arrow pair for viewers that had none — the same round dark-glass buttons
+   the placement viewer already uses, so every viewer offers the same control. */
+.as-nav {
+  position: absolute; top: 50%; z-index: 3; transform: translateY(-50%);
+  display: grid; place-items: center; width: 56px; height: 56px;
+  border: 0; border-radius: 999px;
+  background: rgb(255 255 255 / 0.12); color: #fff; cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.as-nav:hover { background: rgb(255 255 255 / 0.24); }
+.as-nav:active { transform: translateY(-50%) scale(0.94); }
+.as-nav[hidden] { display: none; }
+.as-nav .ic { width: 28px; height: 28px; }
+.as-nav--prev { left: 22px; }
+.as-nav--next { right: 22px; }
+
+/* Success Stories viewer: the frame keeps clear of the arrows. */
+.sw-view .sw-view__frame { max-width: calc(100% - 160px); }
+/* Programme stills: arrows only while a photograph is up, never over a film. */
+.pg-player:not(.is-still) .as-nav { display: none; }
+/* Snapshot modal: the arrows sit on the dark card over the photograph. */
+.dw-modal__media { position: relative; overflow: hidden; }
+.dw-modal .as-nav { width: 48px; height: 48px; background: rgb(0 0 0 / 0.42); }
+.dw-modal .as-nav:hover { background: rgb(0 0 0 / 0.62); }
+.dw-modal .as-nav--prev { left: 14px; }
+.dw-modal .as-nav--next { right: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .as-in--next, .as-in--prev { animation: none; }
+  .as-nav { transition: none; }
 }

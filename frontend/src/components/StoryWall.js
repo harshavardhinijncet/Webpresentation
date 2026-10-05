@@ -1,5 +1,6 @@
 import { h, svg } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { autoSlide, slideIn, slideArrows } from '../utils/autoSlide.js';
 import { media } from '../utils/media.js';
 
 /**
@@ -102,33 +103,65 @@ export function StoryWall(block, { editing = false } = {}) {
      inside the slide `inset: 0` would resolve to the slide and not the screen. */
   const bigImg = h('img', { class: 'sw-view__img', alt: '' });
   const bigCap = h('p', { class: 'sw-view__cap' });
+  const bigFrame = h('figure', { class: 'sw-view__frame' }, bigImg, h('figcaption', {}, bigCap));
+  /* The viewer walks the whole collection: each portrait holds for a moment and
+     the next slides in on its own, and the arrows step and restart the hold. */
+  const viewArrows = slideArrows((d) => viewManual(d), { label: 'story' });
   const viewer = h('div', {
     class: 'sw-view', hidden: true,
     onclick: (e) => { if (e.target === viewer || e.target.closest('.sw-view__close')) shut(); },
   },
     h('button', { class: 'sw-view__close', type: 'button', 'aria-label': 'Close' },
       icon('close', { class: 'ic ic--sm' })),
-    h('figure', { class: 'sw-view__frame' }, bigImg, h('figcaption', {}, bigCap)),
+    viewArrows.prev, viewArrows.next,
+    bigFrame,
   );
   document.body.appendChild(viewer);
 
+  let viewAt = 0;
+  const viewAuto = autoSlide(() => viewStep(1), { host: viewer });
+
   function shut() {
+    viewAuto.stop();
     viewer.hidden = true;
     viewer.classList.remove('is-on');
     document.removeEventListener('keydown', onViewKey, true);
+    deckAuto.reset();
   }
   function onViewKey(e) {
-    if (e.key === 'Escape') { e.stopPropagation(); shut(); }
+    if (e.key === 'Escape') { e.stopPropagation(); shut(); return; }
+    /* Swallowed, or the deck's own arrow handler turns the slide underneath. */
+    if (e.key === 'ArrowRight') { e.stopPropagation(); e.preventDefault(); viewManual(1); }
+    if (e.key === 'ArrowLeft') { e.stopPropagation(); e.preventDefault(); viewManual(-1); }
   }
-  function view(i) {
-    const story = stories[i];
+  function paintView() {
+    const story = stories[viewAt];
     if (!story) return;
     bigImg.src = src(story);
     bigImg.alt = story.name || '';
     bigCap.textContent = story.name || '';
+  }
+  /** Wraps, so the viewer never dead-ends in front of a room. */
+  function viewStep(d) {
+    if (count < 2) return;
+    viewAt = (viewAt + d + count) % count;
+    paintView();
+    slideIn(bigFrame, d);
+  }
+  function viewManual(d) {
+    viewStep(d);
+    viewAuto.reset();
+  }
+  function view(i) {
+    if (!stories[i]) return;
+    viewAt = i;
+    paintView();
+    viewArrows.prev.hidden = count < 2;
+    viewArrows.next.hidden = count < 2;
     viewer.hidden = false;
     requestAnimationFrame(() => viewer.classList.add('is-on'));
     document.addEventListener('keydown', onViewKey, true);
+    if (count > 1) viewAuto.start();
   }
 
   /* -------------------------------------------------------------- the cards */
@@ -252,12 +285,21 @@ export function StoryWall(block, { editing = false } = {}) {
     counter.textContent = `${String(centre + 1).padStart(2, '0')} / ${count}`;
   }
 
-  const go = (i) => { centre = Math.max(0, Math.min(count - 1, i)); place(); };
+  const go = (i) => { centre = Math.max(0, Math.min(count - 1, i)); place(); deckAuto.reset(); };
+
+  /* Dealt, the row walks itself: every few seconds the next card swings to the
+     centre, and after the last it runs back to the first. It waits while the
+     full-size viewer is open, so nothing moves behind the picture being shown. */
+  const deckAuto = autoSlide(() => {
+    centre = (centre + 1) % count;
+    place();
+  }, { host: root, canRun: () => open && viewer.hidden && count > 1 });
 
   function deal() {
     open = true;
     root.classList.add('is-open');
     place();
+    deckAuto.reset();
   }
   function fold() {
     open = false;
@@ -314,11 +356,14 @@ export function StoryWall(block, { editing = false } = {}) {
      synchronously and the browser takes the dealt state as the starting style and
      skips the motion entirely. */
   requestAnimationFrame(place);
+  if (!editing) deckAuto.start();
 
   /* The viewer lives on the body, so it has to be taken down by hand when the
      slide that owns it is replaced. */
   const watch = new MutationObserver(() => {
     if (!root.isConnected) {
+      viewAuto.stop();
+      deckAuto.stop();
       viewer.remove();
       watch.disconnect();
       document.removeEventListener('keydown', onViewKey, true);

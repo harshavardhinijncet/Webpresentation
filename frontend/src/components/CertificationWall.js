@@ -1,4 +1,5 @@
 import { h, svg } from '../utils/dom.js';
+import { autoSlide, slideIn } from '../utils/autoSlide.js';
 import { icon } from '../utils/icons.js';
 import { upload } from '../utils/media.js';
 
@@ -183,12 +184,14 @@ export function CertificationWall(block, { editing = false } = {}) {
 
   const prevBtn = h('button', {
     class: 'cs-light__nav cs-light__nav--prev', type: 'button', 'aria-label': 'Previous',
-    onclick: (e) => { e.stopPropagation(); step(-1); },
+    onclick: (e) => { e.stopPropagation(); manual(-1); },
   }, icon('chevron-left', { class: 'ic' }));
   const nextBtn = h('button', {
     class: 'cs-light__nav cs-light__nav--next', type: 'button', 'aria-label': 'Next',
-    onclick: (e) => { e.stopPropagation(); step(1); },
+    onclick: (e) => { e.stopPropagation(); manual(1); },
   }, icon('chevron-right', { class: 'ic' }));
+  const lightFrame = h('figure', { class: 'cs-light__frame' }, lightImg,
+    h('figcaption', { class: 'cs-light__foot' }, lightCap, lightMeta, lightCount));
 
   const light = h('div', {
     class: 'cs-light', hidden: true,
@@ -196,26 +199,34 @@ export function CertificationWall(block, { editing = false } = {}) {
   },
     h('button', { class: 'cs-light__close', type: 'button', 'aria-label': 'Close' },
       icon('close', { class: 'ic ic--sm' })),
-    prevBtn, nextBtn,
-    h('figure', { class: 'cs-light__frame' }, lightImg,
-      h('figcaption', { class: 'cs-light__foot' }, lightCap, lightMeta, lightCount)),
+    prevBtn, nextBtn, lightFrame,
   );
   document.body.appendChild(light);
 
+  /* Each card holds for a moment and the next slides in on its own; the arrows
+     still step, and restart the hold from wherever they land. */
+  const lightAuto = autoSlide(() => step(1), { host: light });
+  function manual(d) {
+    step(d);
+    lightAuto.reset();
+  }
+
   function shut() {
+    lightAuto.stop();
     light.hidden = true;
     light.classList.remove('is-on');
     document.removeEventListener('keydown', onKey, true);
   }
   function onKey(e) {
     if (e.key === 'Escape') { e.stopPropagation(); shut(); return; }
-    if (e.key === 'ArrowRight') { e.stopPropagation(); e.preventDefault(); step(1); }
-    if (e.key === 'ArrowLeft') { e.stopPropagation(); e.preventDefault(); step(-1); }
+    if (e.key === 'ArrowRight') { e.stopPropagation(); e.preventDefault(); manual(1); }
+    if (e.key === 'ArrowLeft') { e.stopPropagation(); e.preventDefault(); manual(-1); }
   }
   function step(d) {
     if (shown.length < 2) return;
     at = (at + d + shown.length) % shown.length;
     paintLight();
+    slideIn(lightFrame, d);
   }
   function paintLight() {
     const it = shown[at];
@@ -235,6 +246,7 @@ export function CertificationWall(block, { editing = false } = {}) {
     light.hidden = false;
     requestAnimationFrame(() => light.classList.add('is-on'));
     document.addEventListener('keydown', onKey, true);
+    if (shown.length > 1) lightAuto.start();
   }
 
   /* ============================================================== 01 REGISTER */

@@ -1,6 +1,7 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
+import { autoSlide, slideIn } from '../utils/autoSlide.js';
 
 /**
  * Placements: four chapters of evidence, and a gallery that never distorts one
@@ -132,12 +133,14 @@ export function PlacementWall(block, { editing = false } = {}) {
 
   const prevBtn = h('button', {
     class: 'pw-light__nav pw-light__nav--prev', type: 'button', 'aria-label': 'Previous image',
-    onclick: (e) => { e.stopPropagation(); step(-1); },
+    onclick: (e) => { e.stopPropagation(); manual(-1); },
   }, icon('chevron-left', { class: 'ic' }));
   const nextBtn = h('button', {
     class: 'pw-light__nav pw-light__nav--next', type: 'button', 'aria-label': 'Next image',
-    onclick: (e) => { e.stopPropagation(); step(1); },
+    onclick: (e) => { e.stopPropagation(); manual(1); },
   }, icon('chevron-right', { class: 'ic' }));
+  const lightFrame = h('figure', { class: 'pw-light__frame' }, lightImg,
+    h('figcaption', { class: 'pw-light__foot' }, lightCap, lightMeta, lightCount));
 
   const light = h('div', {
     class: 'pw-light', hidden: true,
@@ -145,16 +148,24 @@ export function PlacementWall(block, { editing = false } = {}) {
   },
     h('button', { class: 'pw-light__close', type: 'button', 'aria-label': 'Close' },
       icon('close', { class: 'ic ic--sm' })),
-    prevBtn, nextBtn,
-    h('figure', { class: 'pw-light__frame' }, lightImg,
-      h('figcaption', { class: 'pw-light__foot' }, lightCap, lightMeta, lightCount)),
+    prevBtn, nextBtn, lightFrame,
   );
   document.body.appendChild(light);
+
+  /* The open image holds for a moment and the next slides in on its own; the
+     arrows still step, and restart the hold from wherever they land. */
+  const auto = autoSlide(() => step(1), { host: light });
+  function manual(delta) {
+    step(delta);
+    auto.reset();
+  }
 
   /* The tile the open image came out of, so it can go back into it. */
   let fromTile = null;
 
   function closeLight() {
+    auto.stop();
+    lightFrame.classList.remove('as-in--next', 'as-in--prev');
     document.removeEventListener('keydown', onLightKey, true);
     /* Fly back into the tile, which is what makes it read as one object moving
        rather than a viewer opening and shutting. If the arrows have walked on to
@@ -186,14 +197,15 @@ export function PlacementWall(block, { editing = false } = {}) {
     if (e.key === 'Escape') { e.stopPropagation(); closeLight(); return; }
     /* Swallowed, or the deck's own left/right handler moves to the next slide
        underneath the open image. */
-    if (e.key === 'ArrowRight') { e.stopPropagation(); e.preventDefault(); step(1); }
-    if (e.key === 'ArrowLeft') { e.stopPropagation(); e.preventDefault(); step(-1); }
+    if (e.key === 'ArrowRight') { e.stopPropagation(); e.preventDefault(); manual(1); }
+    if (e.key === 'ArrowLeft') { e.stopPropagation(); e.preventDefault(); manual(-1); }
   }
   /** Wraps, so the arrows never dead-end mid-presentation. */
   function step(delta) {
     if (shown.length < 2) return;
     atIndex = (atIndex + delta + shown.length) % shown.length;
     paint();
+    slideIn(lightFrame, delta);
   }
   function paint() {
     const it = shown[atIndex];
@@ -258,6 +270,7 @@ export function PlacementWall(block, { editing = false } = {}) {
     flyFrom(tile);
     requestAnimationFrame(() => light.classList.add('is-on'));
     document.addEventListener('keydown', onLightKey, true);
+    if (shown.length > 1) auto.start();
   }
 
   /* --------------------------------------------------------------- header */

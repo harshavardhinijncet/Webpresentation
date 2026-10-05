@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { autoSlide, slideIn, slideArrows } from '../utils/autoSlide.js';
 
 /**
  * A wall of tiles drifting up and down a tilted 3D plane, with the title
@@ -52,31 +53,68 @@ function interleave(items) {
 }
 
 /* ------------------------------------------------------------------ lightbox */
-function openLightbox(item) {
+/* Opens on the photograph that was clicked and then walks the whole wall: each
+   picture holds for a moment and the next slides in on its own. The arrows step
+   and restart the hold. */
+function openLightbox(items, startIndex = 0) {
+  let at = Math.max(0, Math.min(items.length - 1, startIndex));
+  const many = items.length > 1;
+
   const close = () => {
-    document.removeEventListener('keydown', onKey);
+    auto.stop();
+    document.removeEventListener('keydown', onKey, true);
     backdrop.remove();
   };
-  const onKey = (event) => { if (event.key === 'Escape') { event.stopPropagation(); close(); } };
+  const onKey = (event) => {
+    if (event.key === 'Escape') { event.stopPropagation(); close(); return; }
+    if (!many) return;
+    /* Swallowed, or the deck's own arrow handler turns the slide underneath. */
+    if (event.key === 'ArrowRight') { event.stopPropagation(); event.preventDefault(); manual(1); }
+    if (event.key === 'ArrowLeft') { event.stopPropagation(); event.preventDefault(); manual(-1); }
+  };
+
+  const img = h('img', { alt: '' });
+  const tag = h('span', { class: 'dw-modal__tag' });
+  const title = h('h3', { class: 'dw-modal__title' });
+  const arrows = slideArrows((d) => manual(d));
+  arrows.prev.hidden = !many;
+  arrows.next.hidden = !many;
+
+  const paint = (dir = 0) => {
+    const item = items[at];
+    img.src = item.src;
+    img.alt = item.title || item.tag || '';
+    tag.textContent = item.category || 'Technical Hub';
+    title.textContent = item.title || item.tag || '';
+    if (dir) slideIn(img, dir);
+  };
+  const step = (d) => {
+    if (!many) return;
+    at = (at + d + items.length) % items.length;
+    paint(d);
+  };
+  function manual(d) {
+    step(d);
+    auto.reset();
+  }
 
   const card = h('div', { class: 'dw-modal__card', onclick: (e) => e.stopPropagation() },
     h('button', { class: 'dw-modal__close', type: 'button', 'aria-label': 'Close', onclick: close },
       icon('close', { class: 'ic ic--sm' })),
-    h('div', { class: 'dw-modal__media' },
-      h('img', { src: item.src, alt: item.title || item.tag || '' })),
-    h('div', { class: 'dw-modal__meta' },
-      h('span', { class: 'dw-modal__tag' }, item.category || 'Technical Hub'),
-      h('h3', { class: 'dw-modal__title' }, item.title || item.tag || ''),
-    ),
+    h('div', { class: 'dw-modal__media' }, img, arrows.prev, arrows.next),
+    h('div', { class: 'dw-modal__meta' }, tag, title),
   );
 
   const backdrop = h('div', {
     class: 'dw-modal', role: 'dialog', 'aria-modal': 'true', onclick: close,
   }, card);
+  const auto = autoSlide(() => step(1), { host: backdrop });
 
-  document.addEventListener('keydown', onKey);
+  paint();
+  document.addEventListener('keydown', onKey, true);
   document.body.appendChild(backdrop);
   requestAnimationFrame(() => backdrop.classList.add('is-in'));
+  if (many) auto.start();
 }
 
 export function DriftWall(block, { editing = false } = {}) {
@@ -130,8 +168,8 @@ export function DriftWall(block, { editing = false } = {}) {
         const tile = h('div', {
           class: 'dw-tile', tabindex: '0', role: 'button',
           'aria-label': item.title || item.tag || 'Image',
-          onclick: () => openLightbox(item),
-          onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(item); } },
+          onclick: () => openLightbox(items, items.indexOf(item)),
+          onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(items, items.indexOf(item)); } },
           onpointerenter: () => { hoveredCol = c; },
           onfocus: () => { hoveredCol = c; },
           onblur: () => { hoveredCol = -1; },

@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { autoSlide, slideIn, slideArrows } from '../utils/autoSlide.js';
 import { media } from '../utils/media.js';
 import { videoControls } from '../utils/videoControls.js';
 
@@ -65,6 +66,7 @@ export function ProgramDeck(block, { editing = false } = {}) {
   const closePlayer = () => {
     // Unmount, don't hide — a hidden iframe keeps playing behind the gallery.
     frame.replaceChildren();
+    stopStills();
     player.classList.remove('is-portal', 'is-still', 'is-lit');
     if (player.parentNode !== root) root.appendChild(player);
     root.classList.remove('is-playing');
@@ -78,6 +80,49 @@ export function ProgramDeck(block, { editing = false } = {}) {
     ),
     frame,
   );
+
+  /* A programme's photographs run as a slideshow once one is opened: each holds
+     for a moment and the next slides in on its own. The arrows step and restart
+     the hold; they are hidden over a film, which is never skipped. */
+  let stills = [];
+  let stillAt = 0;
+  let stillLabel = '';
+  const stillArrows = slideArrows((d) => stillManual(d));
+  player.append(stillArrows.prev, stillArrows.next);
+  const stillAuto = autoSlide(() => stillStep(1), {
+    host: player,
+    canRun: () => player.classList.contains('is-still') && player.classList.contains('is-portal'),
+  });
+  function stillStep(d) {
+    if (stills.length < 2) return;
+    stillAt = (stillAt + d + stills.length) % stills.length;
+    show(stills[stillAt], stillLabel, d);
+  }
+  function stillManual(d) {
+    stillStep(d);
+    stillAuto.reset();
+  }
+  /* Swallowed, or the deck's own arrow handler turns the slide underneath. */
+  function onStillKey(e) {
+    if (e.key === 'ArrowRight') { e.stopPropagation(); e.preventDefault(); stillManual(1); }
+    if (e.key === 'ArrowLeft') { e.stopPropagation(); e.preventDefault(); stillManual(-1); }
+  }
+  function stopStills() {
+    stillAuto.stop();
+    document.removeEventListener('keydown', onStillKey, true);
+  }
+  const openStills = (list, index, label) => {
+    stills = list;
+    stillAt = Math.max(0, index);
+    stillLabel = label;
+    show(stills[stillAt], label);
+    const many = stills.length > 1;
+    stillArrows.prev.hidden = !many;
+    stillArrows.next.hidden = !many;
+    if (!many) return;
+    document.addEventListener('keydown', onStillKey, true);
+    stillAuto.start();
+  };
 
   /**
    * The way out has to be visible.
@@ -100,6 +145,7 @@ export function ProgramDeck(block, { editing = false } = {}) {
   player.addEventListener('pointermove', lightBar);
 
   const play = (video) => {
+    stopStills();
     playerTitle.textContent = video.title || '';
     player.classList.remove('is-still');
     /* Built first, so the control bar can be handed the element it drives: it
@@ -132,7 +178,7 @@ export function ProgramDeck(block, { editing = false } = {}) {
    * Contained rather than cropped — a photograph is the content here, not a
    * backdrop, and `cover` would slice the ends off the two landscape files.
    */
-  const show = (photo, label) => {
+  const show = (photo, label, dir = 0) => {
     /* The programme's name when the picture has no caption of its own: the bar is
        the only thing naming what is on screen once the gallery is behind it. */
     playerTitle.textContent = photo.caption || label || '';
@@ -157,6 +203,7 @@ export function ProgramDeck(block, { editing = false } = {}) {
     still.addEventListener('load', cap);
     if (still.complete) cap();
     frame.replaceChildren(still);
+    if (dir) slideIn(still, dir);
     player.classList.add('is-still');
     portal();
   };
@@ -216,7 +263,10 @@ export function ProgramDeck(block, { editing = false } = {}) {
       /* Read by the tile's entrance animation, so they arrive in reading order
          rather than all at once. */
       style: { '--i': String(i) },
-      onclick: () => (item.kind === 'film' ? play(item.video) : show(item.photo, program.name)),
+      onclick: () => (item.kind === 'film'
+        ? play(item.video)
+        : openStills(program.photos || [item.photo],
+            Math.max(0, (program.photos || []).indexOf(item.photo)), program.name)),
     }, shot);
   };
 
