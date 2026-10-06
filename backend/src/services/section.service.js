@@ -43,6 +43,8 @@ export const BLOCK_TYPES = [
   'event-reel',
   'certification-wall',
   'video-resume',
+  'ai-partners',
+  'partnership',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -81,6 +83,8 @@ const DEFAULT_SIZE = {
   'course-deck': { w: 12, h: 15 },
   'drift-wall': { w: 12, h: 15 },
   'platforms': { w: 12, h: 15 },
+  'ai-partners': { w: 12, h: 15 },
+  'partnership': { w: 12, h: 15 },
 };
 
 const oneOf = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
@@ -515,6 +519,101 @@ function normalizeBlock(raw, index = 0, depth = 0) {
     /* A wall of platform cards; opening one runs it inside the slide.
        Credentials are stored as given — the user was told they end up in the
        store, in git and on the deployed server, and chose that. */
+    /* AI partners, one spread each, chosen by a turning orbit. `mark` is the badge art and
+       `wordmark` the official lockup, both paths under /uploads; a partner with neither is set
+       in type. `hold` is how long each partner stays before the ring turns. */
+    case 'ai-partners':
+      block.title = text(raw.title, 80);
+      block.hold = clampInt(raw.hold, 3000, 20000, 6000);
+      block.partners = (Array.isArray(raw.partners) ? raw.partners : [])
+        .map((p) => ({
+          name: text(p?.name, 40),
+          status: text(p?.status, 60),
+          tag: text(p?.tag, 80),
+          mark: text(p?.mark, 200),
+          wordmark: text(p?.wordmark, 200),
+          headline: (Array.isArray(p?.headline) ? p.headline : [])
+            .map((l) => text(l, 60)).filter(Boolean).slice(0, 2),
+          body: text(p?.body, 600),
+          cards: (Array.isArray(p?.cards) ? p.cards : [])
+            .map((c) => ({
+              title: text(c?.title, 48),
+              body: text(c?.body, 180),
+              tags: (Array.isArray(c?.tags) ? c.tags : []).map((t) => text(t, 20)).filter(Boolean).slice(0, 4),
+            }))
+            .filter((c) => c.title).slice(0, 3),
+          stats: (Array.isArray(p?.stats) ? p.stats : [])
+            .map((s) => ({ value: text(s?.value, 16), label: text(s?.label, 48) }))
+            .filter((s) => s.value).slice(0, 3),
+          /* Photographs of the work, paths under /uploads, shown in a framed card. */
+          photos: (Array.isArray(p?.photos) ? p.photos : [])
+            .map((ph) => ({ src: text(ph?.src, 200), caption: text(ph?.caption, 80) }))
+            .filter((ph) => ph.src).slice(0, 8),
+          sample: Boolean(p?.sample),
+        }))
+        .filter((p) => p.name)
+        .slice(0, 6);
+      break;
+
+    /* A partnership page in two tabs: the story, and the lab. Every image is a path under
+       /uploads. `milestone.badge` is the official partner badge, cut from the announcement. */
+    case 'partnership': {
+      const mark = (m) => ({ name: text(m?.name, 60), logo: text(m?.logo, 200), dark: Boolean(m?.dark) });
+      const photos = (list, max) => (Array.isArray(list) ? list : [])
+        .map((ph) => ({
+          src: text(ph?.src, 200),
+          /* A small copy for ribbons, filmstrips and the card — full-size files decode too
+             slowly to arrive in time as they slide into view. */
+          thumb: text(ph?.thumb, 200),
+          title: text(ph?.title, 80),
+          short: text(ph?.short, 24),
+          caption: text(ph?.caption, 200),
+        }))
+        .filter((ph) => ph.src).slice(0, max);
+      block.title = text(raw.title, 80);
+      block.hold = clampInt(raw.hold, 2500, 15000, 3500);
+      block.lockup = { left: mark(raw.lockup?.left), right: mark(raw.lockup?.right) };
+      block.milestone = {
+        label: text(raw.milestone?.label, 40),
+        text: text(raw.milestone?.text, 200),
+        badge: text(raw.milestone?.badge, 200),
+      };
+      const ov = raw.overview || {};
+      block.overview = {
+        tag: text(ov.tag, 80),
+        headline: (Array.isArray(ov.headline) ? ov.headline : []).map((l) => text(l, 70)).filter(Boolean).slice(0, 2),
+        body: text(ov.body, 600),
+        highlights: (Array.isArray(ov.highlights) ? ov.highlights : [])
+          .map((hl) => ({ icon: iconKey(hl?.icon), title: text(hl?.title, 70), body: text(hl?.body, 140) }))
+          .filter((hl) => hl.title).slice(0, 6),
+        photos: photos(ov.photos, 24),
+      };
+      const lab = raw.lab || {};
+      block.lab = {
+        tabLabel: text(lab.tabLabel, 24),
+        mark: text(lab.mark, 200),
+        note: text(lab.note, 40),
+        cardStyle: oneOf(text(lab.cardStyle, 12), ['classic', 'neon'], 'classic'),
+        /* A cut-out photograph of a hand to hold the phone in the intro. Optional. */
+        hand: text(lab.hand, 200),
+        place: text(lab.place, 40),
+        handle: text(lab.handle, 40),
+        live: text(lab.live, 16),
+        avatar: text(lab.avatar, 200),
+        stats: (Array.isArray(lab.stats) ? lab.stats : [])
+          .map((s) => ({ icon: iconKey(s?.icon), value: text(s?.value, 16), label: text(s?.label, 30) }))
+          .filter((s) => s.value).slice(0, 3),
+        tag: text(lab.tag, 60),
+        title: text(lab.title, 80),
+        body: text(lab.body, 500),
+        facts: (Array.isArray(lab.facts) ? lab.facts : [])
+          .map((f) => ({ icon: iconKey(f?.icon), label: text(f?.label, 50) }))
+          .filter((f) => f.label).slice(0, 6),
+        slides: photos(lab.slides, 30),
+      };
+      break;
+    }
+
     case 'platforms':
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 120);

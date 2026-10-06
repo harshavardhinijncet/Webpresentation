@@ -68,20 +68,6 @@ function sector(from, to, rOuter, rInner) {
     + `L${n2(cx)} ${n2(cy)}A${rInner} ${rInner} 0 ${big} 0 ${n2(dx)} ${n2(dy)}Z`;
 }
 
-/* A title on two lines once it has more than two words, broken where the two halves come out
-   closest in length — "AI & Innovation / Leadership", not "AI / & Innovation Leadership". */
-function titleLines(title) {
-  const words = String(title).trim().split(/\s+/);
-  if (words.length <= 2) return [words.join(' ')];
-  let best = 1;
-  let bestDiff = Infinity;
-  for (let k = 1; k < words.length; k += 1) {
-    const diff = Math.abs(words.slice(0, k).join(' ').length - words.slice(k).join(' ').length);
-    if (diff < bestDiff) { bestDiff = diff; best = k; }
-  }
-  return [words.slice(0, best).join(' '), words.slice(best).join(' ')];
-}
-
 export function LeadershipRoad(block, { editing = false } = {}) {
   const panels = (block.panels || []).filter(Boolean);
   if (!panels.length) {
@@ -136,16 +122,13 @@ export function LeadershipRoad(block, { editing = false } = {}) {
   const titles = panels.map((panel, i) => {
     const { y } = seg(i);
     const x = xAt(rOuter, y) + 26;
-    const lines = titleLines((panel.title || `Chapter ${i + 1}`).toUpperCase());
+    /* Always one line: a title that broke onto two read as two chapters. */
     return svg('text', {
       class: 'ja-seg__label', x: n2(x), y: n2(y),
       'dominant-baseline': 'central',
       style: `--i:${i}`,
       onclick: () => manual(i),
-    }, ...lines.map((line, k) => svg('tspan', {
-      x: n2(x),
-      dy: k === 0 ? `${lines.length > 1 ? -0.6 : 0}em` : '1.2em',
-    }, line)));
+    }, (panel.title || `Chapter ${i + 1}`).toUpperCase());
   });
 
   /* One leader, re-aimed at whichever chapter is on. */

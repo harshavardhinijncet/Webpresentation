@@ -142,7 +142,7 @@ put, and browser Back returns.
 
 ## Current state
 
-Fourteen sections, all with content. Nothing is a placeholder and nothing is half
+Sixteen sections, all with content. Nothing is a placeholder and nothing is half
 built; the empty ones were deleted rather than left for a presenter to walk into.
 Organization Overview and Leadership used to be groups whose rows opened a list
 instead of a slide — Leadership held no blocks at all, so its row opened an empty
@@ -163,7 +163,9 @@ page. Their pages came up a level and both wrappers went, along with CEO Vision.
 | 11 | Events | `event-sign` | `event-reel` | `uploads/Videos.xlsx` |
 | 12 | Video Resumes | `clapper` | `video-resume` | `uploads/Video Resumes.xlsx` |
 | 13 | AI Ready Engineer | `ai-figure` | `course-deck` | authored |
-| 14 | Platforms | `tap-network` | `platforms` | `uploads/platform-logos/` |
+| 14 | AI Partners | `brain` | `ai-partners` | `tools/publish-ai-partners.cjs` — Claude from the two success-story sites; OpenAI and Sarvam copy is sample |
+| 15 | Torii | `link` | `partnership` | `tools/publish-torii.cjs` — Technical Hub × Torii Minds, and the 24/7 Claude AI Lab tab; photos in `uploads/torii-partnership/` |
+| 16 | Platforms | `tap-network` | `platforms` | `uploads/platform-logos/` |
 
 The glyphs are the user's own SVGs in `backend/uploads/navicons/`, one file per row
 plus `Signout`, `collapse` and `expand`. They are solid-fill artwork at mixed
@@ -214,6 +216,8 @@ still publishable only by hand.
 | `publish-programs.cjs` | Programs — the section's name, and Ignite Coder's photographs |
 | `presenter-visibility.cjs` | what the presenter side shows |
 | `flatten-navigation.cjs` | the flat deck — order, titles and per-section icons |
+| `publish-ai-partners.cjs` | AI Partners — creates it after AI Ready Engineer, all copy in the script |
+| `publish-torii.cjs` | Torii — creates it after AI Partners; the Claude Partner Network badge is cut from the announcement kept beside it |
 | `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
 
 The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it

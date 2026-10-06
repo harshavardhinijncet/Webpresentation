@@ -4050,8 +4050,8 @@
               ]
             },
             {
-              "title": "Global Delivery Leadership",
-              "chapter": "Global Delivery Leadership",
+              "title": "Global Leadership",
+              "chapter": "Global Leadership",
               "year": "Wipro",
               "role": "Project & Technology Leadership",
               "summary": "After building strong technical expertise, Babji moved into leadership and project management at Wipro, where he spent around a decade. Working across complex technology environments strengthened his capabilities in delivery, teams, execution, problem-solving, and leadership.",
@@ -4113,7 +4113,7 @@
         }
       ],
       "createdAt": "2026-08-06T10:50:26.898Z",
-      "updatedAt": "2026-08-19T06:48:39.364Z"
+      "updatedAt": "2026-10-05T10:31:04.845Z"
     },
     {
       "id": "sec_28488e9d069c46e5",
@@ -6122,7 +6122,7 @@
       "icon": "",
       "iconKey": "tap-network",
       "iconAssetId": null,
-      "order": 13,
+      "order": 15,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -7947,6 +7947,514 @@
       ],
       "createdAt": "2026-08-19T03:57:25.999Z",
       "updatedAt": "2026-08-19T06:48:39.395Z"
+    },
+    {
+      "id": "sec_97fce5f9fc234b07",
+      "orgId": "technical-hub",
+      "parentId": null,
+      "key": "ai-partners",
+      "title": "AI Partners",
+      "subtitle": "",
+      "icon": "",
+      "iconKey": "brain",
+      "iconAssetId": null,
+      "order": 13,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_8596849a959f4fac",
+          "type": "ai-partners",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "title": "AI Partners",
+          "hold": 6000,
+          "partners": [
+            {
+              "name": "Claude",
+              "status": "Claude Certified Services Partner",
+              "tag": "Claude Partner Network",
+              "mark": "coe/claude.webp",
+              "wordmark": "torii-partnership/claude-certified-services-partner.png",
+              "headline": [
+                "Certified Services Partner.",
+                "Claude, across every campus."
+              ],
+              "body": "Technical Hub designs, builds and teaches with Claude — official certification, hands-on training, 24/7 AI labs and production apps, delivered by Claude-certified architects and turning multi-hour work into minutes.",
+              "cards": [
+                {
+                  "title": "Certify & train",
+                  "body": "Official Anthropic courses — 900+ students certified at Aditya University.",
+                  "tags": [
+                    "Claude API",
+                    "Claude Code",
+                    "MCP"
+                  ]
+                },
+                {
+                  "title": "24/7 Claude AI Lab",
+                  "body": "Claude Max on every workstation at NCET, open all year to every learner.",
+                  "tags": [
+                    "Claude Max",
+                    "Build",
+                    "Deploy"
+                  ]
+                },
+                {
+                  "title": "Prompt to production",
+                  "body": "Six college applications built end to end with Claude Code.",
+                  "tags": [
+                    "Claude Code",
+                    "Apps",
+                    "Live"
+                  ]
+                }
+              ],
+              "stats": [
+                {
+                  "value": "10",
+                  "label": "Claude-certified architects"
+                },
+                {
+                  "value": "900+",
+                  "label": "Students certified"
+                },
+                {
+                  "value": "160+",
+                  "label": "Hackathon teams"
+                }
+              ],
+              "photos": [],
+              "sample": false
+            },
+            {
+              "name": "OpenAI",
+              "status": "OpenAI Select Partner",
+              "tag": "Skills for the GPT era",
+              "mark": "coe/openai.webp",
+              "wordmark": "coe/opneai full.png",
+              "headline": [
+                "OpenAI Select Partner.",
+                "Learning that ships."
+              ],
+              "body": "As an OpenAI Select Partner, Technical Hub brings OpenAI models into hands-on training — helping students and faculty prototype assistants, automate everyday work and ship AI-powered solutions.",
+              "cards": [
+                {
+                  "title": "GPT builder labs",
+                  "body": "Students design, prompt and test assistants on OpenAI models.",
+                  "tags": [
+                    "Prompting",
+                    "APIs",
+                    "Agents"
+                  ]
+                },
+                {
+                  "title": "Faculty enablement",
+                  "body": "Teaching teams use OpenAI tools to plan lessons and build resources.",
+                  "tags": [
+                    "FDP",
+                    "Content",
+                    "Assessment"
+                  ]
+                },
+                {
+                  "title": "Industry projects",
+                  "body": "Real problems solved end to end, from idea to a working demo.",
+                  "tags": [
+                    "Build",
+                    "Demo",
+                    "Deploy"
+                  ]
+                }
+              ],
+              "stats": [
+                {
+                  "value": "Select",
+                  "label": "OpenAI partner tier"
+                },
+                {
+                  "value": "Labs",
+                  "label": "Hands-on GPT builds"
+                },
+                {
+                  "value": "Live",
+                  "label": "Industry projects"
+                }
+              ],
+              "photos": [],
+              "sample": true
+            },
+            {
+              "name": "Sarvam",
+              "status": "Sarvam AI Partner",
+              "tag": "AI that speaks India",
+              "mark": "coe/sarvam.png",
+              "wordmark": "",
+              "headline": [
+                "Sarvam AI partner.",
+                "Built for Bharat."
+              ],
+              "body": "With Sarvam AI, Technical Hub helps students build with Indian-language models — voice, translation and multilingual assistants for the communities they come from.",
+              "cards": [
+                {
+                  "title": "Indic language AI",
+                  "body": "Students work with models built for Indian languages.",
+                  "tags": [
+                    "Telugu",
+                    "Hindi",
+                    "More"
+                  ]
+                },
+                {
+                  "title": "Voice & speech",
+                  "body": "Speech recognition and voice interfaces for local users.",
+                  "tags": [
+                    "Speech",
+                    "Voice",
+                    "Translate"
+                  ]
+                },
+                {
+                  "title": "Bharat-first projects",
+                  "body": "Solutions designed for rural and tier-2/3 communities.",
+                  "tags": [
+                    "Impact",
+                    "Access",
+                    "Scale"
+                  ]
+                }
+              ],
+              "stats": [
+                {
+                  "value": "Indic",
+                  "label": "Language models"
+                },
+                {
+                  "value": "Voice",
+                  "label": "Speech AI"
+                },
+                {
+                  "value": "Bharat",
+                  "label": "First solutions"
+                }
+              ],
+              "photos": [],
+              "sample": true
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-06T04:37:08.815Z",
+      "updatedAt": "2026-10-06T05:37:35.739Z"
+    },
+    {
+      "id": "sec_b17a333c604f4f3b",
+      "orgId": "technical-hub",
+      "parentId": null,
+      "key": "torii",
+      "title": "Torii",
+      "subtitle": "",
+      "icon": "",
+      "iconKey": "link",
+      "iconAssetId": null,
+      "order": 14,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_30a54bbd97014c94",
+          "type": "partnership",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "title": "Torii",
+          "hold": 3500,
+          "lockup": {
+            "left": {
+              "name": "Technical Hub",
+              "logo": "torii-partnership/ncet-logo-thub.png",
+              "dark": false
+            },
+            "right": {
+              "name": "Torii Minds",
+              "logo": "torii-partnership/th-logo-toriiminds.png",
+              "dark": true
+            }
+          },
+          "milestone": {
+            "label": "New milestone",
+            "text": "Technical Hub is now a Certified Services Partner of Anthropic — Claude, in the Claude Partner Network.",
+            "badge": "torii-partnership/claude-certified-services-partner.png"
+          },
+          "overview": {
+            "tag": "Claude Partner Network",
+            "headline": [
+              "Technical Hub × Torii Minds",
+              "One AI-native team, built on Claude."
+            ],
+            "body": "Torii Minds works alongside Technical Hub to take Claude from the lab into every campus it serves — the team behind NTSquare at NCET, the AI Tech Coach Skill Sprint and Myna. A whole workforce made AI-native, now shipping its own Claude-powered products and training at industry standard.",
+            "highlights": [
+              {
+                "icon": "users",
+                "title": "100% AI-skilled team",
+                "body": "A fully AI-assisted development pipeline, end to end."
+              },
+              {
+                "icon": "layers",
+                "title": "Five-module curriculum",
+                "body": "From Claude foundations to training-delivery practice."
+              },
+              {
+                "icon": "phone",
+                "title": "Myna, live on both stores",
+                "body": "An AI-powered LSRW platform on Play Store and App Store."
+              },
+              {
+                "icon": "rocket",
+                "title": "AI Tech Coach Skill Sprint",
+                "body": "A 60-hour sprint, launched at NCET."
+              }
+            ],
+            "photos": [
+              {
+                "src": "torii-partnership/torii-team-trim.jpg",
+                "thumb": "torii-partnership/thumbs/torii-team-trim.jpg",
+                "title": "The Torii Minds team",
+                "short": "",
+                "caption": "The minds behind NTSquare"
+              },
+              {
+                "src": "torii-partnership/aitech-launch.jpg",
+                "thumb": "torii-partnership/thumbs/aitech-launch.jpg",
+                "title": "AI Tech Coach launch",
+                "short": "",
+                "caption": "Unveiling the 60-hour Skill Sprint"
+              },
+              {
+                "src": "torii-partnership/ncet-home-image.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-home-image.jpg",
+                "title": "The Claude wall",
+                "short": "",
+                "caption": "Students in the 24/7 AI Lab, NCET"
+              },
+              {
+                "src": "torii-partnership/aitech-hall.jpg",
+                "thumb": "torii-partnership/thumbs/aitech-hall.jpg",
+                "title": "Skill Sprint in session",
+                "short": "",
+                "caption": "Learn · Innovate · Implement · Lead with AI"
+              },
+              {
+                "src": "torii-partnership/aditya-cert-crowd.jpg",
+                "thumb": "torii-partnership/thumbs/aditya-cert-crowd.jpg",
+                "title": "900+ students certified",
+                "short": "",
+                "caption": "Anthropic courses at Aditya University"
+              },
+              {
+                "src": "torii-partnership/ntsquare-banner.jpg",
+                "thumb": "torii-partnership/thumbs/ntsquare-banner.jpg",
+                "title": "NTSquare at NCET",
+                "short": "",
+                "caption": "Where learning meets industry"
+              },
+              {
+                "src": "torii-partnership/hero-campus.jpg",
+                "thumb": "torii-partnership/thumbs/hero-campus.jpg",
+                "title": "Claude on campus",
+                "short": "",
+                "caption": "The Claude stall at NCET"
+              },
+              {
+                "src": "torii-partnership/ncet-story-kiosk.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-story-kiosk.jpg",
+                "title": "Claude awareness programme",
+                "short": "",
+                "caption": "A packed hall, three days running"
+              },
+              {
+                "src": "torii-partnership/aditya-hackathon-stage.jpg",
+                "thumb": "torii-partnership/thumbs/aditya-hackathon-stage.jpg",
+                "title": "Project Space, Season 8",
+                "short": "",
+                "caption": "160+ teams building with Claude"
+              },
+              {
+                "src": "torii-partnership/th-mg-0186.webp",
+                "thumb": "torii-partnership/thumbs/th-mg-0186.jpg",
+                "title": "Project Street",
+                "short": "",
+                "caption": "Builds defended in the open"
+              },
+              {
+                "src": "torii-partnership/aditya-winners.jpg",
+                "thumb": "torii-partnership/thumbs/aditya-winners.jpg",
+                "title": "Project Space winners",
+                "short": "",
+                "caption": "Top teams won Claude credits"
+              },
+              {
+                "src": "torii-partnership/th-img-0495.webp",
+                "thumb": "torii-partnership/thumbs/th-img-0495.jpg",
+                "title": "Project Week",
+                "short": "",
+                "caption": "Ideas turned into working builds"
+              }
+            ]
+          },
+          "lab": {
+            "tabLabel": "AI Lab",
+            "mark": "coe/claude.webp",
+            "note": "Claude Max, every seat",
+            "cardStyle": "neon",
+            "hand": "",
+            "place": "NCET",
+            "handle": "",
+            "live": "24/7",
+            "avatar": "torii-partnership/thumbs/ncet-ai-lab-1.jpg",
+            "stats": [
+              {
+                "icon": "chip",
+                "value": "Max",
+                "label": "On every seat"
+              },
+              {
+                "icon": "clock",
+                "value": "24/7",
+                "label": "Open all year"
+              },
+              {
+                "icon": "layers",
+                "value": "4",
+                "label": "Skill forges"
+              }
+            ],
+            "tag": "Claude Max · Open 24/7",
+            "title": "The 24/7 Claude AI Lab",
+            "body": "Ordinary computer rooms at NCET, reimagined as AI workbenches. Every workstation runs a Claude Max account — open all year to every student, faculty member, trainer and developer.",
+            "facts": [
+              {
+                "icon": "chip",
+                "label": "Claude Max on every machine"
+              },
+              {
+                "icon": "clock",
+                "label": "Open 24/7, all year"
+              },
+              {
+                "icon": "rocket",
+                "label": "Build · Train · Deploy"
+              },
+              {
+                "icon": "users",
+                "label": "Students, faculty & developers"
+              }
+            ],
+            "slides": [
+              {
+                "src": "torii-partnership/ncet-home-image.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-home-image.jpg",
+                "title": "The Claude wall",
+                "short": "",
+                "caption": "Students at the heart of the lab."
+              },
+              {
+                "src": "torii-partnership/ncet-ai-lab-1.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-ai-lab-1.jpg",
+                "title": "The 24/7 AI Lab",
+                "short": "",
+                "caption": "Claude Max on every workstation, open all year."
+              },
+              {
+                "src": "torii-partnership/ncet-ai-lab-4.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-ai-lab-4.jpg",
+                "title": "Inauguration",
+                "short": "",
+                "caption": "The 24/7 AI Lab opens, every system on."
+              },
+              {
+                "src": "torii-partnership/ncet-ai-lab-5.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-ai-lab-5.jpg",
+                "title": "Opening day",
+                "short": "",
+                "caption": "Guests at the workstations on day one."
+              },
+              {
+                "src": "torii-partnership/ncet-ai-lab-2.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-ai-lab-2.jpg",
+                "title": "AI Ready Engineer zone",
+                "short": "",
+                "caption": "Workstations under the AI Ready Engineer wall."
+              },
+              {
+                "src": "torii-partnership/ncet-ai-lab-3.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-ai-lab-3.jpg",
+                "title": "Claude workbenches",
+                "short": "",
+                "caption": "Focused, individual workstations for building with Claude."
+              },
+              {
+                "src": "torii-partnership/lab-learn-build.png",
+                "thumb": "torii-partnership/thumbs/lab-learn-build.jpg",
+                "title": "AI Skill Forge",
+                "short": "Skill Forge",
+                "caption": "Learn · Build · Innovate · Excel."
+              },
+              {
+                "src": "torii-partnership/lab-ai-ready.png",
+                "thumb": "torii-partnership/thumbs/lab-ai-ready.jpg",
+                "title": "AI Ready Engineer Forge",
+                "short": "AI Ready",
+                "caption": "Build · Train · Deploy — Claude-assisted at every step."
+              },
+              {
+                "src": "torii-partnership/lab-domains.png",
+                "thumb": "torii-partnership/thumbs/lab-domains.jpg",
+                "title": "AI Domains Forge",
+                "short": "AI Domains",
+                "caption": "ML · DL · CV · NLP · Robotics."
+              },
+              {
+                "src": "torii-partnership/lab-build-smarter.png",
+                "thumb": "torii-partnership/thumbs/lab-build-smarter.jpg",
+                "title": "Collaboration Forge",
+                "short": "Collab",
+                "caption": "Together we build smarter."
+              },
+              {
+                "src": "torii-partnership/enrichment-lab.png",
+                "thumb": "torii-partnership/thumbs/enrichment-lab.jpg",
+                "title": "Innovation Studio",
+                "short": "Studio",
+                "caption": "Ideate · Prototype · Refine."
+              },
+              {
+                "src": "torii-partnership/ncet-ai-lab-6.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-ai-lab-6.jpg",
+                "title": "AR roadmap wall",
+                "short": "",
+                "caption": "An AR-enabled AI Ready Engineer roadmap — scan the wall, learn the skill."
+              },
+              {
+                "src": "torii-partnership/ncet-ai-lab-7.jpg",
+                "thumb": "torii-partnership/thumbs/ncet-ai-lab-7.jpg",
+                "title": "AI Centre of Excellence",
+                "short": "",
+                "caption": "The lab’s centre-of-excellence wall at NCET."
+              }
+            ]
+          }
+        }
+      ],
+      "createdAt": "2026-10-06T05:19:15.596Z",
+      "updatedAt": "2026-10-06T10:11:43.279Z"
     }
   ],
   "assets": [

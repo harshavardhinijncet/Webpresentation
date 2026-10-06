@@ -22,6 +22,8 @@ import { EventReel } from './EventReel.js';
 import { CertificationWall } from './CertificationWall.js';
 import { VideoResumes } from './VideoResumes.js';
 import { AiReadyEngineer } from './AiReadyEngineer.js';
+import { AiPartners } from './AiPartners.js';
+import { Partnership } from './Partnership.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
 import { VideoBox } from './VideoBox.js';
@@ -146,6 +148,12 @@ export function renderBlock(block, options = {}) {
 
     case 'video-resume':
       return VideoResumes(block, options);
+
+    case 'ai-partners':
+      return AiPartners(block, options);
+
+    case 'partnership':
+      return Partnership(block, options);
 
     case 'ai-ready-engineer':
       return AiReadyEngineer(block, options);

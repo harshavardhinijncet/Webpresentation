@@ -13460,7 +13460,7 @@ body.is-presenting .vc {
   fill: color-mix(in srgb, var(--ja-ink) 52%, transparent);
   cursor: pointer;
   font-family: var(--display);
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -13921,4 +13921,2155 @@ body.is-presenting .fit-slide__inner .sw-head {
 @media (prefers-reduced-motion: reduce) {
   .as-in--next, .as-in--prev { animation: none; }
   .as-nav { transition: none; }
+}
+
+/* ==========================================================================
+   AI Partners — an editorial spread chosen by a turning orbit
+   The ring and the badges are anchored to the bottom-right corner, so on a
+   taller presenting screen they stay in the corner and the spread gains air.
+   Geometry lives in AiPartners.js (STOP, FOCUS, ORBIT_R); the ring's centre
+   sits 40px in from the right edge and 200px below the floor.
+   ========================================================================== */
+.canvas-block--ai-partners {
+  min-height: 860px !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+.ap-root {
+  --ap-ink: #0d1a12;
+  --ap-paper: #f4f6f2;
+  --ap-band: #e6ebe4;
+  --ap-cx: -10px;    /* ring centre, from the right edge (negative is past it) — far enough out that
+                        the band clears the cards' corner by 40px+ on every partner */
+  --ap-cy: -200px;   /* ring centre, from the floor (negative is below it) */
+  position: relative;
+  flex: 0 0 auto;
+  height: 860px;
+  min-height: 860px;
+  overflow: hidden;
+  background: var(--ap-paper);
+  color: var(--ap-ink);
+  font-family: var(--font);
+}
+
+.slide--hero .ap-root { border-radius: 0; }
+
+/* A faint dot field: the "computational" ground, drawn as a pattern rather than a gradient. */
+.ap-grid {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='2' cy='2' r='1.3' fill='%230d1a12' fill-opacity='0.07'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- top bar */
+.ap-top {
+  position: absolute;
+  top: 28px;
+  left: 72px;
+  right: 56px;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  animation: ap-fade 0.6s ease both;
+}
+
+.ap-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ap-brand__mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--brand-primary, #008638);
+  color: #ffffff;
+}
+
+.ap-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--ap-ink) 8%, transparent);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.7);
+  backdrop-filter: blur(6px);
+}
+
+.ap-tab {
+  position: relative;
+  overflow: hidden;
+  padding: 9px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: color-mix(in srgb, var(--ap-ink) 58%, transparent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.3s ease, background 0.3s ease;
+}
+
+.ap-tab:hover { color: var(--ap-ink); }
+
+.ap-tab.is-active {
+  background: var(--brand-primary, #008638);
+  color: #ffffff;
+}
+
+/* How much of this partner's hold is left, along the foot of its tab. */
+.ap-tab__bar {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--brand-accent, #ffbb00);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.ap-root.is-in:not(.is-paused) .ap-tab.is-active .ap-tab__bar {
+  animation: ap-hold var(--ap-hold, 6000ms) linear both;
+}
+
+@keyframes ap-hold {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.ap-top__end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.ap-status {
+  padding: 11px 20px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px -10px rgba(13, 26, 18, 0.3);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ap-play {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid color-mix(in srgb, var(--ap-ink) 12%, transparent);
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--ap-ink);
+  cursor: pointer;
+}
+
+.ap-play:hover { border-color: var(--brand-primary, #008638); }
+
+/* ----------------------------------------------------------------- spread */
+.ap-spread {
+  position: absolute;
+  top: 132px;
+  left: 72px;
+  bottom: 44px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 860px;
+}
+
+.ap-spread > *,
+.ap-headline > span,
+.ap-work__label,
+.ap-card,
+.ap-stat {
+  animation: ap-rise 0.7s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes ap-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes ap-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ap-tag {
+  padding: 7px 14px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--brand-accent, #ffbb00) 18%, #ffffff);
+  /* The ink alone measured 4.0:1 on this tint; a step darker clears 4.5:1 for 12px. */
+  color: color-mix(in srgb, var(--accent-ink, #7a5a00) 78%, #000000);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ap-headline {
+  display: grid;
+  margin: 22px 0 0;
+  font-size: 60px;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.ap-headline__lead { font-weight: 700; color: var(--ap-ink); }
+.ap-headline__second { font-weight: 400; color: color-mix(in srgb, var(--ap-ink) 78%, transparent); }
+
+.ap-body {
+  max-width: 50ch;
+  margin: 20px 0 0;
+  font-size: 18px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--ap-ink) 78%, transparent);
+}
+
+.ap-official {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
+  padding: 10px 18px 10px 14px;
+  border-left: 3px solid var(--brand-primary, #008638);
+  border-radius: 0 12px 12px 0;
+  background: rgb(255 255 255 / 0.75);
+}
+
+.ap-official__label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ap-ink) 50%, transparent);
+}
+
+.ap-official__mark { display: block; height: 52px; width: auto; border-radius: 8px; }
+
+.ap-official__type {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.ap-official__glyph { display: block; width: 38px; height: 38px; }
+
+/* Lifted off the floor a little, so the cards sit in the slide rather than on its edge, and
+   never closer than 18px to the partner row above — Claude's taller badge took that gap away. */
+.ap-work { margin-top: auto; margin-bottom: 16px; padding-top: 18px; }
+
+.ap-work__label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ap-ink) 50%, transparent);
+}
+
+/* 3 × 260 + gaps ends at x 892 — clear of the ring's band, which at the cards' foot is at
+   x 939 or beyond, and of the badge rolling in along the bottom of the ring.
+   Set on a gentle inward curve, like a row of cards wrapped round the viewer: the outer two
+   turn towards the middle and come forward, the middle one sits back. */
+.ap-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 260px);
+  gap: 20px;
+}
+
+.ap-card {
+  --mx: 0;
+  --my: 0;
+  position: relative;
+  overflow: hidden;
+  padding: 22px 22px 18px;
+  border: 1px solid color-mix(in srgb, var(--ap-ink) 7%, transparent);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 18px 38px -24px rgba(13, 26, 18, 0.38);
+  transform-origin: 50% 50%;
+  /* Depth card: tilted towards the pointer. At rest --mx/--my are 0 and this is flat. */
+  transform: perspective(900px) translateZ(var(--arc-z, 0px)) rotateX(calc(var(--my) * -12deg)) rotateY(calc(var(--arc-ry, 0deg) + var(--mx) * 14deg));
+  transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.16, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+  /* `backwards`, not `both`: a held end state would pin transform and kill the hover lift. */
+  animation: ap-card-in 0.9s cubic-bezier(0.22, 0.9, 0.16, 1) backwards;
+  animation-delay: var(--d, 0s);
+}
+
+/* The curve: the outer cards turn in, each pivoting on its own outer edge so that edge stays
+   exactly where the grid put it — pivoting on the inner edge swung the right card 60px out
+   into the ring. The middle card sits a little back. */
+.ap-card:nth-child(1) { --arc-ry: 16deg; --arc-z: 0px; transform-origin: 0% 50%; }
+.ap-card:nth-child(2) { --arc-ry: 0deg; --arc-z: -16px; }
+.ap-card:nth-child(3) { --arc-ry: -16deg; --arc-z: 0px; transform-origin: 100% 50%; }
+
+/* Following the pointer: a short transition so it tracks without lagging, a small lift, and a
+   shadow thrown away from the side that tipped towards the viewer. */
+.ap-card.is-tilting {
+  transform: perspective(900px) translateZ(var(--arc-z, 0px)) translateY(-6px) rotateX(calc(var(--my) * -12deg)) rotateY(calc(var(--arc-ry, 0deg) + var(--mx) * 14deg)) scale(1.02);
+  transition: transform 0.12s linear, box-shadow 0.35s ease, border-color 0.35s ease;
+  border-color: color-mix(in srgb, var(--brand-primary, #008638) 30%, transparent);
+  box-shadow: calc(var(--mx) * -26px) calc(28px + var(--my) * -18px) 46px -24px rgba(0, 134, 56, 0.45);
+}
+
+/* The layers part by depth: tags nearest, then title, then copy; the numeral sits behind and
+   moves the other way. */
+.ap-card__title,
+.ap-card__body,
+.ap-card__tags,
+.ap-card__num {
+  transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.16, 1), color 0.35s ease;
+}
+.ap-card__title { transform: translate(calc(var(--mx) * 12px), calc(var(--my) * 10px)); }
+.ap-card__body { transform: translate(calc(var(--mx) * 7px), calc(var(--my) * 6px)); }
+.ap-card__tags { transform: translate(calc(var(--mx) * 16px), calc(var(--my) * 13px)); }
+.ap-card__num { transform: translate(calc(var(--mx) * -10px), calc(var(--my) * -8px)); }
+.ap-card.is-tilting .ap-card__title,
+.ap-card.is-tilting .ap-card__body,
+.ap-card.is-tilting .ap-card__tags,
+.ap-card.is-tilting .ap-card__num { transition-duration: 0.12s; transition-timing-function: linear; }
+
+/* A soft light that follows the pointer — a blurred disc, not a gradient. */
+.ap-card__glare {
+  position: absolute;
+  left: calc(50% + var(--mx) * 100%);
+  top: calc(50% + var(--my) * 100%);
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 20%, transparent);
+  filter: blur(42px);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.ap-card.is-tilting .ap-card__glare { opacity: 1; }
+
+@keyframes ap-card-in {
+  from { opacity: 0; transform: translateY(36px) rotateX(24deg) scale(0.95); filter: blur(4px); }
+  60% { filter: blur(0); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+/* The rule that draws itself across the card's top once it lands. */
+.ap-card__bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--brand-primary, #008638);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: ap-card-bar 0.7s cubic-bezier(0.22, 0.9, 0.16, 1) forwards;
+  animation-delay: calc(var(--d, 0s) + 0.45s);
+}
+
+@keyframes ap-card-bar { to { transform: scaleX(1); } }
+
+.ap-card__num {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  color: color-mix(in srgb, var(--brand-primary, #008638) 12%, transparent);
+  transition: color 0.35s ease;
+}
+
+.ap-card:hover .ap-card__num { color: color-mix(in srgb, var(--brand-primary, #008638) 28%, transparent); }
+
+/* One sweep of light once the card has landed. */
+.ap-card__shine {
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  left: -40%;
+  width: 26%;
+  background: rgb(255 255 255 / 0.7);
+  transform: skewX(-20deg);
+  pointer-events: none;
+  animation: ap-card-shine 1.1s ease both;
+  animation-delay: calc(var(--d, 0s) + 0.75s);
+}
+
+@keyframes ap-card-shine { from { left: -40%; } to { left: 140%; } }
+
+.ap-card__title {
+  position: relative;
+  margin: 0;
+  padding-right: 40px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ap-card__body {
+  position: relative;
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ap-ink) 72%, transparent);
+}
+
+.ap-card__tags {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+@keyframes ap-card-tag { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+
+.ap-card__tags span {
+  animation: ap-card-tag 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) backwards;
+  animation-delay: calc(var(--d, 0s) + 0.55s + var(--t, 0) * 0.07s);
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 9%, #ffffff);
+  color: var(--ap-ink);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------- ring */
+.ap-ring {
+  position: absolute;
+  right: calc(var(--ap-cx) - 700px);
+  bottom: calc(var(--ap-cy) - 700px);
+  width: 1400px;
+  height: 1400px;
+  pointer-events: none;
+}
+
+.ap-ring__band {
+  position: absolute;
+  inset: 0;
+  border: 116px solid var(--ap-band);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.8);
+}
+
+/* Two fine tracks either side of the band, turning slowly the whole time. */
+.ap-ring__track {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px dashed color-mix(in srgb, var(--brand-primary, #008638) 26%, transparent);
+  animation: ap-spin 90s linear infinite;
+}
+
+.ap-ring__track--outer { inset: -46px; }
+.ap-ring__track--inner { inset: 150px; animation-direction: reverse; animation-duration: 120s; }
+
+@keyframes ap-spin { to { transform: rotate(360deg); } }
+
+/* The focus point, a breathing halo where the chosen badge comes to rest:
+   FOCUS -124° on ORBIT_R 642 from the ring's centre (700, 700). */
+.ap-ring__focus {
+  position: absolute;
+  left: calc(700px - 359px);
+  top: calc(700px - 532px);
+  width: 150px;
+  height: 150px;
+  border: 2px solid color-mix(in srgb, var(--brand-primary, #008638) 40%, transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ap-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes ap-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+  50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.35; }
+}
+
+/* ----------------------------------------------------------------- badges */
+.ap-orbit {
+  position: absolute;
+  right: var(--ap-cx);
+  bottom: var(--ap-cy);
+  z-index: 2;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--orbit, 0deg));
+  transition: transform var(--ap-turn, 1400ms) cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Out along its own angle, then turned back upright — the counter-turn includes the orbit's,
+   so a badge rides the ring without ever tilting. */
+.ap-badge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * (var(--a) + var(--orbit, 0deg))));
+  transition: transform var(--ap-turn, 1400ms) cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ap-badge__face {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 100px;
+  height: 100px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 18px 36px -16px rgba(13, 26, 18, 0.45);
+  transform: translate(-50%, -50%) scale(0.86);
+  transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.16, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.ap-badge__face img { width: 58%; height: 58%; object-fit: contain; }
+
+/* A partner without an official file: its name set in type, never a drawn logo. */
+.ap-badge__type {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ap-ink);
+}
+
+.ap-badge.is-focus .ap-badge__face {
+  border-color: var(--brand-primary, #008638);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--brand-primary, #008638) 14%, transparent),
+    0 24px 44px -16px rgba(0, 134, 56, 0.55);
+  transform: translate(-50%, -50%) scale(1.14);
+}
+
+/* The motion streak behind a badge while the ring turns. */
+.ap-badge__trail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 170px;
+  height: 64px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 55%, var(--ap-ink));
+  filter: blur(18px);
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(var(--trail, 0deg)) translateX(70px);
+  transition: opacity 0.35s ease;
+}
+
+.ap-root.is-moving .ap-badge__trail { opacity: 0.38; }
+
+/* ------------------------------------------------------------------ stats */
+.ap-stats {
+  position: absolute;
+  right: 64px;
+  bottom: 118px;
+  z-index: 3;
+  display: grid;
+  gap: 18px;
+  width: 190px;
+}
+
+.ap-stat { display: grid; gap: 2px; }
+
+.ap-stat__value {
+  font-family: var(--display);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--ap-ink);
+}
+
+.ap-stat__value--word { font-size: 30px; text-transform: uppercase; }
+
+.ap-stat__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--ap-ink) 60%, transparent);
+}
+
+.ap-root--empty {
+  display: grid;
+  place-items: center;
+  color: color-mix(in srgb, var(--ap-ink) 55%, transparent);
+}
+
+/* Presenting: the screen's own height, and the spread clears the deck bar. */
+body.is-presenting .fit-slide__inner .ap-root {
+  height: var(--slide-h, 860px) !important;
+  min-height: var(--slide-h, 860px) !important;
+  max-height: var(--slide-h, 860px) !important;
+}
+body.is-presenting .fit-slide__inner .ap-spread { bottom: var(--deck-bar-clear, 44px); }
+/* The ring and its figures lift by the bar's own height, or the badge rolling in at the bottom
+   passes under the bar. The ring is anchored to the floor, so one variable moves both. */
+body.is-presenting .fit-slide__inner .ap-root { --ap-cy: calc(-200px + var(--deck-bar-clear, 96px)); }
+body.is-presenting .fit-slide__inner .ap-stats { bottom: calc(118px + var(--deck-bar-clear, 96px)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-card, .ap-card__tags span, .ap-card__shine { animation: none !important; }
+  .ap-card, .ap-card__title, .ap-card__body, .ap-card__tags, .ap-card__num { transform: none !important; transition: none !important; }
+  .ap-card__bar { animation: none !important; transform: none; }
+  .ap-top, .ap-spread > *, .ap-headline > span, .ap-work__label, .ap-card, .ap-stat,
+  .ap-ring__track, .ap-ring__focus, .ap-root.is-in .ap-tab.is-active .ap-tab__bar {
+    animation: none;
+  }
+  .ap-orbit, .ap-badge, .ap-badge__face, .ap-badge__trail { transition: none; }
+}
+
+/* ==========================================================================
+   Partnership — Technical Hub × Torii Minds, two tabs that slide into each
+   other: the partnership story, and the AI lab edge to edge.
+   ========================================================================== */
+.canvas-block--partnership {
+  min-height: 860px !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+.tp-root {
+  --tp-ink: #0d1a12;
+  --tp-paper: #f4f6f2;
+  --tp-tab: 0;
+  position: relative;
+  flex: 0 0 auto;
+  height: 860px;
+  min-height: 860px;
+  overflow: hidden;
+  background: var(--tp-paper);
+  color: var(--tp-ink);
+  font-family: var(--font);
+}
+
+.slide--hero .tp-root { border-radius: 0; }
+
+.tp-grid {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='2' cy='2' r='1.3' fill='%230d1a12' fill-opacity='0.07'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- top bar */
+.tp-top {
+  position: absolute;
+  top: 26px;
+  left: 56px;
+  right: 56px;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  pointer-events: none;
+}
+
+.tp-top > * { pointer-events: auto; }
+
+.tp-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  justify-self: start;
+  padding: 8px 16px 8px 10px;
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.92);
+  box-shadow: 0 8px 24px -16px rgba(13, 26, 18, 0.4);
+}
+
+.tp-mark img { display: block; height: 34px; width: auto; }
+.tp-mark--dark {
+  padding: 7px 12px;
+  border-radius: 9px;
+  background: #0b0b0b;
+}
+.tp-mark--dark img { height: 22px; }
+.tp-mark--type { font-weight: 800; font-size: 18px; }
+.tp-x { font-size: 22px; font-weight: 300; color: color-mix(in srgb, var(--tp-ink) 45%, transparent); }
+
+.tp-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--tp-ink) 8%, transparent);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.92);
+  box-shadow: 0 8px 24px -16px rgba(13, 26, 18, 0.4);
+}
+
+.tp-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: color-mix(in srgb, var(--tp-ink) 60%, transparent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.tp-tab:hover { color: var(--tp-ink); }
+.tp-tab.is-active { background: var(--brand-primary, #008638); color: #ffffff; }
+
+.tp-top__end { display: flex; align-items: center; gap: 10px; justify-self: end; }
+
+.tp-badge-pill {
+  padding: 6px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px -16px rgba(13, 26, 18, 0.4);
+}
+
+.tp-badge-pill img { display: block; height: 46px; width: auto; border-radius: 9px; }
+
+.tp-pause {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid color-mix(in srgb, var(--tp-ink) 12%, transparent);
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--tp-ink);
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ track */
+.tp-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 200%;
+  transform: translateX(calc(var(--tp-tab) * -50%));
+  transition: transform 0.9s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.tp-panel { position: relative; flex: 0 0 50%; height: 100%; overflow: hidden; }
+
+/* Arrival: whichever panel has just come in rises into place in reading order. */
+.tp-root.is-in .tp-tag,
+.tp-root.is-in .tp-headline > span,
+.tp-root.is-in .tp-body,
+.tp-root.is-in .tp-milestone,
+.tp-root.is-in .tp-hl,
+.tp-root.is-in .tp-lab__plate {
+  animation: tp-rise 0.75s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+  animation-delay: calc(var(--d, 0s) + 0.25s);
+}
+
+@keyframes tp-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------------------------------------------------------------- overview */
+.tp-panel--overview {
+  display: grid;
+  grid-template-columns: 640px 1fr;
+  gap: 48px;
+  padding: 118px 56px 40px 72px;
+}
+
+.tp-ov__copy { display: flex; flex-direction: column; align-items: flex-start; min-height: 0; }
+
+.tp-tag {
+  padding: 7px 14px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--brand-accent, #ffbb00) 18%, #ffffff);
+  color: color-mix(in srgb, var(--accent-ink, #7a5a00) 78%, #000000);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.tp-headline {
+  display: grid;
+  margin: 18px 0 0;
+  font-size: 50px;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+.tp-headline__lead { font-weight: 700; }
+.tp-headline__second { font-weight: 400; color: color-mix(in srgb, var(--tp-ink) 76%, transparent); }
+
+.tp-body {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--tp-ink) 78%, transparent);
+}
+
+/* The newest milestone, set as a feature: the official badge, the line, and a slow shine. */
+.tp-milestone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px 18px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--brand-primary, #008638) 26%, transparent);
+  border-left: 4px solid var(--brand-primary, #008638);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 18px 40px -26px rgba(0, 134, 56, 0.55);
+}
+
+.tp-milestone__badge { height: 66px; width: auto; border-radius: 10px; flex: 0 0 auto; }
+
+.tp-milestone__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-primary, #008638);
+}
+
+.tp-milestone__text p { margin: 4px 0 0; font-size: 15px; font-weight: 700; line-height: 1.4; }
+
+.tp-milestone__shine {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -30%;
+  width: 18%;
+  background: rgb(255 255 255 / 0.65);
+  transform: skewX(-20deg);
+  animation: tp-shine 4.5s ease-in-out 1.2s infinite;
+  pointer-events: none;
+}
+
+@keyframes tp-shine {
+  0% { left: -30%; }
+  40%, 100% { left: 130%; }
+}
+
+.tp-hls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+  width: 100%;
+  margin: auto 0 0;
+  padding: 18px 0 0;
+  list-style: none;
+}
+
+.tp-hl { display: flex; gap: 12px; align-items: flex-start; }
+
+.tp-hl__icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 11%, #ffffff);
+  color: var(--brand-primary, #008638);
+}
+
+.tp-hl__text { display: grid; gap: 2px; }
+.tp-hl__text b { font-size: 14px; line-height: 1.3; }
+.tp-hl__text span { font-size: 12.5px; line-height: 1.45; color: color-mix(in srgb, var(--tp-ink) 66%, transparent); }
+
+/* The framed photo on the right, over two drifting ribbons. */
+.tp-ov__media { display: grid; grid-template-rows: 1fr auto auto; gap: 12px; min-height: 0; }
+
+.tp-hero {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #0d1a12;
+  box-shadow: 0 30px 60px -34px rgba(13, 26, 18, 0.6);
+}
+
+.tp-hero__stage, .tp-lab__stage { position: absolute; inset: 0; }
+
+.tp-hero__slide, .tp-lab__slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  clip-path: inset(0 0 0 100%);
+}
+
+.tp-hero__slide img, .tp-lab__slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* In: wipe from the side it came from, while the picture settles from a slight zoom.
+   Leaving: stays put underneath and fades, so there is never a bare frame. */
+.tp-hero__slide.is-active, .tp-lab__slide.is-active {
+  z-index: 2;
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  animation: tp-wipe 1s cubic-bezier(0.7, 0, 0.2, 1) both;
+}
+
+.tp-hero__slide.is-active.from-left, .tp-lab__slide.is-active.from-left { animation-name: tp-wipe-left; }
+
+.tp-hero__slide.is-active img, .tp-lab__slide.is-active img {
+  animation: tp-drift calc(var(--tp-hold, 3500ms) + 1600ms) ease-out both;
+}
+
+.tp-hero__slide.is-leaving, .tp-lab__slide.is-leaving {
+  z-index: 1;
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  animation: tp-leave 1s ease both;
+}
+
+@keyframes tp-wipe { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+@keyframes tp-wipe-left { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes tp-leave { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes tp-drift { from { transform: scale(1.14) translateX(1.5%); } to { transform: scale(1.02) translateX(0); } }
+
+.tp-hero__cap {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 3;
+  display: grid;
+  gap: 2px;
+  max-width: 70%;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgb(8 18 12 / 0.72);
+  color: #ffffff;
+  backdrop-filter: blur(6px);
+}
+
+.tp-hero__cap b { font-size: 14px; }
+.tp-hero__cap span { font-size: 12.5px; color: rgb(255 255 255 / 0.78); }
+.tp-hero__cap.is-in, .tp-lab__space.is-in, .tp-lab__cap.is-in { animation: tp-cap 0.6s cubic-bezier(0.22, 0.9, 0.16, 1) 0.35s both; }
+
+@keyframes tp-cap { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+
+.tp-hero__nav {
+  position: absolute;
+  right: 16px;
+  bottom: 18px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tp-hero__count, .tp-lab__count {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgb(8 18 12 / 0.72);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-arrow {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: var(--tp-ink);
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.tp-arrow:hover { background: #ffffff; transform: scale(1.06); }
+.tp-arrow:active { transform: scale(0.94); }
+.tp-arrow--dark { background: rgb(255 255 255 / 0.14); color: #ffffff; }
+.tp-arrow--dark:hover { background: rgb(255 255 255 / 0.26); }
+
+/* The hold left on the current photo, along the frame's foot. */
+.tp-hero__bar, .tp-lab__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  height: 3px;
+  background: var(--brand-accent, #ffbb00);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.tp-root:not(.is-paused)[data-tab="0"] .tp-hero__bar.is-run,
+.tp-root:not(.is-paused)[data-tab="1"] .tp-lab__bar.is-run {
+  animation: tp-hold var(--tp-hold, 3500ms) linear both;
+}
+
+@keyframes tp-hold { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+.tp-ribbon { overflow: hidden; border-radius: 12px; }
+
+.tp-ribbon__track {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  animation: tp-ribbon calc(var(--n, 6) * 6s) linear infinite;
+}
+
+.tp-ribbon--rev .tp-ribbon__track { animation-direction: reverse; }
+.tp-ribbon:hover .tp-ribbon__track { animation-play-state: paused; }
+
+.tp-ribbon__item { flex: 0 0 auto; width: 150px; height: 84px; overflow: hidden; border-radius: 10px; background: #dfe5dd; }
+.tp-ribbon__item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Exactly half the track — the list is in it twice — so the loop has no seam. */
+@keyframes tp-ribbon { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 5px)); } }
+
+/* ------------------------------------------------------------------ AI lab */
+.tp-panel--lab { background: #0b120d; }
+
+.tp-lab__plate {
+  position: absolute;
+  left: 56px;
+  top: 118px;
+  bottom: 156px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  padding: 28px 30px 22px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 22px;
+  background: rgb(8 18 12 / 0.8);
+  color: #ffffff;
+  backdrop-filter: blur(10px);
+}
+
+/* Raw brand gold is fine here: it is on the dark plate, not on white. */
+.tp-lab__tag {
+  align-self: flex-start;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgb(255 187 0 / 0.16);
+  color: var(--brand-accent, #ffbb00);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.tp-lab__title { margin: 14px 0 0; font-size: 40px; line-height: 1.08; color: #ffffff; }
+.tp-lab__body { margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: rgb(255 255 255 / 0.8); }
+
+.tp-lab__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tp-lab__facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgb(255 255 255 / 0.92);
+}
+
+.tp-lab__facts li .ic { color: var(--brand-accent, #ffbb00); }
+
+.tp-lab__now { margin-top: auto; padding-top: 16px; border-top: 1px solid rgb(255 255 255 / 0.12); }
+
+.tp-lab__now-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.55);
+}
+
+.tp-lab__space { margin: 6px 0 0; font-size: 22px; color: #ffffff; }
+.tp-lab__cap { margin: 4px 0 0; min-height: 2.9em; font-size: 13.5px; line-height: 1.45; color: rgb(255 255 255 / 0.75); }
+
+.tp-lab__nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.tp-lab__nav .tp-lab__count { margin-right: auto; background: rgb(255 255 255 / 0.1); }
+.tp-lab__nav .tp-lab__bar { top: 0; bottom: auto; border-radius: 999px; }
+
+.tp-strip {
+  position: absolute;
+  left: 56px;
+  right: 56px;
+  bottom: 28px;
+  z-index: 3;
+  overflow: hidden;
+  padding: 6px 4px;
+}
+
+.tp-strip__track {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  transition: transform 0.9s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.tp-thumb {
+  flex: 0 0 auto;
+  width: 156px;
+  height: 92px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid rgb(255 255 255 / 0.25);
+  border-radius: 12px;
+  background: #111;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+
+.tp-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tp-thumb:hover { opacity: 0.9; }
+.tp-thumb.is-active { opacity: 1; border-color: var(--brand-accent, #ffbb00); transform: translateY(-4px); }
+
+.tp-pause { box-shadow: 0 8px 24px -16px rgba(13, 26, 18, 0.4); }
+
+/* Presenting: the screen's height, and everything at the foot clears the deck bar. */
+body.is-presenting .fit-slide__inner .tp-root {
+  height: var(--slide-h, 860px) !important;
+  min-height: var(--slide-h, 860px) !important;
+  max-height: var(--slide-h, 860px) !important;
+}
+body.is-presenting .fit-slide__inner .tp-panel--overview { padding-bottom: var(--deck-bar-clear, 40px); }
+body.is-presenting .fit-slide__inner .tp-strip { bottom: var(--deck-bar-clear, 28px); }
+body.is-presenting .fit-slide__inner .tp-lab__plate { bottom: calc(var(--deck-bar-clear, 28px) + 128px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tp-track, .tp-strip__track, .tp-thumb { transition: none; }
+  .tp-root.is-in *, .tp-hero__slide, .tp-lab__slide, .tp-hero__slide img, .tp-lab__slide img,
+  .tp-ribbon__track, .tp-milestone__shine, .tp-hero__bar, .tp-lab__bar, .tp-hero__cap, .tp-lab__space, .tp-lab__cap {
+    animation: none !important;
+  }
+}
+
+/* ---- AI Partners: the framed photograph of the work, top right ---------- */
+.ap-media {
+  position: absolute;
+  top: 118px;
+  left: 905px;
+  z-index: 2;
+  width: 470px;
+  height: 272px;
+  margin: 0;
+  overflow: hidden;
+  border: 6px solid #ffffff;
+  border-radius: 20px;
+  background: #0d1a12;
+  box-shadow: 0 30px 60px -30px rgba(13, 26, 18, 0.55);
+  animation: ap-rise 0.8s cubic-bezier(0.22, 0.9, 0.16, 1) 0.3s both;
+}
+
+.ap-media[hidden] { display: none; }
+
+.ap-media__frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  clip-path: inset(0 0 0 100%);
+}
+
+.ap-media__frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.ap-media__frame.is-active {
+  z-index: 2;
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  animation: ap-wipe 0.95s cubic-bezier(0.7, 0, 0.2, 1) both;
+}
+
+.ap-media__frame.is-active img { animation: ap-drift 4.5s ease-out both; }
+
+.ap-media__frame.is-leaving {
+  z-index: 1;
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  animation: ap-leave 0.95s ease both;
+}
+
+@keyframes ap-wipe { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ap-leave { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes ap-drift { from { transform: scale(1.14); } to { transform: scale(1.02); } }
+
+.ap-media__cap {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 3;
+  max-width: 78%;
+  padding: 7px 11px;
+  border-radius: 9px;
+  background: rgb(8 18 12 / 0.74);
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+}
+
+.ap-media__cap:empty { display: none; }
+.ap-media__cap.is-in { animation: ap-rise 0.55s cubic-bezier(0.22, 0.9, 0.16, 1) 0.3s both; }
+
+.ap-media__dots {
+  position: absolute;
+  right: 14px;
+  bottom: 16px;
+  z-index: 3;
+  display: flex;
+  gap: 5px;
+}
+
+.ap-media__dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.55);
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.ap-media__dots i.is-on { width: 20px; background: var(--brand-accent, #ffbb00); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-media, .ap-media__frame, .ap-media__frame img, .ap-media__cap { animation: none !important; }
+}
+
+/* ---- Partnership: the AI Lab as a glass phone, photographs playing beside it ----------
+   Left, top to bottom: a glass phone laid out like a profile screen. Right: no box — the
+   photographs simply begin where the phone ends and run to the edge, faded in at their left
+   so the picture drifts out from behind the card. Behind it all, the photograph on stage,
+   blurred and dimmed.
+
+   Two finishes for the phone, chosen by the block's `cardStyle`:
+     classic (default) — tinted glass with a fine coral edge and a soft coral glow;
+     neon              — clear glass with a lit tube for a rim, an inner bezel, a 3D hold and
+                         Claude-coloured lights drifting behind (`.is-neon` on the panel).
+   Claude's colours: coral #D97757, deeper #C15F3C, peach #F2B49B, cream #FAEBE1. */
+.tp-panel--lab {
+  --claude: #d97757;
+  --claude-deep: #c15f3c;
+  --claude-soft: #f2b49b;
+  --claude-cream: #faebe1;
+  background: #120d0b;
+}
+
+.tp-amb { position: absolute; inset: 0; overflow: hidden; }
+
+.tp-amb__img {
+  position: absolute;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
+  object-fit: cover;
+  filter: blur(34px) saturate(1.2) brightness(0.42);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.tp-amb__img.is-on { opacity: 1; }
+
+/* The drifting lights belong to the neon finish only. */
+.tp-amb__light { display: none; }
+
+/* ------------------------------------------------- the phone — classic finish */
+.tp-phone {
+  position: absolute;
+  left: 56px;
+  top: 100px;
+  bottom: 36px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 420px;
+  padding: 16px 18px 12px;
+  overflow: hidden;
+  border: 1.5px solid rgb(255 214 196 / 0.75);
+  border-radius: 38px;
+  background: rgb(40 22 16 / 0.22);
+  color: #ffffff;
+  backdrop-filter: blur(10px) saturate(1.4);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.18),
+    inset 0 0 16px 2px rgb(217 119 87 / 0.55),
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 0 0 1px rgb(217 119 87 / 0.65),
+    0 0 18px 2px rgb(217 119 87 / 0.6),
+    0 0 46px 8px rgb(242 180 155 / 0.28),
+    0 40px 80px -30px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.45);
+  animation: tp-phone-glow 4s ease-in-out infinite;
+}
+
+.tp-root.is-in .tp-phone { animation: tp-phone-in 0.95s cubic-bezier(0.22, 0.9, 0.16, 1) 0.25s backwards, tp-phone-glow 4s ease-in-out 1.2s infinite; }
+
+@keyframes tp-phone-in {
+  from { opacity: 0; transform: perspective(1400px) translateY(40px) rotateY(16deg) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes tp-phone-glow {
+  0%, 100% { border-color: rgb(255 214 196 / 0.75); }
+  50% { border-color: rgb(255 236 226 / 0.95); }
+}
+
+.tp-phone__bezel { display: none; }
+
+.tp-phone__glint {
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  left: -40%;
+  width: 16%;
+  background: rgb(255 255 255 / 0.12);
+  transform: skewX(-18deg);
+  filter: blur(4px);
+  animation: tp-shine 8s ease-in-out 2s infinite;
+  pointer-events: none;
+}
+
+.tp-phone > :not(.tp-phone__glint):not(.tp-phone__bezel) { position: relative; }
+
+.tp-phone__bar { display: flex; align-items: center; justify-content: space-between; }
+.tp-phone__mark { width: 26px; height: 26px; object-fit: contain; filter: drop-shadow(0 0 6px rgb(217 119 87 / 0.6)); }
+
+.tp-phone__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border: 1px solid rgb(255 214 196 / 0.6);
+  border-radius: 999px;
+  background: rgb(217 119 87 / 0.85);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-shadow: none;
+}
+
+.tp-phone__live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff;
+  animation: tp-live 1.6s ease-in-out infinite;
+}
+
+.tp-phone__profile { display: flex; align-items: flex-end; gap: 16px; padding-top: 22px; }
+.tp-phone__avatar { position: relative; flex: 0 0 84px; }
+
+.tp-phone__note {
+  position: absolute;
+  left: -4px;
+  bottom: calc(100% - 6px);
+  z-index: 2;
+  max-width: 150px;
+  padding: 5px 10px;
+  border: 1px solid rgb(255 255 255 / 0.35);
+  border-radius: 12px;
+  background: rgb(30 20 16 / 0.72);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.tp-phone__avatar-ring {
+  display: block;
+  width: 84px;
+  height: 84px;
+  padding: 3px;
+  border: 2.5px solid var(--claude);
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgb(217 119 87 / 0.6);
+}
+
+.tp-phone__avatar-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+
+.tp-phone__avatar i {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: var(--claude);
+}
+
+.tp-phone__avatar i .ic { width: 12px; height: 12px; color: #ffffff; }
+
+.tp-phone__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  flex: 1;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.tp-phone__stat { display: grid; gap: 1px; }
+.tp-phone__stat b { font-family: var(--display); font-size: 22px; line-height: 1.05; }
+.tp-phone__stat span { font-size: 11.5px; color: rgb(255 255 255 / 0.85); }
+
+.tp-phone__id { display: grid; gap: 5px; justify-items: start; }
+.tp-phone__name { margin: 0; font-size: 24px; line-height: 1.1; color: #ffffff; }
+
+.tp-phone__tag {
+  padding: 3px 9px;
+  border-radius: 5px;
+  background: var(--claude);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+
+.tp-phone__facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tp-phone__facts li { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; line-height: 1.3; }
+.tp-phone__facts li .ic { flex: 0 0 auto; color: var(--claude-soft); }
+
+.tp-phone__btns { display: grid; grid-template-columns: 1fr 1fr 38px; gap: 8px; }
+
+.tp-phone__btn, .tp-phone__iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  border: 1px solid rgb(255 255 255 / 0.28);
+  border-radius: 11px;
+  background: rgb(255 255 255 / 0.12);
+  color: #ffffff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.tp-phone__btn:hover, .tp-phone__iconbtn:hover { background: rgb(217 119 87 / 0.35); border-color: rgb(255 214 196 / 0.7); }
+.tp-phone__btn:active, .tp-phone__iconbtn:active { transform: scale(0.96); }
+
+.tp-phone__hls { display: flex; justify-content: space-between; }
+
+.tp-phone__hl {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: 72px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tp-phone__hl-ring {
+  display: block;
+  width: 54px;
+  height: 54px;
+  padding: 3px;
+  border: 2px solid rgb(255 255 255 / 0.55);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.08);
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tp-phone__hl-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+.tp-phone__hl:hover .tp-phone__hl-ring { transform: scale(1.06); }
+.tp-phone__hl.is-active .tp-phone__hl-ring { border-color: var(--claude); box-shadow: 0 0 12px rgb(217 119 87 / 0.75); transform: scale(1.08); }
+.tp-phone__hl-label { font-size: 10.5px; font-weight: 700; line-height: 1.15; }
+
+.tp-phone__gridwrap { display: flex; flex-direction: column; gap: 7px; flex: 1 1 auto; min-height: 0; }
+
+.tp-phone__tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: center;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tp-phone__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 4px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.tp-phone__cell {
+  position: relative;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.08);
+  cursor: pointer;
+}
+
+.tp-phone__cell img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+.tp-phone__cell:hover img { transform: scale(1.08); }
+
+.tp-phone__cell-ic {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: rgb(0 0 0 / 0.35);
+}
+
+.tp-phone__cell-ic .ic { width: 11px; height: 11px; color: #ffffff; }
+
+.tp-phone__cell.is-active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2.5px solid var(--claude);
+  border-radius: 8px;
+  box-shadow: inset 0 0 12px rgb(217 119 87 / 0.6);
+}
+
+.tp-phone__foot {
+  display: grid;
+  gap: 6px;
+  margin: 0 -18px;
+  padding: 7px 20px 0;
+  border-top: 1px solid rgb(255 255 255 / 0.18);
+}
+
+.tp-phone__track { position: relative; height: 3px; overflow: hidden; border-radius: 999px; background: rgb(255 255 255 / 0.2); }
+.tp-phone__track .tp-lab__bar { background: var(--claude); }
+
+.tp-phone__nav { display: flex; align-items: center; justify-content: space-between; }
+
+.tp-phone__navbtn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.tp-phone__navbtn:hover { background: rgb(255 255 255 / 0.16); }
+.tp-phone__count { font-size: 11.5px; font-weight: 800; letter-spacing: 0.1em; font-variant-numeric: tabular-nums; }
+
+.tp-phone__navnow {
+  display: block;
+  width: 28px;
+  height: 28px;
+  padding: 2px;
+  border: 2px solid var(--claude);
+  border-radius: 50%;
+}
+
+.tp-phone__navnow img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+
+/* ---------------------------------------------------- the phone — neon finish */
+.tp-panel--lab.is-neon { background: #1a1210; }
+.tp-panel--lab.is-neon .tp-amb__img { filter: blur(26px) saturate(1.2) brightness(0.5); }
+.tp-panel--lab.is-neon .tp-amb__light {
+  display: block;
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(38px);
+  opacity: 0.55;
+  animation: tp-drift-light 16s ease-in-out infinite alternate;
+}
+.tp-panel--lab.is-neon .tp-amb__light--0 { left: 33%; top: 2%; width: 240px; height: 240px; background: var(--claude); opacity: 0.4; }
+.tp-panel--lab.is-neon .tp-amb__light--1 { left: -6%; top: 78%; width: 200px; height: 200px; background: var(--claude-soft); opacity: 0.3; animation-duration: 19s; }
+.tp-panel--lab.is-neon .tp-amb__light--2 { left: 30%; top: 4%; width: 150px; height: 150px; background: var(--claude-cream); opacity: 0.35; animation-duration: 13s; }
+.tp-panel--lab.is-neon .tp-amb__light--3 { right: 6%; top: 8%; width: 220px; height: 220px; background: var(--claude-deep); opacity: 0.4; animation-duration: 21s; }
+.tp-panel--lab.is-neon .tp-amb__light--4 { right: 18%; bottom: 4%; width: 280px; height: 280px; background: var(--claude); opacity: 0.35; animation-duration: 17s; }
+.tp-panel--lab.is-neon .tp-amb__light--5 { left: 48%; top: 40%; width: 120px; height: 120px; background: var(--claude-soft); opacity: 0.3; animation-duration: 23s; }
+
+@keyframes tp-drift-light {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(40px, -30px) scale(1.15); }
+}
+
+.tp-panel--lab.is-neon .tp-phone {
+  width: 424px;
+  padding: 18px 20px 12px;
+  border: 2.5px solid #fff3ec;
+  border-radius: 44px;
+  background: rgb(255 255 255 / 0.07);
+  backdrop-filter: blur(7px) saturate(1.3);
+  -webkit-backdrop-filter: blur(7px) saturate(1.3);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.35),
+    inset 3px 3px 12px rgb(242 180 155 / 0.38),
+    inset -3px -3px 12px rgb(217 119 87 / 0.45),
+    -3px -3px 0 rgb(242 180 155 / 0.9),
+    3px 3px 0 rgb(217 119 87 / 0.95),
+    -8px -8px 26px rgb(242 180 155 / 0.7),
+    8px 8px 26px rgb(217 119 87 / 0.8),
+    0 0 70px 10px rgb(217 119 87 / 0.32),
+    30px 50px 90px -30px rgba(0, 0, 0, 0.75);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 1px 10px rgb(0 0 0 / 0.6);
+  transform: perspective(1600px) rotateY(7deg) rotateX(2deg);
+  transform-origin: 0 50%;
+  animation: tp-neon-glow 4.5s ease-in-out infinite;
+}
+
+.tp-root.is-in .tp-panel--lab.is-neon .tp-phone {
+  animation: tp-neon-in 1s cubic-bezier(0.22, 0.9, 0.16, 1) 0.25s backwards, tp-neon-glow 4.5s ease-in-out 1.3s infinite;
+}
+
+@keyframes tp-neon-in {
+  from { opacity: 0; transform: perspective(1600px) translateY(46px) rotateY(22deg) rotateX(6deg) scale(0.95); }
+  to { opacity: 1; transform: perspective(1600px) rotateY(7deg) rotateX(2deg); }
+}
+
+@keyframes tp-neon-glow {
+  0%, 100% { border-color: #fff3ec; }
+  50% { border-color: #ffffff; }
+}
+
+.tp-panel--lab.is-neon .tp-phone__bezel {
+  display: block;
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgb(255 255 255 / 0.4);
+  border-radius: 37px;
+  box-shadow: inset 0 0 22px rgb(255 255 255 / 0.08);
+  pointer-events: none;
+}
+
+.tp-panel--lab.is-neon .tp-phone__note { border-color: rgb(255 255 255 / 0.45); background: rgb(255 255 255 / 0.22); backdrop-filter: blur(6px); }
+.tp-panel--lab.is-neon .tp-phone__avatar-ring { border-width: 3px; background: rgb(255 255 255 / 0.85); box-shadow: 0 0 0 2px rgb(242 180 155 / 0.7), 0 0 16px rgb(217 119 87 / 0.7); }
+.tp-panel--lab.is-neon .tp-phone__btn,
+.tp-panel--lab.is-neon .tp-phone__iconbtn { border-color: rgb(255 255 255 / 0.42); border-radius: 12px; background: rgb(255 255 255 / 0.2); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35); }
+.tp-panel--lab.is-neon .tp-phone__hl-ring { width: 56px; height: 56px; border: 2.5px solid rgb(255 255 255 / 0.85); background: rgb(255 255 255 / 0.1); box-shadow: 0 4px 12px rgb(0 0 0 / 0.25); }
+.tp-panel--lab.is-neon .tp-phone__hl.is-active .tp-phone__hl-ring { border-color: var(--claude); box-shadow: 0 0 0 2px rgb(242 180 155 / 0.6), 0 0 16px rgb(217 119 87 / 0.85); }
+.tp-panel--lab.is-neon .tp-phone__cell { border: 1px solid rgb(255 255 255 / 0.4); border-radius: 11px; box-shadow: 0 4px 12px rgb(0 0 0 / 0.25); }
+.tp-panel--lab.is-neon .tp-phone__foot { margin: 0 -20px; padding: 8px 22px 0; border-top-color: rgb(255 255 255 / 0.3); }
+.tp-panel--lab.is-neon .tp-phone__navnow { border-color: #ffffff; box-shadow: 0 0 10px rgb(217 119 87 / 0.6); }
+
+/* ---------------------------------------------- movement 1 — the intro, the phone centred */
+.tp-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.tp-panel--lab.is-intro .tp-intro,
+.tp-panel--lab.is-opening .tp-intro { pointer-events: auto; }
+.tp-panel--lab.is-carousel .tp-intro { visibility: hidden; }
+
+/* Centred, top to bottom, in both finishes. */
+.tp-panel--lab .tp-intro .tp-phone {
+  left: calc(50% - 212px);
+  top: 96px;
+  bottom: 40px;
+}
+
+/* The hand, when one is supplied: under the phone, rising with it, dropping as it spins away. */
+.tp-hand {
+  position: absolute;
+  left: 50%;
+  bottom: -40px;
+  z-index: 0;
+  width: 760px;
+  max-width: none;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 30px 40px rgb(0 0 0 / 0.5));
+  animation: tp-hand-in 1s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+}
+
+.tp-intro .tp-phone { z-index: 1; }
+
+@keyframes tp-hand-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(120px); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+
+/* ------------------------------------- movement 2 — the phone's screen opens into the page */
+/* The phone fades as its screen takes over: a copy laid over it, holding the photograph the
+   carousel opens on, grows to the whole panel while its corners and lit edge relax away. */
+.tp-panel--lab.is-opening .tp-intro .tp-phone,
+.tp-panel--lab.is-neon.is-opening .tp-intro .tp-phone {
+  animation: tp-phone-hand-off 0.45s ease forwards !important;
+}
+
+@keyframes tp-phone-hand-off {
+  to { opacity: 0; }
+}
+
+.tp-screen {
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  border: 2.5px solid #fff3ec;
+  border-radius: 44px;
+  /* Transparent, not dark: as the edge fades it shows the same photograph already set
+     underneath, where a dark backing drew a thin black line round the opening screen. */
+  background: transparent;
+  box-shadow:
+    -3px -3px 0 rgb(242 180 155 / 0.85),
+    3px 3px 0 rgb(217 119 87 / 0.9),
+    0 0 30px rgb(217 119 87 / 0.6),
+    0 40px 90px -30px rgb(0 0 0 / 0.7);
+  transition:
+    left 1.1s cubic-bezier(0.76, 0, 0.24, 1),
+    top 1.1s cubic-bezier(0.76, 0, 0.24, 1),
+    width 1.1s cubic-bezier(0.76, 0, 0.24, 1),
+    height 1.1s cubic-bezier(0.76, 0, 0.24, 1),
+    border-radius 1.1s cubic-bezier(0.76, 0, 0.24, 1),
+    border-color 0.9s ease 0.2s,
+    box-shadow 0.9s ease 0.2s;
+}
+
+.tp-screen.is-open { border-radius: 0; border-color: transparent; box-shadow: none; }
+
+/* The photograph comes up inside the screen as the phone's interface leaves it, and settles
+   from a slight zoom — the same drift the carousel's own background makes. */
+.tp-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.72);
+  opacity: 0;
+  animation: tp-screen-img 1.1s cubic-bezier(0.22, 0.9, 0.16, 1) forwards;
+}
+
+@keyframes tp-screen-img {
+  0% { opacity: 0; transform: scale(1.18); }
+  35% { opacity: 1; }
+  100% { opacity: 1; transform: scale(1.08); }
+}
+
+/* The page is there underneath while the screen opens, but its words and cards wait. */
+.tp-panel--lab.is-opening .tp-car { opacity: 1; visibility: visible; transition: none; }
+.tp-panel--lab.is-opening .tp-car__copy,
+.tp-panel--lab.is-opening .tp-car__rowbox,
+.tp-panel--lab.is-opening .tp-car__controls { opacity: 0; }
+
+.tp-panel--lab.is-opening .tp-hand { animation: tp-hand-out 0.7s ease-in both; }
+
+@keyframes tp-hand-out {
+  to { opacity: 0; transform: translateX(-50%) translateY(160px); }
+}
+
+/* The controls and cards fade up after the screen has landed. */
+.tp-panel--lab.is-carousel .tp-car__controls { animation: tp-fade-up 0.7s cubic-bezier(0.22, 0.9, 0.16, 1) 0.35s backwards; }
+
+@keyframes tp-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------ movement 3 — the carousel, photographs morphing */
+.tp-car {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease, visibility 0s linear 0.8s;
+}
+
+.tp-panel--lab.is-carousel .tp-car {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.8s ease;
+}
+
+/* The photograph on screen, dimmed a little so white type reads over it. */
+.tp-car__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.72);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.tp-car__bg.is-on { opacity: 1; }
+.tp-car__bg.is-drift { animation: tp-car-drift 9s ease-out both; }
+
+@keyframes tp-car-drift {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+/* No band of shade: its hard top edge drew a line across every photograph. */
+.tp-car__shade { display: none; }
+
+/* The morph: a copy of the next card, grown from its place in the row to the whole screen,
+   dimming to the background's level as it goes so the hand-over is seamless. */
+.tp-car__morph { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+
+.tp-car__morphimg {
+  position: absolute;
+  object-fit: cover;
+  border-radius: 16px;
+  filter: brightness(0.92);
+  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.6);
+  transition:
+    left 1s cubic-bezier(0.7, 0, 0.2, 1),
+    top 1s cubic-bezier(0.7, 0, 0.2, 1),
+    width 1s cubic-bezier(0.7, 0, 0.2, 1),
+    height 1s cubic-bezier(0.7, 0, 0.2, 1),
+    border-radius 1s cubic-bezier(0.7, 0, 0.2, 1),
+    filter 1s ease,
+    box-shadow 1s ease;
+}
+
+.tp-car__morphimg.is-go { border-radius: 0; filter: brightness(0.72); box-shadow: none; }
+
+/* The words, large on the left. */
+.tp-car__copy {
+  position: absolute;
+  left: 72px;
+  top: 25%;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 620px;
+  color: #ffffff;
+  text-shadow: 0 2px 18px rgb(0 0 0 / 0.45);
+}
+
+/* A soft dark glow behind the words — a blurred disc, not a gradient — so the title reads
+   over a busy photograph such as the Claude wall. */
+.tp-car__copy::before {
+  content: '';
+  position: absolute;
+  left: -160px;
+  top: -120px;
+  z-index: -1;
+  width: 900px;
+  height: 560px;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.55);
+  filter: blur(56px);
+  pointer-events: none;
+}
+
+.tp-car__rule {
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-bottom: 16px;
+  border-radius: 999px;
+  background: var(--claude);
+  box-shadow: 0 0 10px rgb(217 119 87 / 0.7);
+}
+
+/* The place line, led by a small coral bullet. */
+.tp-car__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.92);
+}
+
+.tp-car__eyebrow::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--claude);
+  box-shadow: 0 0 10px rgb(217 119 87 / 0.8);
+}
+
+.tp-car__title {
+  margin: 12px 0 0;
+  font-family: var(--display);
+  font-size: 84px;
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.tp-car__desc {
+  max-width: 440px;
+  margin: 18px 0 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: rgb(255 255 255 / 0.88);
+}
+
+.tp-car__eyebrow.is-in { animation: tp-car-in 0.8s cubic-bezier(0.22, 0.9, 0.16, 1) 0.05s both; }
+.tp-car__title.is-in { animation: tp-car-in 0.9s cubic-bezier(0.22, 0.9, 0.16, 1) 0.15s both; }
+.tp-car__desc.is-in { animation: tp-car-in 0.9s cubic-bezier(0.22, 0.9, 0.16, 1) 0.28s both; }
+.tp-car__eyebrow.is-out, .tp-car__title.is-out, .tp-car__desc.is-out { animation: tp-car-out 0.45s ease both; }
+
+@keyframes tp-car-in {
+  from { opacity: 0; transform: translateY(28px); clip-path: inset(0 0 100% 0); }
+  to { opacity: 1; transform: none; clip-path: inset(0 0 -20% 0); }
+}
+
+@keyframes tp-car-out {
+  to { opacity: 0; transform: translateY(-18px); }
+}
+
+.tp-car__actions { display: flex; align-items: center; gap: 14px; margin-top: 26px; }
+
+.tp-car__round {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--claude);
+  color: #ffffff;
+  box-shadow: 0 0 16px rgb(217 119 87 / 0.6);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.tp-car__round:hover { transform: scale(1.06); }
+
+.tp-car__ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px;
+  border: 1.5px solid rgb(255 255 255 / 0.7);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.08);
+  color: #ffffff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s ease;
+}
+
+.tp-car__ghost:hover { background: rgb(255 255 255 / 0.2); }
+
+/* The waiting photographs, as cards on the right, running off the edge. */
+/* Low on the page: the cards sit just above the controls at the foot. */
+.tp-car__rowbox {
+  position: absolute;
+  left: 760px;
+  right: 0;
+  bottom: 84px;
+  z-index: 4;
+  height: 280px;
+}
+
+.tp-car__row { display: flex; gap: 20px; }
+.tp-car__row.is-sliding { transition: transform 1s cubic-bezier(0.7, 0, 0.2, 1); }
+
+.tp-car__card {
+  position: relative;
+  flex: 0 0 200px;
+  height: 280px;
+  padding: 0;
+  overflow: hidden;
+  /* A fine glass edge, so each card reads as a pane laid over the photograph. */
+  border: 1px solid rgb(255 255 255 / 0.4);
+  border-radius: 16px;
+  background: #111111;
+  box-shadow: 0 30px 50px -22px rgb(0 0 0 / 0.65);
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.22, 0.9, 0.16, 1), opacity 0.25s ease;
+}
+
+.tp-car__card:hover { transform: translateY(-8px); }
+.tp-car__card.is-lifting { opacity: 0; transition: opacity 0.2s ease 0.05s; }
+
+.tp-car__card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.86); transition: transform 0.6s ease; }
+.tp-car__card:hover img { transform: scale(1.06); }
+
+.tp-car__cardtext {
+  position: absolute;
+  left: 16px;
+  right: 14px;
+  bottom: 16px;
+  display: grid;
+  gap: 4px;
+  color: #ffffff;
+  text-align: left;
+  text-shadow: 0 2px 10px rgb(0 0 0 / 0.7);
+}
+
+.tp-car__cardtext small { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(255 255 255 / 0.85); }
+.tp-car__cardtext b { font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1; text-transform: uppercase; }
+
+/* The cards come in from the right when the carousel arrives, one after another. */
+.tp-car__row.is-entering .tp-car__card { animation: tp-card-in 0.8s cubic-bezier(0.22, 0.9, 0.16, 1) backwards; }
+.tp-car__row.is-entering .tp-car__card:nth-child(2) { animation-delay: 0.08s; }
+.tp-car__row.is-entering .tp-car__card:nth-child(3) { animation-delay: 0.16s; }
+.tp-car__row.is-entering .tp-car__card:nth-child(4) { animation-delay: 0.24s; }
+.tp-car__row.is-entering .tp-car__card:nth-child(5) { animation-delay: 0.32s; }
+.tp-panel--lab.is-carousel .tp-car__row.is-sliding .tp-car__card { animation: none; }
+
+@keyframes tp-card-in {
+  from { opacity: 0; transform: translateX(120px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Arrows, the progress line and the big number, under the cards. */
+.tp-car__controls {
+  position: absolute;
+  left: 760px;
+  right: 56px;
+  bottom: 22px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tp-car__arrow {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1.5px solid rgb(255 255 255 / 0.65);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.06);
+  color: #ffffff;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.tp-car__arrow:hover { background: rgb(255 255 255 / 0.22); transform: scale(1.06); }
+
+.tp-car__track { position: relative; flex: 1; height: 2px; margin: 0 10px; background: rgb(255 255 255 / 0.3); }
+.tp-car__fill { position: absolute; left: 0; top: -1px; bottom: -1px; width: 0; background: var(--claude); box-shadow: 0 0 8px rgb(217 119 87 / 0.7); transition: width 0.8s cubic-bezier(0.22, 0.9, 0.16, 1); }
+
+.tp-car__num {
+  min-width: 120px;
+  font-family: var(--display);
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: right;
+  color: #ffffff;
+  text-shadow: 0 2px 14px rgb(0 0 0 / 0.5);
+}
+
+/* Presenting: the controls and the cards clear the deck bar. */
+body.is-presenting .fit-slide__inner .tp-car__controls { bottom: calc(var(--deck-bar-clear, 40px) - 6px); }
+body.is-presenting .fit-slide__inner .tp-car__rowbox { bottom: calc(var(--deck-bar-clear, 40px) + 56px); }
+
+/* The counter: the slide large, the total small beside it. */
+.tp-car__num small { font-size: 18px; font-weight: 600; color: rgb(255 255 255 / 0.65); }
+body.is-presenting .fit-slide__inner .tp-intro .tp-phone { bottom: var(--deck-bar-clear, 40px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tp-car__bg.is-drift, .tp-car__eyebrow.is-in, .tp-car__title.is-in, .tp-car__desc.is-in,
+  .tp-car__row.is-entering .tp-car__card, .tp-hand, .tp-panel--lab.is-opening .tp-intro .tp-phone { animation: none !important; }
+  .tp-car__morphimg, .tp-car__row.is-sliding, .tp-car__bg { transition: none; }
 }
