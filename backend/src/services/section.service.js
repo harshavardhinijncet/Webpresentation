@@ -45,6 +45,8 @@ export const BLOCK_TYPES = [
   'video-resume',
   'ai-partners',
   'partnership',
+  'ai-ready-deck',
+  'team-wall',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -85,6 +87,8 @@ const DEFAULT_SIZE = {
   'platforms': { w: 12, h: 15 },
   'ai-partners': { w: 12, h: 15 },
   'partnership': { w: 12, h: 15 },
+  'ai-ready-deck': { w: 12, h: 15 },
+  'team-wall': { w: 12, h: 15 },
 };
 
 const oneOf = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
@@ -519,41 +523,117 @@ function normalizeBlock(raw, index = 0, depth = 0) {
     /* A wall of platform cards; opening one runs it inside the slide.
        Credentials are stored as given — the user was told they end up in the
        store, in git and on the deployed server, and chose that. */
-    /* AI partners, one spread each, chosen by a turning orbit. `mark` is the badge art and
-       `wordmark` the official lockup, both paths under /uploads; a partner with neither is set
-       in type. `hold` is how long each partner stays before the ring turns. */
-    case 'ai-partners':
+    /* The trainers: cut-out portraits under /uploads, named where the name is known. */
+    case 'team-wall': {
+      const list = (v) => (Array.isArray(v) ? v : []);
+      block.eyebrow = text(raw.eyebrow, 60);
+      block.headline = list(raw.headline).map((l) => text(l, 60)).filter(Boolean).slice(0, 2);
+      block.body = text(raw.body, 400);
+      block.namesTitle = text(raw.namesTitle, 60);
+      block.stats = list(raw.stats).map((s) => ({ value: text(s?.value, 16), label: text(s?.label, 40), icon: iconKey(s?.icon) })).filter((s) => s.value).slice(0, 2);
+      block.allLabel = text(raw.allLabel, 40);
+      block.architectsLabel = text(raw.architectsLabel, 40);
+      block.hub = raw.hub?.photo ? { photo: text(raw.hub.photo, 200), name: text(raw.hub.name, 40), role: text(raw.hub.role, 40), focus: Math.max(0, Math.min(100, Number(raw.hub.focus) || 50)) } : null;
+      block.connectors = list(raw.connectors).map((c) => text(c, 30)).filter(Boolean).slice(0, 12);
+      block.members = list(raw.members).map((m) => ({
+        photo: text(m?.photo, 200),
+        name: text(m?.name, 40),
+        architect: m?.architect === true,
+        focus: Math.max(0, Math.min(100, Number(m?.focus) || 50)),
+        rank: Math.max(0, Math.min(99, Math.round(Number(m?.rank) || 0))),
+      })).filter((m) => m.photo).slice(0, 60);
+      break;
+    }
+
+    /* AI Ready Engineer as a three-page brochure: the road map, the course in phases, the
+       benefits. Image fields are paths under /uploads. */
+    case 'ai-ready-deck': {
+      const list = (v) => (Array.isArray(v) ? v : []);
+      const item = (it) => ({ title: text(it?.title, 70), body: text(it?.body, 200), icon: iconKey(it?.icon) });
       block.title = text(raw.title, 80);
-      block.hold = clampInt(raw.hold, 3000, 20000, 6000);
-      block.partners = (Array.isArray(raw.partners) ? raw.partners : [])
+      block.eyebrow = text(raw.eyebrow, 80);
+      block.kicker = text(raw.kicker, 80);
+      block.logo = text(raw.logo, 200);
+      block.roadmap = text(raw.roadmap, 200);
+      block.headline = list(raw.headline).map((l) => text(l, 70)).filter(Boolean).slice(0, 2);
+      block.standfirst = text(raw.standfirst, 400);
+      block.partners = list(raw.partners).map((p) => text(p, 40)).filter(Boolean).slice(0, 3);
+      block.stats = list(raw.stats).map((s) => ({ value: text(s?.value, 24), label: text(s?.label, 40), icon: iconKey(s?.icon) })).filter((s) => s.value).slice(0, 4);
+      block.course = { eyebrow: text(raw.course?.eyebrow, 60), title: text(raw.course?.title, 80), subtitle: text(raw.course?.subtitle, 200) };
+      block.highlights = list(raw.highlights).map(item).filter((i) => i.title).slice(0, 8);
+      block.phases = list(raw.phases).map((ph) => ({
+        name: text(ph?.name, 40),
+        modules: list(ph?.modules).map((m) => ({ title: text(m?.title, 60), body: text(m?.body, 90), icon: iconKey(m?.icon) })).filter((m) => m.title).slice(0, 6),
+      })).filter((ph) => ph.name).slice(0, 4);
+      block.studentsTitle = text(raw.studentsTitle, 80);
+      block.students = list(raw.students).map(item).filter((i) => i.title).slice(0, 4);
+      block.collegeTitle = text(raw.collegeTitle, 80);
+      block.college = list(raw.college).map(item).filter((i) => i.title).slice(0, 4);
+      block.training = {
+        eyebrow: text(raw.training?.eyebrow, 60),
+        title: text(raw.training?.title, 80),
+        sub: text(raw.training?.sub, 200),
+        photos: list(raw.training?.photos).map((p) => ({ src: text(p?.src, 200), caption: text(p?.caption, 80) })).filter((p) => p.src).slice(0, 40),
+      };
+      block.close = {
+        eyebrow: text(raw.close?.eyebrow, 80),
+        title: text(raw.close?.title, 80),
+        line: text(raw.close?.line, 160),
+        stats: list(raw.close?.stats).map((s) => ({ value: text(s?.value, 24), label: text(s?.label, 40) })).filter((s) => s.value).slice(0, 3),
+        contact: list(raw.close?.contact).map((c) => ({ icon: iconKey(c?.icon), label: text(c?.label, 60) })).filter((c) => c.label).slice(0, 4),
+      };
+      break;
+    }
+
+    /* AI partners, one landing page each, chosen from a rail. Every image is a path under
+       /uploads: `badge` is the official partner lockup, `mark` the partner's own symbol (rail
+       and background). `circles` is the row of round items — people with photographs, or
+       focus areas with icons — and `cards` the row beneath it. `accent` is the page colour. */
+    case 'ai-partners': {
+      const list = (v) => (Array.isArray(v) ? v : []);
+      block.title = text(raw.title, 80);
+      block.hold = clampInt(raw.hold, 3000, 30000, 9000);
+      block.partners = list(raw.partners)
         .map((p) => ({
           name: text(p?.name, 40),
+          short: text(p?.short, 20),
           status: text(p?.status, 60),
-          tag: text(p?.tag, 80),
+          tagline: text(p?.tagline, 80),
+          accent: hexColor(p?.accent),
+          badge: text(p?.badge, 200),
           mark: text(p?.mark, 200),
-          wordmark: text(p?.wordmark, 200),
-          headline: (Array.isArray(p?.headline) ? p.headline : [])
-            .map((l) => text(l, 60)).filter(Boolean).slice(0, 2),
+          headline: list(p?.headline).map((l) => text(l, 60)).filter(Boolean).slice(0, 2),
           body: text(p?.body, 600),
-          cards: (Array.isArray(p?.cards) ? p.cards : [])
+          strip: list(p?.strip)
+            .map((f) => ({ icon: iconKey(f?.icon), label: text(f?.label, 24), value: text(f?.value, 40) }))
+            .filter((f) => f.value).slice(0, 3),
+          photos: list(p?.photos)
+            .map((ph) => ({ src: text(ph?.src, 200), caption: text(ph?.caption, 60) }))
+            .filter((ph) => ph.src).slice(0, 3),
+          circles: {
+            title: text(p?.circles?.title, 80),
+            sub: text(p?.circles?.sub, 160),
+            items: list(p?.circles?.items)
+              .map((it) => ({ label: text(it?.label, 40), sub: text(it?.sub, 40), photo: text(it?.photo, 200), icon: iconKey(it?.icon) }))
+              .filter((it) => it.label).slice(0, 12),
+          },
+          cardsTitle: text(p?.cardsTitle, 80),
+          cardsSub: text(p?.cardsSub, 160),
+          cards: list(p?.cards)
             .map((c) => ({
-              title: text(c?.title, 48),
-              body: text(c?.body, 180),
-              tags: (Array.isArray(c?.tags) ? c.tags : []).map((t) => text(t, 20)).filter(Boolean).slice(0, 4),
+              title: text(c?.title, 60),
+              body: text(c?.body, 200),
+              photo: text(c?.photo, 200),
+              icon: iconKey(c?.icon),
+              badge: text(c?.badge, 24),
+              tags: list(c?.tags).map((t) => text(t, 20)).filter(Boolean).slice(0, 3),
             }))
-            .filter((c) => c.title).slice(0, 3),
-          stats: (Array.isArray(p?.stats) ? p.stats : [])
-            .map((s) => ({ value: text(s?.value, 16), label: text(s?.label, 48) }))
-            .filter((s) => s.value).slice(0, 3),
-          /* Photographs of the work, paths under /uploads, shown in a framed card. */
-          photos: (Array.isArray(p?.photos) ? p.photos : [])
-            .map((ph) => ({ src: text(ph?.src, 200), caption: text(ph?.caption, 80) }))
-            .filter((ph) => ph.src).slice(0, 8),
-          sample: Boolean(p?.sample),
+            .filter((c) => c.title).slice(0, 8),
         }))
         .filter((p) => p.name)
         .slice(0, 6);
       break;
+    }
 
     /* A partnership page in two tabs: the story, and the lab. Every image is a path under
        /uploads. `milestone.badge` is the official partner badge, cut from the announcement. */

@@ -46,7 +46,10 @@ export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false }
     const insetY = px(style.paddingTop) + px(style.paddingBottom)
       + px(style.borderTopWidth) + px(style.borderBottomWidth);
     const availWidth = box.width - insetX;
-    const availHeight = box.height - insetY;
+    // Never more than the window. At narrow widths the frame is sized by its content, so the
+    // stretched slide made the frame taller, which read as more room, which stretched the slide
+    // again — doubling every pass until the browser's layout limit (2^25 px).
+    const availHeight = Math.min(box.height, window.innerHeight - Math.max(0, box.top)) - insetY;
     if (availWidth <= 0 || availHeight <= 0) return;
 
     // Filling: the nominal box takes the screen's aspect, so both axes land
@@ -64,6 +67,7 @@ export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false }
     // the slide flips between filling and not on every resize. Cleared, every
     // pass measures the same baseline — each root's own fallback height.
     inner.style.height = '';
+    inner.style.width = `${nominalWidth}px`;
     inner.style.removeProperty('--slide-h');
     const contentHeight = inner.scrollHeight;
     if (!contentHeight) return;
@@ -79,6 +83,25 @@ export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false }
     const OVERFLOW_SLACK = 24;
     const screenShaped = Math.max(1, Math.round(nominalWidth * (availHeight / availWidth)));
     const filled = wantsFill(fill) && contentHeight <= screenShaped + OVERFLOW_SLACK;
+
+    /* A screen wider than the content (21:9 and the like) used to fall back to fitting, with
+       bars down both sides. Instead the canvas is widened to the screen's own shape at the
+       content's height: every section still gets the height it was arranged for, the extra
+       width goes to the gutters and full-bleed grounds, and the slide meets all four edges.
+       Only for a modest overshoot — a section genuinely taller than its slide still fits. */
+    if (wantsFill(fill) && !filled && contentHeight <= NOMINAL_HEIGHT + OVERFLOW_SLACK) {
+      const wide = Math.round(contentHeight * (availWidth / availHeight));
+      inner.style.width = `${wide}px`;
+      inner.style.height = `${contentHeight}px`;
+      inner.style.setProperty('--slide-h', `${contentHeight}px`);
+      const s = availHeight / contentHeight;
+      frame.dataset.fill = 'true';
+      inner.style.transform = `translate(0px, 0px) scale(${s})`;
+      frame.dataset.scale = s.toFixed(3);
+      inner.style.setProperty('--slide-scale', s.toFixed(4));
+      return;
+    }
+
     const natural = filled ? screenShaped : contentHeight;
     if (filled) {
       inner.style.height = `${screenShaped}px`;

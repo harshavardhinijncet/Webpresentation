@@ -24,6 +24,8 @@ import { VideoResumes } from './VideoResumes.js';
 import { AiReadyEngineer } from './AiReadyEngineer.js';
 import { AiPartners } from './AiPartners.js';
 import { Partnership } from './Partnership.js';
+import { AiReadyDeck } from './AiReadyDeck.js';
+import { TeamWall } from './TeamWall.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
 import { VideoBox } from './VideoBox.js';
@@ -154,6 +156,12 @@ export function renderBlock(block, options = {}) {
 
     case 'partnership':
       return Partnership(block, options);
+
+    case 'ai-ready-deck':
+      return AiReadyDeck(block, options);
+
+    case 'team-wall':
+      return TeamWall(block, options);
 
     case 'ai-ready-engineer':
       return AiReadyEngineer(block, options);

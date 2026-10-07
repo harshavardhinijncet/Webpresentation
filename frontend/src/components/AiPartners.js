@@ -5,283 +5,171 @@ import { registerStepper } from '../utils/slideSteps.js';
 import { autoSlide } from '../utils/autoSlide.js';
 
 /**
- * AI Partners — one page per partner, chosen by an orbit.
+ * AI Partners — one landing page per partner, chosen from a slim rail on the left.
  *
- * The left of the slide is an editorial spread: a tag, a two-line headline, a paragraph, the
- * partner's official mark and three cards of what has actually been done with it. The bottom
- * right is a wide ring, mostly off the slide, with the partners' badges riding on it. Every few
- * seconds the ring turns one stop and the next badge rolls into the focus point; the spread
- * changes to that partner as it arrives.
+ * Laid out like a travel landing page: a large headline with the partner's name set in its
+ * accent, a line of introduction and a white "search bar" strip of facts with a button at its
+ * end; on the right the official partner badge, large, among rounded photographs; then a row of
+ * circles (the ten Claude Certified Architects, for Claude) and a row of cards with arrows.
+ * Behind it all the partner's own mark, enormous and faint, with soft light in its colour.
  *
- * The ring carries each partner four times, thirty degrees apart, so it can turn the same way
- * for ever: the orbit angle only ever grows, and the badge in focus is always `step mod 12`.
+ * The rail advances on its own — a ring round the active partner fills while it holds — and
+ * the deck's Prev / Next walk the three partners before turning the slide.
  *
- * Partner marks are the official files from /uploads where one exists. A partner without one
- * gets its name set in type on the badge — a brand logo is never drawn by hand.
+ * Partner badges and marks are official files from /uploads; a brand is never drawn by hand.
  */
 
-const STOP = 30;          // degrees between neighbouring badges — three are on the slide at once
-const COPIES = 4;         // each partner rides the ring this many times (12 × 30° = a full turn)
-const FOCUS = -124;       // the focus point, in degrees clockwise from east (y down)
-const ORBIT_R = 642;      // badge centres sit on this radius
-const TURN_MS = 1400;     // how long one stop takes
-
-const isNumeric = (v) => /^\s*\d[\d,]*(\.\d+)?/.test(String(v));
 const src = (path) => (path ? media(`/uploads/${String(path).split('/').map(encodeURIComponent).join('/')}`) : '');
-
-/** Counts a figure such as "900+" up from zero, keeping whatever follows the number. */
-function countUp(el, value, ms = 1100) {
-  const m = String(value).match(/^(\s*)(\d[\d,]*)(.*)$/);
-  if (!m || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-    el.textContent = value;
-    return;
-  }
-  const target = Number(m[2].replace(/,/g, ''));
-  const t0 = performance.now();
-  const tick = (now) => {
-    const k = Math.min(1, (now - t0) / ms);
-    const eased = 1 - (1 - k) ** 3;
-    el.textContent = `${Math.round(target * eased).toLocaleString('en-IN')}${m[3]}`;
-    if (k < 1 && el.isConnected) requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
-}
+const RING = 2 * Math.PI * 27; // the rail's progress ring, r = 27
 
 export function AiPartners(block, { editing = false } = {}) {
   const partners = (block.partners || []).filter((p) => p && p.name);
   if (!partners.length) {
-    return h('div', { class: 'ap-root ap-root--empty ph-root' }, 'No AI partners yet.');
+    return h('div', { class: 'apx-root apx-root--empty ph-root' }, 'No AI partners yet.');
   }
   const n = partners.length;
-  const hold = Number(block.hold) || 6000;
+  const hold = Number(block.hold) || 9000;
 
-  const root = h('div', { class: 'ap-root ph-root', style: { '--ap-hold': `${hold}ms`, '--ap-turn': `${TURN_MS}ms` } });
-
-  /* ---------------------------------------------------------------- the top bar
-     Mirrors a product site's header: the page's own name on the left, the partners as
-     navigation in the middle, and the partner's standing as the pill on the right. */
-  const tabs = partners.map((p, i) => h('button', {
-    class: 'ap-tab', type: 'button',
-    onclick: () => manual(i),
-  }, p.name, h('span', { class: 'ap-tab__bar' })));
-  const statusPill = h('span', { class: 'ap-status' });
-  const playBtn = h('button', {
-    class: 'ap-play', type: 'button',
-    onclick: () => setPlaying(!playing),
-  });
-  const top = h('header', { class: 'ap-top' },
-    h('div', { class: 'ap-brand' },
-      h('span', { class: 'ap-brand__mark' }, icon('sparkles', { class: 'ic ic--sm' })),
-      h('span', {}, block.title || 'AI Partners'),
-    ),
-    h('nav', { class: 'ap-tabs', 'aria-label': 'AI partners' }, ...tabs),
-    h('div', { class: 'ap-top__end' }, statusPill, playBtn),
-  );
-
-  /* ----------------------------------------------------------------- the spread */
-  const spread = h('div', { class: 'ap-spread', 'aria-live': 'polite' });
-
-  /* ------------------------------------------------------------------- the orbit */
-  const badges = [];
-  const orbit = h('div', { class: 'ap-orbit' });
-  for (let k = 0; k < n * COPIES; k += 1) {
-    const p = partners[k % n];
-    const angle = FOCUS + k * STOP;
-    const badge = h('button', {
-      class: 'ap-badge', type: 'button',
-      'aria-label': p.name,
-      tabindex: '-1',
-      style: { '--a': `${angle}deg`, '--r': `${ORBIT_R}px` },
-      onclick: () => manual(k % n),
-    },
-      h('span', { class: 'ap-badge__trail', 'aria-hidden': 'true' }),
-      h('span', { class: 'ap-badge__face' },
-        p.mark
-          ? h('img', { src: src(p.mark), alt: '', draggable: 'false' })
-          : h('b', { class: 'ap-badge__type' }, p.name)),
-    );
-    badges.push({ el: badge, partner: k % n, angle });
-    orbit.appendChild(badge);
-  }
-  const ring = h('div', { class: 'ap-ring', 'aria-hidden': 'true' },
-    h('span', { class: 'ap-ring__band' }),
-    h('span', { class: 'ap-ring__track ap-ring__track--outer' }),
-    h('span', { class: 'ap-ring__track ap-ring__track--inner' }),
-    h('span', { class: 'ap-ring__focus' }),
-  );
-  const stats = h('div', { class: 'ap-stats' });
-
-  /* A framed photograph of the work, top right, for a partner that has them. It runs its own
-     quicker cycle inside the partner's hold and starts again from the first when the ring turns. */
-  const mediaCard = h('figure', { class: 'ap-media', hidden: true });
-  let mediaTimer = null;
-  const paintMedia = (p) => {
-    clearInterval(mediaTimer);
-    const photos = (p.photos || []).filter((x) => x.src);
-    mediaCard.hidden = !photos.length;
-    if (!photos.length) { mediaCard.replaceChildren(); return; }
-    const frames = photos.map((ph) => h('span', { class: 'ap-media__frame' },
-      h('img', { src: src(ph.src), alt: ph.caption || '', decoding: 'async', draggable: 'false' })));
-    const cap = h('figcaption', { class: 'ap-media__cap' });
-    const dots = photos.map(() => h('i'));
-    mediaCard.replaceChildren(...frames, cap, h('span', { class: 'ap-media__dots' }, ...dots));
-    let i = -1;
-    const next = () => {
-      const prev = i;
-      i = (i + 1) % photos.length;
-      frames.forEach((f, n) => {
-        f.classList.toggle('is-leaving', n === prev && n !== i);
-        f.classList.remove('is-active');
-      });
-      void frames[i].offsetWidth;
-      frames[i].classList.add('is-active');
-      dots.forEach((d, n) => d.classList.toggle('is-on', n === i));
-      cap.textContent = photos[i].caption || '';
-      cap.classList.remove('is-in'); void cap.offsetWidth; cap.classList.add('is-in');
-    };
-    next();
-    if (photos.length > 1) {
-      const every = Math.max(1800, Math.floor(hold / photos.length));
-      mediaTimer = setInterval(() => {
-        if (!root.isConnected) { clearInterval(mediaTimer); return; }
-        if (playing && !document.hidden) next();
-      }, every);
-    }
-  };
-
-  root.append(
-    h('div', { class: 'ap-grid', 'aria-hidden': 'true' }),
-    ring, mediaCard, orbit, stats, top, spread,
-  );
-
-  /* ---------------------------------------------------------------- behaviour */
-  let step = 0;          // stops turned so far; only ever grows going forward
+  const root = h('div', { class: 'apx-root ph-root', style: { '--apx-hold': `${hold}ms`, '--apx-ring': String(RING) } });
   let active = 0;
   let playing = !editing;
-  let movingTimer = null;
 
-  const placeOrbit = () => {
-    const turn = -step * STOP;
-    orbit.style.setProperty('--orbit', `${turn}deg`);
-    badges.forEach((b) => {
-      const at = ((b.angle + turn) % 360 + 360) % 360;
-      const focus = (((FOCUS % 360) + 360) % 360);
-      b.el.classList.toggle('is-focus', Math.abs(at - focus) < 1);
-      /* The trail points back along the way the badge came: the ring turns anticlockwise,
-         so behind a badge is clockwise of it. */
-      b.el.style.setProperty('--trail', `${b.angle + turn + 90}deg`);
-    });
-    root.classList.add('is-moving');
-    clearTimeout(movingTimer);
-    movingTimer = setTimeout(() => root.classList.remove('is-moving'), TURN_MS);
+  /* ---------------------------------------------------------------- the rail */
+  const railBtns = partners.map((p, i) => h('button', {
+    class: 'apx-rail__btn', type: 'button', 'aria-label': p.name,
+    style: { '--accent': p.accent || '#008638' },
+    onclick: () => manual(i),
+  },
+    h('span', { class: 'apx-rail__dot' },
+      h('span', { class: 'apx-rail__ringbox', 'aria-hidden': 'true' }),
+      p.mark ? h('img', { src: src(p.mark), alt: '', draggable: 'false' }) : h('b', {}, p.name.slice(0, 1))),
+    h('span', { class: 'apx-rail__label' }, p.short || p.name)));
+  // The ring is SVG: written as markup so it lands in the SVG namespace.
+  railBtns.forEach((b) => {
+    b.querySelector('.apx-rail__ringbox').innerHTML = '<svg class="apx-rail__ring" viewBox="0 0 60 60"><circle class="apx-rail__track" cx="30" cy="30" r="27"/><circle class="apx-rail__fill" cx="30" cy="30" r="27"/></svg>';
+  });
+  const playBtn = h('button', { class: 'apx-rail__play', type: 'button', onclick: () => setPlaying(!playing) });
+  const rail = h('nav', { class: 'apx-rail', 'aria-label': 'AI partners' },
+    h('span', { class: 'apx-rail__title' }, block.title || 'AI Partners'),
+    h('div', { class: 'apx-rail__list' }, ...railBtns),
+    playBtn);
+
+  const stage = h('div', { class: 'apx-stage', 'aria-live': 'polite' });
+  const backdrop = h('div', { class: 'apx-bg', 'aria-hidden': 'true' });
+  root.append(backdrop, rail, stage);
+
+  /* --------------------------------------------------------------- one page */
+  const page = (p) => {
+    const accent = p.accent || '#008638';
+    const people = (p.circles?.items || []);
+
+    // The collage: the badge large, the photographs — or the mark — around it.
+    const photos = (p.photos || []).filter((x) => x.src);
+    const tiles = photos.length
+      ? photos.slice(0, 3).map((ph, k) => h('figure', { class: `apx-tile apx-tile--${k}`, style: { '--d': `${0.25 + k * 0.1}s` } },
+          h('img', { src: src(ph.src), alt: ph.caption || '', draggable: 'false' }),
+          ph.caption ? h('figcaption', {}, ph.caption) : null))
+      : [
+          h('figure', { class: 'apx-tile apx-tile--0 apx-tile--mark', style: { '--d': '0.25s' } },
+            p.mark ? h('img', { src: src(p.mark), alt: '', draggable: 'false' }) : null),
+          h('figure', { class: 'apx-tile apx-tile--1 apx-tile--word', style: { '--d': '0.35s' } },
+            h('span', {}, p.tagline || p.name)),
+        ];
+
+    const circle = (it, k) => h('li', { class: 'apx-circle', style: { '--d': `${0.45 + k * 0.05}s` } },
+      h('span', { class: `apx-circle__pic${it.photo ? '' : ' apx-circle__pic--icon'}` },
+        it.photo ? h('img', { src: src(it.photo), alt: it.label, draggable: 'false' }) : icon(it.icon || 'sparkles', { class: 'ic' })),
+      h('b', {}, it.label),
+      it.sub ? h('small', {}, it.sub) : null);
+
+    const cardEls = (p.cards || []).map((c, k) => h('article', { class: 'apx-card', style: { '--d': `${0.6 + k * 0.08}s` } },
+      h('span', { class: `apx-card__pic${c.photo ? '' : ' apx-card__pic--plate'}` },
+        c.photo
+          ? h('img', { src: src(c.photo), alt: '', draggable: 'false' })
+          : h('span', { class: 'apx-card__glyph' }, icon(c.icon || 'sparkles', { class: 'ic' })),
+        c.badge ? h('em', {}, c.badge) : null),
+      h('div', { class: 'apx-card__body' },
+        h('h4', {}, c.title),
+        !c.photo && c.body ? h('p', { class: 'apx-card__desc' }, c.body) : null,
+        c.tags?.length ? h('div', { class: 'apx-card__foot' },
+          h('span', { class: 'apx-card__tags' }, ...c.tags.slice(0, 2).map((t) => h('i', {}, t))),
+          h('span', { class: 'apx-card__go' }, 'Explore')) : null)));
+
+    const track = h('div', { class: 'apx-cards__track' }, ...cardEls);
+    let off = 0;
+    const scroll = (d) => {
+      const max = Math.max(0, cardEls.length - 4);
+      off = Math.max(0, Math.min(max, off + d));
+      track.style.transform = `translateX(calc(${-off} * (var(--apx-card-w) + 18px)))`;
+    };
+
+    const nxt = partners[(active + 1) % n];
+
+    return h('section', { class: 'apx-page', style: { '--accent': accent } },
+      h('div', { class: 'apx-hero' },
+        h('div', { class: 'apx-copy' },
+          p.status ? h('span', { class: 'apx-pill', style: { '--d': '0s' } }, h('i'), p.status) : null,
+          h('h2', { class: 'apx-title', style: { '--d': '0.06s' } },
+            p.headline?.[0] || '', ' ', h('span', {}, p.headline?.[1] || p.name)),
+          p.body ? h('p', { class: 'apx-lead', style: { '--d': '0.14s' } }, p.body) : null,
+          p.strip?.length ? h('div', { class: 'apx-strip', style: { '--d': '0.22s' } },
+            ...p.strip.slice(0, 3).map((f) => h('div', { class: 'apx-strip__field' },
+              h('span', { class: 'apx-strip__icon' }, icon(f.icon || 'sparkles', { class: 'ic ic--xs' })),
+              h('span', { class: 'apx-strip__text' }, h('small', {}, f.label), h('b', {}, f.value)))),
+            n > 1 ? h('button', { class: 'apx-strip__btn', type: 'button', onclick: () => manual(active + 1) },
+              `Next: ${nxt.short || nxt.name}`, icon('arrow-right', { class: 'ic ic--xs' })) : null) : null),
+        h('div', { class: 'apx-collage' },
+          h('div', { class: 'apx-badge', style: { '--d': '0.18s' } },
+            h('span', { class: 'apx-badge__label' }, icon('seal-check', { class: 'ic ic--xs' }), 'Official partner badge'),
+            p.badge ? h('img', { src: src(p.badge), alt: p.status || p.name, draggable: 'false' }) : h('b', {}, p.name)),
+          )),
+
+      people.length ? h('div', { class: 'apx-row' },
+        h('header', { class: 'apx-row__head' },
+          h('div', {}, h('h3', {}, p.circles.title), p.circles.sub ? h('p', {}, p.circles.sub) : null)),
+        h('ul', { class: `apx-circles${people.some((x) => x.photo) ? ' apx-circles--people' : ''}` }, ...people.map(circle))) : null,
+
+      cardEls.length ? h('div', { class: 'apx-row apx-row--cards' },
+        h('header', { class: 'apx-row__head' },
+          h('div', {}, h('h3', {}, p.cardsTitle || `What we do with ${p.short || p.name}`),
+            p.cardsSub ? h('p', {}, p.cardsSub) : null),
+          cardEls.length > 4 ? h('div', { class: 'apx-arrows' },
+            h('button', { type: 'button', 'aria-label': 'Previous', onclick: () => scroll(-1) }, icon('chevron-left', { class: 'ic ic--xs' })),
+            h('button', { type: 'button', class: 'is-primary', 'aria-label': 'Next', onclick: () => scroll(1) }, icon('chevron-right', { class: 'ic ic--xs' }))) : null),
+        h('div', { class: 'apx-cards' }, track)) : null);
   };
 
-  /* Each card tips up into place in turn; a rule draws across its top, its tags pop in one
-     by one, and a single sweep of light crosses it once it has landed. */
-  const card = (c, i) => h('article', { class: 'ap-card', style: { '--d': `${0.42 + i * 0.12}s` } },
-    h('span', { class: 'ap-card__bar', 'aria-hidden': 'true' }),
-    h('span', { class: 'ap-card__num', 'aria-hidden': 'true' }, String(i + 1).padStart(2, '0')),
-    h('h4', { class: 'ap-card__title' }, c.title),
-    c.body ? h('p', { class: 'ap-card__body' }, c.body) : null,
-    c.tags?.length
-      ? h('div', { class: 'ap-card__tags' }, ...c.tags.map((t, k) => h('span', { style: { '--t': String(k) } }, t)))
-      : null,
-    h('span', { class: 'ap-card__shine', 'aria-hidden': 'true' }),
-    h('span', { class: 'ap-card__glare', 'aria-hidden': 'true' }),
-  );
-
-  /**
-   * Depth card: the card tilts towards the pointer and its layers part — the title, the copy,
-   * the tags and the numeral each shift by a different amount, so it reads as built in depth.
-   * Done in plain CSS custom properties (--mx / --my, the pointer's offset from the centre,
-   * -0.5…0.5) rather than a library: the deck has no React and no network when presenting.
-   * A bounding rect is fine here even inside FitSlide's transform — only the ratio is used.
-   */
-  const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-  const depth = (el) => {
-    if (REDUCED?.matches) return el;
-    let raf = 0;
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect();
-      if (!r.width || !r.height) return;
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        el.style.setProperty('--mx', x.toFixed(3));
-        el.style.setProperty('--my', y.toFixed(3));
-        el.classList.add('is-tilting');
-      });
-    });
-    el.addEventListener('pointerleave', () => {
-      cancelAnimationFrame(raf);
-      el.classList.remove('is-tilting');
-      el.style.setProperty('--mx', '0');
-      el.style.setProperty('--my', '0');
-    });
-    return el;
+  /* The faint background: the partner's mark, huge, twice, and two soft glows of its colour. */
+  const paintBackdrop = (p) => {
+    backdrop.style.setProperty('--accent', p.accent || '#008638');
+    backdrop.replaceChildren(
+      h('span', { class: 'apx-bg__glow apx-bg__glow--a' }),
+      h('span', { class: 'apx-bg__glow apx-bg__glow--b' }),
+      ...(p.mark ? [
+        h('img', { class: 'apx-bg__mark apx-bg__mark--a', src: src(p.mark), alt: '' }),
+        h('img', { class: 'apx-bg__mark apx-bg__mark--b', src: src(p.mark), alt: '' }),
+      ] : []));
   };
 
-  function paint() {
+  const replay = () => { root.classList.remove('is-in'); void root.offsetWidth; root.classList.add('is-in'); };
+
+  function paint(dir = 1) {
     const p = partners[active];
-    tabs.forEach((t, i) => t.classList.toggle('is-active', i === active));
-    statusPill.textContent = p.status || p.name;
-    paintMedia(p);
-
-    const [lead, second] = p.headline?.length ? p.headline : [p.name, ''];
-    spread.replaceChildren(
-      p.tag ? h('span', { class: 'ap-tag', style: { '--d': '0s' } }, p.tag) : null,
-      h('h2', { class: 'ap-headline' },
-        h('span', { class: 'ap-headline__lead', style: { '--d': '0.06s' } }, lead),
-        second ? h('span', { class: 'ap-headline__second', style: { '--d': '0.14s' } }, second) : null,
-      ),
-      p.body ? h('p', { class: 'ap-body', style: { '--d': '0.22s' } }, p.body) : null,
-      h('div', { class: 'ap-official', style: { '--d': '0.3s' } },
-        h('span', { class: 'ap-official__label' }, 'Official partner'),
-        p.wordmark
-          ? h('img', { class: 'ap-official__mark', src: src(p.wordmark), alt: p.status || p.name })
-          /* No lockup: the partner's own mark beside its name in type. */
-          : h('span', { class: 'ap-official__type' },
-              p.mark ? h('img', { class: 'ap-official__glyph', src: src(p.mark), alt: '' }) : null,
-              p.name),
-      ),
-      p.cards?.length
-        ? h('div', { class: 'ap-work' },
-            h('span', { class: 'ap-work__label', style: { '--d': '0.36s' } }, `Our work with ${p.name}`),
-            h('div', { class: 'ap-cards' }, ...p.cards.map((c, i) => depth(card(c, i)))))
-        : null,
-    );
-
-    stats.replaceChildren(...(p.stats || []).map((s, i) => {
-      const value = h('strong', { class: `ap-stat__value${isNumeric(s.value) ? '' : ' ap-stat__value--word'}` }, s.value);
-      if (isNumeric(s.value)) countUp(value, s.value);
-      return h('div', { class: 'ap-stat', style: { '--d': `${0.5 + i * 0.1}s` } },
-        value, h('span', { class: 'ap-stat__label' }, s.label));
-    }));
-
-    // Restart the arrival motion on the new content and the hold bar on the new tab.
-    root.classList.remove('is-in');
-    void root.offsetWidth;
-    root.classList.add('is-in');
+    railBtns.forEach((b, i) => b.classList.toggle('is-active', i === active));
+    paintBackdrop(p);
+    const next = page(p);
+    next.classList.add(dir < 0 ? 'from-up' : 'from-down');
+    stage.replaceChildren(next);
+    replay();
   }
 
-  /** Turn the ring `d` stops; positive is forward. */
-  function turn(d) {
-    if (!d) return;
-    step += d;
-    active = ((step % n) + n) % n;
-    placeOrbit();
-    paint();
-  }
+  const auto = autoSlide(() => { active = (active + 1) % n; paint(1); }, { host: root, interval: hold });
 
-  const auto = autoSlide(() => turn(1), { host: root, interval: hold });
-
-  /** A chosen partner gets its full hold. Forward the short way round. */
   function manual(i) {
-    const target = ((i % n) + n) % n;
-    const fwd = (target - active + n) % n;
-    if (fwd) turn(fwd);
+    const t = ((i % n) + n) % n;
+    if (t !== active) { const dir = t > active ? 1 : -1; active = t; paint(dir); }
     auto.reset();
+    replay();
   }
 
   function setPlaying(on) {
@@ -289,32 +177,20 @@ export function AiPartners(block, { editing = false } = {}) {
     playBtn.replaceChildren(icon(on ? 'pause' : 'play', { class: 'ic ic--xs' }));
     playBtn.setAttribute('aria-label', on ? 'Pause' : 'Play');
     root.classList.toggle('is-paused', !on);
-    if (on) auto.start();
-    else auto.stop();
-    // The hold bar restarts with the state.
-    root.classList.remove('is-in');
-    void root.offsetWidth;
-    root.classList.add('is-in');
+    if (on) auto.start(); else auto.stop();
+    replay();
   }
 
   if (!editing) {
-    /* Prev / Next walk the partners before the deck turns the slide. */
     registerStepper((delta) => {
-      if (delta > 0) {
-        if (active >= n - 1) return false;
-        turn(1);
-      } else {
-        if (active <= 0) return false;
-        turn(-1);
-      }
-      auto.reset();
+      const t = active + (delta > 0 ? 1 : -1);
+      if (t < 0 || t >= n) return false;
+      manual(t);
       return true;
     });
   }
 
-  placeOrbit();
-  root.classList.remove('is-moving');
-  paint();
+  paint(1);
   setPlaying(playing);
   return root;
 }

@@ -128,7 +128,9 @@
   /* What the player bar takes out of the bottom-right corner: its own width, the
      inset it sits at, and the gap between the two bars. The presenter bar subtracts
      this when it centres, so the two sit side by side rather than on each other. */
-  --player-reserve: 246px;
+  /* The corner player bar this once made room for is gone, so nothing is reserved and the
+     deck bar sits in the true centre. */
+  --player-reserve: 0px;
   --font: 'Open Sans', 'Segoe UI', Arial, sans-serif;
   --display: 'Oswald', 'Arial Narrow', 'Segoe UI', sans-serif;
   /* Montserrat is wider and taller in the x-height than the condensed face this
@@ -14029,10 +14031,24 @@ body.is-presenting .fit-slide__inner .sw-head {
 
 .ap-tab:hover { color: var(--ap-ink); }
 
-.ap-tab.is-active {
+.ap-tab.is-active { color: var(--brand-primary, #008638); }
+
+.ap-tabs { position: relative; }
+
+.ap-tabs__line {
+  position: absolute;
+  bottom: 7px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  border-radius: 999px;
   background: var(--brand-primary, #008638);
-  color: #ffffff;
+  box-shadow: 0 2px 8px rgb(0 134 56 / 0.35);
+  transition: left 0.55s cubic-bezier(0.65, 0, 0.35, 1), width 0.55s cubic-bezier(0.65, 0, 0.35, 1);
 }
+
+/* The old per-tab hold bar would sit on top of the line; the line replaces it. */
+.ap-tab__bar { display: none; }
 
 /* How much of this partner's hold is left, along the foot of its tab. */
 .ap-tab__bar {
@@ -14219,7 +14235,7 @@ body.is-presenting .fit-slide__inner .sw-head {
   box-shadow: 0 18px 38px -24px rgba(13, 26, 18, 0.38);
   transform-origin: 50% 50%;
   /* Depth card: tilted towards the pointer. At rest --mx/--my are 0 and this is flat. */
-  transform: perspective(900px) translateZ(var(--arc-z, 0px)) rotateX(calc(var(--my) * -12deg)) rotateY(calc(var(--arc-ry, 0deg) + var(--mx) * 14deg));
+  transform: translateZ(var(--arc-z, 0px)) rotateX(calc(var(--my) * -12deg)) rotateY(calc(var(--arc-ry, 0deg) + var(--mx) * 14deg));
   transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.16, 1), box-shadow 0.35s ease, border-color 0.35s ease;
   /* `backwards`, not `both`: a held end state would pin transform and kill the hover lift. */
   animation: ap-card-in 0.9s cubic-bezier(0.22, 0.9, 0.16, 1) backwards;
@@ -14236,7 +14252,7 @@ body.is-presenting .fit-slide__inner .sw-head {
 /* Following the pointer: a short transition so it tracks without lagging, a small lift, and a
    shadow thrown away from the side that tipped towards the viewer. */
 .ap-card.is-tilting {
-  transform: perspective(900px) translateZ(var(--arc-z, 0px)) translateY(-6px) rotateX(calc(var(--my) * -12deg)) rotateY(calc(var(--arc-ry, 0deg) + var(--mx) * 14deg)) scale(1.02);
+  transform: translateZ(var(--arc-z, 0px)) translateY(-6px) rotateX(calc(var(--my) * -12deg)) rotateY(calc(var(--arc-ry, 0deg) + var(--mx) * 14deg)) scale(1.02);
   transition: transform 0.12s linear, box-shadow 0.35s ease, border-color 0.35s ease;
   border-color: color-mix(in srgb, var(--brand-primary, #008638) 30%, transparent);
   box-shadow: calc(var(--mx) * -26px) calc(28px + var(--my) * -18px) 46px -24px rgba(0, 134, 56, 0.45);
@@ -14286,9 +14302,10 @@ body.is-presenting .fit-slide__inner .sw-head {
 .ap-card__bar {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 16px;
+  right: 16px;
   height: 3px;
+  border-radius: 0 0 3px 3px;
   background: var(--brand-primary, #008638);
   transform: scaleX(0);
   transform-origin: left center;
@@ -15203,6 +15220,236 @@ body.is-presenting .fit-slide__inner .tp-lab__plate { bottom: calc(var(--deck-ba
   .ap-media, .ap-media__frame, .ap-media__frame img, .ap-media__cap { animation: none !important; }
 }
 
+/* ---- AI Partners — the refined spread ------------------------------------------------
+   One spacing scale down the left, as an editorial landing page keeps it: 24px from the tag
+   to the title, 8px to its subtitle, 22px to the paragraph, 30px to the button, and the wall
+   of cards at the foot. The title is the one large line; the second line is a subtitle in
+   the text face, so the two never read as the same size. */
+.ap-tag { margin-bottom: 0; }
+
+.ap-headline { gap: 8px; margin-top: 24px; }
+
+.ap-headline__lead {
+  font-size: 62px;
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+}
+
+.ap-headline__second {
+  font-family: var(--font);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  color: color-mix(in srgb, var(--ap-ink) 68%, transparent);
+}
+
+/* The paragraph opened up: a touch more tracking and air between the lines. */
+.ap-body {
+  max-width: 52ch;
+  margin-top: 22px;
+  font-size: 17px;
+  line-height: 1.78;
+  letter-spacing: 0.016em;
+  color: color-mix(in srgb, var(--ap-ink) 74%, transparent);
+}
+
+/* --------------------------------------------------- the official partner, as a button */
+.ap-official {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  height: 58px;
+  margin-top: 30px;
+  padding: 0 8px 0 20px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ap-ink) 9%, transparent);
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 16px 34px -20px rgb(13 26 18 / 0.4);
+  color: var(--ap-ink);
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.22, 0.9, 0.16, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.ap-official:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--brand-primary, #008638) 35%, transparent);
+  box-shadow: 0 22px 40px -20px rgb(0 134 56 / 0.45);
+}
+
+.ap-official:active { transform: translateY(-1px) scale(0.98); }
+
+.ap-official__label {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ap-ink) 50%, transparent);
+}
+
+.ap-official__mark { height: 34px; border-radius: 7px; }
+.ap-official__type { font-size: 21px; }
+.ap-official__glyph { width: 30px; height: 30px; }
+
+/* The arrow nudges forward on a loop, and further on hover. */
+.ap-official__go {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--brand-primary, #008638);
+  color: #ffffff;
+  transition: background 0.3s ease;
+}
+
+.ap-official__go .ic { animation: ap-nudge 1.8s ease-in-out infinite; }
+.ap-official:hover .ap-official__go { background: color-mix(in srgb, var(--brand-primary, #008638) 82%, #000000); }
+
+@keyframes ap-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.ap-official__shine {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -30%;
+  width: 18%;
+  background: rgb(255 255 255 / 0.8);
+  transform: skewX(-20deg);
+  animation: tp-shine 4.5s ease-in-out 1.5s infinite;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------- the wall of cards */
+.ap-work { margin-bottom: 16px; padding-top: 24px; }
+.ap-work__label { margin-bottom: 14px; }
+
+/* Five small cards on a curve that wraps round the viewer: the two at the ends turn in on
+   their outer edges, the ones beside them less, and the middle one sits furthest back. */
+/* One shared viewpoint, centred on the row: each card's own perspective() made it a door
+   swinging about its own middle, so the right-hand pair leaned the wrong way. */
+.ap-cards.ap-cards--5,
+.ap-cards.ap-cards--4 { perspective: 1000px; perspective-origin: 50% 40%; align-items: center; }
+.ap-cards.ap-cards--5 { grid-template-columns: repeat(5, 150px); gap: 12px; }
+.ap-cards.ap-cards--4 { grid-template-columns: repeat(4, 180px); gap: 12px; }
+
+.ap-cards--5 .ap-card:nth-child(1) { --arc-ry: 24deg; --arc-z: 0px; transform-origin: 0% 50%; }
+.ap-cards--5 .ap-card:nth-child(2) { --arc-ry: 10deg; --arc-z: -10px; transform-origin: 50% 50%; }
+.ap-cards--5 .ap-card:nth-child(3) { --arc-ry: 0deg; --arc-z: -24px; transform-origin: 50% 50%; }
+.ap-cards--5 .ap-card:nth-child(4) { --arc-ry: -10deg; --arc-z: -10px; transform-origin: 50% 50%; }
+.ap-cards--5 .ap-card:nth-child(5) { --arc-ry: -24deg; --arc-z: 0px; transform-origin: 100% 50%; }
+
+.ap-cards--5 .ap-card,
+.ap-cards--4 .ap-card {
+  display: flex;
+  flex-direction: column;
+  height: 204px;
+  padding: 16px 14px 13px;
+  border-radius: 16px;
+}
+
+.ap-cards--5 .ap-card__title,
+.ap-cards--4 .ap-card__title {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding-right: 24px;
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+}
+
+.ap-cards--5 .ap-card__body,
+.ap-cards--4 .ap-card__body {
+  display: -webkit-box;
+  margin-top: 8px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.ap-cards--5 .ap-card__tags,
+.ap-cards--4 .ap-card__tags { margin-top: auto; gap: 4px; }
+.ap-cards--5 .ap-card__tags span,
+.ap-cards--4 .ap-card__tags span { padding: 3px 7px; font-size: 9px; }
+.ap-cards--5 .ap-card__tags span:nth-child(n + 3) { display: none; }
+
+.ap-cards--5 .ap-card__num,
+.ap-cards--4 .ap-card__num { top: 10px; right: 12px; font-size: 24px; }
+
+/* The highlight: the middle piece of work set dark, its title led by a check. */
+.ap-card--dark {
+  border-color: rgb(255 255 255 / 0.08);
+  background: #0f1d15;
+  box-shadow: 0 24px 44px -24px rgb(0 0 0 / 0.6);
+}
+
+.ap-card--dark .ap-card__title { color: #ffffff; }
+.ap-card--dark .ap-card__body { color: rgb(255 255 255 / 0.78); }
+.ap-card--dark .ap-card__tags span { background: rgb(255 255 255 / 0.12); color: #ffffff; }
+.ap-card--dark .ap-card__num { color: rgb(255 255 255 / 0.12); }
+.ap-card--dark .ap-card__bar { background: var(--brand-accent, #ffbb00); }
+.ap-card--dark .ap-card__shine { background: rgb(255 255 255 / 0.12); }
+
+.ap-card__check {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: -1px;
+  border-radius: 50%;
+  background: var(--brand-primary, #008638);
+}
+
+.ap-card__check .ic { width: 10px; height: 10px; color: #ffffff; }
+
+/* The figures, each on a card of its own (or two to a card). */
+.ap-card--stat { justify-content: space-between; gap: 10px; }
+
+.ap-card__statmark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 11%, #ffffff);
+  color: var(--brand-primary, #008638);
+}
+
+.ap-card__statmark .ic { width: 16px; height: 16px; }
+
+.ap-card__stat { display: grid; gap: 3px; }
+
+.ap-card__fig {
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ap-ink);
+}
+
+.ap-card--stat .ap-card__stat + .ap-card__stat .ap-card__fig { font-size: 28px; }
+.ap-card__fig--word { font-size: 24px; text-transform: uppercase; }
+.ap-card__stat span { font-size: 11.5px; font-weight: 600; line-height: 1.3; letter-spacing: 0.01em; color: color-mix(in srgb, var(--ap-ink) 62%, transparent); }
+
+/* The figures moved onto the wall; the ring's hollow is left to the ring. */
+.ap-stats { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-official__go .ic, .ap-official__shine { animation: none; }
+  .ap-official { transition: none; }
+}
+
 /* ---- Partnership: the AI Lab as a glass phone, photographs playing beside it ----------
    Left, top to bottom: a glass phone laid out like a profile screen. Right: no box — the
    photographs simply begin where the phone ends and run to the edge, faded in at their left
@@ -16072,4 +16319,1899 @@ body.is-presenting .fit-slide__inner .tp-intro .tp-phone { bottom: var(--deck-ba
   .tp-car__bg.is-drift, .tp-car__eyebrow.is-in, .tp-car__title.is-in, .tp-car__desc.is-in,
   .tp-car__row.is-entering .tp-car__card, .tp-hand, .tp-panel--lab.is-opening .tp-intro .tp-phone { animation: none !important; }
   .tp-car__morphimg, .tp-car__row.is-sliding, .tp-car__bg { transition: none; }
+}
+
+/* ==========================================================================
+   AI Partners — one landing page per partner, a slim rail to choose between
+   Laid out like a travel landing page: headline, lead and a white fact strip
+   on the left, the official badge among rounded photographs on the right, a
+   row of circles and a row of cards beneath. Behind it, the partner's mark,
+   huge and faint. Budget: everything ends by y 760 so the deck bar clears it.
+   ========================================================================== */
+.apx-root {
+  --ink: #101a14;
+  --paper: #f6f7f3;
+  --accent: #008638;
+  --apx-card-w: 334px;
+  position: relative;
+  flex: 0 0 auto;
+  height: 860px;
+  min-height: 860px;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+}
+
+body.is-presenting .fit-slide__inner .apx-root {
+  height: var(--slide-h, 860px) !important;
+  min-height: var(--slide-h, 860px) !important;
+  max-height: var(--slide-h, 860px) !important;
+}
+
+.apx-root--empty { display: grid; place-items: center; color: color-mix(in srgb, var(--ink) 55%, transparent); }
+
+/* ------------------------------------------------------------- background */
+.apx-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+
+.apx-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23101a14' fill-opacity='0.06'/%3E%3C/svg%3E");
+}
+
+.apx-bg__glow { position: absolute; border-radius: 50%; background: var(--accent); filter: blur(90px); opacity: 0.12; }
+.apx-bg__glow--a { right: -120px; top: -140px; width: 560px; height: 560px; }
+.apx-bg__glow--b { left: 18%; bottom: -260px; width: 520px; height: 420px; opacity: 0.08; }
+
+.apx-bg__mark { position: absolute; object-fit: contain; opacity: 0.05; animation: apx-bg-drift 26s ease-in-out infinite alternate; }
+.apx-bg__mark--a { right: -90px; bottom: -150px; width: 640px; height: 640px; transform: rotate(-12deg); }
+.apx-bg__mark--b { left: 38%; top: -170px; width: 340px; height: 340px; opacity: 0.035; transform: rotate(18deg); animation-duration: 32s; }
+
+@keyframes apx-bg-drift {
+  from { translate: 0 0; }
+  to { translate: -30px 20px; }
+}
+
+/* ----------------------------------------------------------------- the rail */
+.apx-rail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 104px;
+  padding: 26px 0 22px;
+  border-right: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
+  background: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.apx-rail__title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.apx-rail__list { display: grid; gap: 26px; margin: auto 0; }
+
+.apx-rail__btn {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  font: inherit;
+  cursor: pointer;
+}
+
+.apx-rail__dot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+}
+
+.apx-rail__dot > img,
+.apx-rail__dot > b {
+  width: 44px;
+  height: 44px;
+  padding: 9px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 6px 16px -8px rgb(16 26 20 / 0.4);
+  object-fit: contain;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.apx-rail__btn:hover .apx-rail__dot > img { transform: scale(1.06); }
+
+.apx-rail__ringbox { position: absolute; inset: 0; }
+.apx-rail__ring { width: 60px; height: 60px; transform: rotate(-90deg); }
+.apx-rail__track { fill: none; stroke: transparent; stroke-width: 3; }
+.apx-rail__fill {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: var(--apx-ring);
+  stroke-dashoffset: var(--apx-ring);
+}
+
+.apx-rail__btn.is-active .apx-rail__track { stroke: color-mix(in srgb, var(--accent) 18%, transparent); }
+.apx-rail__btn.is-active .apx-rail__fill { stroke-dashoffset: 0; }
+.apx-root.is-in:not(.is-paused) .apx-rail__btn.is-active .apx-rail__fill { animation: apx-ring var(--apx-hold, 9000ms) linear both; }
+
+@keyframes apx-ring {
+  from { stroke-dashoffset: var(--apx-ring); }
+  to { stroke-dashoffset: 0; }
+}
+
+.apx-rail__btn.is-active { color: var(--ink); }
+.apx-rail__btn.is-active .apx-rail__dot > img { box-shadow: 0 10px 22px -10px var(--accent); }
+
+.apx-rail__label { font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; }
+
+.apx-rail__play {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------------- the page */
+.apx-stage { position: absolute; left: 104px; right: 0; top: 0; bottom: 0; z-index: 2; }
+
+.apx-page {
+  --apx-air: calc(22px + (var(--slide-h, 860px) - 860px) * 0.12);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: calc(28px + (var(--slide-h, 860px) - 860px) * 0.06) 56px 28px 48px;
+}
+
+body.is-presenting .fit-slide__inner .apx-page { padding-bottom: calc(var(--deck-bar-clear, 96px) + 4px); }
+
+.apx-page.from-down { animation: apx-page-in 0.7s cubic-bezier(0.22, 0.9, 0.16, 1) both; }
+.apx-page.from-up { animation: apx-page-in-up 0.7s cubic-bezier(0.22, 0.9, 0.16, 1) both; }
+
+@keyframes apx-page-in { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+@keyframes apx-page-in-up { from { opacity: 0; transform: translateY(-26px); } to { opacity: 1; transform: none; } }
+
+/* Everything with a --d arrives in reading order. */
+.apx-root.is-in .apx-page [style*='--d'] {
+  animation: apx-rise 0.7s cubic-bezier(0.22, 0.9, 0.16, 1) backwards;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes apx-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* At least 276 tall, taller if the copy needs it — never overlapping the row beneath. */
+.apx-hero { flex: 0 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 560px; gap: 32px; min-height: 276px; }
+
+.apx-copy { display: flex; flex-direction: column; align-items: flex-start; padding-top: 6px; }
+
+.apx-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 11%, #ffffff);
+  color: color-mix(in srgb, var(--accent) 82%, #000000);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.apx-pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+.apx-title {
+  margin: 14px 0 0;
+  font-family: var(--font);
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.apx-title span { color: var(--accent); }
+
+.apx-lead {
+  max-width: 58ch;
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.66;
+  letter-spacing: 0.012em;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* The fact strip — the landing page's search bar. */
+.apx-strip {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 18px;
+  padding: 7px 7px 7px 4px;
+  border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 18px 40px -26px rgb(16 26 20 / 0.45);
+}
+
+.apx-strip__field {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 3px 14px;
+}
+
+.apx-strip__field + .apx-strip__field { border-left: 1px solid color-mix(in srgb, var(--ink) 9%, transparent); }
+
+.apx-strip__icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--accent) 11%, #ffffff);
+  color: var(--accent);
+}
+
+.apx-strip__text { display: grid; gap: 1px; }
+.apx-strip__text small { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in srgb, var(--ink) 50%, transparent); }
+.apx-strip__text b { font-size: 13.5px; font-weight: 700; white-space: nowrap; }
+
+.apx-strip__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  margin-left: 6px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--accent);
+  color: #ffffff;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -10px var(--accent);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.apx-strip__btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.apx-strip__btn .ic { animation: ap-nudge 1.8s ease-in-out infinite; }
+
+/* ------------------------------------------------------------- the collage */
+.apx-collage { position: relative; display: grid; align-items: center; }
+
+.apx-tile {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #e8ece6;
+  box-shadow: 0 22px 44px -26px rgb(16 26 20 / 0.55);
+}
+
+.apx-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.apx-tile--0 { left: 352px; top: 0; width: 208px; height: 300px; animation: apx-bob 7s ease-in-out infinite; }
+.apx-tile--1 { left: 20px; top: 0; width: 316px; height: 128px; animation: apx-bob 8s ease-in-out 1s infinite; }
+.apx-tile--2 { display: none; }
+
+.apx-tile figcaption {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 9px;
+  background: rgb(10 18 13 / 0.6);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+}
+
+/* A partner without photographs: its mark large on a wash of its colour, and its tagline. */
+.apx-tile--mark { display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 9%, #ffffff); }
+.apx-tile--mark img { width: 58%; height: auto; object-fit: contain; }
+.apx-tile--word { display: grid; place-items: center; padding: 18px 24px; background: var(--ink); }
+.apx-tile--word span { font-size: 22px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; color: #ffffff; text-align: center; }
+
+@keyframes apx-bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+
+/* The badge: the most visible thing on the page. */
+.apx-badge {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  padding: 20px 24px 24px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 7%, transparent), 0 28px 56px -26px rgb(16 26 20 / 0.55);
+  animation: apx-badge-glow 3.6s ease-in-out infinite;
+}
+
+.apx-badge__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent) 82%, #000000);
+}
+
+.apx-badge img { display: block; width: 100%; height: 172px; object-fit: contain; border-radius: 14px; }
+.apx-badge b { font-size: 28px; }
+
+@keyframes apx-badge-glow {
+  0%, 100% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 7%, transparent), 0 28px 56px -26px rgb(16 26 20 / 0.55); }
+  50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--accent) 11%, transparent), 0 28px 56px -26px rgb(16 26 20 / 0.55); }
+}
+
+/* ------------------------------------------------------------------ the rows */
+.apx-row { flex: 0 0 auto; margin-top: var(--apx-air); }
+.apx-row--cards {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: var(--apx-air);
+}
+
+.apx-row__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 16px; }
+.apx-row__head h3 { margin: 0; font-family: var(--font); font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
+.apx-row__head p { margin: 2px 0 0; font-size: 12.5px; letter-spacing: 0.01em; color: color-mix(in srgb, var(--ink) 58%, transparent); }
+
+.apx-circles { display: flex; justify-content: space-between; margin: 0; padding: 0; list-style: none; }
+
+.apx-circle { display: grid; justify-items: center; gap: 5px; width: 112px; text-align: center; }
+
+.apx-circle__pic {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 14%, #ffffff);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent), 0 12px 22px -12px rgb(16 26 20 / 0.5);
+  transition: transform 0.35s cubic-bezier(0.22, 0.9, 0.16, 1);
+}
+
+.apx-circle:hover .apx-circle__pic { transform: translateY(-4px) scale(1.05); }
+.apx-circle__pic img { width: 100%; height: 100%; object-fit: cover; }
+.apx-circle__pic--icon { color: var(--accent); }
+.apx-circle__pic--icon .ic { width: 28px; height: 28px; }
+
+.apx-circle b { font-size: 12.5px; font-weight: 700; line-height: 1.2; }
+.apx-circle small { margin-top: -3px; font-size: 10.5px; font-weight: 600; color: color-mix(in srgb, var(--ink) 52%, transparent); }
+
+.apx-arrows { display: flex; gap: 8px; }
+
+.apx-arrows button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.apx-arrows .is-primary { border-color: var(--accent); background: var(--accent); color: #ffffff; }
+
+.apx-cards { flex: 1 1 auto; display: flex; min-height: 0; overflow: hidden; margin: -10px -12px; padding: 10px 12px 14px; }
+.apx-cards__track { display: flex; align-items: stretch; gap: 18px; height: 100%; transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1); }
+
+.apx-card {
+  flex: 0 0 var(--apx-card-w);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ink) 6%, transparent);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 16px 34px -24px rgb(16 26 20 / 0.45);
+  transition: transform 0.35s cubic-bezier(0.22, 0.9, 0.16, 1), box-shadow 0.35s ease;
+}
+
+.apx-card:hover { transform: translateY(-5px); box-shadow: 0 24px 44px -24px rgb(16 26 20 / 0.5); }
+
+.apx-card__pic { position: relative; display: block; flex: 1 1 auto; min-height: 84px; overflow: hidden; margin: 8px 8px 0; border-radius: 13px; }
+.apx-card__pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.apx-card:hover .apx-card__pic img { transform: scale(1.06); }
+.apx-card__pic--plate { display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 10%, #ffffff); }
+.apx-card__glyph {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--accent);
+  box-shadow: 0 8px 18px -10px rgb(16 26 20 / 0.4);
+}
+.apx-card__glyph .ic { width: 24px; height: 24px; }
+
+.apx-card__pic em {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.92);
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.apx-card__body { flex: 0 0 auto; padding: 12px 16px 14px; }
+.apx-card__body h4 { margin: 0; font-size: 14.5px; font-weight: 800; letter-spacing: -0.005em; }
+
+.apx-card__body p {
+  display: -webkit-box;
+  margin: 4px 0 0;
+  overflow: hidden;
+  font-size: 12.5px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.apx-card__foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.apx-card__tags { display: flex; gap: 5px; }
+.apx-card__tags i { padding: 3px 8px; border-radius: 6px; background: #f1f3ef; font-size: 10.5px; font-style: normal; font-weight: 700; color: color-mix(in srgb, var(--ink) 72%, transparent); }
+
+.apx-card__go {
+  padding: 6px 12px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--accent) 11%, #ffffff);
+  color: color-mix(in srgb, var(--accent) 82%, #000000);
+  font-size: 11.5px;
+  font-weight: 800;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.apx-card:hover .apx-card__go { background: var(--accent); color: #ffffff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .apx-page, .apx-root.is-in .apx-page [style*='--d'], .apx-bg__mark, .apx-tile, .apx-badge,
+  .apx-strip__btn .ic, .apx-root.is-in:not(.is-paused) .apx-rail__btn.is-active .apx-rail__fill { animation: none !important; }
+}
+
+/* AI Partners — feature cards (no photograph): description shown, the icon plate breathing. */
+.apx-card__desc {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--ink) 64%, transparent);
+}
+
+.apx-card__pic--plate { background: color-mix(in srgb, var(--accent) 9%, #ffffff); }
+.apx-card__pic--plate .apx-card__glyph { width: 64px; height: 64px; border-radius: 18px; animation: apx-glyph 3.6s ease-in-out infinite; }
+.apx-card__pic--plate .apx-card__glyph .ic { width: 30px; height: 30px; }
+.apx-card:nth-child(2) .apx-card__glyph { animation-delay: -0.9s; }
+.apx-card:nth-child(3) .apx-card__glyph { animation-delay: -1.8s; }
+.apx-card:nth-child(4) .apx-card__glyph { animation-delay: -2.7s; }
+.apx-card:hover .apx-card__glyph { background: var(--accent); color: #ffffff; }
+
+@keyframes apx-glyph {
+  0%, 100% { transform: translateY(0); box-shadow: 0 8px 18px -10px rgb(16 26 20 / 0.4); }
+  50% { transform: translateY(-6px); box-shadow: 0 18px 26px -12px rgb(16 26 20 / 0.35); }
+}
+
+@media (prefers-reduced-motion: reduce) { .apx-card__glyph { animation: none !important; } }
+
+/* AI Partners — card motion: the photo drifts inside its frame, a light sweeps once. */
+.apx-card__pic img { animation: apx-card-drift 12s ease-in-out infinite alternate; }
+.apx-card:nth-child(2) .apx-card__pic img { animation-delay: -3s; }
+.apx-card:nth-child(3) .apx-card__pic img { animation-delay: -6s; }
+.apx-card:nth-child(4) .apx-card__pic img { animation-delay: -9s; }
+.apx-card:hover .apx-card__pic img { animation-play-state: paused; }
+
+@keyframes apx-card-drift {
+  from { transform: scale(1.04) translate(0, 0); }
+  to { transform: scale(1.12) translate(-2%, -2%); }
+}
+
+.apx-card__pic::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -40%;
+  width: 22%;
+  background: rgb(255 255 255 / 0.35);
+  transform: skewX(-18deg);
+  pointer-events: none;
+}
+
+.apx-root.is-in .apx-card__pic::after { animation: apx-card-sweep 1.2s ease calc(var(--d, 0.6s) + 0.5s) both; }
+
+@keyframes apx-card-sweep { from { left: -40%; } to { left: 140%; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .apx-card__pic img, .apx-root.is-in .apx-card__pic::after { animation: none !important; }
+}
+
+/* ==========================================================================
+   AI Ready Engineer — a three-page brochure spread
+   01 the road map (light), 02 the course structure (dark green), 03 benefits.
+   Pages are columns that fill the slide; presenting, the foot of each clears
+   the deck bar with --deck-bar-clear.
+   ========================================================================== */
+.canvas-block--ai-ready-deck {
+  min-height: 860px !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+.are-root {
+  --ink: #101a14;
+  --green: var(--brand-primary, #008638);
+  --deep: #0c3320;
+  --gold: var(--brand-accent, #ffbb00);
+  --cream: #fbf8f3;
+  --are-page: 0;
+  --are-foot: 30px;
+  position: relative;
+  flex: 0 0 auto;
+  height: 860px;
+  min-height: 860px;
+  overflow: hidden;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font);
+}
+
+.slide--hero .are-root { border-radius: 0; }
+
+body.is-presenting .fit-slide__inner .are-root {
+  --are-foot: calc(var(--deck-bar-clear, 96px) + 6px);
+  height: var(--slide-h, 860px) !important;
+  min-height: var(--slide-h, 860px) !important;
+  max-height: var(--slide-h, 860px) !important;
+}
+
+.are-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23101a14' fill-opacity='0.06'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ----------------------------------------------------------------- top bar */
+.are-top {
+  position: absolute;
+  top: 24px;
+  left: 56px;
+  right: 56px;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+/* The logo is white artwork: it sits on a dark green plate, on every page. */
+.are-logo {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 14px;
+  background: var(--deep);
+  box-shadow: 0 10px 24px -14px rgb(12 51 32 / 0.6);
+}
+
+.are-logo img { display: block; height: 30px; width: auto; }
+.are-logo b { color: #ffffff; font-size: 16px; }
+
+.are-tabs {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.85);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 26px -18px rgb(16 26 20 / 0.45);
+}
+
+.are-tab {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 9px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.are-tab small { font-size: 10.5px; font-weight: 800; color: color-mix(in srgb, var(--ink) 35%, transparent); }
+.are-tab.is-active { color: var(--green); }
+.are-tab.is-active small { color: var(--green); }
+
+.are-tabs__line {
+  position: absolute;
+  bottom: 6px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--green);
+  transition: left 0.55s cubic-bezier(0.65, 0, 0.35, 1), width 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.are-top__end { justify-self: end; display: flex; align-items: center; gap: 14px; }
+.are-by { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: color-mix(in srgb, var(--ink) 55%, transparent); }
+
+.are-count {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 6px 16px -12px rgb(16 26 20 / 0.5);
+}
+
+/* On the dark page the bar's quiet text turns light. */
+.are-root[data-page='1'] .are-by { color: rgb(255 255 255 / 0.7); }
+
+/* ------------------------------------------------------------------- pages */
+.are-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 300%;
+  transform: translateX(calc(var(--are-page) * -33.3333%));
+  transition: transform 0.95s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.are-page {
+  position: relative;
+  flex: 0 0 33.3333%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: calc(108px + (var(--slide-h, 860px) - 860px) * 0.08) 56px var(--are-foot);
+}
+
+/* Arrival: whatever carries a --d rises in reading order. */
+.are-page.is-in [style*='--d'] {
+  animation: are-rise 0.75s cubic-bezier(0.22, 0.9, 0.16, 1) backwards;
+  animation-delay: calc(var(--d, 0s) + 0.35s);
+}
+
+@keyframes are-rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+.are-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--green) 11%, #ffffff);
+  color: color-mix(in srgb, var(--green) 80%, #000000);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.are-pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+
+/* ------------------------------------------------------- 01 the road map */
+.are-page--intro { background: #fffcf7; }
+
+.are-intro { display: grid; grid-template-columns: minmax(0, 1fr) 520px; gap: 48px; align-items: center; }
+.are-intro__copy { display: flex; flex-direction: column; align-items: flex-start; }
+
+.are-title {
+  margin: 16px 0 0;
+  font-family: var(--font);
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.are-title span { color: var(--green); }
+
+.are-lead {
+  max-width: 56ch;
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0.012em;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.are-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 22px; }
+
+.are-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--green);
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 24px -12px rgb(0 134 56 / 0.7);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.are-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.are-btn .ic { animation: ap-nudge 1.8s ease-in-out infinite; }
+
+.are-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid color-mix(in srgb, var(--ink) 9%, transparent);
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.are-chip .ic { color: var(--green); }
+
+.are-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.are-stat {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 14px;
+  align-items: center;
+  padding: 16px 18px;
+  border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 16px 34px -26px rgb(16 26 20 / 0.5);
+  transition: transform 0.3s ease;
+}
+
+.are-stat:hover { transform: translateY(-3px); }
+
+.are-stat__icon {
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--green) 11%, #ffffff);
+  color: var(--green);
+}
+
+.are-stat__icon .ic { width: 22px; height: 22px; }
+.are-stat__value { font-family: var(--display); font-size: 30px; font-weight: 700; line-height: 1; }
+.are-stat__label { font-size: 12.5px; font-weight: 600; color: color-mix(in srgb, var(--ink) 60%, transparent); }
+
+/* The road itself, the full width of the slide at the foot. Multiply melts the artwork's own
+   cream ground into the page so the road sits on the paper, not on a pasted rectangle; it is
+   drawn in from the left when the page arrives. */
+.are-road {
+  position: relative;
+  margin: auto -56px 0;
+  padding-top: 18px;
+}
+
+.are-road img {
+  display: block;
+  width: 100%;
+  height: auto;
+  clip-path: inset(0 0 0 0);
+}
+
+.are-page--intro.is-in .are-road img { animation: are-road-in 2.6s cubic-bezier(0.45, 0, 0.25, 1) 0.5s both; }
+
+@keyframes are-road-in {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.are-road figcaption {
+  position: absolute;
+  left: 56px;
+  right: 56px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.are-road figcaption i { flex: 1; height: 1px; background: color-mix(in srgb, var(--ink) 14%, transparent); }
+
+/* ------------------------------------------------ 02 the course structure */
+.are-page--course { background: var(--deep); color: #ffffff; }
+.are-page--course::before {
+  content: '';
+  position: absolute;
+  right: -160px;
+  top: -200px;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: var(--green);
+  filter: blur(120px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.are-course { position: relative; flex: 1 1 auto; display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 40px; min-height: 0; }
+
+.are-eyebrow {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.are-eyebrow--ink { color: color-mix(in srgb, var(--green) 85%, #000000); }
+
+.are-h3 { margin: 10px 0 0; font-family: var(--font); font-size: 34px; font-weight: 800; line-height: 1.12; letter-spacing: -0.015em; color: #ffffff; }
+.are-h3--ink { color: var(--ink); font-size: 26px; }
+.are-sub { margin: 10px 0 0; font-size: 14.5px; line-height: 1.6; color: rgb(255 255 255 / 0.72); }
+
+.are-why { display: flex; flex-direction: column; min-height: 0; }
+
+.are-why__list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1 1 auto;
+  gap: 10px;
+  margin: 22px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+  list-style: none;
+}
+
+.are-why__list li { display: flex; align-items: flex-start; gap: 12px; }
+
+.are-why__icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: rgb(255 187 0 / 0.14);
+  color: var(--gold);
+}
+
+.are-why__list b { display: block; font-size: 14px; font-weight: 700; line-height: 1.3; }
+.are-why__list small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.45; color: rgb(255 255 255 / 0.65); }
+
+.are-phases { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; min-height: 0; }
+
+.are-phase {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 16px 16px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.06);
+  backdrop-filter: blur(6px);
+  transition: transform 0.35s cubic-bezier(0.22, 0.9, 0.16, 1), background 0.35s ease, border-color 0.35s ease;
+}
+
+.are-phase:hover { transform: translateY(-5px); background: rgb(255 255 255 / 0.1); border-color: rgb(255 187 0 / 0.45); }
+
+.are-phase__head { padding-bottom: 14px; border-bottom: 1px solid rgb(255 255 255 / 0.12); }
+.are-phase__no { font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+.are-phase__head h4 { margin: 6px 0 0; font-size: 18px; font-weight: 800; line-height: 1.2; color: #ffffff; }
+
+.are-mods { display: flex; flex-direction: column; justify-content: space-evenly; flex: 1 1 auto; gap: 10px; margin: 6px 0 0; padding: 0; list-style: none; }
+
+.are-mod {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 14px;
+  transition: background 0.3s ease;
+}
+
+.are-mod:hover { background: rgb(255 255 255 / 0.06); }
+.are-mod__text { display: grid; gap: 3px; }
+.are-mod__text b { font-size: 14px; font-weight: 700; line-height: 1.3; }
+.are-mod__text small { font-size: 12px; line-height: 1.45; color: rgb(255 255 255 / 0.62); }
+
+.are-mod__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--deep);
+  box-shadow: 0 8px 18px -10px rgb(0 0 0 / 0.6);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.are-mod__icon .ic { width: 20px; height: 20px; }
+.are-mod:hover .are-mod__icon { background: var(--gold); }
+
+.are-mod__no { padding-top: 2px; font-family: var(--display); font-size: 15px; font-weight: 700; color: rgb(255 255 255 / 0.4); }
+
+/* ------------------------------------------------------------- 03 benefits */
+.are-page--benefits { background: var(--cream); }
+
+.are-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; flex: 1 1 auto; min-height: 0; }
+.are-bcol { display: flex; flex-direction: column; min-height: 0; }
+
+.are-bgrid { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 14px; flex: 1 1 auto; margin-top: 16px; }
+
+.are-benefit {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 18px 16px;
+  border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 16px 34px -26px rgb(16 26 20 / 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.are-benefit:hover { transform: translateY(-4px); box-shadow: 0 22px 40px -24px rgb(0 134 56 / 0.4); }
+
+.are-benefit__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--green) 11%, #ffffff);
+  color: var(--green);
+}
+
+.are-benefit__icon .ic { width: 21px; height: 21px; }
+.are-benefit__top { display: flex; align-items: flex-start; justify-content: space-between; }
+.are-benefit__no { font-family: var(--display); font-size: 44px; font-weight: 700; line-height: 0.9; color: color-mix(in srgb, var(--green) 14%, transparent); transition: color 0.3s ease; }
+.are-benefit:hover .are-benefit__no { color: color-mix(in srgb, var(--green) 32%, transparent); }
+.are-benefit h5 { margin: 0; font-size: 15px; font-weight: 800; line-height: 1.3; }
+.are-benefit p { margin: 6px 0 0; font-size: 13px; line-height: 1.55; letter-spacing: 0.01em; color: color-mix(in srgb, var(--ink) 64%, transparent); }
+
+/* The close: a dark band with the figures and the contact line. */
+.are-close {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 36px;
+  margin-top: calc(22px + (var(--slide-h, 860px) - 860px) * 0.06);
+  padding: 22px 28px;
+  border-radius: 22px;
+  background: var(--deep);
+  color: #ffffff;
+}
+
+.are-close__head h3 { margin: 6px 0 0; font-family: var(--font); font-size: 28px; font-weight: 800; line-height: 1.1; color: #ffffff; }
+
+.are-figures { display: flex; gap: 32px; }
+.are-figure { display: grid; gap: 2px; }
+.are-figure strong { font-family: var(--display); font-size: 40px; font-weight: 700; line-height: 1; color: var(--gold); }
+.are-figure span { font-size: 12.5px; font-weight: 600; color: rgb(255 255 255 / 0.75); }
+
+.are-contact { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.are-contact li { display: flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 600; }
+.are-contact .ic { color: var(--gold); }
+
+@media (prefers-reduced-motion: reduce) {
+  .are-track, .are-tabs__line { transition: none; }
+  .are-page.is-in [style*='--d'], .are-page--intro.is-in .are-road img, .are-btn .ic { animation: none !important; }
+}
+
+/* ---- AI Ready Engineer — in the logo's own colours, four pages --------------------------
+   The deck takes the AI Ready Engineer mark's palette: its orange (#F2723B), its charcoal
+   lettering (#242424) and the road map's cream. Orange fills; text in orange uses the deeper
+   ink, which holds 4.5:1 on the cream. */
+.are-root {
+  --orange: #f2723b;
+  --orange-ink: #b94a1a;
+  --orange-soft: #fde7dc;
+  --char: #242424;
+  --green: var(--orange);
+  --cream: #fffcf7;
+}
+
+.are-track { width: 400%; transform: translateX(calc(var(--are-page) * -25%)); }
+/* Each page clips to itself — the carousel's side photographs reached into the next page. */
+.are-page { flex: 0 0 25%; overflow: hidden; }
+
+.are-logo { background: var(--char); }
+.are-tab.is-active, .are-tab.is-active small { color: var(--orange-ink); }
+.are-tabs__line { background: var(--orange); }
+.are-root[data-page='1'] .are-by { color: color-mix(in srgb, var(--ink) 55%, transparent); }
+.are-pill { background: var(--orange-soft); color: var(--orange-ink); }
+.are-pill i { background: var(--orange); }
+.are-title span { color: var(--orange); }
+.are-btn { background: var(--orange); box-shadow: 0 12px 24px -12px rgb(242 114 59 / 0.75); }
+.are-chip .ic { color: var(--orange-ink); }
+.are-stat__icon { background: var(--orange-soft); color: var(--orange-ink); }
+
+/* 01 — the road follows the hero straight away; any spare height is shared above and below
+   the pair rather than left as a gap between them. */
+.are-intro { margin-top: auto; }
+.are-road { margin: calc(26px + (var(--slide-h, 860px) - 860px) * 0.05) -56px auto; padding-top: 22px; }
+
+/* 02 — course structure: cream page, the reasons on a charcoal panel, phases in white. */
+.are-page--course { background: var(--cream); color: var(--ink); }
+.are-page--course::before { background: var(--orange); opacity: 0.12; right: -220px; top: -260px; }
+
+.are-why {
+  padding: 26px 26px 22px;
+  border-radius: 24px;
+  background: var(--char);
+  color: #ffffff;
+  box-shadow: 0 30px 60px -36px rgb(0 0 0 / 0.6);
+}
+
+.are-why .are-eyebrow { color: var(--orange); }
+.are-why .are-h3 { font-size: 30px; }
+.are-why .are-sub { color: rgb(255 255 255 / 0.7); }
+.are-why__list { border-top-color: rgb(255 255 255 / 0.12); }
+.are-why__icon { background: rgb(242 114 59 / 0.18); color: var(--orange); }
+
+.are-phase {
+  border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
+  background: #ffffff;
+  backdrop-filter: none;
+  box-shadow: 0 18px 38px -28px rgb(36 36 36 / 0.45);
+  overflow: hidden;
+  padding: 0 14px 12px;
+}
+
+.are-phase:hover { background: #ffffff; border-color: rgb(242 114 59 / 0.45); }
+
+.are-phase__head {
+  margin: 0 -14px;
+  padding: 16px 16px 14px;
+  border-bottom: 0;
+  background: var(--char);
+}
+
+.are-phase__no { color: var(--orange); }
+.are-phase__head h4 { color: #ffffff; }
+
+.are-mod:hover { background: var(--orange-soft); }
+.are-mod__icon { background: var(--orange-soft); color: var(--orange-ink); box-shadow: none; }
+.are-mod:hover .are-mod__icon { background: var(--orange); color: #ffffff; }
+.are-mod__text b { color: var(--ink); }
+.are-mod__text small { color: color-mix(in srgb, var(--ink) 60%, transparent); }
+.are-mod__no { color: color-mix(in srgb, var(--orange) 70%, transparent); }
+
+/* 03 — training onboard: a coverflow that runs itself. */
+.are-page--train { background: var(--cream); }
+
+.are-train__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.are-sub--ink { color: color-mix(in srgb, var(--ink) 62%, transparent); }
+
+.are-cf__nav { display: flex; align-items: center; gap: 10px; }
+.are-cf__count { margin-right: 8px; font-size: 14px; font-weight: 700; color: color-mix(in srgb, var(--ink) 50%, transparent); font-variant-numeric: tabular-nums; }
+.are-cf__count b { font-family: var(--display); font-size: 30px; color: var(--ink); }
+
+.are-cf__arrow {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.are-cf__arrow:hover { transform: scale(1.06); }
+.are-cf__arrow.is-primary { border-color: var(--orange); background: var(--orange); color: #ffffff; }
+
+.are-cf {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 22px 0 18px;
+  perspective: 1800px;
+}
+
+.are-cf__slide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  overflow: hidden;
+  border: 5px solid #ffffff;
+  border-radius: 22px;
+  background: #e9e6e0;
+  box-shadow: 0 30px 60px -30px rgb(36 36 36 / 0.55);
+  cursor: pointer;
+  transform: translateX(calc(-50% + var(--cf, 0) * 58%)) translateZ(calc(var(--ca, 0) * -220px)) rotateY(calc(var(--cf, 0) * -24deg));
+  opacity: calc(1 - var(--ca, 0) * 0.3);
+  transition: transform 0.85s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.85s ease, filter 0.85s ease;
+  filter: saturate(calc(1 - var(--ca, 0) * 0.35));
+}
+
+.are-cf__slide.is-hidden { opacity: 0; pointer-events: none; }
+.are-cf__slide.is-current { box-shadow: 0 40px 70px -30px rgb(36 36 36 / 0.6), 0 0 0 3px var(--orange); }
+
+/* The photographs are washed white across their top third; framing low keeps the people. */
+.are-cf__slide img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 78%; display: block; }
+.are-cf__slide.is-current img { animation: are-cf-drift 4s ease-out both; }
+
+@keyframes are-cf-drift { from { transform: scale(1.08); } to { transform: scale(1); } }
+
+.are-cf__foot { display: flex; align-items: center; gap: 22px; }
+.are-cf__dots { display: flex; gap: 6px; }
+
+.are-cf__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 18%, transparent);
+  cursor: pointer;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.are-cf__dot.is-active { width: 26px; background: var(--orange); }
+.are-cf__track { position: relative; flex: 1; height: 3px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--ink) 9%, transparent); }
+.are-cf__bar { position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: left; }
+.are-cf__bar.is-run { animation: are-cf-bar 3.5s linear both; }
+
+@keyframes are-cf-bar { to { transform: scaleX(1); } }
+
+/* 04 — benefits in the logo palette, and a closing band in three distinct blocks. */
+.are-eyebrow--ink { color: var(--orange-ink); }
+.are-benefit__icon { background: var(--orange-soft); color: var(--orange-ink); }
+.are-benefit__no { color: color-mix(in srgb, var(--orange) 18%, transparent); }
+.are-benefit:hover { box-shadow: 0 22px 40px -24px rgb(242 114 59 / 0.45); }
+.are-benefit:hover .are-benefit__no { color: color-mix(in srgb, var(--orange) 40%, transparent); }
+
+.are-close {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--ink);
+}
+
+.are-close__lead {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 100%;
+  padding: 22px 26px;
+  border-radius: 22px;
+  background: var(--char);
+  color: #ffffff;
+}
+
+.are-close__spark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: var(--orange);
+  color: #ffffff;
+  box-shadow: 0 12px 24px -10px rgb(242 114 59 / 0.7);
+}
+
+.are-close__spark .ic { width: 26px; height: 26px; }
+.are-close__eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); }
+.are-close__lead h3 { margin: 4px 0 0; font-family: var(--font); font-size: 28px; font-weight: 800; line-height: 1.1; color: #ffffff; }
+.are-close__lead p { margin: 6px 0 0; font-size: 12.5px; line-height: 1.5; color: rgb(255 255 255 / 0.68); }
+
+.are-figures { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; height: 100%; }
+
+.are-figure {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: var(--orange);
+  color: #ffffff;
+}
+
+.are-figure + .are-figure { background: var(--orange-soft); }
+.are-figure strong { font-size: 38px; color: #ffffff; }
+.are-figure + .are-figure strong { color: var(--orange-ink); }
+.are-figure span { font-size: 12.5px; font-weight: 700; color: rgb(255 255 255 / 0.92); }
+.are-figure + .are-figure span { color: var(--orange-ink); }
+
+.are-contact {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  height: 100%;
+  padding: 18px 22px;
+  border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 16px 34px -26px rgb(36 36 36 / 0.5);
+}
+
+.are-contact__head { font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: color-mix(in srgb, var(--ink) 50%, transparent); }
+.are-contact ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.are-contact li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 700; color: var(--ink); }
+
+.are-contact__icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--orange-soft);
+  color: var(--orange-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .are-cf__slide { transition: none; }
+  .are-cf__slide.is-current img, .are-cf__bar.is-run { animation: none !important; }
+}
+
+/* ---- AI Ready Engineer · 03 Training onboard — landing-page hero + expanding carousel ---- */
+.are-page--train { gap: 0; }
+
+.are-tr__hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: center; }
+.are-tr__copy { display: flex; flex-direction: column; }
+
+.are-tr__title {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  font-family: var(--font);
+  font-size: calc(78px + (var(--slide-h, 860px) - 860px) * 0.04);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--char);
+}
+
+.are-tr__line { display: flex; align-items: center; gap: 18px; }
+.are-tr__line:last-child { padding-left: 64px; }
+
+.are-tr__inset {
+  display: inline-block;
+  width: 84px;
+  height: 84px;
+  overflow: hidden;
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--orange), 0 14px 26px -14px rgb(36 36 36 / 0.6);
+  animation: are-bob 6s ease-in-out infinite;
+}
+
+.are-tr__inset img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 70%; }
+
+.are-tr__go {
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 58px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--orange);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 14px 26px -12px rgb(242 114 59 / 0.75);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.are-tr__go:hover { transform: translateX(4px); filter: brightness(1.06); }
+.are-tr__go .ic { width: 30px; height: 30px; animation: ap-nudge 1.8s ease-in-out infinite; }
+
+.are-tr__lead { display: flex; align-items: flex-start; gap: 18px; margin-top: 18px; }
+.are-tr__glyphs { display: flex; gap: 8px; padding-top: 2px; color: var(--char); }
+.are-tr__lead p { max-width: 52ch; margin: 0; font-size: 14.5px; line-height: 1.65; letter-spacing: 0.01em; color: color-mix(in srgb, var(--ink) 62%, transparent); }
+
+@keyframes are-bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+
+/* The circular photograph with its ring of turning text. */
+.are-tr__orb { position: relative; width: 300px; height: 300px; margin: 0; justify-self: end; }
+.are-ring { position: absolute; inset: 0; animation: are-spin 26s linear infinite; }
+.are-ring svg { width: 100%; height: 100%; overflow: visible; }
+.are-ring text { font-family: var(--font); font-size: 13px; font-weight: 700; letter-spacing: 0.42em; fill: var(--char); }
+
+@keyframes are-spin { to { transform: rotate(360deg); } }
+
+.are-tr__orbpic {
+  position: absolute;
+  inset: 32px;
+  overflow: hidden;
+  border: 6px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--orange), 0 24px 48px -24px rgb(36 36 36 / 0.6);
+}
+
+.are-tr__orbpic img, .are-tr__orbpic video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; display: block; }
+
+/* The three pills. */
+.are-tr__pills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: calc(14px + (var(--slide-h, 860px) - 860px) * 0.05); }
+
+.are-tr__pill {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 10px 14px;
+  border-radius: 20px;
+}
+
+.are-tr__pill b { display: block; font-size: 16px; font-weight: 800; color: var(--char); }
+.are-tr__pill small { display: block; margin-top: 2px; font-size: 12px; line-height: 1.4; color: color-mix(in srgb, var(--ink) 60%, transparent); }
+.are-tr__pill:first-child b { font-family: var(--display); font-size: 30px; line-height: 1; }
+
+.are-tr__stack { display: flex; }
+.are-tr__stack img { width: 46px; height: 46px; border: 3px solid var(--cream); border-radius: 14px; object-fit: cover; object-position: 50% 75%; }
+.are-tr__stack img + img { margin-left: -16px; }
+
+.are-tr__pill--card { justify-content: space-between; background: #ffffff; box-shadow: 0 16px 34px -24px rgb(36 36 36 / 0.45); }
+.are-tr__round { flex: 0 0 52px; width: 52px; height: 52px; overflow: hidden; border: 3px solid var(--char); border-radius: 50%; }
+.are-tr__round img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; }
+
+.are-tr__pill--story { justify-content: space-between; }
+
+.are-tr__sq {
+  display: grid;
+  place-items: center;
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--orange);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 12px 22px -10px rgb(242 114 59 / 0.7);
+}
+
+/* "Inside the classroom" and the expanding carousel. */
+.are-xc__head { display: flex; align-items: center; justify-content: space-between; margin-top: calc(16px + (var(--slide-h, 860px) - 860px) * 0.05); }
+.are-xc__head h3 { margin: 0; font-family: var(--font); font-size: 24px; font-weight: 800; color: var(--char); }
+.are-xc__count { margin-right: 6px; font-size: 13px; font-weight: 700; color: color-mix(in srgb, var(--ink) 50%, transparent); font-variant-numeric: tabular-nums; }
+.are-xc__count b { font-family: var(--display); font-size: 24px; color: var(--char); }
+
+.are-xc { display: flex; gap: 10px; flex: 1 1 auto; min-height: 150px; margin-top: 12px; }
+
+.are-xc__panel {
+  position: relative;
+  flex: 0 0 58px;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 22px;
+  background: #e9e6e0;
+  cursor: pointer;
+  box-shadow: 0 16px 30px -22px rgb(36 36 36 / 0.55);
+  transition: flex 0.75s cubic-bezier(0.65, 0, 0.35, 1), filter 0.5s ease;
+}
+
+.are-xc__panel.is-open { flex: 1 1 auto; }
+.are-xc__panel:not(.is-open) { filter: saturate(0.8); }
+.are-xc__panel:not(.is-open):hover { filter: none; }
+
+.are-xc__panel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; }
+.are-xc__panel.is-open img { animation: are-cf-drift 4s ease-out both; }
+
+/* The round badge at the foot of every panel; the caption only on the open one. */
+.are-xc__badge {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--orange-ink);
+  box-shadow: 0 6px 14px -6px rgb(0 0 0 / 0.45);
+  transform: translateX(-50%);
+  transition: left 0.75s cubic-bezier(0.65, 0, 0.35, 1), transform 0.75s cubic-bezier(0.65, 0, 0.35, 1), background 0.4s ease, color 0.4s ease;
+}
+
+.are-xc__panel.is-open .are-xc__badge { left: 18px; transform: none; background: var(--orange); color: #ffffff; }
+
+.are-xc__cap {
+  position: absolute;
+  left: 62px;
+  bottom: 12px;
+  z-index: 2;
+  display: grid;
+  gap: 1px;
+  color: #ffffff;
+  text-align: left;
+  text-shadow: 0 2px 10px rgb(0 0 0 / 0.7);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  white-space: nowrap;
+}
+
+.are-xc__panel.is-open .are-xc__cap { opacity: 1; transform: none; transition-delay: 0.45s; }
+.are-xc__cap b { font-size: 16px; font-weight: 800; }
+.are-xc__cap small { font-size: 12px; font-weight: 600; opacity: 0.9; }
+
+/* A soft dark foot under the caption so white type reads on a bright photograph. */
+.are-xc__panel.is-open::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -40px;
+  z-index: 1;
+  width: 70%;
+  height: 120px;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.42);
+  filter: blur(26px);
+}
+
+.are-xc__track { flex: 0 0 auto; margin-top: 12px; }
+
+/* Revision: copy · stacked pills · circle across the hero; the logo by the headline; the
+   gallery larger, the open photograph always on the left and the strips together on the right. */
+.are-tr__hero { grid-template-columns: minmax(0, 1fr) 360px 270px; gap: 32px; }
+.are-tr__title { font-size: calc(70px + (var(--slide-h, 860px) - 860px) * 0.04); }
+.are-tr__logo { height: 76px; width: auto; animation: are-bob 6s ease-in-out infinite; }
+.are-tr__orb { width: 270px; height: 270px; }
+.are-tr__orbpic { inset: 28px; }
+.are-ring text { font-size: 12px; }
+
+.are-tr__pills { grid-template-columns: 1fr; gap: 10px; margin-top: 0; }
+.are-tr__pill { min-height: 0; padding: 10px 14px; border-radius: 18px; background: #ffffff; box-shadow: 0 14px 30px -24px rgb(36 36 36 / 0.45); }
+.are-tr__pill--card { box-shadow: 0 14px 30px -24px rgb(36 36 36 / 0.45); }
+.are-tr__pill:first-child b { font-size: 26px; }
+.are-tr__sq, .are-tr__round { flex-basis: 44px; width: 44px; height: 44px; }
+.are-tr__stack img { width: 40px; height: 40px; }
+
+.are-xc__head { margin-top: calc(10px + (var(--slide-h, 860px) - 860px) * 0.03); }
+.are-xc { min-height: 240px; }
+.are-xc__panel { flex: 0 0 64px; }
+.are-xc__panel.is-open { flex: 0 0 56%; }
+/* The strips share what is left of the row, so they always reach the right edge. */
+.are-xc__panel:not(.is-open) { flex: 1 1 0; }
+
+/* Slow and smooth: one long, gentle ease for every change of width, a softer zoom on the
+   open photograph, and the outgoing one folding away rather than jumping to the far end. */
+.are-xc__panel {
+  transition:
+    flex 1.4s cubic-bezier(0.45, 0, 0.2, 1),
+    margin 1.4s cubic-bezier(0.45, 0, 0.2, 1),
+    opacity 1s ease,
+    filter 0.8s ease;
+}
+
+.are-xc__panel.is-leaving { flex: 0 0 0 !important; margin-right: -10px; opacity: 0; }
+.are-xc__panel.is-entering { animation: are-xc-enter 1s ease both; }
+
+@keyframes are-xc-enter { from { opacity: 0; } to { opacity: 1; } }
+
+.are-xc__panel.is-open img { animation: are-xc-drift 9s cubic-bezier(0.25, 0, 0.25, 1) both; }
+
+@keyframes are-xc-drift { from { transform: scale(1.05); } to { transform: scale(1); } }
+
+.are-xc__badge {
+  transition: left 1.4s cubic-bezier(0.45, 0, 0.2, 1), transform 1.4s cubic-bezier(0.45, 0, 0.2, 1), background 0.8s ease, color 0.8s ease;
+}
+
+.are-xc__cap { transition: opacity 0.8s ease, transform 0.8s ease; }
+.are-xc__panel.is-open .are-xc__cap { transition-delay: 1s; }
+.are-root .are-cf__bar.is-run { animation-duration: 5.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .are-ring, .are-tr__inset, .are-tr__go .ic, .are-xc__panel.is-open img { animation: none !important; }
+  .are-xc__panel, .are-xc__badge, .are-xc__cap { transition: none; }
+}
+
+/* ==========================================================================
+   Team — the whole team as one connected network: round portraits joined by
+   dotted curves, Claude connectors on the lines, and a switch between the
+   entire team and the ten Claude-certified architects
+   ========================================================================== */
+.canvas-block--team-wall {
+  min-height: 860px !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+.tw3-root {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 860px;
+  min-height: 860px;
+  overflow: hidden;
+  background: #ffffff;
+  color: var(--text, #14201a);
+  font-family: var(--font);
+}
+
+.slide--hero .tw3-root { border-radius: 0; }
+
+body.is-presenting .fit-slide__inner .tw3-root {
+  height: var(--slide-h, 860px) !important;
+  min-height: var(--slide-h, 860px) !important;
+  max-height: var(--slide-h, 860px) !important;
+}
+
+.tw3-empty { padding: 60px; color: var(--muted, #5b6b62); }
+
+/* ------------------------------------------------------------------ head */
+.tw3-head {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 48px 4px;
+  text-align: center;
+  animation: tw3-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.tw3-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--brand-primary, #008638) 22%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 7%, #ffffff);
+  color: var(--brand-primary, #008638);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.tw3-pill i { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-accent, #ffbb00); }
+
+.tw3-title {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text, #14201a);
+}
+
+.tw3-title__accent { color: var(--brand-primary, #008638); }
+
+.tw3-body {
+  max-width: 1100px;
+  margin: 0;
+  color: var(--muted, #5b6b62);
+  font-size: 16.5px;
+  line-height: 1.5;
+}
+
+/* The switch: two segments, the active one in the brand's primary. */
+.tw3-switch {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 5px;
+  border: 1px solid #e3ebe6;
+  border-radius: 999px;
+  background: #f4f8f5;
+}
+
+.tw3-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px 10px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text, #14201a);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tw3-tab:hover { background: #ffffff; }
+.tw3-tab .ic { color: var(--brand-primary, #008638); }
+
+.tw3-tab b {
+  min-width: 26px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--brand-primary, #008638);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.tw3-tab.is-on {
+  background: var(--brand-primary, #008638);
+  color: #ffffff;
+  box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--brand-primary, #008638) 80%, transparent);
+}
+
+.tw3-tab.is-on .ic { color: var(--brand-accent, #ffbb00); }
+.tw3-tab.is-on b { background: var(--brand-accent, #ffbb00); color: #1c1600; }
+.tw3-tab:focus-visible { outline: 3px solid var(--brand-accent, #ffbb00); outline-offset: 2px; }
+
+/* ----------------------------------------------------------------- stage */
+.tw3-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0 32px 14px;
+}
+
+body.is-presenting .tw3-stage { margin-bottom: var(--deck-bar-clear, 96px); }
+
+.tw3-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+
+/* Dotted network lines: round dots that flow slowly along each connection. */
+.tw3-lines path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--brand-primary, #008638) 55%, #ffffff);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-dasharray: 0.1 9;
+  opacity: 0;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+}
+
+.tw3-lines path.is-accent { stroke: var(--brand-accent, #ffbb00); }
+
+.tw3-stage.is-drawn .tw3-lines path {
+  animation: tw3-line-in 0.6s ease both, tw3-flow 2.2s linear infinite;
+  animation-delay: calc(0.25s + var(--k) * 0.035s), 0s;
+}
+
+.tw3-stage.has-hot .tw3-lines path { opacity: 0.35; }
+.tw3-stage.has-hot .tw3-lines path.is-hot { opacity: 1; stroke: var(--brand-primary, #008638); stroke-width: 3.4; }
+
+@keyframes tw3-line-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tw3-flow { to { stroke-dashoffset: -18.2; } }
+
+/* A portrait: a round crop on the head and shoulders, the name beneath. */
+.tw3-node {
+  --s: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: var(--s);
+  margin: 0;
+  transition: transform 0.95s cubic-bezier(0.6, 0, 0.2, 1), width 0.95s cubic-bezier(0.6, 0, 0.2, 1), opacity 0.5s ease;
+  animation: tw3-pop 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  animation-delay: calc(0.15s + var(--i) * 0.03s);
+}
+
+.tw3-ava {
+  position: relative;
+  display: block;
+  width: var(--s);
+  height: var(--s);
+  overflow: hidden;
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 12%, #ffffff);
+  box-shadow: 0 0 0 1.5px #e3ebe6, 0 12px 26px -14px rgb(10 40 22 / 0.45);
+  transition: width 0.95s cubic-bezier(0.6, 0, 0.2, 1), height 0.95s cubic-bezier(0.6, 0, 0.2, 1), box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.tw3-ava img {
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  height: 205%;
+  width: auto;
+  max-width: none;
+  transform: translateX(calc(var(--fx, 50%) * -1));
+}
+
+.tw3-node.is-architect .tw3-ava { box-shadow: 0 0 0 2.5px var(--brand-accent, #ffbb00), 0 12px 26px -14px rgb(10 40 22 / 0.45); }
+
+.tw3-seal {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid #ffffff;
+  border-radius: 50%;
+  background: var(--brand-accent, #ffbb00);
+  color: #1c1600;
+}
+
+.tw3-seal .ic { width: 15px; height: 15px; }
+
+.tw3-name {
+  position: absolute;
+  left: 50%;
+  top: calc(100% - 12px);
+  z-index: 1;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px #e3ebe6;
+  color: var(--text, #14201a);
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.tw3-root.is-architects .tw3-name { font-size: 15px; padding: 4px 12px; }
+
+.tw3-node:hover .tw3-ava, .tw3-node.is-hot .tw3-ava { transform: scale(1.07); box-shadow: 0 0 0 3px var(--brand-primary, #008638), 0 18px 30px -14px rgb(10 40 22 / 0.5); }
+.tw3-node.is-hot .tw3-name { background: var(--brand-primary, #008638); color: #ffffff; box-shadow: none; }
+
+/* Everyone not in the current network falls away. */
+/* The entrance animation fills forwards and would hold them at full opacity, so it goes. */
+.tw3-node.is-out { opacity: 0; pointer-events: none; animation: none; transition: opacity 0.18s ease; }
+.tw3-node.is-out .tw3-ava { width: calc(var(--s) * 0.5); height: calc(var(--s) * 0.5); }
+
+/* Connector chips: white cards on the lines, like messages passing between people. */
+.tw3-chips { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+
+.tw3-chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px 7px 8px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px #e6ede8, 0 10px 24px -12px rgb(10 40 22 / 0.35);
+  color: var(--text, #14201a);
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.tw3-stage.is-drawn .tw3-chip { animation: tw3-chip-in 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both; animation-delay: calc(0.75s + var(--k) * 0.12s); }
+
+.tw3-chip__ic {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 10%, #ffffff);
+  color: var(--brand-primary, #008638);
+}
+
+.tw3-chip__ic .ic { width: 16px; height: 16px; }
+
+@keyframes tw3-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes tw3-pop { from { opacity: 0; scale: 0.6; } to { opacity: 1; scale: 1; } }
+@keyframes tw3-chip-in { from { opacity: 0; transform: translate(-50%, -30%) scale(0.85); } to { opacity: 1; transform: translate(-50%, -50%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tw3-head, .tw3-node, .tw3-stage.is-drawn .tw3-lines path, .tw3-stage.is-drawn .tw3-chip { animation: none !important; }
+  .tw3-lines path, .tw3-chip { opacity: 1; }
+  .tw3-node, .tw3-ava, .tw3-tab { transition: none; }
+}
+
+/* Babji Neelam at the centre of the network: larger, ringed in the primary, with his role. */
+.tw3-hub { z-index: 3; animation-delay: 0.05s; }
+.tw3-hub .tw3-ava { border-width: 6px; box-shadow: 0 0 0 3px var(--brand-primary, #008638), 0 22px 40px -18px rgb(10 40 22 / 0.55); }
+.tw3-hub .tw3-ava img { top: 4%; height: 128%; }
+.tw3-hub .tw3-name { top: calc(100% - 14px); display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 16px 6px; border-radius: 14px; background: var(--brand-primary, #008638); box-shadow: none; color: #ffffff; }
+.tw3-hub .tw3-name b { font-size: 16px; font-weight: 800; }
+.tw3-hub .tw3-name small { color: var(--brand-accent, #ffbb00); font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.tw3-hub:hover .tw3-ava, .tw3-hub.is-hot .tw3-ava { transform: scale(1.04); }
+.tw3-hub.is-hot .tw3-name { background: var(--brand-primary, #008638); }
+
+/* Connector → Babji spokes are the trunk lines: the primary, heavier dots. */
+.tw3-lines path.is-spoke { stroke: var(--brand-primary, #008638); stroke-width: 3.4; stroke-dasharray: 0.1 10; }
+.tw3-chip { z-index: 1; transition: box-shadow 0.3s ease, transform 0.3s ease; }
+.tw3-chip.is-hot { box-shadow: 0 0 0 2px var(--brand-primary, #008638), 0 12px 26px -12px rgb(10 40 22 / 0.4); }
+
+/* ==========================================================================
+   Titles — one voice across the deck. Every page and section title is set in the
+   display face the opening slides use (Oswald), in capitals. This sits last
+   so it outranks each page's own title rule; Oswald stops at 700, so the
+   Open Sans 800s come down to its heaviest cut.
+   ========================================================================== */
+.milestones__heading, .tw3-title, .ev-title, .vr-title, .are-title, .are-tr__title,
+.are-xc__head h3, .apx-title, .tp-headline, .tp-car__title, .pf-title, .pw-title,
+.cs-title, .coe-title, .sw-title, .pg-cover__title, .ja-title, .cd-title, .cd-heading,
+.slide__title, .th-hero__title, .tw-title, .are-h3, .are-close h3, .apx-row__head h3 {
+  font-family: var(--display) !important;
+  text-transform: uppercase !important;
+}
+
+.tw3-title, .ev-title, .vr-title, .are-title, .are-tr__title, .are-xc__head h3,
+.apx-title, .tp-headline, .pw-title, .cs-title, .pf-title, .milestones__heading,
+.are-h3, .are-close h3, .apx-row__head h3 {
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
 }

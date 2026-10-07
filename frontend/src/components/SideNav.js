@@ -43,6 +43,7 @@ const NAVIGATION_GROUPS = [
   ['history-milestones', 'History & Milestones', 'roadmap', []],
   ['ceo-profile', 'CEO Profile', 'ceo-podium', []],
   ['leadership-journey', 'Leadership Journey', 'climb-steps', []],
+  ['trainers', 'Team', 'users', []],
   ['success-stories', 'Success Stories', 'rosette', []],
   ['programs', 'Programs', 'www-globe', []],
   ['team', 'Centers of Excellence', 'handshake-check', []],

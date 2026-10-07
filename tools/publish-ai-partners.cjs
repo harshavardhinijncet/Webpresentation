@@ -1,5 +1,5 @@
 /**
- * Publishes the AI Partners section: one spread per partner, chosen by a turning orbit.
+ * Publishes the AI Partners section: one landing page per partner, chosen from a side rail.
  *
  *   node tools/publish-ai-partners.cjs --dry     # print what would be sent
  *   node tools/publish-ai-partners.cjs           # create or update it, and place it in the deck
@@ -7,18 +7,15 @@
  * Creates the section on first run (key `ai-partners`, published, icon `brain`) and places it
  * straight after AI Ready Engineer; later runs only replace its block. Safe to run twice.
  *
- * Sources:
- *   Claude  — claude.technicalhub.io, claude.ncet.co.in, the two Claude success-story sites
- *             (Aditya University, NCET) and the Claude Partner Network announcement. Every figure
- *             is from them: ten Claude-certified architects, 900+ students certified across
- *             four Anthropic courses, 160+ hackathon teams. Photographs are in
- *             uploads/torii-partnership, downloaded so nothing depends on the network.
- *   OpenAI  — the official "OpenAI Select Partner" lockup in uploads/coe. The rest is sample
- *             copy, marked `sample`, until the real programme details arrive.
- *   Sarvam  — sample copy throughout. The mark is the file the user supplied
- *             (uploads/coe/sarvam-original.png), cut to a transparent PNG as coe/sarvam.png.
+ * Everything is Technical Hub's. Sources:
+ *   Claude — claude.technicalhub.io (the ten Claude Certified Architects, names and photographs,
+ *            in uploads/ai-partners/architects), the Claude success-story sites (900+ students
+ *            certified, 160+ hackathon teams, the 24/7 Claude Max lab) and the Certified
+ *            Services Partner announcement (badge cut from it: uploads/ai-partners/).
+ *   OpenAI and Sarvam — the points on the Torii Minds AI Partners page, restated for Technical
+ *            Hub, with the official lockups downloaded from it into uploads/ai-partners/.
  *
- * No figure is invented. Where a partner has no numbers, its stats are words.
+ * No figure is invented: numbers appear only where a source states them.
  */
 const http = require('http');
 
@@ -28,107 +25,134 @@ const KEY = 'ai-partners';
 const TITLE = 'AI Partners';
 const AFTER = 'ai-ready-engineer';
 const DRY = process.argv.includes('--dry');
+const A = 'ai-partners/';
+const T = 'torii-partnership/thumbs/';
+
+const ARCHITECTS = [
+  ['01-harshavardhini', 'Harshavardhini'],
+  ['02-prasanth', 'Prasanth'],
+  ['03-bobby-pamarthi', 'Bobby Pamarthi'],
+  ['04-peter', 'Peter'],
+  ['05-sudhir', 'Sudhir'],
+  ['06-akhilesh', 'Akhilesh'],
+  ['07-bhargav', 'Bhargav'],
+  ['08-kishore-girijala', 'Kishore Girijala'],
+  ['09-naveen', 'Naveen'],
+  ['10-azar', 'Azar'],
+];
 
 const BLOCK = {
   type: 'ai-partners',
   layout: { x: 0, y: 0, w: 12, h: 15 },
   title: 'AI Partners',
-  hold: 6000,
+  hold: 9000,
   partners: [
     {
       name: 'Claude',
+      short: 'Claude',
       status: 'Claude Certified Services Partner',
-      tag: 'Claude Partner Network',
+      tagline: 'Applied AI, agents & assistants',
+      accent: '#B5532F',
+      badge: `${A}claude-certified-services-partner.png`,
       mark: 'coe/claude.webp',
-      wordmark: 'torii-partnership/claude-certified-services-partner.png',
-      headline: ['Certified Services Partner.', 'Claude, across every campus.'],
-      body: 'Technical Hub designs, builds and teaches with Claude — official certification, hands-on training, 24/7 AI labs and production apps, delivered by Claude-certified architects and turning multi-hour work into minutes.',
-      cards: [
-        {
-          title: 'Certify & train',
-          body: 'Official Anthropic courses — 900+ students certified at Aditya University.',
-          tags: ['Claude API', 'Claude Code', 'MCP'],
-        },
-        {
-          title: '24/7 Claude AI Lab',
-          body: 'Claude Max on every workstation at NCET, open all year to every learner.',
-          tags: ['Claude Max', 'Build', 'Deploy'],
-        },
-        {
-          title: 'Prompt to production',
-          body: 'Six college applications built end to end with Claude Code.',
-          tags: ['Claude Code', 'Apps', 'Live'],
-        },
+      headline: ['Certified Services Partner of', 'Claude'],
+      body: 'Technical Hub designs, builds and teaches with Claude — official certification, hands-on training, a 24/7 Claude AI Lab and production apps, delivered by our own Claude-certified architects.',
+      strip: [
+        { icon: 'seal-check', label: 'Standing', value: 'Certified Services Partner' },
+        { icon: 'users', label: 'Team', value: '10 certified architects' },
+        { icon: 'clock', label: 'AI Lab', value: '24/7 Claude Max' },
       ],
-      stats: [
-        { value: '10', label: 'Claude-certified architects' },
-        { value: '900+', label: 'Students certified' },
-        { value: '160+', label: 'Hackathon teams' },
+      photos: [
+        { src: 'torii-partnership/ncet-home-image.jpg', caption: 'The Claude wall, NCET AI Lab' },
+        { src: 'torii-partnership/aditya-cert-crowd.jpg', caption: '900+ students certified' },
+      ],
+      circles: {
+        title: 'Claude Certified Architects',
+        sub: 'Ten certified experts who design, build and teach with Claude — the team behind every engagement',
+        items: ARCHITECTS.map(([file, name]) => ({ label: name, sub: 'Claude Architect', photo: `${A}architects/face/${file}.png` })),
+      },
+      cardsTitle: 'What we do with Claude',
+      cardsSub: 'From the classroom to production, on campuses across the region',
+      cards: [
+        { title: 'Certify & train', body: 'Official Anthropic courses — 900+ students certified at Aditya University.', photo: `${T}aditya-cert-crowd.jpg`, badge: '900+ certified', tags: ['Claude API', 'MCP'] },
+        { title: '24/7 Claude AI Lab', body: 'Claude Max on every workstation at NCET, open all year to every learner.', photo: `${T}ncet-ai-lab-1.jpg`, badge: 'Open 24/7', tags: ['Claude Max', 'Build'] },
+        { title: 'Project Space hackathon', body: '160+ student teams built with Claude; the top teams won Claude credits.', photo: `${T}aditya-hackathon-stage.jpg`, badge: '160+ teams', tags: ['Hackathon', 'Deploy'] },
+        { title: 'Faculty development', body: 'Educators use Claude for course design, assessments and research.', photo: `${T}aditya-fdp.jpg`, badge: 'FDP', tags: ['Curriculum', 'Research'] },
       ],
     },
     {
       name: 'OpenAI',
+      short: 'OpenAI',
       status: 'OpenAI Select Partner',
-      tag: 'Skills for the GPT era',
+      tagline: 'Generative AI & LLMs',
+      accent: '#0D7A5F',
+      badge: `${A}openai-select-partner.jpeg`,
       mark: 'coe/openai.webp',
-      wordmark: 'coe/opneai full.png',
-      headline: ['OpenAI Select Partner.', 'Learning that ships.'],
-      body: 'As an OpenAI Select Partner, Technical Hub brings OpenAI models into hands-on training — helping students and faculty prototype assistants, automate everyday work and ship AI-powered solutions.',
+      headline: ['Select Partner of', 'OpenAI'],
+      body: 'As an OpenAI Select Partner, Technical Hub runs a Centre of Excellence on campus and carries generative AI through the AI Ready Engineer programme.',
+      strip: [
+        { icon: 'seal-check', label: 'Standing', value: 'Select Partner' },
+        { icon: 'building', label: 'On campus', value: 'Centre of Excellence' },
+        { icon: 'ai-figure', label: 'Programme', value: 'AI Ready Engineer' },
+      ],
+      circles: {
+        title: 'Where OpenAI shows up',
+        sub: 'Across the partnership, the campus and the curriculum',
+        items: [
+          { label: 'Select Partner', icon: 'handshake-check' },
+          { label: 'Centre of Excellence', icon: 'building' },
+          { label: 'AI Ready Engineer', icon: 'ai-figure' },
+          { label: 'Generative AI', icon: 'sparkles' },
+          { label: 'Codex', icon: 'code' },
+          { label: 'The 3 C’s', icon: 'layers' },
+        ],
+      },
+      /* No OpenAI photographs exist, so these are feature cards — points from the partnership
+         and the success stories, each with its icon. */
+      cardsTitle: 'What we do with OpenAI',
+      cardsSub: 'The partnership in practice — on campus and in the curriculum',
       cards: [
-        {
-          title: 'GPT builder labs',
-          body: 'Students design, prompt and test assistants on OpenAI models.',
-          tags: ['Prompting', 'APIs', 'Agents'],
-        },
-        {
-          title: 'Faculty enablement',
-          body: 'Teaching teams use OpenAI tools to plan lessons and build resources.',
-          tags: ['FDP', 'Content', 'Assessment'],
-        },
-        {
-          title: 'Industry projects',
-          body: 'Real problems solved end to end, from idea to a working demo.',
-          tags: ['Build', 'Demo', 'Deploy'],
-        },
+        { title: 'Select Partner', body: 'Select Partner — the tier printed on the official OpenAI lockup.', icon: 'seal-check', badge: 'Partnership', tags: ['Official'] },
+        { title: 'Centre of Excellence', body: 'A Centre of Excellence partner on campus, where students build with generative AI.', icon: 'building', badge: 'On campus', tags: ['CoE', 'GenAI'] },
+        { title: 'AI Ready Engineer', body: 'Generative AI runs through the AI Ready Engineer programme, foundations to delivery.', icon: 'ai-figure', badge: 'Curriculum', tags: ['Programme'] },
+        { title: 'The 3 C’s', body: 'Codex taught beside Claude and Copilot — AI pair-programming, side by side.', icon: 'code', badge: 'AI pair', tags: ['Codex', 'Copilot'] },
       ],
-      stats: [
-        { value: 'Select', label: 'OpenAI partner tier' },
-        { value: 'Labs', label: 'Hands-on GPT builds' },
-        { value: 'Live', label: 'Industry projects' },
-      ],
-      sample: true,
     },
     {
-      name: 'Sarvam',
+      name: 'Sarvam AI',
+      short: 'Sarvam',
       status: 'Sarvam AI Partner',
-      tag: 'AI that speaks India',
+      tagline: 'Indian-language foundation models',
+      accent: '#3346B8',
+      badge: `${A}sarvam-ai.jpeg`,
       mark: 'coe/sarvam.png',
-      wordmark: '',
-      headline: ['Sarvam AI partner.', 'Built for Bharat.'],
-      body: 'With Sarvam AI, Technical Hub helps students build with Indian-language models — voice, translation and multilingual assistants for the communities they come from.',
+      headline: ['Building India’s AI with', 'Sarvam'],
+      body: 'With Sarvam AI, Technical Hub brings India’s own foundation models into the classroom — Indian-language, voice and open-weight models that students build real applications on.',
+      strip: [
+        { icon: 'seal-check', label: 'Standing', value: 'AI Partner' },
+        { icon: 'globe', label: 'Focus', value: 'Indian-language AI' },
+        { icon: 'code', label: 'Models', value: 'Open weights' },
+      ],
+      circles: {
+        title: 'What Sarvam brings',
+        sub: 'Foundation models made in India, for India’s languages',
+        items: [
+          { label: 'Indian Languages', icon: 'globe' },
+          { label: 'Voice AI', icon: 'volume' },
+          { label: 'Sovereign AI', icon: 'flag' },
+          { label: 'Open Weights', icon: 'code' },
+          { label: 'Developer Platform', icon: 'tap-network' },
+          { label: 'AI Partner', icon: 'handshake-check' },
+        ],
+      },
+      cardsTitle: 'Building for Bharat',
+      cardsSub: 'Indic-language AI for the students and communities we serve',
       cards: [
-        {
-          title: 'Indic language AI',
-          body: 'Students work with models built for Indian languages.',
-          tags: ['Telugu', 'Hindi', 'More'],
-        },
-        {
-          title: 'Voice & speech',
-          body: 'Speech recognition and voice interfaces for local users.',
-          tags: ['Speech', 'Voice', 'Translate'],
-        },
-        {
-          title: 'Bharat-first projects',
-          body: 'Solutions designed for rural and tier-2/3 communities.',
-          tags: ['Impact', 'Access', 'Scale'],
-        },
+        { title: 'Indian languages', body: 'Foundation models built for India’s languages, made in India — for rural and tier-2/3 talent.', icon: 'globe', badge: 'Indic', tags: ['Multilingual'] },
+        { title: 'Voice AI', body: 'Speech recognition and speech synthesis for Indian languages.', icon: 'volume', badge: 'Speech', tags: ['Voice'] },
+        { title: 'Sovereign AI', body: 'Selected under the IndiaAI Mission to build India’s own foundation model.', icon: 'flag', badge: 'IndiaAI Mission', tags: ['Made in India'] },
+        { title: 'Developer platform', body: 'Open-weight models, APIs and agent tooling that students build real applications on.', icon: 'tap-network', badge: 'Open weights', tags: ['APIs', 'Agents'] },
       ],
-      stats: [
-        { value: 'Indic', label: 'Language models' },
-        { value: 'Voice', label: 'Speech AI' },
-        { value: 'Bharat', label: 'First solutions' },
-      ],
-      sample: true,
     },
   ],
 };
@@ -159,30 +183,23 @@ function request(method, path, body, cookie) {
 }
 
 (async () => {
-  if (DRY) {
-    console.log(JSON.stringify(BLOCK, null, 2));
-    return;
-  }
+  if (DRY) { console.log(JSON.stringify(BLOCK, null, 2)); return; }
   const login = await request('POST', '/api/auth/login', { email: 'admin@org.local', password: 'Admin@123' });
   const cookie = String(login.headers['set-cookie'] || '').split(';')[0];
 
   const list = async () => (await request('GET', `/api/orgs/${ORG}/sections`, null, cookie)).json.sections;
   let sections = await list();
   let section = sections.find((s) => s.key === KEY);
-
   if (!section) {
     section = (await request('POST', `/api/orgs/${ORG}/sections`, {
       title: TITLE, key: KEY, iconKey: 'brain', status: 'published', blocks: [BLOCK],
     }, cookie)).json.section;
     console.log('created', section.id);
   } else {
-    await request('PATCH', `/api/sections/${section.id}`, {
-      title: TITLE, iconKey: 'brain', status: 'published', blocks: [BLOCK],
-    }, cookie);
+    await request('PATCH', `/api/sections/${section.id}`, { title: TITLE, iconKey: 'brain', status: 'published', blocks: [BLOCK] }, cookie);
     console.log('updated', section.id);
   }
 
-  // Straight after AI Ready Engineer, top-level rows only.
   sections = await list();
   const top = sections.filter((s) => !s.parentId).sort((a, b) => a.order - b.order);
   const rest = top.filter((s) => s.id !== section.id);

@@ -90,6 +90,9 @@ reference the returned asset ids.
 - **Accent as text must use `--accent-ink`.** Raw brand accent on white measures
   1.7:1 for Technical Hub's gold. The ink is the readable derivative. Raw accent is
   fine on a dark ground (e.g. a hero scrim over an image).
+- **Every title is Oswald (`--display`), in capitals.** Page titles and section headings alike.
+  One rule at the end of `app.css` ("Titles — one voice across the deck") lists them all; a new
+  component's title class goes into that list rather than setting its own face.
 - **No gradients.** White is the major surface; the accent is reserved for what is
   active or primary.
 - **Never place a raw poster.** Crop away burned-in headlines and logos so the
@@ -142,7 +145,7 @@ put, and browser Back returns.
 
 ## Current state
 
-Sixteen sections, all with content. Nothing is a placeholder and nothing is half
+Seventeen sections, all with content. Nothing is a placeholder and nothing is half
 built; the empty ones were deleted rather than left for a presenter to walk into.
 Organization Overview and Leadership used to be groups whose rows opened a list
 instead of a slide — Leadership held no blocks at all, so its row opened an empty
@@ -155,6 +158,7 @@ page. Their pages came up a level and both wrappers went, along with CEO Vision.
 | 3 | History & Milestones | `roadmap` | `milestone-timeline` | authored |
 | 4 | CEO Profile | `ceo-podium` | | Babji Neelam portfolio |
 | 5 | Leadership Journey | `climb-steps` | | Babji Neelam portfolio |
+| 5a | Team | `users` | `team-wall` | `tools/publish-team.cjs` — a loose network: Babji Neelam fixed at the centre, Claude connector chips spread round him, the 25 portraits (`uploads/team/`) scattered and pushed apart until nothing touches; dotted branches grow from Babji through the connectors. Entire team / Claude-certified architects switch |
 | 6 | Success Stories | `rosette` | `story-wall` | Babji Neelam portfolio |
 | 7 | Programs | `www-globe` | `program-deck` | `uploads/Programs*`, `Videos.xlsx` |
 | 8 | Centers of Excellence | `handshake-check` | `coe-wall` | `uploads/coepics/`, `Videos.xlsx` |
@@ -162,8 +166,8 @@ page. Their pages came up a level and both wrappers went, along with CEO Vision.
 | 10 | Placements | `job-pin` | `placement-wall` | `uploads/Placements/` |
 | 11 | Events | `event-sign` | `event-reel` | `uploads/Videos.xlsx` |
 | 12 | Video Resumes | `clapper` | `video-resume` | `uploads/Video Resumes.xlsx` |
-| 13 | AI Ready Engineer | `ai-figure` | `course-deck` | authored |
-| 14 | AI Partners | `brain` | `ai-partners` | `tools/publish-ai-partners.cjs` — Claude from the two success-story sites; OpenAI and Sarvam copy is sample |
+| 13 | AI Ready Engineer | `ai-figure` | `ai-ready-deck` | `tools/publish-ai-ready.cjs` — three pages: road map (cropped from the AI Ready road map, `uploads/ai-ready/`), course structure in four phases, benefits |
+| 14 | AI Partners | `brain` | `ai-partners` | `tools/publish-ai-partners.cjs` — one landing page per partner off a side rail; Claude from claude.technicalhub.io (ten architects) and the success-story sites, OpenAI and Sarvam from the Torii Minds AI Partners page restated for Technical Hub; assets in `uploads/ai-partners/` |
 | 15 | Torii | `link` | `partnership` | `tools/publish-torii.cjs` — Technical Hub × Torii Minds, and the 24/7 Claude AI Lab tab; photos in `uploads/torii-partnership/` |
 | 16 | Platforms | `tap-network` | `platforms` | `uploads/platform-logos/` |
 
@@ -217,6 +221,10 @@ still publishable only by hand.
 | `presenter-visibility.cjs` | what the presenter side shows |
 | `flatten-navigation.cjs` | the flat deck — order, titles and per-section icons |
 | `publish-ai-partners.cjs` | AI Partners — creates it after AI Ready Engineer, all copy in the script |
+| `publish-team.cjs` | Team — creates it after Leadership Journey; names, the ten architects, the hub and the connector chips are in the script. `TeamWall` scatters a seeded grid, relaxes it with every real footprint (photo, name pill, chip, Babji's card) and shrinks the portraits only if it cannot settle clean |
+| `recolour-team.cjs` | puts the supplied red Torii-shirt portraits into Technical Hub green with the TH mark (`--green` re-shades an already green shirt) |
+| `make-training-reel.cjs` | renders the AI Ready classroom photos into the looping circle video |
+| `publish-ai-ready.cjs` | AI Ready Engineer — the three-page brochure; course copy in the script |
 | `publish-torii.cjs` | Torii — creates it after AI Partners; the Claude Partner Network badge is cut from the announcement kept beside it |
 | `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
 
@@ -338,6 +346,10 @@ When measuring whether something is really under the bar, intersect its rect wit
 every ancestor that clips. Inside a scrolling wall a half-scrolled card still
 reports its whole box, well past the clip, and every scroller reads as a collision
 that is not there.
+
+FitSlide caps the room it measures at the window's height. At narrow widths the frame is
+sized by its content, so a filled slide made the frame taller, which read as more room, and the
+slide doubled every pass until it hit the browser's 2^25px layout limit.
 
 Related: a box sized by `aspect-ratio` off a percentage width contributes *nothing*
 to intrinsic height, so `grid-auto-rows: auto` sizes to the rest of the card and

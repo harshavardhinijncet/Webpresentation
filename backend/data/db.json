@@ -926,7 +926,7 @@
       "title": "Programs",
       "subtitle": "",
       "icon": "▤",
-      "order": 6,
+      "order": 7,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1193,7 +1193,7 @@
       "title": "Centers of Excellence",
       "subtitle": "",
       "icon": "⬢",
-      "order": 7,
+      "order": 8,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1693,7 +1693,7 @@
       "title": "Placements",
       "subtitle": "",
       "icon": "▲",
-      "order": 9,
+      "order": 10,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -2402,7 +2402,7 @@
       "title": "Events",
       "subtitle": "",
       "icon": "✧",
-      "order": 10,
+      "order": 11,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -3257,7 +3257,7 @@
       "title": "Video Resumes",
       "subtitle": "",
       "icon": "❞",
-      "order": 11,
+      "order": 12,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -4125,7 +4125,7 @@
       "icon": "",
       "iconKey": "rosette",
       "iconAssetId": null,
-      "order": 5,
+      "order": 6,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -5506,303 +5506,328 @@
       "icon": "",
       "iconKey": "ai-figure",
       "iconAssetId": null,
-      "order": 12,
+      "order": 13,
       "hidden": false,
       "status": "published",
       "blocks": [
         {
-          "id": "blk_2d9722c744554c20",
-          "type": "course-deck",
+          "id": "blk_b784c6c09a5d4d29",
+          "type": "ai-ready-deck",
           "layout": {
             "x": 0,
             "y": 0,
             "w": 12,
             "h": 15
           },
+          "title": "AI Ready Engineer",
           "eyebrow": "Technical Hub · in association with Torii",
-          "titleLines": [
-            "AI Ready",
-            "Engineer"
+          "kicker": "From engineers to AI Ready Engineers",
+          "logo": "ai-ready/ai-ready-logo-white.png",
+          "roadmap": "ai-ready/roadmap-road.jpg",
+          "headline": [
+            "Road map to become an",
+            "AI Ready Engineer"
           ],
           "standfirst": "An intensive, hands-on journey from language-model foundations to shipping production-grade, agentic AI products.",
+          "partners": [
+            "Claude Partner Network",
+            "OpenAI Select Partner"
+          ],
           "stats": [
             {
               "value": "16",
-              "label": "Modules"
+              "label": "Modules, end to end",
+              "icon": "layers"
+            },
+            {
+              "value": "200 hrs",
+              "label": "Hands-on learning",
+              "icon": "clock"
             },
             {
               "value": "50+",
-              "label": "AI tools & platforms"
+              "label": "AI tools & platforms",
+              "icon": "tools"
+            },
+            {
+              "value": "Claude",
+              "label": "Certified Associate",
+              "icon": "certificate"
             }
           ],
-          "credential": {
-            "ring": "Foundations",
-            "name": "Claude Certified Associate",
-            "note": ""
+          "course": {
+            "eyebrow": "The curriculum",
+            "title": "16 Modules. End to End.",
+            "subtitle": "The complete modern AI stack — foundations to deployment."
           },
-          "partners": [
+          "highlights": [
             {
-              "name": "Claude Partner Network",
-              "note": "Member"
+              "title": "200-hour learning journey",
+              "body": "Structured, hands-on training across the full AI stack.",
+              "icon": "clock"
             },
             {
-              "name": "OpenAI Select Partner",
-              "note": ""
+              "title": "Taught by AI-certified experts",
+              "body": "Every module led by Claude-certified practitioners.",
+              "icon": "certificate"
+            },
+            {
+              "title": "Internship completion letter",
+              "body": "Issued by our AI partners.",
+              "icon": "document"
+            },
+            {
+              "title": "Industry-ready engineers",
+              "body": "Mentored by working engineers, job-ready on day one.",
+              "icon": "users"
+            },
+            {
+              "title": "AIRE learning platform",
+              "body": "Live classes, assessments and progress in one portal.",
+              "icon": "grid-4"
+            },
+            {
+              "title": "Real AI projects",
+              "body": "Build and ship AI products, from prompt to deployment.",
+              "icon": "rocket"
             }
           ],
-          "frames": [
+          "phases": [
             {
-              "kind": "cards",
-              "eyebrow": "Why it stands out",
-              "title": "Built to make engineers, not attendees",
-              "subtitle": "",
-              "columns": 2,
-              "items": [
-                {
-                  "title": "Comprehensive 200-Hour Learning Journey",
-                  "body": "200 hours of structured, hands-on training across the full AI stack.",
-                  "icon": "clock"
-                },
-                {
-                  "title": "Training by AI-Certified Experts",
-                  "body": "Every module taught by Claude-certified practitioners.",
-                  "icon": "certificate"
-                },
-                {
-                  "title": "Internship Completion Letter",
-                  "body": "An official completion letter issued by our AI partners.",
-                  "icon": "document"
-                },
-                {
-                  "title": "Industry-Ready AI Engineers",
-                  "body": "Mentored by working engineers, so you graduate job-ready.",
-                  "icon": "users"
-                },
-                {
-                  "title": "AIRE Learning Platform Access",
-                  "body": "Live classes, assessments and progress tracking in one portal.",
-                  "icon": "grid-4"
-                },
-                {
-                  "title": "AI Projects",
-                  "body": "Build and ship real AI products, from prompt to deployment.",
-                  "icon": "code"
-                }
-              ],
-              "chips": [],
-              "stats": [],
-              "lines": [],
-              "contact": []
-            },
-            {
-              "kind": "modules",
-              "eyebrow": "The curriculum",
-              "title": "16 Modules. End to End.",
-              "subtitle": "The complete modern AI stack — foundations to deployment.",
-              "columns": 2,
-              "items": [
+              "name": "Foundations",
+              "modules": [
                 {
                   "title": "LLM Foundation",
-                  "body": "",
-                  "icon": ""
+                  "body": "How large language models think, learn and respond.",
+                  "icon": "brain"
                 },
                 {
                   "title": "Generative AI",
-                  "body": "",
-                  "icon": ""
+                  "body": "Creating text, images and code with AI models.",
+                  "icon": "sparkles"
                 },
                 {
                   "title": "AI Tools",
-                  "body": "",
-                  "icon": ""
+                  "body": "The everyday AI toolkit for engineers.",
+                  "icon": "tools"
                 },
                 {
                   "title": "Prompt Engineering",
-                  "body": "",
-                  "icon": ""
-                },
+                  "body": "Precise prompts that get dependable results.",
+                  "icon": "message"
+                }
+              ]
+            },
+            {
+              "name": "Build",
+              "modules": [
                 {
                   "title": "GitHub & Version Control",
-                  "body": "",
-                  "icon": ""
+                  "body": "Branches, reviews and team workflows.",
+                  "icon": "git-branch"
                 },
                 {
                   "title": "Vibe Coding",
-                  "body": "",
-                  "icon": ""
+                  "body": "Building software in partnership with AI.",
+                  "icon": "code"
                 },
                 {
                   "title": "Database",
-                  "body": "",
-                  "icon": ""
+                  "body": "Designing and querying the data layer.",
+                  "icon": "database"
                 },
                 {
                   "title": "AI API Integration",
-                  "body": "",
-                  "icon": ""
-                },
+                  "body": "Wiring model APIs into real applications.",
+                  "icon": "plug"
+                }
+              ]
+            },
+            {
+              "name": "Intelligent systems",
+              "modules": [
                 {
                   "title": "RAG Systems",
-                  "body": "",
-                  "icon": ""
+                  "body": "Grounding answers in your own knowledge.",
+                  "icon": "search"
                 },
                 {
                   "title": "AI Agents",
-                  "body": "",
-                  "icon": ""
+                  "body": "Assistants that plan, use tools and act.",
+                  "icon": "ai-figure"
                 },
                 {
-                  "title": "3 C's — Claude · Codex · Copilot",
-                  "body": "",
-                  "icon": ""
+                  "title": "3 C’s — Claude · Codex · Copilot",
+                  "body": "Three AI pair-programmers, side by side.",
+                  "icon": "layers"
                 },
                 {
                   "title": "AI Security",
-                  "body": "",
-                  "icon": ""
-                },
+                  "body": "Guardrails, safety and responsible AI.",
+                  "icon": "lock"
+                }
+              ]
+            },
+            {
+              "name": "Ship & scale",
+              "modules": [
                 {
                   "title": "Agentic AI",
-                  "body": "",
-                  "icon": ""
+                  "body": "Multi-step, autonomous AI workflows.",
+                  "icon": "workflow"
                 },
                 {
                   "title": "Deployment",
-                  "body": "",
-                  "icon": ""
+                  "body": "Shipping AI products to production.",
+                  "icon": "rocket"
                 },
                 {
                   "title": "LLM Creation",
-                  "body": "",
-                  "icon": ""
+                  "body": "Training and fine-tuning your own models.",
+                  "icon": "chip"
                 },
                 {
                   "title": "Cloud AI",
-                  "body": "",
-                  "icon": ""
-                }
-              ],
-              "chips": [],
-              "stats": [],
-              "lines": [],
-              "contact": []
-            },
-            {
-              "kind": "cards",
-              "eyebrow": "Student benefits",
-              "title": "What a student walks away with",
-              "subtitle": "",
-              "columns": 2,
-              "items": [
-                {
-                  "title": "Not a Fast-Track Program",
-                  "body": "A steady, deliberate pace — time to absorb every concept properly.",
-                  "icon": "clock"
-                },
-                {
-                  "title": "Authorised AI Certifications",
-                  "body": "Earn the authorised Claude Associate Certification.",
-                  "icon": "certificate"
-                },
-                {
-                  "title": "Trained by AI-Certified Experts",
-                  "body": "Industry-ready, AI-certified practitioners teach every module.",
-                  "icon": "users"
-                },
-                {
-                  "title": "Internship Completion Letter",
-                  "body": "A completion letter issued and signed off by our AI partners.",
-                  "icon": "document"
-                }
-              ],
-              "chips": [],
-              "stats": [],
-              "lines": [],
-              "contact": []
-            },
-            {
-              "kind": "cards",
-              "eyebrow": "College benefits",
-              "title": "What the campus gains",
-              "subtitle": "",
-              "columns": 2,
-              "items": [
-                {
-                  "title": "Official Claude & OpenAI Centre of Excellence",
-                  "body": "An accredited AI centre established on your campus.",
-                  "icon": "beaker"
-                },
-                {
-                  "title": "Industry-Ready AI Engineers",
-                  "body": "Graduates who arrive at interviews already able to build.",
-                  "icon": "users"
-                },
-                {
-                  "title": "Enhanced College Branding",
-                  "body": "Association with the AI partners setting the standard.",
-                  "icon": "trophy"
-                },
-                {
-                  "title": "AI Ecosystem on Campus",
-                  "body": "Tools, platforms and practice embedded in day-to-day teaching.",
-                  "icon": "layers"
-                }
-              ],
-              "chips": [],
-              "stats": [],
-              "lines": [],
-              "contact": []
-            },
-            {
-              "kind": "close",
-              "eyebrow": "Experience AI intelligence in action",
-              "title": "Step In. Stand Out.",
-              "subtitle": "",
-              "columns": 2,
-              "items": [],
-              "chips": [
-                "ChatGPT",
-                "Gemini",
-                "Claude",
-                "Perplexity",
-                "Copilot",
-                "Runway",
-                "Grok",
-                "Lovable"
-              ],
-              "stats": [
-                {
-                  "value": "16,000+",
-                  "label": "Certified students"
-                },
-                {
-                  "value": "10,000+",
-                  "label": "Placement offers"
-                }
-              ],
-              "lines": [
-                "Designed & Developed by the world's leading AI companies."
-              ],
-              "contact": [
-                {
-                  "icon": "mail",
-                  "label": "babji@technicalhub.io"
-                },
-                {
-                  "icon": "globe",
-                  "label": "claude.technicalhub.io"
-                },
-                {
-                  "icon": "phone",
-                  "label": "+91 83 43 81 81 81"
+                  "body": "Scaling AI on cloud platforms.",
+                  "icon": "cloud"
                 }
               ]
             }
-          ]
+          ],
+          "studentsTitle": "What a student walks away with",
+          "students": [
+            {
+              "title": "Not a fast-track program",
+              "body": "A steady, deliberate pace — time to absorb every concept properly.",
+              "icon": "clock"
+            },
+            {
+              "title": "Authorised AI certification",
+              "body": "Earn the authorised Claude Certified Associate credential.",
+              "icon": "certificate"
+            },
+            {
+              "title": "Trained by certified experts",
+              "body": "Industry-ready, AI-certified practitioners teach every module.",
+              "icon": "users"
+            },
+            {
+              "title": "Internship completion letter",
+              "body": "Issued and signed off by our AI partners.",
+              "icon": "document"
+            }
+          ],
+          "collegeTitle": "What the campus gains",
+          "college": [
+            {
+              "title": "Claude & OpenAI Centre of Excellence",
+              "body": "An official AI centre established on your campus.",
+              "icon": "building"
+            },
+            {
+              "title": "Industry-ready AI engineers",
+              "body": "Graduates who arrive at interviews already able to build.",
+              "icon": "briefcase"
+            },
+            {
+              "title": "Enhanced college branding",
+              "body": "Association with the AI partners setting the standard.",
+              "icon": "trophy"
+            },
+            {
+              "title": "AI ecosystem on campus",
+              "body": "Tools, platforms and practice embedded in day-to-day teaching.",
+              "icon": "layers"
+            }
+          ],
+          "training": {
+            "eyebrow": "In the classroom",
+            "title": "Inside the classroom",
+            "sub": "AI Ready Engineer cohorts in session — hands-on, laptop-first, every day.",
+            "photos": [
+              {
+                "src": "ai-ready/training/class-01.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-02.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-03.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-04.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-05.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-06.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-07.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-08.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-09.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-10.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-11.jpg",
+                "caption": ""
+              },
+              {
+                "src": "ai-ready/training/class-12.jpg",
+                "caption": ""
+              }
+            ]
+          },
+          "close": {
+            "eyebrow": "Experience AI in action",
+            "title": "Step In. Stand Out.",
+            "line": "Designed and developed with the world’s leading AI companies.",
+            "stats": [
+              {
+                "value": "16,000+",
+                "label": "Certified students"
+              },
+              {
+                "value": "10,000+",
+                "label": "Placement offers"
+              }
+            ],
+            "contact": [
+              {
+                "icon": "mail",
+                "label": "babji@technicalhub.io"
+              },
+              {
+                "icon": "globe",
+                "label": "claude.technicalhub.io"
+              },
+              {
+                "icon": "phone",
+                "label": "+91 83 43 81 81 81"
+              }
+            ]
+          }
         }
       ],
       "createdAt": "2026-08-07T14:45:25.144Z",
-      "updatedAt": "2026-08-19T06:48:39.426Z"
+      "updatedAt": "2026-10-07T07:33:18.039Z"
     },
     {
       "id": "sec_ai_ready_engineer_torii",
@@ -6122,7 +6147,7 @@
       "icon": "",
       "iconKey": "tap-network",
       "iconAssetId": null,
-      "order": 15,
+      "order": 16,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -6640,7 +6665,7 @@
       "icon": "",
       "iconKey": "seal-check",
       "iconAssetId": null,
-      "order": 8,
+      "order": 9,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -7958,12 +7983,12 @@
       "icon": "",
       "iconKey": "brain",
       "iconAssetId": null,
-      "order": 13,
+      "order": 14,
       "hidden": false,
       "status": "published",
       "blocks": [
         {
-          "id": "blk_8596849a959f4fac",
+          "id": "blk_a01a91cd51774f00",
           "type": "ai-partners",
           "layout": {
             "x": 0,
@@ -7972,184 +7997,407 @@
             "h": 15
           },
           "title": "AI Partners",
-          "hold": 6000,
+          "hold": 9000,
           "partners": [
             {
               "name": "Claude",
+              "short": "Claude",
               "status": "Claude Certified Services Partner",
-              "tag": "Claude Partner Network",
+              "tagline": "Applied AI, agents & assistants",
+              "accent": "#B5532F",
+              "badge": "ai-partners/claude-certified-services-partner.png",
               "mark": "coe/claude.webp",
-              "wordmark": "torii-partnership/claude-certified-services-partner.png",
               "headline": [
-                "Certified Services Partner.",
-                "Claude, across every campus."
+                "Certified Services Partner of",
+                "Claude"
               ],
-              "body": "Technical Hub designs, builds and teaches with Claude — official certification, hands-on training, 24/7 AI labs and production apps, delivered by Claude-certified architects and turning multi-hour work into minutes.",
+              "body": "Technical Hub designs, builds and teaches with Claude — official certification, hands-on training, a 24/7 Claude AI Lab and production apps, delivered by our own Claude-certified architects.",
+              "strip": [
+                {
+                  "icon": "seal-check",
+                  "label": "Standing",
+                  "value": "Certified Services Partner"
+                },
+                {
+                  "icon": "users",
+                  "label": "Team",
+                  "value": "10 certified architects"
+                },
+                {
+                  "icon": "clock",
+                  "label": "AI Lab",
+                  "value": "24/7 Claude Max"
+                }
+              ],
+              "photos": [
+                {
+                  "src": "torii-partnership/ncet-home-image.jpg",
+                  "caption": "The Claude wall, NCET AI Lab"
+                },
+                {
+                  "src": "torii-partnership/aditya-cert-crowd.jpg",
+                  "caption": "900+ students certified"
+                }
+              ],
+              "circles": {
+                "title": "Claude Certified Architects",
+                "sub": "Ten certified experts who design, build and teach with Claude — the team behind every engagement",
+                "items": [
+                  {
+                    "label": "Harshavardhini",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/01-harshavardhini.png",
+                    "icon": ""
+                  },
+                  {
+                    "label": "Prasanth",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/02-prasanth.png",
+                    "icon": ""
+                  },
+                  {
+                    "label": "Bobby Pamarthi",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/03-bobby-pamarthi.png",
+                    "icon": ""
+                  },
+                  {
+                    "label": "Peter",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/04-peter.png",
+                    "icon": ""
+                  },
+                  {
+                    "label": "Sudhir",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/05-sudhir.png",
+                    "icon": ""
+                  },
+                  {
+                    "label": "Akhilesh",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/06-akhilesh.png",
+                    "icon": ""
+                  },
+                  {
+                    "label": "Bhargav",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/07-bhargav.png",
+                    "icon": ""
+                  },
+                  {
+                    "label": "Kishore Girijala",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/08-kishore-girijala.png",
+                    "icon": ""
+                  },
+                  {
+                    "label": "Naveen",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/09-naveen.png",
+                    "icon": ""
+                  },
+                  {
+                    "label": "Azar",
+                    "sub": "Claude Architect",
+                    "photo": "ai-partners/architects/face/10-azar.png",
+                    "icon": ""
+                  }
+                ]
+              },
+              "cardsTitle": "What we do with Claude",
+              "cardsSub": "From the classroom to production, on campuses across the region",
               "cards": [
                 {
                   "title": "Certify & train",
                   "body": "Official Anthropic courses — 900+ students certified at Aditya University.",
+                  "photo": "torii-partnership/thumbs/aditya-cert-crowd.jpg",
+                  "icon": "",
+                  "badge": "900+ certified",
                   "tags": [
                     "Claude API",
-                    "Claude Code",
                     "MCP"
                   ]
                 },
                 {
                   "title": "24/7 Claude AI Lab",
                   "body": "Claude Max on every workstation at NCET, open all year to every learner.",
+                  "photo": "torii-partnership/thumbs/ncet-ai-lab-1.jpg",
+                  "icon": "",
+                  "badge": "Open 24/7",
                   "tags": [
                     "Claude Max",
-                    "Build",
+                    "Build"
+                  ]
+                },
+                {
+                  "title": "Project Space hackathon",
+                  "body": "160+ student teams built with Claude; the top teams won Claude credits.",
+                  "photo": "torii-partnership/thumbs/aditya-hackathon-stage.jpg",
+                  "icon": "",
+                  "badge": "160+ teams",
+                  "tags": [
+                    "Hackathon",
                     "Deploy"
                   ]
                 },
                 {
-                  "title": "Prompt to production",
-                  "body": "Six college applications built end to end with Claude Code.",
+                  "title": "Faculty development",
+                  "body": "Educators use Claude for course design, assessments and research.",
+                  "photo": "torii-partnership/thumbs/aditya-fdp.jpg",
+                  "icon": "",
+                  "badge": "FDP",
                   "tags": [
-                    "Claude Code",
-                    "Apps",
-                    "Live"
+                    "Curriculum",
+                    "Research"
                   ]
                 }
-              ],
-              "stats": [
-                {
-                  "value": "10",
-                  "label": "Claude-certified architects"
-                },
-                {
-                  "value": "900+",
-                  "label": "Students certified"
-                },
-                {
-                  "value": "160+",
-                  "label": "Hackathon teams"
-                }
-              ],
-              "photos": [],
-              "sample": false
+              ]
             },
             {
               "name": "OpenAI",
+              "short": "OpenAI",
               "status": "OpenAI Select Partner",
-              "tag": "Skills for the GPT era",
+              "tagline": "Generative AI & LLMs",
+              "accent": "#0D7A5F",
+              "badge": "ai-partners/openai-select-partner.jpeg",
               "mark": "coe/openai.webp",
-              "wordmark": "coe/opneai full.png",
               "headline": [
-                "OpenAI Select Partner.",
-                "Learning that ships."
+                "Select Partner of",
+                "OpenAI"
               ],
-              "body": "As an OpenAI Select Partner, Technical Hub brings OpenAI models into hands-on training — helping students and faculty prototype assistants, automate everyday work and ship AI-powered solutions.",
+              "body": "As an OpenAI Select Partner, Technical Hub runs a Centre of Excellence on campus and carries generative AI through the AI Ready Engineer programme.",
+              "strip": [
+                {
+                  "icon": "seal-check",
+                  "label": "Standing",
+                  "value": "Select Partner"
+                },
+                {
+                  "icon": "building",
+                  "label": "On campus",
+                  "value": "Centre of Excellence"
+                },
+                {
+                  "icon": "ai-figure",
+                  "label": "Programme",
+                  "value": "AI Ready Engineer"
+                }
+              ],
+              "photos": [],
+              "circles": {
+                "title": "Where OpenAI shows up",
+                "sub": "Across the partnership, the campus and the curriculum",
+                "items": [
+                  {
+                    "label": "Select Partner",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "handshake-check"
+                  },
+                  {
+                    "label": "Centre of Excellence",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "building"
+                  },
+                  {
+                    "label": "AI Ready Engineer",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "ai-figure"
+                  },
+                  {
+                    "label": "Generative AI",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "sparkles"
+                  },
+                  {
+                    "label": "Codex",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "code"
+                  },
+                  {
+                    "label": "The 3 C’s",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "layers"
+                  }
+                ]
+              },
+              "cardsTitle": "What we do with OpenAI",
+              "cardsSub": "The partnership in practice — on campus and in the curriculum",
               "cards": [
                 {
-                  "title": "GPT builder labs",
-                  "body": "Students design, prompt and test assistants on OpenAI models.",
+                  "title": "Select Partner",
+                  "body": "Select Partner — the tier printed on the official OpenAI lockup.",
+                  "photo": "",
+                  "icon": "seal-check",
+                  "badge": "Partnership",
                   "tags": [
-                    "Prompting",
+                    "Official"
+                  ]
+                },
+                {
+                  "title": "Centre of Excellence",
+                  "body": "A Centre of Excellence partner on campus, where students build with generative AI.",
+                  "photo": "",
+                  "icon": "building",
+                  "badge": "On campus",
+                  "tags": [
+                    "CoE",
+                    "GenAI"
+                  ]
+                },
+                {
+                  "title": "AI Ready Engineer",
+                  "body": "Generative AI runs through the AI Ready Engineer programme, foundations to delivery.",
+                  "photo": "",
+                  "icon": "ai-figure",
+                  "badge": "Curriculum",
+                  "tags": [
+                    "Programme"
+                  ]
+                },
+                {
+                  "title": "The 3 C’s",
+                  "body": "Codex taught beside Claude and Copilot — AI pair-programming, side by side.",
+                  "photo": "",
+                  "icon": "code",
+                  "badge": "AI pair",
+                  "tags": [
+                    "Codex",
+                    "Copilot"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Sarvam AI",
+              "short": "Sarvam",
+              "status": "Sarvam AI Partner",
+              "tagline": "Indian-language foundation models",
+              "accent": "#3346B8",
+              "badge": "ai-partners/sarvam-ai.jpeg",
+              "mark": "coe/sarvam.png",
+              "headline": [
+                "Building India’s AI with",
+                "Sarvam"
+              ],
+              "body": "With Sarvam AI, Technical Hub brings India’s own foundation models into the classroom — Indian-language, voice and open-weight models that students build real applications on.",
+              "strip": [
+                {
+                  "icon": "seal-check",
+                  "label": "Standing",
+                  "value": "AI Partner"
+                },
+                {
+                  "icon": "globe",
+                  "label": "Focus",
+                  "value": "Indian-language AI"
+                },
+                {
+                  "icon": "code",
+                  "label": "Models",
+                  "value": "Open weights"
+                }
+              ],
+              "photos": [],
+              "circles": {
+                "title": "What Sarvam brings",
+                "sub": "Foundation models made in India, for India’s languages",
+                "items": [
+                  {
+                    "label": "Indian Languages",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "globe"
+                  },
+                  {
+                    "label": "Voice AI",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "volume"
+                  },
+                  {
+                    "label": "Sovereign AI",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "flag"
+                  },
+                  {
+                    "label": "Open Weights",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "code"
+                  },
+                  {
+                    "label": "Developer Platform",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "tap-network"
+                  },
+                  {
+                    "label": "AI Partner",
+                    "sub": "",
+                    "photo": "",
+                    "icon": "handshake-check"
+                  }
+                ]
+              },
+              "cardsTitle": "Building for Bharat",
+              "cardsSub": "Indic-language AI for the students and communities we serve",
+              "cards": [
+                {
+                  "title": "Indian languages",
+                  "body": "Foundation models built for India’s languages, made in India — for rural and tier-2/3 talent.",
+                  "photo": "",
+                  "icon": "globe",
+                  "badge": "Indic",
+                  "tags": [
+                    "Multilingual"
+                  ]
+                },
+                {
+                  "title": "Voice AI",
+                  "body": "Speech recognition and speech synthesis for Indian languages.",
+                  "photo": "",
+                  "icon": "volume",
+                  "badge": "Speech",
+                  "tags": [
+                    "Voice"
+                  ]
+                },
+                {
+                  "title": "Sovereign AI",
+                  "body": "Selected under the IndiaAI Mission to build India’s own foundation model.",
+                  "photo": "",
+                  "icon": "flag",
+                  "badge": "IndiaAI Mission",
+                  "tags": [
+                    "Made in India"
+                  ]
+                },
+                {
+                  "title": "Developer platform",
+                  "body": "Open-weight models, APIs and agent tooling that students build real applications on.",
+                  "photo": "",
+                  "icon": "tap-network",
+                  "badge": "Open weights",
+                  "tags": [
                     "APIs",
                     "Agents"
                   ]
-                },
-                {
-                  "title": "Faculty enablement",
-                  "body": "Teaching teams use OpenAI tools to plan lessons and build resources.",
-                  "tags": [
-                    "FDP",
-                    "Content",
-                    "Assessment"
-                  ]
-                },
-                {
-                  "title": "Industry projects",
-                  "body": "Real problems solved end to end, from idea to a working demo.",
-                  "tags": [
-                    "Build",
-                    "Demo",
-                    "Deploy"
-                  ]
                 }
-              ],
-              "stats": [
-                {
-                  "value": "Select",
-                  "label": "OpenAI partner tier"
-                },
-                {
-                  "value": "Labs",
-                  "label": "Hands-on GPT builds"
-                },
-                {
-                  "value": "Live",
-                  "label": "Industry projects"
-                }
-              ],
-              "photos": [],
-              "sample": true
-            },
-            {
-              "name": "Sarvam",
-              "status": "Sarvam AI Partner",
-              "tag": "AI that speaks India",
-              "mark": "coe/sarvam.png",
-              "wordmark": "",
-              "headline": [
-                "Sarvam AI partner.",
-                "Built for Bharat."
-              ],
-              "body": "With Sarvam AI, Technical Hub helps students build with Indian-language models — voice, translation and multilingual assistants for the communities they come from.",
-              "cards": [
-                {
-                  "title": "Indic language AI",
-                  "body": "Students work with models built for Indian languages.",
-                  "tags": [
-                    "Telugu",
-                    "Hindi",
-                    "More"
-                  ]
-                },
-                {
-                  "title": "Voice & speech",
-                  "body": "Speech recognition and voice interfaces for local users.",
-                  "tags": [
-                    "Speech",
-                    "Voice",
-                    "Translate"
-                  ]
-                },
-                {
-                  "title": "Bharat-first projects",
-                  "body": "Solutions designed for rural and tier-2/3 communities.",
-                  "tags": [
-                    "Impact",
-                    "Access",
-                    "Scale"
-                  ]
-                }
-              ],
-              "stats": [
-                {
-                  "value": "Indic",
-                  "label": "Language models"
-                },
-                {
-                  "value": "Voice",
-                  "label": "Speech AI"
-                },
-                {
-                  "value": "Bharat",
-                  "label": "First solutions"
-                }
-              ],
-              "photos": [],
-              "sample": true
+              ]
             }
           ]
         }
       ],
       "createdAt": "2026-10-06T04:37:08.815Z",
-      "updatedAt": "2026-10-06T05:37:35.739Z"
+      "updatedAt": "2026-10-07T06:27:53.021Z"
     },
     {
       "id": "sec_b17a333c604f4f3b",
@@ -8161,7 +8409,7 @@
       "icon": "",
       "iconKey": "link",
       "iconAssetId": null,
-      "order": 14,
+      "order": 15,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -8455,6 +8703,237 @@
       ],
       "createdAt": "2026-10-06T05:19:15.596Z",
       "updatedAt": "2026-10-06T10:11:43.279Z"
+    },
+    {
+      "id": "sec_2f4a9acc0626415d",
+      "orgId": "technical-hub",
+      "parentId": null,
+      "key": "trainers",
+      "title": "Team",
+      "subtitle": "",
+      "icon": "",
+      "iconKey": "users",
+      "iconAssetId": null,
+      "order": 5,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_00b43909c70d46aa",
+          "type": "team-wall",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "eyebrow": "",
+          "headline": [
+            "The trainers behind",
+            "every engineer"
+          ],
+          "body": "One team, connected by Claude — trainers and certified architects who teach, mentor and build alongside every Technical Hub cohort.",
+          "namesTitle": "",
+          "stats": [],
+          "allLabel": "Entire team",
+          "architectsLabel": "Claude-certified architects",
+          "hub": {
+            "photo": "team/hub-babji-neelam.webp",
+            "name": "Babji Neelam",
+            "role": "Founder & CEO",
+            "focus": 48.3
+          },
+          "connectors": [
+            "Claude Code",
+            "MCP",
+            "Agent Skills",
+            "Claude API",
+            "Artifacts",
+            "Projects",
+            "Agent SDK",
+            "Connectors"
+          ],
+          "members": [
+            {
+              "photo": "team/abhilash.webp",
+              "name": "Abhilash",
+              "architect": false,
+              "focus": 49.5,
+              "rank": 0
+            },
+            {
+              "photo": "team/abhishek.webp",
+              "name": "Abhishek",
+              "architect": false,
+              "focus": 43.6,
+              "rank": 0
+            },
+            {
+              "photo": "team/harshavardhini.webp",
+              "name": "Harshavardhini",
+              "architect": true,
+              "focus": 39.6,
+              "rank": 1
+            },
+            {
+              "photo": "team/abraham.webp",
+              "name": "Abraham",
+              "architect": false,
+              "focus": 49.8,
+              "rank": 0
+            },
+            {
+              "photo": "team/prasanth-sir.webp",
+              "name": "Prasanth",
+              "architect": true,
+              "focus": 52.6,
+              "rank": 2
+            },
+            {
+              "photo": "team/harika.webp",
+              "name": "Harika",
+              "architect": false,
+              "focus": 46.9,
+              "rank": 0
+            },
+            {
+              "photo": "team/hemavathi.webp",
+              "name": "Hemavathi",
+              "architect": false,
+              "focus": 49.7,
+              "rank": 0
+            },
+            {
+              "photo": "team/bobby.webp",
+              "name": "Bobby Pamarthi",
+              "architect": true,
+              "focus": 52.4,
+              "rank": 3
+            },
+            {
+              "photo": "team/jayanth.webp",
+              "name": "Jayanth",
+              "architect": false,
+              "focus": 44.8,
+              "rank": 0
+            },
+            {
+              "photo": "team/peter.webp",
+              "name": "Peter",
+              "architect": true,
+              "focus": 37.1,
+              "rank": 4
+            },
+            {
+              "photo": "team/kiran.webp",
+              "name": "Kiran",
+              "architect": false,
+              "focus": 52.3,
+              "rank": 0
+            },
+            {
+              "photo": "team/kiran-chaithu.webp",
+              "name": "Kiran Chaithu",
+              "architect": false,
+              "focus": 41.5,
+              "rank": 0
+            },
+            {
+              "photo": "team/sudhir.webp",
+              "name": "Sudhir",
+              "architect": true,
+              "focus": 45.1,
+              "rank": 5
+            },
+            {
+              "photo": "team/manikanta.webp",
+              "name": "Manikanta",
+              "architect": false,
+              "focus": 42.4,
+              "rank": 0
+            },
+            {
+              "photo": "team/akhilesh.webp",
+              "name": "Akhilesh",
+              "architect": true,
+              "focus": 47.8,
+              "rank": 6
+            },
+            {
+              "photo": "team/prasanth.webp",
+              "name": "Prasanth",
+              "architect": false,
+              "focus": 47.2,
+              "rank": 0
+            },
+            {
+              "photo": "team/rahul.webp",
+              "name": "Rahul",
+              "architect": false,
+              "focus": 49.8,
+              "rank": 0
+            },
+            {
+              "photo": "team/bhargava.webp",
+              "name": "Bhargav",
+              "architect": true,
+              "focus": 47.8,
+              "rank": 7
+            },
+            {
+              "photo": "team/sampath.webp",
+              "name": "Sampath",
+              "architect": false,
+              "focus": 41.3,
+              "rank": 0
+            },
+            {
+              "photo": "team/kishore.webp",
+              "name": "Kishore Girijala",
+              "architect": true,
+              "focus": 47,
+              "rank": 8
+            },
+            {
+              "photo": "team/satish.webp",
+              "name": "Satish",
+              "architect": false,
+              "focus": 53.2,
+              "rank": 0
+            },
+            {
+              "photo": "team/suneetha.webp",
+              "name": "Suneetha",
+              "architect": false,
+              "focus": 48.4,
+              "rank": 0
+            },
+            {
+              "photo": "team/naveen.webp",
+              "name": "Naveen",
+              "architect": true,
+              "focus": 52.2,
+              "rank": 9
+            },
+            {
+              "photo": "team/veera-babu.webp",
+              "name": "Veera Babu",
+              "architect": false,
+              "focus": 56.2,
+              "rank": 0
+            },
+            {
+              "photo": "team/azarunnisa.webp",
+              "name": "Azar",
+              "architect": true,
+              "focus": 38.2,
+              "rank": 10
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-10-07T09:08:09.862Z",
+      "updatedAt": "2026-10-07T10:10:25.868Z"
     }
   ],
   "assets": [
