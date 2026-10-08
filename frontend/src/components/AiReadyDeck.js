@@ -142,7 +142,8 @@ export function AiReadyDeck(block, { editing = false } = {}) {
      Laid out like a travel landing page: an oversized two-line headline with a photograph and
      an arrow pill set into its lines, a circular photograph on the right ringed by turning
      text, a row of three pills, then the classroom as an expanding-card carousel — one photo
-     open wide, the rest standing as slim strips with a round badge, each opening in turn. */
+     open wide and the next waiting beside it as a single card; when its time is up the
+     waiting card opens and the one after slides into its place. */
   const tr = b.training || {};
   const shots = (tr.photos || []).filter((p) => p.src);
   const BADGES = ['users', 'code', 'brain', 'sparkles', 'rocket', 'book', 'chip', 'message', 'lightbulb', 'target', 'graduation', 'layers'];
@@ -158,9 +159,9 @@ export function AiReadyDeck(block, { editing = false } = {}) {
       h('small', {}, `${tr.capSub || 'Classroom'} · ${pad(k + 1)}`))));
   const cfCount = h('span', { class: 'are-xc__count' });
   const cfBar = h('span', { class: 'are-cf__bar' });
-  /* Moving forward one is a conveyor: the next strip widens into the open slot while the
-     photograph leaving folds away on the left and the strips glide along; only once that has
-     settled does it reappear, fading in at the end of the row. Any other jump reorders at once. */
+  /* Moving forward one is a conveyor: the waiting card widens into the open slot while the
+     photograph leaving folds away on the left, and the one after grows into the waiting slot
+     from the right. Any other jump reorders at once. */
   const XC_MS = 1400;
   let shown = -1;
   let settle = null;
@@ -169,6 +170,8 @@ export function AiReadyDeck(block, { editing = false } = {}) {
     const n = shots.length;
     clearTimeout(settle);
     panels.forEach((el) => el.classList.remove('is-leaving', 'is-entering'));
+    // Only two are ever in view: the open photograph and the one waiting to open next.
+    panels.forEach((el, k) => el.classList.toggle('is-next', n > 1 && k === (cur + 1) % n));
     if (shown >= 0 && cur === (shown + 1) % n && !REDUCED_ARE) {
       const out = panels[shown];
       out.classList.remove('is-open');

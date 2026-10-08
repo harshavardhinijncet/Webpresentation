@@ -51,7 +51,8 @@ const DECK = [
   ['testimonials', 'Video Resumes', 'clapper'],
   ['ai-ready-engineer', 'AI Ready Engineer', 'ai-figure'],
   ['ai-partners', 'AI Partners', 'brain'],
-  ['torii', 'Torii', 'link'],
+  ['torii', 'Technical Hub × Torii', 'link'],
+  ['collaborations', 'Collaborations', 'partners'],
   ['platforms', 'Platforms', 'tap-network'],
 ];
 

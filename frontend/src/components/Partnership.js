@@ -7,10 +7,10 @@ import { autoSlide } from '../utils/autoSlide.js';
 /**
  * A partnership page in two tabs that slide into each other.
  *
- *   Partnership — the two marks, the newest milestone set as a feature, the story and its
- *                 highlights on the left; on the right a framed photo that wipes from one
- *                 picture to the next, over two ribbons of photographs drifting in opposite
- *                 directions.
+ *   Partnership — a product-landing hero told as a run of stories: kicker, title and copy
+ *                 on the left, the photograph in a tall arch with the story's word set huge
+ *                 in outline behind it, a glass card of figures, a side rail, and Prev, dots
+ *                 and Next along the foot.
  *   AI Lab      — the lab edge to edge: each photograph wipes in from the right and keeps
  *                 drifting slowly while it holds, a dark plate names the space on screen, and
  *                 a filmstrip along the foot slides to keep the current picture centred.
@@ -86,67 +86,84 @@ export function Partnership(block, { editing = false } = {}) {
       ms.badge ? h('div', { class: 'tp-badge-pill' }, h('img', { src: src(ms.badge), alt: ms.text || 'Partner badge' })) : null),
   );
 
-  /* ------------------------------------------------------------ partnership */
-  const ovPhotos = (ov.photos || []).filter((p) => p.src);
+  /* ------------------------------------------------------------ partnership
+     A product-landing hero, told as a run of stories. On the left a tracked kicker, a large
+     title, a line of copy and a call to action; in the middle the story's photograph in a tall
+     arch, with the story's word set huge in outline behind it; at the foot of the arch a glass
+     card of up to three figures. A rail down the right edge carries the section's name on its
+     side; Prev, the dots and Next run along the foot. The stories turn on their own. */
   /** Replays a hold bar from empty. */
   const restart = (bar) => { bar.classList.remove('is-run'); void bar.offsetWidth; bar.classList.add('is-run'); };
-  const ovBar = h('span', { class: 'tp-hero__bar' });
-  const ovCaption = h('figcaption', { class: 'tp-hero__cap' });
-  const ovCount = h('span', { class: 'tp-hero__count' });
-  const ovShow = ovPhotos.length ? slideshow(ovPhotos, {
-    hold, className: 'tp-hero', canRun: () => tab === 0 && !paused,
-    onChange: (i) => {
-      ovCaption.replaceChildren(h('b', {}, ovPhotos[i].title || ''), ovPhotos[i].caption ? h('span', {}, ovPhotos[i].caption) : null);
-      ovCount.textContent = `${pad(i + 1)} / ${pad(ovPhotos.length)}`;
-      ovCaption.classList.remove('is-in'); void ovCaption.offsetWidth; ovCaption.classList.add('is-in');
-      restart(ovBar);
-    },
-  }) : null;
+  const stories = (ov.slides || []).filter((s) => s.photo && s.title);
+  let si = 0;
+  const kicker = h('p', { class: 'tpx-kicker' });
+  const heading = h('h2', { class: 'tpx-title' });
+  const copy = h('p', { class: 'tpx-body' });
+  const cta = h('button', { class: 'tpx-cta', type: 'button' });
+  const word = h('span', { class: 'tpx-word', 'aria-hidden': 'true' });
+  const cap = h('span', { class: 'tpx-photo__cap' });
+  const figures = h('ul', { class: 'tpx-stats' });
+  const count = h('span', { class: 'tpx-count' });
+  const shots = stories.map((s, k) => h('img', {
+    class: 'tpx-photo__img', src: src(s.photo), alt: s.caption || s.title || '',
+    loading: k < 2 ? 'eager' : 'lazy', decoding: 'async', draggable: 'false',
+  }));
+  const dots = stories.map((s, k) => h('button', {
+    class: 'tpx-dot', type: 'button', 'aria-label': s.title || `Story ${k + 1}`, onclick: () => goStory(k),
+  }));
+  const copyBox = h('div', { class: 'tpx-copy' }, kicker, heading, copy, cta);
 
-  /* Two ribbons of the same photographs drifting opposite ways. Each track holds the list
-     twice, so sliding it by exactly half its width lands where it began and the loop has no seam. */
-  const ribbon = (list, reverse) => {
-    const items = [...list, ...list].map((p) => h('span', { class: 'tp-ribbon__item' },
-      h('img', { src: small(p), alt: '', draggable: 'false' })));
-    return h('div', { class: `tp-ribbon${reverse ? ' tp-ribbon--rev' : ''}` },
-      h('div', { class: 'tp-ribbon__track', style: { '--n': String(list.length) } }, ...items));
+  /** Paint story `si`: the words and figures re-enter, the photograph crossfades. */
+  const paintStory = () => {
+    const s = stories[si];
+    if (!s) return;
+    kicker.textContent = s.kicker || '';
+    heading.textContent = s.title || '';
+    copy.textContent = s.body || '';
+    copy.hidden = !s.body;
+    const label = s.cta?.label || 'Next story';
+    cta.replaceChildren(h('span', {}, label), icon('arrow-right', { class: 'ic ic--xs' }));
+    cta.onclick = () => { if (s.cta?.tab >= 0) setTab(s.cta.tab); else goStory(si + 1); };
+    word.textContent = s.word || '';
+    cap.textContent = s.caption || '';
+    cap.hidden = !s.caption;
+    figures.replaceChildren(...(s.stats || []).map((x) => h('li', {}, h('b', {}, x.value), h('span', {}, x.label))));
+    figures.hidden = !(s.stats || []).length;
+    shots.forEach((img, k) => img.classList.toggle('is-on', k === si));
+    dots.forEach((d, k) => d.classList.toggle('is-on', k === si));
+    count.replaceChildren(h('b', {}, pad(si + 1)), ` / ${pad(stories.length)}`);
+    [copyBox, word, figures, cap].forEach((el) => { el.classList.remove('is-in'); void el.offsetWidth; el.classList.add('is-in'); });
   };
-  const ribbonA = ovPhotos.filter((_, i) => i % 2 === 0);
-  const ribbonB = ovPhotos.filter((_, i) => i % 2 === 1);
+  const storyAuto = autoSlide(() => { si = (si + 1) % stories.length; paintStory(); }, {
+    host: root, interval: Math.max(hold, 6500), canRun: () => tab === 0 && !paused && stories.length > 1,
+  });
+  function goStory(k) {
+    if (!stories.length) return;
+    si = ((k % stories.length) + stories.length) % stories.length;
+    paintStory();
+    storyAuto.reset();
+  }
 
-  const highlights = (ov.highlights || []).map((hl, i) => h('li', { class: 'tp-hl', style: { '--d': `${0.5 + i * 0.08}s` } },
-    h('span', { class: 'tp-hl__icon' }, icon(hl.icon || 'sparkles', { class: 'ic ic--sm' })),
-    h('span', { class: 'tp-hl__text' }, h('b', {}, hl.title), hl.body ? h('span', {}, hl.body) : null)));
-
-  const overview = h('section', { class: 'tp-panel tp-panel--overview' },
-    h('div', { class: 'tp-ov__copy' },
-      ov.tag ? h('span', { class: 'tp-tag', style: { '--d': '0s' } }, ov.tag) : null,
-      h('h2', { class: 'tp-headline' },
-        ...(ov.headline || []).map((line, i) => h('span', { class: i ? 'tp-headline__second' : 'tp-headline__lead', style: { '--d': `${0.06 + i * 0.08}s` } }, line))),
-      ov.body ? h('p', { class: 'tp-body', style: { '--d': '0.22s' } }, ov.body) : null,
-      ms.text
-        ? h('div', { class: 'tp-milestone', style: { '--d': '0.32s' } },
-            ms.badge ? h('img', { class: 'tp-milestone__badge', src: src(ms.badge), alt: '' }) : null,
-            h('div', { class: 'tp-milestone__text' },
-              h('span', { class: 'tp-milestone__label' }, icon('sparkles', { class: 'ic ic--xs' }), ms.label || 'New milestone'),
-              h('p', {}, ms.text)),
-            h('span', { class: 'tp-milestone__shine', 'aria-hidden': 'true' }))
-        : null,
-      highlights.length ? h('ul', { class: 'tp-hls' }, ...highlights) : null,
-    ),
-    h('div', { class: 'tp-ov__media' },
-      ovShow
-        ? h('div', { class: 'tp-hero' }, ovShow.stage,
-            ovCaption,
-            h('div', { class: 'tp-hero__nav' },
-              ovCount,
-              h('button', { class: 'tp-arrow', type: 'button', 'aria-label': 'Previous photo', onclick: () => ovShow.step(-1) }, icon('chevron-left', { class: 'ic ic--sm' })),
-              h('button', { class: 'tp-arrow', type: 'button', 'aria-label': 'Next photo', onclick: () => ovShow.step(1) }, icon('chevron-right', { class: 'ic ic--sm' }))),
-            ovBar)
-        : null,
-      ribbonA.length ? ribbon(ribbonA, false) : null,
-      ribbonB.length ? ribbon(ribbonB, true) : null,
-    ),
+  const railPause = h('button', { class: 'tpx-rail__btn', type: 'button', onclick: () => setPaused(!paused) });
+  const overview = h('section', { class: 'tp-panel tp-panel--overview tpx' },
+    h('span', { class: 'tpx-orb tpx-orb--a', 'aria-hidden': 'true' }),
+    h('span', { class: 'tpx-orb tpx-orb--b', 'aria-hidden': 'true' }),
+    h('span', { class: 'tpx-orb tpx-orb--c', 'aria-hidden': 'true' }),
+    word,
+    copyBox,
+    stories.length ? h('figure', { class: 'tpx-photo' }, ...shots, cap) : null,
+    figures,
+    h('aside', { class: 'tpx-rail' },
+      railPause,
+      h('span', { class: 'tpx-rail__text' }, block.railText || 'The partnership'),
+      h('button', { class: 'tpx-rail__btn tpx-rail__btn--go', type: 'button', 'aria-label': 'Next story', onclick: () => goStory(si + 1) },
+        icon('plus', { class: 'ic ic--sm' }))),
+    stories.length > 1
+      ? h('nav', { class: 'tpx-nav' },
+          h('button', { class: 'tpx-nav__btn', type: 'button', onclick: () => goStory(si - 1) }, icon('chevron-left', { class: 'ic ic--sm' }), 'Prev'),
+          h('div', { class: 'tpx-nav__mid' }, h('div', { class: 'tpx-dots' }, ...dots), count),
+          h('button', { class: 'tpx-nav__btn', type: 'button', onclick: () => goStory(si + 1) }, 'Next', icon('chevron-right', { class: 'ic ic--sm' })))
+      : null,
   );
 
   /* ----------------------------------------------------------------- AI lab */
@@ -509,7 +526,7 @@ export function Partnership(block, { editing = false } = {}) {
     tabs.forEach((t, n) => t.classList.toggle('is-active', n === next));
     // Restart the arrival motion of whichever panel has just come in.
     root.classList.remove('is-in'); void root.offsetWidth; root.classList.add('is-in');
-    ovShow?.reset();
+    storyAuto.reset();
     // The AI Lab plays its intro every time it is opened, and resets when it is left.
     if (next === 1) labShow?.enter(); else labShow?.leave();
   }
@@ -524,7 +541,9 @@ export function Partnership(block, { editing = false } = {}) {
     labPauseBtn?.setAttribute('aria-label', on ? 'Play' : 'Pause');
     carPauseBtn?.replaceChildren(icon(on ? 'play' : 'pause', { class: 'ic ic--xs' }));
     carPauseBtn?.setAttribute('aria-label', on ? 'Play' : 'Pause');
-    if (on) { ovShow?.stop(); labShow?.stop(); } else { ovShow?.start(); labShow?.start(); }
+    railPause.replaceChildren(icon(on ? 'play' : 'pause', { class: 'ic ic--xs' }));
+    railPause.setAttribute('aria-label', on ? 'Play' : 'Pause');
+    if (on) { storyAuto.stop(); labShow?.stop(); } else { storyAuto.start(); labShow?.start(); }
   }
 
   if (!editing) {
@@ -537,7 +556,7 @@ export function Partnership(block, { editing = false } = {}) {
   }
 
 
-  ovShow && ovShow.go(0);
+  paintStory();
   setTab(0);
   setPaused(paused);
   return root;

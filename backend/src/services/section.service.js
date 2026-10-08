@@ -47,6 +47,8 @@ export const BLOCK_TYPES = [
   'partnership',
   'ai-ready-deck',
   'team-wall',
+  'torii-app',
+  'collab-wall',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -89,6 +91,8 @@ const DEFAULT_SIZE = {
   'partnership': { w: 12, h: 15 },
   'ai-ready-deck': { w: 12, h: 15 },
   'team-wall': { w: 12, h: 15 },
+  'torii-app': { w: 12, h: 15 },
+  'collab-wall': { w: 12, h: 15 },
 };
 
 const oneOf = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
@@ -524,6 +528,30 @@ function normalizeBlock(raw, index = 0, depth = 0) {
        Credentials are stored as given — the user was told they end up in the
        store, in git and on the deployed server, and chose that. */
     /* The trainers: cut-out portraits under /uploads, named where the name is known. */
+    /* Pages whose content is a whole structured story — Technical Hub × Torii, and the
+       Collaborations wall. The content is kept as plain data: strings, numbers and booleans,
+       nested no deeper than six levels, with every string capped. Nothing in it is ever set as
+       HTML or used as a link by the components, so this is the whole of the sanitising. */
+    case 'torii-app':
+    case 'collab-wall': {
+      const plain = (v, depth = 0) => {
+        if (depth > 6 || v === null || v === undefined) return undefined;
+        if (typeof v === 'string') return text(v, 800);
+        if (typeof v === 'number') return Number.isFinite(v) ? v : undefined;
+        if (typeof v === 'boolean') return v;
+        if (Array.isArray(v)) return v.slice(0, 80).map((x) => plain(x, depth + 1)).filter((x) => x !== undefined);
+        if (typeof v === 'object') {
+          return Object.fromEntries(Object.entries(v).slice(0, 48)
+            .filter(([k]) => /^[A-Za-z][A-Za-z0-9_]{0,31}$/.test(k))
+            .map(([k, x]) => [k, plain(x, depth + 1)])
+            .filter(([, x]) => x !== undefined));
+        }
+        return undefined;
+      };
+      block.content = plain(raw.content) || {};
+      break;
+    }
+
     case 'team-wall': {
       const list = (v) => (Array.isArray(v) ? v : []);
       block.eyebrow = text(raw.eyebrow, 60);
@@ -667,6 +695,20 @@ function normalizeBlock(raw, index = 0, depth = 0) {
           .map((hl) => ({ icon: iconKey(hl?.icon), title: text(hl?.title, 70), body: text(hl?.body, 140) }))
           .filter((hl) => hl.title).slice(0, 6),
         photos: photos(ov.photos, 24),
+        /* The partnership told as a run of hero stories: a small tracked kicker, a large
+           title, a giant outlined word behind the photograph, and up to three figures. */
+        slides: (Array.isArray(ov.slides) ? ov.slides : []).map((st) => ({
+          kicker: text(st?.kicker, 60),
+          title: text(st?.title, 60),
+          word: text(st?.word, 12),
+          body: text(st?.body, 300),
+          photo: text(st?.photo, 200),
+          caption: text(st?.caption, 80),
+          cta: { label: text(st?.cta?.label, 40), tab: clampInt(st?.cta?.tab, -1, 1, -1) },
+          stats: (Array.isArray(st?.stats) ? st.stats : [])
+            .map((x) => ({ value: text(x?.value, 16), label: text(x?.label, 40) }))
+            .filter((x) => x.value).slice(0, 3),
+        })).filter((st) => st.photo && st.title).slice(0, 8),
       };
       const lab = raw.lab || {};
       block.lab = {

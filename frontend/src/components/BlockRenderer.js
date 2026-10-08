@@ -26,6 +26,8 @@ import { AiPartners } from './AiPartners.js';
 import { Partnership } from './Partnership.js';
 import { AiReadyDeck } from './AiReadyDeck.js';
 import { TeamWall } from './TeamWall.js';
+import { ToriiApp } from './ToriiApp.js';
+import { CollabWall } from './CollabWall.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
 import { VideoBox } from './VideoBox.js';
@@ -162,6 +164,12 @@ export function renderBlock(block, options = {}) {
 
     case 'team-wall':
       return TeamWall(block, options);
+
+    case 'torii-app':
+      return ToriiApp(block, options);
+
+    case 'collab-wall':
+      return CollabWall(block, options);
 
     case 'ai-ready-engineer':
       return AiReadyEngineer(block, options);

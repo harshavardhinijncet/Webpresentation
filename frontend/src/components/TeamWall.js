@@ -3,14 +3,14 @@ import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
 
 /**
- * Team — the whole team as one loose network growing out of Babji Neelam.
+ * Team — the whole team as one loose network round Babji Neelam.
  *
  * White ground, in the Technical Hub palette. The headline sits centred over a switch between
  * the entire team and the ten Claude-certified architects. Below it Babji Neelam stands at the
- * centre of the stage and the team is scattered freely around him, with a few Claude
- * connectors among them like messages in flight. A few dotted curves run out from Babji to
- * the connectors and on to the people nearest them, with a handful between neighbours —
- * a loose network, not a web.
+ * centre of the stage with the Claude connectors floating round his portrait, the way the tags
+ * float round it on the CEO page. The team is scattered freely round him, and dotted curves
+ * join each person to a neighbour or two — never to Babji, never behind anyone, never across
+ * another line.
  *
  * The scatter is a seeded jittered grid, then pushed apart until no portrait, name, chip or
  * Babji's own card touches another (each box is the real footprint, name pill included). If
@@ -61,6 +61,7 @@ function relax(bodies, W, H) {
       for (let j = i + 1; j < bodies.length; j += 1) {
         const A = bodies[i];
         const B = bodies[j];
+        if (A.ghost || B.ghost) continue;
         const ox = Math.min(right(A), right(B)) - Math.max(left(A), left(B)) + GAP;
         const oy = Math.min(bottom(A), bottom(B)) - Math.max(top(A), top(B)) + GAP;
         if (ox <= 0 || oy <= 0) continue;
@@ -84,7 +85,7 @@ function relax(bodies, W, H) {
     if (!moved) return true;
   }
   // Clean only if nothing still touches.
-  return !bodies.some((A, i) => bodies.some((B, j) => j > i
+  return !bodies.some((A, i) => bodies.some((B, j) => j > i && !A.ghost && !B.ghost
     && Math.min(right(A), right(B)) - Math.max(left(A), left(B)) > 0
     && Math.min(bottom(A), bottom(B)) - Math.max(top(A), top(B)) > 0));
 }
@@ -131,19 +132,12 @@ export function TeamWall(block) {
   const chipLayer = h('div', { class: 'tw3-chips', 'aria-hidden': 'true' });
   const stage = h('div', { class: 'tw3-stage' }, lines, chipLayer, ...nodes, hub);
 
-  // Hovering a person lights their whole branch back to Babji; hovering Babji lights it all.
+  // Hovering a person lights the lines they hold; hovering Babji lights the connectors round him.
   let net = null;
   function hot(i) {
-    const on = new Set();
-    if (net && i !== -1) {
-      if (i === 'hub') net.paths.forEach((p) => on.add(p));
-      else {
-        let b = net.bodyOf.get(i);
-        while (b !== undefined && b > 0) { on.add(net.pathTo[b]); b = net.parent[b]; }
-      }
-    }
-    net?.paths.forEach((p) => p.classList.toggle('is-hot', on.has(p)));
-    net?.chipEls.forEach((c) => c.el.classList.toggle('is-hot', i === 'hub' || on.has(net.pathTo[c.body])));
+    const b = net && typeof i === 'number' ? net.bodyOf.get(i) : undefined;
+    net?.paths.forEach((p) => p.el.classList.toggle('is-hot', b !== undefined && (p.a === b || p.b === b)));
+    net?.chipEls.forEach((c) => c.classList.toggle('is-hot', i === 'hub'));
     stage.classList.toggle('has-hot', i !== -1);
     nodes.forEach((n, k) => n.classList.toggle('is-hot', k === i));
     hub?.classList.toggle('is-hot', i === 'hub');
@@ -161,10 +155,10 @@ export function TeamWall(block) {
 
     const shown = view === 'all' ? members : architects;
     const ids = shown.map((m) => members.indexOf(m));
-    const labels = connectors.slice(0, view === 'all' ? 6 : 4);
+    const labels = connectors.slice(0, 4);
     const perChar = view === 'all' ? 7.1 : 8.4;
     const hubSize = Math.round(Math.min(view === 'all' ? 150 : 160, H * 0.3));
-    const hubNameW = Math.max(hubSize, (hubData?.name || '').length * 9.6 + 40);
+    const hubNameW = Math.max(hubSize, (hubData?.name || '').length * 13 + 70);   // Oswald capitals, tracked, and the plaque's ring
     const centre = { x: W / 2, y: H / 2 - 24 };
 
     let bodies = null;
@@ -179,31 +173,53 @@ export function TeamWall(block) {
           return { kind: 'person', k, l: -w / 2 - RING, r: w / 2 + RING, t: -size / 2 - RING, b: size / 2 + NAME_H };
         }),
         ...labels.map((label, k) => {
-          const w = label.length * 8.4 + 62;
-          return { kind: 'chip', k, label, l: -w / 2, r: w / 2, t: -20, b: 20 };
+          const w = label.length * 8.4 + 62 + 34;      // the pill and its lead-in line
+          return { kind: 'chip', k, label, l: -w / 2, r: w / 2, t: -22, b: 22 };
         }),
       ];
-      // The connectors start spread all round Babji, so his branches go every way.
+      // The connectors float round Babji like the tags round his portrait on the CEO page:
+      // half on each side, hugging the circle, clear of his name card, a lead-in line pointing
+      // back at him. Fixed, so the team arranges itself round them.
       const chipBodies = others.filter((o) => o.kind === 'chip');
       const personBodies = others.filter((o) => o.kind === 'person');
-      const turn = rand() * Math.PI * 2;
+      const R = hubSize / 2 + RING;
+      const perSide = Math.ceil(chipBodies.length / 2);
+      const rowsAt = perSide === 1 ? [0] : perSide === 2 ? [-0.42, 0.42] : [-0.66, 0, 0.66];
       chipBodies.forEach((o, k) => {
-        const t = turn + (k / chipBodies.length) * Math.PI * 2 + (rand() - 0.5) * 0.5;
-        o.x = centre.x + Math.cos(t) * W * (0.2 + rand() * 0.06);
-        o.y = centre.y + Math.sin(t) * H * (0.3 + rand() * 0.06);
+        const side = k % 2 ? 1 : -1;
+        const dy = (rowsAt[Math.floor(k / 2)] ?? 0) * hubSize + (side > 0 ? 10 : -6);
+        // Against the circle where it can, but never inside Babji's own box (his card is as
+        // wide as his name): two fixed bodies overlapping is a knot the layout cannot untie.
+        let inner = Math.abs(dy) < R ? Math.sqrt(R * R - dy * dy) : 0;
+        if (dy + 22 + GAP > hubBody.t && dy - 22 - GAP < hubBody.b) inner = Math.max(inner, hubNameW / 2 + GAP);
+        o.side = side < 0 ? 'left' : 'right';
+        o.fixed = true;
+        o.x = centre.x + side * (inner + 4 + (o.r - o.l) / 2);
+        o.y = centre.y + dy;
       });
       const total = personBodies.length;
       const rows = Math.max(2, Math.round(Math.sqrt((total / (W / H)) * 1.2)));
       const cols = Math.ceil((total + 2) / rows);
       const cellW = W / cols;
       const cellH = H / rows;
-      // The slots nearest the middle are Babji's; the rest, furthest first, are everyone's.
+      // The middle belongs to Babji and the connectors round him: measure that cluster, and
+      // hand out the slots furthest from it first.
+      const cluster = [hubBody, ...chipBodies];
+      const halfW = Math.max(...cluster.map((b) => Math.max(Math.abs(b.x + b.l - centre.x), Math.abs(b.x + b.r - centre.x))));
+      const halfH = Math.max(...cluster.map((b) => Math.max(Math.abs(b.y + b.t - centre.y), Math.abs(b.y + b.b - centre.y))));
+      // To the layout the cluster is one solid block. Pushed between two fixed chips a person
+      // only rocks up and down between them and never gets out, so the gaps are not offered.
+      hubBody.l = -halfW;
+      hubBody.r = halfW;
+      hubBody.t = -halfH;
+      hubBody.b = halfH;
+      chipBodies.forEach((o) => { o.ghost = true; });
       const slots = [];
       for (let r = 0; r < rows; r += 1) {
         for (let c = 0; c < cols; c += 1) {
           const x = (c + 0.5 + (r % 2 ? 0.25 : -0.25)) * cellW;
           const y = (r + 0.5) * cellH;
-          const d = Math.hypot((x - centre.x) / (hubNameW / 2 + cellW / 2), (y - centre.y) / (hubSize / 2 + cellH / 2));
+          const d = Math.max(Math.abs(x - centre.x) / (halfW + cellW / 2), Math.abs(y - centre.y) / (halfH + cellH / 2));
           slots.push({ x, y, d });
         }
       }
@@ -236,58 +252,103 @@ export function TeamWall(block) {
       hub.style.transform = `translate(${Math.round(centre.x - hubSize / 2)}px, ${Math.round(centre.y - hubSize / 2)}px)`;
     }
 
-    // A few links, not a web. Babji reaches every connector and the two people nearest him;
-    // each connector reaches the person nearest it (and now and then a second); and a handful
-    // of people are linked to a neighbour. Everyone else simply stands in the network.
+    // Lines run between people only — nothing reaches Babji or the connectors round him —
+    // and they join the whole team into one network. No line may pass behind anyone or
+    // cross another; each is tested against every portrait, name, chip and Babji's card but
+    // its own two ends and against the lines already drawn, the other bends are tried if it
+    // fails, and failing those the next nearest neighbour.
     const pts = bodies.map((b) => ({ x: b.x, y: b.y }));
-    const pick = rng(view === 'all' ? 97 : 53);
     const dist = (i, j) => Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
     const personIdx = bodies.map((b, i) => (b.kind === 'person' ? i : -1)).filter((i) => i >= 0);
-    const chipIdx = bodies.map((b, i) => (b.kind === 'chip' ? i : -1)).filter((i) => i >= 0);
-    const parent = new Array(bodies.length).fill(-1);
-    const linked = new Set();
+    const degree = new Array(bodies.length).fill(0);
     const links = [];
-    const link = (a, b) => { links.push({ a, b }); if (parent[b] < 0) parent[b] = a; linked.add(b); };
-    const nearest = (from, pool) => pool.filter((j) => !linked.has(j)).sort((x, y) => dist(from, x) - dist(from, y));
-    chipIdx.forEach((c) => link(0, c));
-    nearest(0, personIdx).slice(0, view === 'all' ? 2 : 1).forEach((p) => link(0, p));
-    chipIdx.forEach((c) => {
-      const near = nearest(c, personIdx);
-      if (near[0] !== undefined) link(c, near[0]);
-      if (near[1] !== undefined && pick() < 0.4) link(c, near[1]);
-    });
-    const loose = Math.round(personIdx.length * 0.18);
-    personIdx.filter((p) => linked.has(p)).sort(() => pick() - 0.5).slice(0, loose).forEach((p) => {
-      const near = nearest(p, personIdx);
-      if (near[0] !== undefined && dist(p, near[0]) < W * 0.22) link(p, near[0]);
-    });
+    const PAD = 6;
+    const inside = (p, b) => p.x > left(b) - PAD && p.x < right(b) + PAD && p.y > top(b) - PAD && p.y < bottom(b) + PAD;
+    // The curve as a polyline, for testing against bodies and against the lines already drawn.
+    const trace = (a, b, bend) => {
+      const p = pts[a];
+      const q = pts[b];
+      const cx = (p.x + q.x) / 2 - (q.y - p.y) * bend;
+      const cy = (p.y + q.y) / 2 + (q.x - p.x) * bend;
+      const steps = Math.max(12, Math.ceil(dist(a, b) / 8));
+      const out = [];
+      for (let s = 0; s <= steps; s += 1) {
+        const t = s / steps;
+        const u = 1 - t;
+        out.push({ x: u * u * p.x + 2 * u * t * cx + t * t * q.x, y: u * u * p.y + 2 * u * t * cy + t * t * q.y });
+      }
+      return out;
+    };
+    const cross = (p1, p2, p3, p4) => {
+      const d = (p2.x - p1.x) * (p4.y - p3.y) - (p2.y - p1.y) * (p4.x - p3.x);
+      if (!d) return false;
+      const t = ((p3.x - p1.x) * (p4.y - p3.y) - (p3.y - p1.y) * (p4.x - p3.x)) / d;
+      const u = ((p3.x - p1.x) * (p2.y - p1.y) - (p3.y - p1.y) * (p2.x - p1.x)) / d;
+      return t > 0 && t < 1 && u > 0 && u < 1;
+    };
+    const clear = (a, b, bend) => {
+      const line = trace(a, b, bend);
+      for (let s = 1; s < line.length - 1; s += 1) {
+        for (let k = 0; k < bodies.length; k += 1) {
+          if (k !== a && k !== b && inside(line[s], bodies[k])) return false;
+        }
+      }
+      return !links.some((e) => {
+        if (e.a === a || e.a === b || e.b === a || e.b === b) return false;
+        for (let i = 1; i < line.length; i += 1) {
+          for (let j = 1; j < e.line.length; j += 1) {
+            if (cross(line[i - 1], line[i], e.line[j - 1], e.line[j])) return true;
+          }
+        }
+        return false;
+      });
+    };
+    const link = (a, b) => {
+      if (links.some((e) => (e.a === a && e.b === b) || (e.a === b && e.b === a))) return false;
+      const base = 0.12 + ((links.length * 37) % 10) / 70;
+      const sign = links.length % 2 ? 1 : -1;
+      const bend = [sign * base, -sign * base, 0, sign * 0.32, -sign * 0.32].find((x) => clear(a, b, x));
+      if (bend === undefined) return false;
+      links.push({ a, b, bend, line: trace(a, b, bend) });
+      degree[a] += 1;
+      degree[b] += 1;
+      return true;
+    };
+    // One network, not islands: the shortest clear lines that join two groups not yet joined
+    // (Kruskal's spanning tree), so every person is reachable from every other.
+    const group = new Map(personIdx.map((p) => [p, p]));
+    const findGroup = (p) => { while (group.get(p) !== p) p = group.get(p); return p; };
+    const pairs = [];
+    personIdx.forEach((a, i) => personIdx.slice(i + 1).forEach((b) => pairs.push([a, b, dist(a, b)])));
+    pairs.sort((x, y) => x[2] - y[2]);
+    for (const [a, b] of pairs) {
+      const ga = findGroup(a);
+      const gb = findGroup(b);
+      if (ga !== gb && link(a, b)) group.set(ga, gb);
+    }
 
     lines.setAttribute('viewBox', `0 0 ${W} ${H}`);
     lines.replaceChildren();
-    const paths = [];
-    const pathTo = [];
-    links.forEach((e, k) => {
-      const el = svg('path', {
-        d: curve(pts[e.a], pts[e.b], (k % 2 ? 1 : -1) * (0.12 + ((k * 37) % 10) / 70)),
-        class: e.a === 0 ? 'is-spoke' : k % 3 === 1 ? 'is-accent' : '',
-        style: `--k:${k}`,
-      });
+    const paths = links.map((e, k) => {
+      const el = svg('path', { d: curve(pts[e.a], pts[e.b], e.bend), class: k % 3 === 1 ? 'is-accent' : '', style: `--k:${k}` });
       lines.append(el);
-      paths.push(el);
-      if (parent[e.b] === e.a) pathTo[e.b] = el;
+      return { el, a: e.a, b: e.b };
     });
 
     const chipEls = [];
-    chipLayer.replaceChildren(...bodies.map((b, i) => {
+    chipLayer.replaceChildren(...bodies.map((b) => {
       if (b.kind !== 'chip') return null;
+      const tail = h('span', { class: 'tw3-chip__tail', 'aria-hidden': 'true' });
+      const ic = h('span', { class: 'tw3-chip__ic' }, icon(CONNECTOR_ICONS[b.label.toLowerCase()] || 'link', { class: 'ic' }));
+      const label = h('span', {}, b.label);
       const el = h('span', {
-        class: 'tw3-chip', style: { left: `${Math.round(b.x)}px`, top: `${Math.round(b.y)}px`, '--k': String(b.k) },
-      }, h('span', { class: 'tw3-chip__ic' }, icon(CONNECTOR_ICONS[b.label.toLowerCase()] || 'link', { class: 'ic' })), b.label);
-      chipEls.push({ el, body: i });
+        class: `tw3-chip tw3-chip--${b.side}`, style: { left: `${Math.round(b.x)}px`, top: `${Math.round(b.y)}px`, '--k': String(b.k) },
+      }, ...(b.side === 'right' ? [tail, ic, label] : [ic, label, tail]));
+      chipEls.push(el);
       return el;
     }).filter(Boolean));
 
-    net = { paths, pathTo, parent, bodyOf, chipEls };
+    net = { paths, bodyOf, chipEls };
 
     // Replay the drawing of the lines and the chips for the new network.
     stage.classList.remove('is-drawn');

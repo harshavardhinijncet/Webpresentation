@@ -93,6 +93,12 @@ reference the returned asset ids.
 - **Every title is Oswald (`--display`), in capitals.** Page titles and section headings alike.
   One rule at the end of `app.css` ("Titles — one voice across the deck") lists them all; a new
   component's title class goes into that list rather than setting its own face.
+- **Spread to the whole screen.** No column may end halfway down over an empty band: columns run top to
+  bottom and their cards share the height (`flex: 1` / `grid-auto-rows: minmax(0, 1fr)`), with type sized
+  up to suit. Where content varies (a module list, a partner's points) measure the card after layout and
+  fit it — add items until the next would not fit, or tighten a step — never a fixed count. Measure
+  overflow on a card's own content, not on an animated column: entrance transforms inflate
+  `scrollHeight`.
 - **No gradients.** White is the major surface; the accent is reserved for what is
   active or primary.
 - **Never place a raw poster.** Crop away burned-in headlines and logos so the
@@ -145,7 +151,7 @@ put, and browser Back returns.
 
 ## Current state
 
-Seventeen sections, all with content. Nothing is a placeholder and nothing is half
+Eighteen sections, all with content. Nothing is a placeholder and nothing is half
 built; the empty ones were deleted rather than left for a presenter to walk into.
 Organization Overview and Leadership used to be groups whose rows opened a list
 instead of a slide — Leadership held no blocks at all, so its row opened an empty
@@ -158,8 +164,8 @@ page. Their pages came up a level and both wrappers went, along with CEO Vision.
 | 3 | History & Milestones | `roadmap` | `milestone-timeline` | authored |
 | 4 | CEO Profile | `ceo-podium` | | Babji Neelam portfolio |
 | 5 | Leadership Journey | `climb-steps` | | Babji Neelam portfolio |
-| 5a | Team | `users` | `team-wall` | `tools/publish-team.cjs` — a loose network: Babji Neelam fixed at the centre, Claude connector chips spread round him, the 25 portraits (`uploads/team/`) scattered and pushed apart until nothing touches; dotted branches grow from Babji through the connectors. Entire team / Claude-certified architects switch |
-| 6 | Success Stories | `rosette` | `story-wall` | Babji Neelam portfolio |
+| 5a | Team | `users` | `team-wall` | `tools/publish-team.cjs` — Babji Neelam at the centre on a gold-edged plaque, four Claude connectors floating round him as on the CEO page; the 25 portraits (`uploads/team/`) scattered round that cluster. Dotted lines join people only — never Babji — into one network (a spanning tree); no line passes behind anyone or crosses another. Entire team / Claude-certified architects switch |
+| 6 | Success Stories | `rosette` | `story-wall` | `tools/publish-success-stories.cjs` — six Babji photographs lead (square crops in `uploads/stories/babji/`), then the full-size stories; photos fill their cards. The 206px thumbnails are off the wall until full-size files arrive |
 | 7 | Programs | `www-globe` | `program-deck` | `uploads/Programs*`, `Videos.xlsx` |
 | 8 | Centers of Excellence | `handshake-check` | `coe-wall` | `uploads/coepics/`, `Videos.xlsx` |
 | 9 | Certifications | `seal-check` | `certification-wall` | see below |
@@ -168,7 +174,8 @@ page. Their pages came up a level and both wrappers went, along with CEO Vision.
 | 12 | Video Resumes | `clapper` | `video-resume` | `uploads/Video Resumes.xlsx` |
 | 13 | AI Ready Engineer | `ai-figure` | `ai-ready-deck` | `tools/publish-ai-ready.cjs` — three pages: road map (cropped from the AI Ready road map, `uploads/ai-ready/`), course structure in four phases, benefits |
 | 14 | AI Partners | `brain` | `ai-partners` | `tools/publish-ai-partners.cjs` — one landing page per partner off a side rail; Claude from claude.technicalhub.io (ten architects) and the success-story sites, OpenAI and Sarvam from the Torii Minds AI Partners page restated for Technical Hub; assets in `uploads/ai-partners/` |
-| 15 | Torii | `link` | `partnership` | `tools/publish-torii.cjs` — Technical Hub × Torii Minds, and the 24/7 Claude AI Lab tab; photos in `uploads/torii-partnership/` |
+| 15 | Technical Hub × Torii | `link` | `torii-app` | `tools/publish-th-torii.cjs` — the whole Torii application as an app inside one slide: Home (the partnership announcement as hero, the MoU services carousel), Trainings, AI Lab, Campus (galleries open in a viewer), Products, Partners; brand film over all. Media copied from profile.toriiminds.com into `uploads/th-torii/`. Key is still `torii`; the old two-tab `partnership` block lives on in `tools/publish-torii.cjs` |
+| 15a | Collaborations | `partners` | `collab-wall` | `tools/publish-collaborations.cjs` — a wall of partner tiles, then one card per partner (announcement image, points restated from Technical Hub’s LinkedIn posts) with a gold ring running round the selected logo. Images in `uploads/collaborations/`. SRKR has no post yet |
 | 16 | Platforms | `tap-network` | `platforms` | `uploads/platform-logos/` |
 
 The glyphs are the user's own SVGs in `backend/uploads/navicons/`, one file per row
@@ -226,6 +233,9 @@ still publishable only by hand.
 | `make-training-reel.cjs` | renders the AI Ready classroom photos into the looping circle video |
 | `publish-ai-ready.cjs` | AI Ready Engineer — the three-page brochure; course copy in the script |
 | `publish-torii.cjs` | Torii — creates it after AI Partners; the Claude Partner Network badge is cut from the announcement kept beside it |
+| `publish-th-torii.cjs` | Technical Hub × Torii — all copy and the media list in the script; checks every file exists before sending |
+| `publish-collaborations.cjs` | Collaborations — one entry per partner, created after Technical Hub × Torii |
+| `publish-success-stories.cjs` | Success Stories — the story list, titles in the script |
 | `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
 
 The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it
