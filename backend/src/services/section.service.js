@@ -49,6 +49,8 @@ export const BLOCK_TYPES = [
   'team-wall',
   'torii-app',
   'collab-wall',
+  'story-site',
+  'story-hub',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -93,6 +95,8 @@ const DEFAULT_SIZE = {
   'team-wall': { w: 12, h: 15 },
   'torii-app': { w: 12, h: 15 },
   'collab-wall': { w: 12, h: 15 },
+  'story-site': { w: 12, h: 15 },
+  'story-hub': { w: 12, h: 15 },
 };
 
 const oneOf = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
@@ -533,9 +537,13 @@ function normalizeBlock(raw, index = 0, depth = 0) {
        nested no deeper than six levels, with every string capped. Nothing in it is ever set as
        HTML or used as a link by the components, so this is the whole of the sanitising. */
     case 'torii-app':
-    case 'collab-wall': {
+    case 'collab-wall':
+    case 'story-site':
+    case 'story-hub': {
+      /* A story's chapters carry cards that carry figures — two levels more than the others. */
+      const deepest = type === 'story-hub' ? 11 : type === 'story-site' ? 8 : 6;
       const plain = (v, depth = 0) => {
-        if (depth > 6 || v === null || v === undefined) return undefined;
+        if (depth > deepest || v === null || v === undefined) return undefined;
         if (typeof v === 'string') return text(v, 800);
         if (typeof v === 'number') return Number.isFinite(v) ? v : undefined;
         if (typeof v === 'boolean') return v;

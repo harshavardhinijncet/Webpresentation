@@ -2918,7 +2918,7 @@
       "title": "Events",
       "subtitle": "",
       "icon": "✧",
-      "order": 17,
+      "order": 18,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -3773,7 +3773,7 @@
       "title": "Video Resumes",
       "subtitle": "",
       "icon": "❞",
-      "order": 16,
+      "order": 17,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -10255,6 +10255,1088 @@
       ],
       "createdAt": "2026-10-08T05:35:38.780Z",
       "updatedAt": "2026-10-09T06:41:55.153Z"
+    },
+    {
+      "id": "sec_499bc8661b324af8",
+      "orgId": "technical-hub",
+      "parentId": null,
+      "key": "stories-published",
+      "title": "Stories Published",
+      "subtitle": "",
+      "icon": "",
+      "iconKey": "newspaper",
+      "iconAssetId": null,
+      "order": 16,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_15a51155afcd4cd5",
+          "type": "story-hub",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "content": {
+            "kicker": "Success stories · built with Claude",
+            "title": "Stories Published",
+            "lede": "Three published success stories — a college, Technical Hub itself and a company — each on how Claude became part of everyday work.",
+            "stories": [
+              {
+                "kind": "Campus-wide · college",
+                "title": "Claude, woven into every corner of NCET",
+                "text": "Workshops for every stream, a 24/7 Claude Max lab and six college apps vibe-coded to production.",
+                "image": "stories-published/ncet/home-image.jpg",
+                "badge": "stories-published/ncet/ncet-mark.png",
+                "badgeAlt": "NCET",
+                "url": "claude.ncet.co.in",
+                "stats": [
+                  {
+                    "n": "10",
+                    "label": "certified architects"
+                  },
+                  {
+                    "n": "24/7",
+                    "label": "Claude Max AI Lab"
+                  },
+                  {
+                    "n": "6+",
+                    "label": "domains on Claude"
+                  }
+                ],
+                "site": {
+                  "title": "NCET × Claude",
+                  "url": "claude.ncet.co.in",
+                  "logos": [
+                    {
+                      "src": "stories-published/ncet/logo-thub.png",
+                      "alt": "Technical Hub"
+                    },
+                    {
+                      "src": "stories-published/ncet/logo-ncet.png",
+                      "alt": "NCET"
+                    }
+                  ],
+                  "chapters": [
+                    {
+                      "kind": "cover",
+                      "label": "Overview",
+                      "icon": "sparkles",
+                      "kicker": "Campus-wide AI transformation",
+                      "title": "Claude, woven into every corner of",
+                      "titleEm": "NCET",
+                      "lede": "How Technical Hub embedded Claude into every domain of Nagarjuna College of Engineering & Technology — classrooms, labs, design, development, marketing and management.",
+                      "stats": [
+                        {
+                          "n": "10",
+                          "label": "Claude-certified architects"
+                        },
+                        {
+                          "n": "24/7",
+                          "label": "AI Lab on Claude Max"
+                        },
+                        {
+                          "n": "100%",
+                          "label": "Systems Claude-integrated"
+                        },
+                        {
+                          "n": "6+",
+                          "label": "Domains running on Claude"
+                        }
+                      ],
+                      "images": [
+                        "stories-published/ncet/home-image.jpg",
+                        "stories-published/ncet/story-mentor.jpg",
+                        "stories-published/ncet/story-kiosk.jpg"
+                      ],
+                      "badge": "Powered by Claude"
+                    },
+                    {
+                      "kind": "cards",
+                      "label": "Workshops",
+                      "icon": "graduation",
+                      "eyebrow": "Cultivating an AI culture",
+                      "title": "Claude workshops for every stream",
+                      "intro": "Hands-on workshops took thousands of students from first-time curiosity to a daily working habit.",
+                      "cols": 4,
+                      "cards": [
+                        {
+                          "image": "stories-published/ncet/workshop-day-1.webp",
+                          "tag": "B.Tech",
+                          "title": "Engineering",
+                          "text": "Coding, debugging and project scoping with Claude as a daily partner."
+                        },
+                        {
+                          "image": "stories-published/ncet/workshop-day-2.jpg",
+                          "tag": "BCA",
+                          "title": "Computer Applications",
+                          "text": "App ideas to working builds — logic to deployment."
+                        },
+                        {
+                          "image": "stories-published/ncet/workshop-day-3.jpg",
+                          "tag": "MCA",
+                          "title": "Advanced Computing",
+                          "text": "LLM workflows and prompt engineering."
+                        },
+                        {
+                          "image": "stories-published/ncet/projectweek4.jpg",
+                          "tag": "M.Tech",
+                          "title": "Research",
+                          "text": "Literature synthesis, experiments and documentation."
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "people",
+                      "label": "Architects",
+                      "icon": "users",
+                      "eyebrow": "On-ground leadership",
+                      "title": "10 Claude-certified architects",
+                      "intro": "Certified architects removing the learning curve — a friction-free path to an AI-skilled institution.",
+                      "cols": 5,
+                      "people": [
+                        {
+                          "photo": "stories-published/th/harshavardhini.png",
+                          "name": "Harshavardhini",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/prashat.png",
+                          "name": "Prasanth",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/bobby.png",
+                          "name": "Bobby Pamarthi",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/peter.png",
+                          "name": "Peter",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/sudhir.png",
+                          "name": "Sudhir",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/akhilesh.png",
+                          "name": "Akhilesh",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/bhargav.png",
+                          "name": "Bhargav",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/kishore.png",
+                          "name": "Kishore Girijala",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/naveen.png",
+                          "name": "Naveen",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/azar.png",
+                          "name": "Azar",
+                          "role": "Claude Certified Architect"
+                        }
+                      ],
+                      "side": {
+                        "cards": [
+                          {
+                            "icon": "tools",
+                            "title": "Troubleshooting clinics",
+                            "text": "Production-level advice for students and faculty."
+                          },
+                          {
+                            "icon": "clipboard-check",
+                            "title": "Project auditing",
+                            "text": "Raising the quality of student innovation."
+                          },
+                          {
+                            "icon": "layers",
+                            "title": "Architecture alignment",
+                            "text": "Every build on modern cloud and AI patterns."
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "kind": "split",
+                      "label": "AI Lab",
+                      "icon": "chip",
+                      "eyebrow": "Always-on infrastructure",
+                      "title": "A Claude stall and a 24/7 AI Lab",
+                      "body": [
+                        "A permanent Claude stall for workshops and live demos, and an AI Lab where every workstation runs Claude Max — open all year to students, faculty, trainers and developers."
+                      ],
+                      "tiles": [
+                        {
+                          "n": "24/7",
+                          "title": "Online all year"
+                        },
+                        {
+                          "icon": "chip",
+                          "title": "Claude Max",
+                          "text": "On every machine"
+                        },
+                        {
+                          "icon": "rocket",
+                          "title": "Build · train · deploy"
+                        }
+                      ],
+                      "wide": true,
+                      "images": [
+                        {
+                          "src": "stories-published/ncet/ai-lab-4.jpg",
+                          "cap": "Inauguration of the 24/7 AI Lab"
+                        },
+                        {
+                          "src": "stories-published/ncet/ai-lab-1.jpg",
+                          "cap": "Every system on Claude Max"
+                        },
+                        {
+                          "src": "stories-published/ncet/ntsquare-hub.webp",
+                          "cap": "The Claude stall, inaugurated on campus"
+                        },
+                        {
+                          "src": "stories-published/ncet/ai-lab-5.jpg",
+                          "cap": "Leadership touring the lab"
+                        },
+                        {
+                          "src": "stories-published/ncet/ai-lab-2.jpg",
+                          "cap": "Open to every student"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "cards",
+                      "label": "Every Domain",
+                      "icon": "globe",
+                      "eyebrow": "Claude, everywhere",
+                      "title": "One AI partner, every department",
+                      "intro": "Claude became the working layer beneath everything NCET does — every role, every day.",
+                      "cols": 6,
+                      "cards": [
+                        {
+                          "image": "stories-published/ncet/domain-studentsusing.jpg",
+                          "tag": "01",
+                          "title": "Students"
+                        },
+                        {
+                          "image": "stories-published/ncet/domain-trainers.jpg",
+                          "tag": "02",
+                          "title": "Trainers"
+                        },
+                        {
+                          "image": "stories-published/ncet/domain-teachers.jpg",
+                          "tag": "03",
+                          "title": "Teachers"
+                        },
+                        {
+                          "image": "stories-published/ncet/domain-developers.jpeg",
+                          "tag": "04",
+                          "title": "Developers"
+                        },
+                        {
+                          "image": "stories-published/ncet/domain-designers.jpeg",
+                          "tag": "05",
+                          "title": "Designers"
+                        },
+                        {
+                          "image": "stories-published/ncet/domain-digital.jpeg",
+                          "tag": "06",
+                          "title": "Digital Marketing"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "steps",
+                      "label": "Project Week",
+                      "icon": "route",
+                      "eyebrow": "From problem to pitch",
+                      "title": "Project Week — teams of four, real problems",
+                      "intro": "Build a working solution with Claude, then take it to the street and defend it to faculty.",
+                      "steps": [
+                        {
+                          "title": "Team up",
+                          "text": "Four students, one goal."
+                        },
+                        {
+                          "title": "Scope",
+                          "text": "A real problem worth solving."
+                        },
+                        {
+                          "title": "Build",
+                          "text": "A working solution, with Claude."
+                        },
+                        {
+                          "title": "Pitch",
+                          "text": "Defended with data and charts."
+                        }
+                      ],
+                      "images": [
+                        {
+                          "src": "stories-published/ncet/projectweek1.webp",
+                          "cap": "Planning the project"
+                        },
+                        {
+                          "src": "stories-published/ncet/projectweek2.webp",
+                          "cap": "Building the solution"
+                        },
+                        {
+                          "src": "stories-published/ncet/project-street-1.webp",
+                          "cap": "Presenting at the easel"
+                        },
+                        {
+                          "src": "stories-published/ncet/project-street-8.webp",
+                          "cap": "The whole street, full of projects"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "cards",
+                      "label": "Apps",
+                      "icon": "code",
+                      "eyebrow": "From prompt to production",
+                      "title": "College apps, fully vibe-coded",
+                      "intro": "In-use college software, built and deployed end to end with Claude Code.",
+                      "cols": 3,
+                      "cards": [
+                        {
+                          "image": "stories-published/ncet/app-kaizen.webp",
+                          "tag": "Live",
+                          "title": "Prompt Kaizen",
+                          "foot": "kaizen.ncet.app"
+                        },
+                        {
+                          "image": "stories-published/ncet/app-kaizen-admin.webp",
+                          "tag": "Live",
+                          "title": "Kaizen Admin",
+                          "foot": "admin.kaizen.ncet.app"
+                        },
+                        {
+                          "image": "stories-published/ncet/app-tag-portal.webp",
+                          "tag": "Live",
+                          "title": "T@g Portal",
+                          "foot": "tag.ncet.app"
+                        },
+                        {
+                          "image": "stories-published/ncet/app-work-mgmt.webp",
+                          "tag": "Live",
+                          "title": "Work Management",
+                          "foot": "work.ncet.app"
+                        },
+                        {
+                          "image": "stories-published/ncet/app-placement-portal.webp",
+                          "tag": "Live",
+                          "title": "Placement Portal",
+                          "foot": "placement.ncet.app"
+                        },
+                        {
+                          "image": "stories-published/ncet/app-ai-ready-portal.webp",
+                          "tag": "Live",
+                          "title": "AI-Ready Engineer",
+                          "foot": "engineer.ncet.app"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "steps",
+                      "label": "Impact",
+                      "icon": "trend-up",
+                      "eyebrow": "The transformation blueprint",
+                      "title": "A reproducible journey",
+                      "steps": [
+                        {
+                          "title": "Awareness",
+                          "text": "Campus-wide workshops."
+                        },
+                        {
+                          "title": "Infrastructure",
+                          "text": "The 24/7 Claude Max AI Lab."
+                        },
+                        {
+                          "title": "Curriculum",
+                          "text": "Prompt engineering, credited."
+                        },
+                        {
+                          "title": "Hands-on build",
+                          "text": "Project Week & ProjectStreet."
+                        },
+                        {
+                          "title": "Expertise",
+                          "text": "10 certified architects."
+                        },
+                        {
+                          "title": "Impact",
+                          "text": "Claude in everyday execution."
+                        }
+                      ],
+                      "quotes": [
+                        {
+                          "text": "Claude moved from an occasional novelty to a primary driver of academic and operational work.",
+                          "by": "Everyday AI adoption"
+                        },
+                        {
+                          "text": "Technical Hub didn’t just unlock our institution’s potential — it built a reproducible blueprint for the future of AI-driven technical education.",
+                          "by": "Nagarjuna College of Engineering & Technology"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "kind": "Claude Partner Network",
+                "title": "Technical Hub — Claude architects & AI solutions",
+                "text": "Ten certified architects, seven services and one six-phase playbook behind every engagement.",
+                "image": "stories-published/th/dsc-1766.webp",
+                "badge": "stories-published/th/th-mark.png",
+                "badgeAlt": "Technical Hub",
+                "url": "claude.technicalhub.io",
+                "stats": [
+                  {
+                    "n": "900+",
+                    "label": "students certified"
+                  },
+                  {
+                    "n": "3×",
+                    "label": "faster shipping"
+                  },
+                  {
+                    "n": "10",
+                    "label": "Claude architects"
+                  }
+                ],
+                "site": {
+                  "title": "Technical Hub × Claude",
+                  "url": "claude.technicalhub.io",
+                  "logos": [
+                    {
+                      "src": "stories-published/ncet/logo-thub.png",
+                      "alt": "Technical Hub"
+                    }
+                  ],
+                  "chapters": [
+                    {
+                      "kind": "cover",
+                      "label": "Overview",
+                      "icon": "sparkles",
+                      "kicker": "Official partner · Claude Partner Network",
+                      "title": "Claude architects &",
+                      "titleEm": "AI solutions",
+                      "lede": "Ten certified experts who design, build and teach with Claude — the team behind every engagement.",
+                      "stats": [
+                        {
+                          "n": "900+",
+                          "label": "Students certified"
+                        },
+                        {
+                          "n": "3×",
+                          "label": "Faster product shipping"
+                        },
+                        {
+                          "n": "100%",
+                          "label": "Campus-wide Claude rollout"
+                        }
+                      ],
+                      "images": [
+                        "stories-published/th/home-image.webp",
+                        "stories-published/th/dsc-1766.webp",
+                        "stories-published/th/workshop-day-1.webp"
+                      ],
+                      "badge": "Claude Partner Network",
+                      "badgeIcon": "seal-check"
+                    },
+                    {
+                      "kind": "cards",
+                      "label": "Services",
+                      "icon": "briefcase",
+                      "eyebrow": "Now offering",
+                      "title": "Our services",
+                      "cols": 4,
+                      "cards": [
+                        {
+                          "icon": "plug",
+                          "tag": "Claude",
+                          "title": "Integration",
+                          "points": [
+                            "Connect Claude to existing tools",
+                            "Workflow and API integration",
+                            "Secure, scalable deployment"
+                          ]
+                        },
+                        {
+                          "icon": "ai-figure",
+                          "tag": "Engineers → AI Ready",
+                          "title": "AI Ready Engineers",
+                          "points": [
+                            "AI and its real-world applications",
+                            "Hands-on AI problem solving",
+                            "Confidence with emerging tech"
+                          ]
+                        },
+                        {
+                          "icon": "certificate",
+                          "tag": "Claude",
+                          "title": "Certification",
+                          "points": [
+                            "Exam-backed certification tracks",
+                            "Beginner to advanced paths",
+                            "Verifiable digital certificates"
+                          ]
+                        },
+                        {
+                          "icon": "graduation",
+                          "tag": "Claude",
+                          "title": "Training",
+                          "points": [
+                            "Live, instructor-led sessions",
+                            "Team and student cohorts",
+                            "Prompt & workflow labs"
+                          ]
+                        },
+                        {
+                          "icon": "rocket",
+                          "tag": "AI",
+                          "title": "Product Building",
+                          "points": [
+                            "Discovery, prototyping and MVPs",
+                            "Production-grade Claude integrations",
+                            "QA, deployment and scaling"
+                          ]
+                        },
+                        {
+                          "icon": "users",
+                          "tag": "FDP",
+                          "title": "FDP & Trainings",
+                          "points": [
+                            "Faculty Development Programs",
+                            "Ready-to-teach Claude modules",
+                            "Curriculum and assessment design"
+                          ]
+                        },
+                        {
+                          "icon": "chip",
+                          "tag": "AI",
+                          "title": "Lab Setup",
+                          "points": [
+                            "Infrastructure and tooling",
+                            "Curriculum and lab manuals",
+                            "Trainer and staff enablement"
+                          ]
+                        },
+                        {
+                          "icon": "mail",
+                          "tag": "Interested?",
+                          "title": "Write to us",
+                          "text": "babji@technicalhub.io — mention the service in your subject."
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "people",
+                      "label": "Architects",
+                      "icon": "users",
+                      "eyebrow": "Technical Hub",
+                      "title": "Meet the Claude architects",
+                      "intro": "Every architect on the bench holds the Claude Certified Architect credential from Anthropic.",
+                      "cols": 5,
+                      "people": [
+                        {
+                          "photo": "stories-published/th/harshavardhini.png",
+                          "name": "Harshavardhini",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/prashat.png",
+                          "name": "Prasanth",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/bobby.png",
+                          "name": "Bobby Pamarthi",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/peter.png",
+                          "name": "Peter",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/sudhir.png",
+                          "name": "Sudhir",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/akhilesh.png",
+                          "name": "Akhilesh",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/bhargav.png",
+                          "name": "Bhargav",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/kishore.png",
+                          "name": "Kishore Girijala",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/naveen.png",
+                          "name": "Naveen",
+                          "role": "Claude Certified Architect"
+                        },
+                        {
+                          "photo": "stories-published/th/azar.png",
+                          "name": "Azar",
+                          "role": "Claude Certified Architect"
+                        }
+                      ],
+                      "side": {
+                        "image": "stories-published/th/claude-certification.png"
+                      }
+                    },
+                    {
+                      "kind": "steps",
+                      "label": "Playbook",
+                      "icon": "route",
+                      "eyebrow": "The playbook",
+                      "title": "One blueprint. Any institution.",
+                      "intro": "The same six-phase engagement behind every story — documented, measured, reproducible.",
+                      "steps": [
+                        {
+                          "title": "Awareness",
+                          "text": "Workshops spark an AI culture."
+                        },
+                        {
+                          "title": "Infrastructure",
+                          "text": "Labs on Claude, up to Claude Max."
+                        },
+                        {
+                          "title": "Curriculum",
+                          "text": "Prompt & context engineering."
+                        },
+                        {
+                          "title": "Hands-on build",
+                          "text": "Hackathons & project weeks."
+                        },
+                        {
+                          "title": "Expertise",
+                          "text": "Certified architects on the ground."
+                        },
+                        {
+                          "title": "Certification",
+                          "text": "Official Anthropic certificates."
+                        }
+                      ],
+                      "images": [
+                        {
+                          "src": "stories-published/th/workshop-day-3.webp",
+                          "cap": "Workshop"
+                        },
+                        {
+                          "src": "stories-published/th/ai-lab-2.webp",
+                          "cap": "AI Lab"
+                        },
+                        {
+                          "src": "stories-published/th/img-0478.webp",
+                          "cap": "Project Week"
+                        },
+                        {
+                          "src": "stories-published/th/domain-teachers.webp",
+                          "cap": "Faculty development"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "gallery",
+                      "label": "Work That Ships",
+                      "icon": "images",
+                      "eyebrow": "Work that ships",
+                      "title": "Labs, programmes and products",
+                      "tiles": 5,
+                      "photos": [
+                        {
+                          "src": "stories-published/th/dsc-1766.webp",
+                          "tag": "AI Lab",
+                          "cap": "Centre of Excellence"
+                        },
+                        {
+                          "src": "stories-published/th/workshop-day-1.webp",
+                          "tag": "Workshop",
+                          "cap": "Hands-on workshop"
+                        },
+                        {
+                          "src": "stories-published/th/domain-studentsusing.webp",
+                          "tag": "Training",
+                          "cap": "Students building with Claude"
+                        },
+                        {
+                          "src": "stories-published/th/mg-0186.webp",
+                          "tag": "Project Street",
+                          "cap": "Project Street"
+                        },
+                        {
+                          "src": "stories-published/th/domain-teachers.webp",
+                          "tag": "FDP",
+                          "cap": "Faculty development"
+                        },
+                        {
+                          "src": "stories-published/th/img-0478.webp",
+                          "tag": "Project Week",
+                          "cap": "Project Week"
+                        },
+                        {
+                          "src": "stories-published/th/ai-lab-2.webp",
+                          "tag": "AI Lab",
+                          "cap": "Inside the AI Lab"
+                        },
+                        {
+                          "src": "stories-published/th/domain-trainers.webp",
+                          "tag": "Training",
+                          "cap": "Trainer-led sessions"
+                        },
+                        {
+                          "src": "stories-published/th/project-street-8.webp",
+                          "tag": "Project Street",
+                          "cap": "Project Street"
+                        },
+                        {
+                          "src": "stories-published/th/domain-designers.webp",
+                          "tag": "Curriculum",
+                          "cap": "Design sprints"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "kind": "Corporate · workforce",
+                "title": "How Technical Hub upskilled Torii Minds",
+                "text": "A whole workforce made AI-native — certified architects, a five-module curriculum and Myna, now live.",
+                "image": "stories-published/torii/architects-team.jpg",
+                "badge": "stories-published/torii/torii-short.png",
+                "badgeAlt": "Torii Minds",
+                "url": "toriiminds.com/success-story",
+                "stats": [
+                  {
+                    "n": "3x",
+                    "label": "faster MVPs"
+                  },
+                  {
+                    "n": "-40%",
+                    "label": "debugging cycles"
+                  },
+                  {
+                    "n": "100%",
+                    "label": "AI-skilled team"
+                  }
+                ],
+                "site": {
+                  "title": "Torii Minds × Claude",
+                  "url": "toriiminds.com/success-story",
+                  "logos": [
+                    {
+                      "src": "stories-published/ncet/logo-thub.png",
+                      "alt": "Technical Hub"
+                    },
+                    {
+                      "src": "stories-published/torii/torii-logo.png",
+                      "alt": "Torii Minds"
+                    }
+                  ],
+                  "chapters": [
+                    {
+                      "kind": "cover",
+                      "label": "Overview",
+                      "icon": "sparkles",
+                      "kicker": "Success story · workforce transformation",
+                      "title": "How Technical Hub upskilled Torii to deliver",
+                      "titleEm": "industry-standard Claude AI",
+                      "lede": "Torii invested in its people first — turning abstract AI potential into concrete, repeatable developer workflows.",
+                      "stats": [
+                        {
+                          "n": "100%",
+                          "label": "AI-skilled team"
+                        },
+                        {
+                          "n": "3x",
+                          "label": "Faster MVP prototyping"
+                        },
+                        {
+                          "n": "-40%",
+                          "label": "Shorter debugging cycles"
+                        },
+                        {
+                          "n": "100%",
+                          "label": "AI-assisted dev pipeline"
+                        }
+                      ],
+                      "images": [
+                        "stories-published/torii/team-capability.jpg",
+                        "stories-published/torii/program-vision.jpg",
+                        "stories-published/torii/curriculum-prompt.jpg"
+                      ],
+                      "badge": "Step IN · Stand OUT"
+                    },
+                    {
+                      "kind": "compare",
+                      "label": "The Shift",
+                      "icon": "swap",
+                      "eyebrow": "Before and after",
+                      "title": "From ad-hoc AI to a certified team",
+                      "before": {
+                        "label": "Before",
+                        "items": [
+                          "Ad-hoc AI usage",
+                          "Scattered resources",
+                          "AI used only occasionally",
+                          "Slow debugging & documentation"
+                        ]
+                      },
+                      "after": {
+                        "label": "After",
+                        "items": [
+                          "Standardised Claude workflows",
+                          "A validated delivery framework",
+                          "AI-assisted coding adopted",
+                          "A certified, delivery-ready team"
+                        ]
+                      },
+                      "image": {
+                        "src": "stories-published/torii/team-capability.jpg",
+                        "cap": "The Torii delivery team — certified & enterprise-ready"
+                      }
+                    },
+                    {
+                      "kind": "cards",
+                      "label": "Curriculum",
+                      "icon": "book",
+                      "eyebrow": "Curriculum snapshot",
+                      "title": "What the team learned",
+                      "cols": 5,
+                      "cards": [
+                        {
+                          "n": "01",
+                          "title": "Claude Foundations",
+                          "text": "Capabilities, limits and responsible use."
+                        },
+                        {
+                          "n": "02",
+                          "title": "Prompt Engineering",
+                          "text": "Role, context, examples, constraints, output format."
+                        },
+                        {
+                          "n": "03",
+                          "title": "Context Engineering",
+                          "text": "Long documents, whole codebases, multi-step tasks."
+                        },
+                        {
+                          "n": "04",
+                          "title": "Claude for Coding",
+                          "text": "Bug fixing, refactoring and tests with Claude Code."
+                        },
+                        {
+                          "n": "05",
+                          "title": "Training Delivery",
+                          "text": "AI concepts turned into sessions learners act on."
+                        }
+                      ],
+                      "images": [
+                        {
+                          "src": "stories-published/torii/curriculum-prompt.jpg",
+                          "cap": "A shared prompt-library framework, taught hands-on"
+                        },
+                        {
+                          "src": "stories-published/torii/training-classroom.jpg",
+                          "cap": "Dedicated developer training sessions"
+                        },
+                        {
+                          "src": "stories-published/torii/use-cases.jpg",
+                          "cap": "Claude applied in a working session"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "split",
+                      "label": "Certified Team",
+                      "icon": "seal-check",
+                      "eyebrow": "The people behind it",
+                      "title": "Ten Claude-certified architects",
+                      "body": [
+                        "Validated across structured assessments, peer-review simulations and live delivery — Torii’s centre of excellence for AI-assisted training and engineering."
+                      ],
+                      "chips": [
+                        "AI Delivery Certified",
+                        "Context Engineering",
+                        "Automated QA",
+                        "Rapid Prototyping",
+                        "Enterprise Delivery"
+                      ],
+                      "images": [
+                        {
+                          "src": "stories-published/torii/architects-team.jpg",
+                          "cap": "Torii’s ten Claude-certified architects"
+                        },
+                        {
+                          "src": "stories-published/torii/ai-vision-auditorium.jpg",
+                          "cap": "An AI vision session with HODs and faculty"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "split",
+                      "label": "NCET Launch",
+                      "icon": "rocket",
+                      "eyebrow": "On campus · live launch",
+                      "title": "AI Tech Coach launch at NCET",
+                      "body": [
+                        "Torii Minds launched the AI Tech Coach “Skill Sprint” at NCET — AI for learning, coding, projects, debugging and research."
+                      ],
+                      "chips": [
+                        "Hands-on sessions",
+                        "Live demonstrations",
+                        "Structured mentoring",
+                        "Responsible AI"
+                      ],
+                      "flip": true,
+                      "images": [
+                        {
+                          "src": "stories-published/torii/ncet-launch-1.jpg",
+                          "cap": "Unveiling the AI Tech Coach Skill Sprint"
+                        },
+                        {
+                          "src": "stories-published/torii/ncet-launch-2.jpg",
+                          "cap": "An interactive launch with students and NCET leadership"
+                        },
+                        {
+                          "src": "stories-published/torii/ncet-launch-3.jpg",
+                          "cap": "Students engaged during the kickoff"
+                        },
+                        {
+                          "src": "stories-published/torii/ncet-launch-4.jpg",
+                          "cap": "Live mentoring on AI-powered workflows"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "split",
+                      "label": "Myna",
+                      "icon": "message",
+                      "eyebrow": "New platform launch",
+                      "title": "Myna — AI-powered LSRW training",
+                      "body": [
+                        "Built by Torii Minds, Myna trains and evaluates Listening, Speaking, Reading and Writing with AI instead of manual grading."
+                      ],
+                      "tiles": [
+                        {
+                          "n": "70%",
+                          "title": "Lower assessment costs"
+                        },
+                        {
+                          "n": "24/7",
+                          "title": "Always available"
+                        }
+                      ],
+                      "wide": true,
+                      "fit": "contain",
+                      "images": [
+                        {
+                          "src": "stories-published/torii/myna-landing.jpg",
+                          "cap": "Myna — jump-start your career to the next level"
+                        },
+                        {
+                          "src": "stories-published/torii/myna-dashboard.jpg",
+                          "cap": "The trainee dashboard and A1–C2 levelboard"
+                        },
+                        {
+                          "src": "stories-published/torii/myna-speaking.jpg",
+                          "cap": "Speaking — scored for clarity and fluency"
+                        },
+                        {
+                          "src": "stories-published/torii/myna-prime.jpg",
+                          "cap": "Myna Prime — interview-style practice"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "cards",
+                      "label": "Engineering",
+                      "icon": "code",
+                      "eyebrow": "Engineering velocity",
+                      "title": "An immediate spike in operational KPIs",
+                      "cols": 4,
+                      "cards": [
+                        {
+                          "icon": "code",
+                          "tag": "Track",
+                          "title": "Context-aware coding",
+                          "text": "Codebase exploration, refactoring and microservices."
+                        },
+                        {
+                          "icon": "shield",
+                          "tag": "Track",
+                          "title": "Automated QA",
+                          "text": "Bug localisation and unit-test generation."
+                        },
+                        {
+                          "icon": "rocket",
+                          "tag": "Track",
+                          "title": "Accelerated prototyping",
+                          "text": "MVPs within hours rather than days."
+                        },
+                        {
+                          "icon": "clock",
+                          "tag": "Result",
+                          "title": "Shorter timelines",
+                          "text": "Bottlenecks removed across the lifecycle."
+                        },
+                        {
+                          "icon": "trend-up",
+                          "tag": "Result",
+                          "title": "Lower overhead",
+                          "text": "Routine effort offloaded to AI workflows."
+                        },
+                        {
+                          "icon": "star",
+                          "tag": "Result",
+                          "title": "Higher output quality",
+                          "text": "Consistent, standards-aligned output."
+                        },
+                        {
+                          "icon": "layers",
+                          "tag": "Result",
+                          "title": "Future-proofed pipeline",
+                          "text": "Every practice natively AI-assisted."
+                        },
+                        {
+                          "image": "stories-published/torii/use-cases.jpg",
+                          "tag": "In practice",
+                          "title": "Claude, hands-on",
+                          "text": "Applied to live training and engineering work."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "createdAt": "2026-10-09T09:55:17.099Z",
+      "updatedAt": "2026-10-09T10:53:40.093Z"
     }
   ],
   "assets": [

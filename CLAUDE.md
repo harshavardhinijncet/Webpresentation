@@ -151,7 +151,7 @@ put, and browser Back returns.
 
 ## Current state
 
-Eighteen sections, all with content. Nothing is a placeholder and nothing is half
+Nineteen sections, all with content. Nothing is a placeholder and nothing is half
 built; the empty ones were deleted rather than left for a presenter to walk into.
 Organization Overview and Leadership used to be groups whose rows opened a list
 instead of a slide — Leadership held no blocks at all, so its row opened an empty
@@ -176,6 +176,7 @@ page. Their pages came up a level and both wrappers went, along with CEO Vision.
 | 14 | AI Partners | `brain` | `ai-partners` | `tools/publish-ai-partners.cjs` — one landing page per partner off a side rail; Claude from claude.technicalhub.io (ten architects) and the success-story sites, OpenAI and Sarvam from the Torii Minds AI Partners page restated for Technical Hub; assets in `uploads/ai-partners/` |
 | 15 | Technical Hub × Torii | `link` | `torii-app` | `tools/publish-th-torii.cjs` — the whole Torii application as an app inside one slide: Home (the partnership announcement as hero, the MoU services carousel), Trainings, AI Lab, Campus (galleries open in a viewer), Products, Partners; brand film over all. Media copied from profile.toriiminds.com into `uploads/th-torii/`. Key is still `torii`; the old two-tab `partnership` block lives on in `tools/publish-torii.cjs` |
 | 15a | Collaborations | `partners` | `collab-wall` | `tools/publish-collaborations.cjs` — a wall of partner tiles, then one card per partner (announcement image, points restated from Technical Hub’s LinkedIn posts) with a gold ring running round the selected logo. Images in `uploads/collaborations/`. SRKR has no post yet |
+| 15b | Stories Published | `newspaper` | `story-hub` | `tools/publish-stories-published.cjs` — one slide, **no sub-navigation** (the user asked for it that way): three story cards, each with its partner's square mark in a round badge, and each card opens its story in place — NCET × Claude (claude.ncet.co.in), Technical Hub × Claude (claude.technicalhub.io), Torii Minds × Claude (toriiminds.com/success-story). "All stories" returns to the cards; the deck walks cards → every chapter of each story → next slide. Copy only from those sites; NCET shows Technical Hub's **10** Claude-certified architects (the user's correction — the NCET site names four). Photos in `uploads/stories-published/<story>/`. Chapter shapes in `StorySite`: cover, split, cards, people, steps, gallery, compare |
 | 16 | Platforms | `tap-network` | `platforms` | `uploads/platform-logos/` |
 
 The glyphs are the user's own SVGs in `backend/uploads/navicons/`, one file per row
@@ -237,6 +238,7 @@ still publishable only by hand.
 | `publish-collaborations.cjs` | Collaborations — one entry per partner, created after Technical Hub × Torii |
 | `publish-success-stories.cjs` | Success Stories — the story list, titles in the script |
 | `publish-placements.cjs` | Placements — re-sorts Campus / Open Drives by poster colour; the company and package of every poster are in the script, keyed by file name |
+| `publish-stories-published.cjs` | Stories Published — the one slide and its three embedded stories, all copy and figures restated from the published sites; checks every file before sending and deletes any old child pages |
 | `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
 
 The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it

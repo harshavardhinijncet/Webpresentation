@@ -54,6 +54,7 @@ const NAVIGATION_GROUPS = [
   ['ai-partners', 'AI Partners', 'brain', []],
   ['torii', 'Technical Hub × Torii', 'link', []],
   ['collaborations', 'Collaborations', 'partners', []],
+  ['stories-published', 'Stories Published', 'newspaper', []],
   ['testimonials', 'Video Resumes', 'clapper', []],
   ['achievements', 'Events', 'event-sign', []],
 ];
