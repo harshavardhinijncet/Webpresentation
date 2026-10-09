@@ -4,6 +4,7 @@ import { media as mediaUrl } from '../utils/media.js';
 import { toastSuccess, toastError } from './Toast.js';
 import { dockMagnify } from '../utils/dock.js';
 import { videoControls } from '../utils/videoControls.js';
+import { isDeckPaused } from '../utils/autoSlide.js';
 
 /**
  * The platform wall: a rotating 3D stack of browser windows, and opening one
@@ -199,7 +200,7 @@ const stepFor = (n) => (n >= 7 ? { distance: 30, rise: 36 } : { distance: 46, ri
    card down and the horizontal edges run diagonally across the slide; rotateY
    turns the window like a door, so its vertical edges stay upright and only
    perspective narrows the far side. */
-function cardSwap(cards, { tilt = -9, delay = 4200 } = {}) {
+function cardSwap(cards, { tilt = -9, delay = 5000, onFront = () => {} } = {}) {
   const { distance, rise } = stepFor(cards.length);
   const total = cards.length;
   const order = cards.map((_, i) => i);
@@ -274,6 +275,7 @@ function cardSwap(cards, { tilt = -9, delay = 4200 } = {}) {
     }, 430));
 
     order.push(order.shift());
+    onFront(order[0]);
   };
 
   /** Bring a specific card to the front — a presenter jumping to a platform. */
@@ -283,6 +285,7 @@ function cardSwap(cards, { tilt = -9, delay = 4200 } = {}) {
     clearSteps();
     order.splice(at, 1);
     order.unshift(index);
+    onFront(index);
     settle();
     promoteMedia();
   };
@@ -292,7 +295,7 @@ function cardSwap(cards, { tilt = -9, delay = 4200 } = {}) {
     stop();
     promoteMedia();
     if (REDUCED?.matches) return;
-    timer = setInterval(swap, delay);
+    timer = setInterval(() => { if (!isDeckPaused()) swap(); }, delay);
   };
 
   /**
@@ -512,16 +515,16 @@ export function Platforms(block, { editing = false } = {}) {
     const count = (pane.logins || []).length;
     return h('button', {
       class: 'pf-row', type: 'button',
+      'data-i': String(i),
       /* The product's own colour, used only by the active card. Set as a custom
          property so the stylesheet decides where it lands. */
-      style: item.tint ? { '--tint': item.tint } : {},
+      style: { '--i': String(i), ...(item.tint ? { '--tint': item.tint } : {}) },
       /* The accessible name has to carry what the tooltip does. A button whose
          only content is an untitled image announces nothing to a screen reader,
          and the tooltip is decoration as far as one is concerned. */
       'aria-label': `${item.name}${label ? ` — ${label}` : ''}, ${count} sign-in${count === 1 ? '' : 's'}`,
       onclick: () => {
-        chips.forEach((c) => c.classList.remove('is-on'));
-        chips[i].classList.add('is-on');
+        mark(i);
         swap.focus(i); swap.stop(); swap.start();
       },
       ondblclick: () => open(pane),
@@ -529,16 +532,29 @@ export function Platforms(block, { editing = false } = {}) {
       /* Text leads; the mark appears on the card that is open. The rail reads as
          a list of names until one is chosen, which is the pattern in the
          reference — a column of labelled rows, one of them expanded. */
+      tile,
       h('span', { class: 'pf-row__tip' },
         h('b', {}, item.name),
-        label ? h('i', {}, label) : null,
-        h('em', {}, `${count} login${count === 1 ? '' : 's'}`),
+        h('span', { class: 'pf-row__meta' },
+          label ? h('i', {}, label) : null,
+          h('em', {}, `${count} login${count === 1 ? '' : 's'}`)),
       ),
-      tile,
+      icon('chevron-right', { class: 'ic pf-row__go' }),
+      h('span', { class: 'pf-row__time', 'aria-hidden': 'true' }),
     );
   });
 
-  if (chips.length) chips[0].classList.add('is-on');
+  /* The row in front follows the stack, whether it turned on its own or was chosen, and the
+     page takes on that product's colour — a faint light behind everything, never a fill. */
+  const mark = (i) => {
+    chips.forEach((c, k) => {
+      c.classList.toggle('is-on', k === i);
+      if (k === i) { c.classList.remove('is-run'); void c.offsetWidth; c.classList.add('is-run'); }
+    });
+    const tint = panes[i]?.item.tint;
+    if (tint) root.style.setProperty('--pf-tint', tint);
+  };
+  if (chips.length) mark(0);
   const chipRail = h('div', { class: 'pf-chips' }, ...chips);
   /* The dock, vertical. `transform: false` because a full-width row scaled up
      runs out of its own column — the stylesheet reads --dock-k and grows the
@@ -549,6 +565,12 @@ export function Platforms(block, { editing = false } = {}) {
   requestAnimationFrame(() => {
     dockMagnify(chipRail, { radius: 132, transform: false });
   });
+
+  /* A few points of the current colour, twinkling at the edges of the white. */
+  const glow = h('div', { class: 'pf-glow', 'aria-hidden': 'true' },
+    h('i', { class: 'pf-glow__a' }), h('i', { class: 'pf-glow__b' }),
+    ...[[8, 14], [22, 82], [31, 6], [47, 92], [63, 18], [76, 70], [88, 40], [14, 58], [55, 4], [93, 88]]
+      .map(([y, x], k) => h('b', { class: 'pf-spark', style: { top: `${y}%`, left: `${x}%`, '--k': String(k) } })));
 
   const wall = h('div', { class: 'pf-wall' },
     h('div', { class: 'pf-intro' },
@@ -567,9 +589,11 @@ export function Platforms(block, { editing = false } = {}) {
      wrapped onto three lines. */
   wall.appendChild(h('div', { class: 'pf-railrow' }, chipRail));
 
-  const swap = cardSwap(cards, { delay: 5200 });
+  chipRail.style.setProperty('--pf-hold', '5200ms');
+  const swap = cardSwap(cards, { delay: 5200, onFront: mark });
   swap.begin();
 
+  root.appendChild(glow);
   root.appendChild(wall);
   root.appendChild(stage);
   return root;

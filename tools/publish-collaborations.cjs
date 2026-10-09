@@ -45,7 +45,7 @@ const BLOCK = {
     lead: 'The colleges, companies and AI platforms that work with Technical Hub — each one an MoU or a partnership, signed and running.',
     goLabel: 'Explore every collaboration',
     bandLabel: 'Collaborations',
-    hold: 9000,
+    hold: 5000,
     wallHold: 5200,
     partners: [
       {

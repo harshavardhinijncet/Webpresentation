@@ -1,6 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
-import { sectionLabel, sectionMenu } from './SideNav.js';
+import { sectionLabel, sectionMenu, sectionGlyph } from './SideNav.js';
 
 /**
  * The presenter's bar: where you are, what is either side of you, and a way to
@@ -72,7 +72,8 @@ export function DeckControls({ index, total, deck = [], onPrev, onNext, onExit, 
       'aria-label': `${i + 1}. ${label}`,
       onclick: () => onJump?.(section),
     },
-      icon(iconKey, { class: 'ic ic--xs' }),
+      // The same mark the navigation pane shows for this section.
+      sectionGlyph(section, iconKey, { class: 'deck-dot__glyph' }),
       h('span', { class: 'deck-dot__name' }, label),
     );
     const cell = h('div', { class: 'deck-cell' }, dot, card);
@@ -88,7 +89,7 @@ export function DeckControls({ index, total, deck = [], onPrev, onNext, onExit, 
   const step = (dir, section, handler) => h('button', {
     class: `deck-step deck-step--${dir}`,
     type: 'button',
-    title: dir === 'prev' ? 'Previous (←)' : 'Next (→ or Space)',
+    title: dir === 'prev' ? 'Previous (←)' : 'Next (→) · Space pauses',
     onclick: handler,
   },
     dir === 'prev' ? icon('chevron-left', { class: 'ic ic--xs' }) : null,

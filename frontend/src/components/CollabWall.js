@@ -2,7 +2,7 @@ import { h, svg } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
 import { registerStepper } from '../utils/slideSteps.js';
-import { autoSlide } from '../utils/autoSlide.js';
+import { autoSlide, isDeckPaused } from '../utils/autoSlide.js';
 
 /**
  * Technical Hub Collaborations — two scenes.
@@ -161,6 +161,7 @@ export function CollabWall(block, { editing = false } = {}) {
     if (imgs.length > 1 && !REDUCED) {
       let s = 0;
       shotTimer = setInterval(() => {
+        if (isDeckPaused()) return;
         const els = shots.querySelectorAll('.cw-shot');
         els[s].classList.remove('is-on');
         pips.children[s].classList.remove('is-on');

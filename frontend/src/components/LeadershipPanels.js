@@ -370,7 +370,7 @@ export function LeadershipPanels(block, { editing = false } = {}) {
       if (active === null) return false;
       setActive(active === 0 ? null : active - 1);
       return true;
-    });
+    }, { auto: 6000 });
   }
 
   root.appendChild(overlay);

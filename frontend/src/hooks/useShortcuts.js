@@ -11,6 +11,15 @@ export function useShortcuts(map, { target = window } = {}) {
     event.preventDefault();
     fn(event);
   };
+  // A focused button activates on Space's keyup — swallow that too, or pausing the deck
+  // would also press whatever was last clicked.
+  const swallow = (event) => {
+    if (event.key !== ' ' || !map.Space) return;
+    const tag = event.target?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || event.target?.isContentEditable) return;
+    event.preventDefault();
+  };
   target.addEventListener('keydown', handler);
-  return () => target.removeEventListener('keydown', handler);
+  target.addEventListener('keyup', swallow);
+  return () => { target.removeEventListener('keydown', handler); target.removeEventListener('keyup', swallow); };
 }

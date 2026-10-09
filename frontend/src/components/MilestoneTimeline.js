@@ -280,7 +280,7 @@ export function MilestoneTimeline(block, { editing = false } = {}) {
       if (next < 0 || next >= stops.length) return false;
       setStop(next, delta);
       return true;
-    });
+    }, { auto: 6000 });
   }
 
   const head = h(

@@ -239,7 +239,7 @@ export function GalleryWall(block, { editing = false } = {}) {
       if (next < 0 || next > 1) return false;
       setFrame(next);
       return true;
-    });
+    }, { auto: 6000 });
   }
 
   setFrame(0);

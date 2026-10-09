@@ -1,6 +1,7 @@
 import { h, svg } from '../utils/dom.js';
 import { autoSlide, slideIn } from '../utils/autoSlide.js';
 import { icon } from '../utils/icons.js';
+import { registerStepper } from '../utils/slideSteps.js';
 import { upload } from '../utils/media.js';
 
 /**
@@ -719,6 +720,22 @@ export function CertificationWall(block, { editing = false } = {}) {
     }
   });
   watch.observe(document.body, { childList: true, subtree: true });
+
+  /* The three acts turn on their own while the deck plays and step with Next / Prev while it is
+     paused. Behaviour only — the acts themselves are unchanged. */
+  if (!editing) {
+    const KEYS = ACTS.map((a) => a.key);
+    const goAct = (k) => { if (k !== act) { act = k; drawSteps(); showAct(); } };
+    registerStepper((delta) => {
+      const i = KEYS.indexOf(act) + (delta > 0 ? 1 : -1);
+      if (i < 0 || i >= KEYS.length) return false;
+      goAct(KEYS[i]);
+      return true;
+    }, {
+      auto: () => (act === 'register' ? 6000 : 7000),
+      next: () => { goAct(KEYS[(KEYS.indexOf(act) + 1) % KEYS.length]); return true; },
+    });
+  }
 
   return root;
 }

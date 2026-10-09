@@ -169,7 +169,7 @@ page. Their pages came up a level and both wrappers went, along with CEO Vision.
 | 7 | Programs | `www-globe` | `program-deck` | `uploads/Programs*`, `Videos.xlsx` |
 | 8 | Centers of Excellence | `handshake-check` | `coe-wall` | `uploads/coepics/`, `Videos.xlsx` |
 | 9 | Certifications | `seal-check` | `certification-wall` | see below |
-| 10 | Placements | `job-pin` | `placement-wall` | `uploads/Placements/` |
+| 10 | Placements | `job-pin` | `placement-wall` | `uploads/Placements/`; `tools/publish-placements.cjs` sorts Campus (green posters) from Open Drives (black-and-gold) by measured colour and tags every poster with its companies and package, read off the poster. Those two chapters carry `filters: true`: a rail of package bands and companies beside the gallery |
 | 11 | Events | `event-sign` | `event-reel` | `uploads/Videos.xlsx` |
 | 12 | Video Resumes | `clapper` | `video-resume` | `uploads/Video Resumes.xlsx` |
 | 13 | AI Ready Engineer | `ai-figure` | `ai-ready-deck` | `tools/publish-ai-ready.cjs` — three pages: road map (cropped from the AI Ready road map, `uploads/ai-ready/`), course structure in four phases, benefits |
@@ -236,10 +236,23 @@ still publishable only by hand.
 | `publish-th-torii.cjs` | Technical Hub × Torii — all copy and the media list in the script; checks every file exists before sending |
 | `publish-collaborations.cjs` | Collaborations — one entry per partner, created after Technical Hub × Torii |
 | `publish-success-stories.cjs` | Success Stories — the story list, titles in the script |
+| `publish-placements.cjs` | Placements — re-sorts Campus / Open Drives by poster colour; the company and package of every poster are in the script, keyed by file name |
 | `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
 
 The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it
 rather than writing a third one.
+
+## Playing, pausing and Next
+
+- **Playing** (the default): every auto-slide runs (`utils/autoSlide.js`) — photographs hold 5 s, and
+  sections with tabs, chapters or pages advance through them on their own, 5–7 s by how much the
+  view carries. A stepper opts in with `registerStepper(fn, { auto: ms | () => ms, next })`; `next`
+  wraps a short toggle (Team, Events, Placements, Certifications acts), without it the walk stops at
+  the end (Torii app, AI Ready). Next / Prev / arrows turn the deck.
+- **Space** toggles a deck-wide pause: auto-slides hold, looping CSS animations freeze, a pill says
+  so. **Paused**, Next / Prev step through the slide first (its stepper, then its visible
+  auto-slides) and turn the deck only once it is spent.
+- A component with its own `setInterval` must check `isDeckPaused()`; use `autoSlide` instead where possible.
 
 ## The navigation pane
 

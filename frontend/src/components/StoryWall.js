@@ -1,6 +1,7 @@
 import { h, svg } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
-import { autoSlide, slideIn, slideArrows } from '../utils/autoSlide.js';
+import { registerStepper } from '../utils/slideSteps.js';
+import { isDeckPaused, autoSlide, slideIn, slideArrows } from '../utils/autoSlide.js';
 import { media } from '../utils/media.js';
 
 /**
@@ -357,6 +358,22 @@ export function StoryWall(block, { editing = false } = {}) {
      skips the motion entirely. */
   requestAnimationFrame(place);
   if (!editing) deckAuto.start();
+
+  /* The pile deals itself: it shows folded for a moment as the slide arrives, then fans out on
+     its own (waiting while the deck is paused). Paused, Next deals it straight away. */
+  if (!editing && count > 1) {
+    let waited = 0;
+    const tick = setInterval(() => {
+      if (!root.isConnected || open) { clearInterval(tick); return; }
+      if (isDeckPaused()) return;
+      waited += 300;
+      if (waited >= 2400) { clearInterval(tick); deal(); }
+    }, 300);
+    registerStepper((delta) => {
+      if (delta > 0 && !open) { deal(); return true; }
+      return false;
+    });
+  }
 
   /* The viewer lives on the body, so it has to be taken down by hand when the
      slide that owns it is replaced. */

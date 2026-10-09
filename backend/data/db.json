@@ -1193,7 +1193,7 @@
       "title": "Centers of Excellence",
       "subtitle": "",
       "icon": "⬢",
-      "order": 8,
+      "order": 12,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1693,7 +1693,7 @@
       "title": "Placements",
       "subtitle": "",
       "icon": "▲",
-      "order": 10,
+      "order": 11,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -1716,6 +1716,7 @@
               "blurb": "One student, one timeline, start to offer.",
               "kind": "journey",
               "icon": "route",
+              "filters": false,
               "groups": [
                 {
                   "name": "",
@@ -1724,19 +1725,31 @@
                       "src": "PJ1.jpg",
                       "label": "",
                       "w": 1280,
-                      "h": 2008
+                      "h": 2008,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "PJ2.jpg",
                       "label": "",
                       "w": 1280,
-                      "h": 2008
+                      "h": 2008,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "PJ3.jpg",
                       "label": "",
                       "w": 1280,
-                      "h": 2008
+                      "h": 2008,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 }
@@ -1745,210 +1758,433 @@
             {
               "key": "campus",
               "name": "Campus Placements",
-              "blurb": "Selections announced from campus drives.",
+              "blurb": "Placed through campus drives",
               "kind": "poster",
               "icon": "building",
+              "filters": true,
               "groups": [
                 {
                   "name": "",
                   "images": [
                     {
-                      "src": "Open Drive\\Autodesk.jpg",
-                      "label": "Autodesk",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Campus Placements/Capgemini.jpg",
-                      "label": "Capgemini",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Open Drive\\Congolmerate.jpg",
-                      "label": "Conglomerate",
-                      "w": 2048,
-                      "h": 1152
-                    },
-                    {
-                      "src": "Campus Placements/Deloitte.jpg",
-                      "label": "Deloitte",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Campus Placements/Deloitte1.jpg",
-                      "label": "Deloitte",
-                      "w": 800,
-                      "h": 450
-                    },
-                    {
-                      "src": "Campus Placements/DeltaX.jpg",
-                      "label": "DeltaX",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Campus Placements/genpact.jpg",
-                      "label": "Genpact",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Campus Placements/hcltech.jpg",
-                      "label": "HCLTech",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
                       "src": "Campus Placements/Hitachi.jpg",
                       "label": "Hitachi",
                       "w": 2000,
-                      "h": 2000
+                      "h": 2000,
+                      "companies": [
+                        "Hitachi"
+                      ],
+                      "pkg": 29.27,
+                      "pkgText": "29.27 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/UIPath.jpg",
+                      "label": "UiPath",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "UiPath"
+                      ],
+                      "pkg": 17,
+                      "pkgText": "17 LPA PPO",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/sttelemedia global data center.jpg",
+                      "label": "STTelemedia GDC",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "STT GDC"
+                      ],
+                      "pkg": 10,
+                      "pkgText": "10 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/FreshBus.jpg",
+                      "label": "FreshBus",
+                      "w": 800,
+                      "h": 800,
+                      "companies": [
+                        "FreshBus"
+                      ],
+                      "pkg": 10,
+                      "pkgText": "10 LPA",
+                      "intern": false
                     },
                     {
                       "src": "Campus Placements/hsbc.jpg",
                       "label": "HSBC",
                       "w": 1179,
-                      "h": 2048
+                      "h": 2048,
+                      "companies": [
+                        "HSBC"
+                      ],
+                      "pkg": 9,
+                      "pkgText": "9 LPA",
+                      "intern": false
                     },
                     {
                       "src": "Campus Placements/hsbc1.jpg",
                       "label": "HSBC",
                       "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Campus Placements/IBM.jpg",
-                      "label": "IBM",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Campus Placements/Infosys-Servicenow.jpg",
-                      "label": "Infosys ServiceNow",
-                      "w": 800,
-                      "h": 806
-                    },
-                    {
-                      "src": "Campus Placements/Infosys.jpg",
-                      "label": "Infosys",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Open Drive\\Japan.jpg",
-                      "label": "Japan",
-                      "w": 1536,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [
+                        "HSBC"
+                      ],
+                      "pkg": 9,
+                      "pkgText": "9 LPA",
+                      "intern": false
                     },
                     {
                       "src": "Campus Placements/jyesta.jpg",
                       "label": "Jyesta",
                       "w": 1536,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [
+                        "Jyesta"
+                      ],
+                      "pkg": 9,
+                      "pkgText": "7–9 LPA",
+                      "intern": false
                     },
                     {
-                      "src": "Campus Placements/KT Semicon.jpg",
-                      "label": "KT Semicon",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Campus Placements/L and T.jpg",
-                      "label": "L and T",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Open Drive\\LG.jpg",
-                      "label": "LG",
-                      "w": 2048,
-                      "h": 1152
-                    },
-                    {
-                      "src": "Open Drive\\maersk.jpg",
-                      "label": "Maersk",
+                      "src": "Campus Placements/ball.jpg",
+                      "label": "Ball",
                       "w": 800,
-                      "h": 450
+                      "h": 800,
+                      "companies": [
+                        "Ball"
+                      ],
+                      "pkg": 8.5,
+                      "pkgText": "8.50 LPA",
+                      "intern": false
                     },
                     {
-                      "src": "Open Drive\\O9.jpg",
-                      "label": "O",
+                      "src": "Campus Placements/Deloitte.jpg",
+                      "label": "HashedIn by Deloitte",
                       "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Campus Placements/pelatro.jpg",
-                      "label": "Pelatro",
-                      "w": 800,
-                      "h": 800
+                      "h": 2000,
+                      "companies": [
+                        "Deloitte"
+                      ],
+                      "pkg": 8.1,
+                      "pkgText": "8.10 LPA",
+                      "intern": false
                     },
                     {
                       "src": "Campus Placements/Pennant.jpg",
                       "label": "Pennant",
                       "w": 2048,
-                      "h": 1152
+                      "h": 1152,
+                      "companies": [
+                        "Pennant"
+                      ],
+                      "pkg": 7.9,
+                      "pkgText": "4.1–7.9 LPA",
+                      "intern": false
                     },
                     {
-                      "src": "Campus Placements/peopletech.jpg",
-                      "label": "PeopleTech",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Campus Placements/Qsales.jpg",
-                      "label": "Qsales",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Campus Placements/Rossell Techsy.jpg",
-                      "label": "Rossell Techsy",
+                      "src": "Campus Placements/Capgemini.jpg",
+                      "label": "Capgemini",
                       "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Campus Placements/sttelemedia global data center.jpg",
-                      "label": "Sttelemedia Global Data Center",
-                      "w": 1536,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [
+                        "Capgemini"
+                      ],
+                      "pkg": 7.5,
+                      "pkgText": "4.25–7.5 LPA",
+                      "intern": false
                     },
                     {
                       "src": "Campus Placements/TCS Digital.jpg",
                       "label": "TCS Digital",
                       "w": 1536,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [
+                        "TCS"
+                      ],
+                      "pkg": 7.09,
+                      "pkgText": "7.09 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/DeltaX.jpg",
+                      "label": "DeltaX",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "DeltaX"
+                      ],
+                      "pkg": 7,
+                      "pkgText": "7 LPA",
+                      "intern": false
                     },
                     {
                       "src": "Campus Placements/TCS Ninja.jpg",
-                      "label": "TCS Ninja",
+                      "label": "TCS Digital · Ninja",
                       "w": 2000,
-                      "h": 2000
+                      "h": 2000,
+                      "companies": [
+                        "TCS"
+                      ],
+                      "pkg": 7,
+                      "pkgText": "3.46–7 LPA",
+                      "intern": false
                     },
                     {
-                      "src": "Campus Placements/vedxience.jpg",
-                      "label": "Vedxience",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Campus Placements/vedxience1.jpg",
-                      "label": "Vedxience",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Campus Placements/Verizon.jpg",
-                      "label": "Verizon",
+                      "src": "Campus Placements/NorthernArc.jpg",
+                      "label": "Northern Arc",
                       "w": 1536,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [
+                        "Northern Arc"
+                      ],
+                      "pkg": 7,
+                      "pkgText": "7 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/L and T.jpg",
+                      "label": "Larsen & Toubro",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "Larsen & Toubro"
+                      ],
+                      "pkg": 6.55,
+                      "pkgText": "6.55 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/genpact.jpg",
+                      "label": "Genpact",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "Genpact"
+                      ],
+                      "pkg": 6.5,
+                      "pkgText": "6.5 LPA",
+                      "intern": false
                     },
                     {
                       "src": "Campus Placements/Virtusa.jpg",
                       "label": "Virtusa",
                       "w": 2000,
-                      "h": 2000
+                      "h": 2000,
+                      "companies": [
+                        "Virtusa"
+                      ],
+                      "pkg": 6.5,
+                      "pkgText": "6.5 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/Infosys.jpg",
+                      "label": "Infosys",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "Infosys"
+                      ],
+                      "pkg": 6.25,
+                      "pkgText": "6.25 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/hcltech.jpg",
+                      "label": "HCLTech",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "HCLTech"
+                      ],
+                      "pkg": 6,
+                      "pkgText": "6 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/pelatro.jpg",
+                      "label": "Pelatro",
+                      "w": 800,
+                      "h": 800,
+                      "companies": [
+                        "Pelatro"
+                      ],
+                      "pkg": 6,
+                      "pkgText": "6 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/Qsales.jpg",
+                      "label": "Sales Partners",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "Sales Partners"
+                      ],
+                      "pkg": 6,
+                      "pkgText": "6 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/vedxience.jpg",
+                      "label": "VedXlence",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "VedXlence"
+                      ],
+                      "pkg": 6,
+                      "pkgText": "Up to 6 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/vedxience1.jpg",
+                      "label": "VedXlence",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "VedXlence"
+                      ],
+                      "pkg": 6,
+                      "pkgText": "Up to 6 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/Wissada.jpg",
+                      "label": "Wissda",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "Wissda"
+                      ],
+                      "pkg": 6,
+                      "pkgText": "6 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/Wissda.jpg",
+                      "label": "Wissda",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "Wissda"
+                      ],
+                      "pkg": 6,
+                      "pkgText": "6 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/peopletech.jpg",
+                      "label": "PeopleTech",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "PeopleTech"
+                      ],
+                      "pkg": 5,
+                      "pkgText": "5 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/Rossell Techsy.jpg",
+                      "label": "Rossell Techsys",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "Rossell Techsys"
+                      ],
+                      "pkg": 5,
+                      "pkgText": "5 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/ISRO Intern.jpg",
+                      "label": "ISRO",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "ISRO"
+                      ],
+                      "pkg": null,
+                      "pkgText": "Internship",
+                      "intern": true
+                    },
+                    {
+                      "src": "Campus Placements/Redhat.jpg",
+                      "label": "Red Hat",
+                      "w": 800,
+                      "h": 800,
+                      "companies": [
+                        "Red Hat"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹30,000 / month",
+                      "intern": true
+                    },
+                    {
+                      "src": "Campus Placements/Deloitte1.jpg",
+                      "label": "Deloitte",
+                      "w": 800,
+                      "h": 450,
+                      "companies": [
+                        "Deloitte"
+                      ],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/IBM.jpg",
+                      "label": "IBM",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "IBM"
+                      ],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/Infosys-Servicenow.jpg",
+                      "label": "Infosys · ServiceNow",
+                      "w": 800,
+                      "h": 806,
+                      "companies": [
+                        "Infosys"
+                      ],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/KT Semicon.jpg",
+                      "label": "KT Semicon",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "KT Semicon"
+                      ],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
+                    },
+                    {
+                      "src": "Campus Placements/Verizon.jpg",
+                      "label": "Verizon",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "Verizon"
+                      ],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 }
@@ -1957,174 +2193,317 @@
             {
               "key": "open",
               "name": "Open Drives",
-              "blurb": "Selections from open and off-campus drives.",
+              "blurb": "Selected through open drives",
               "kind": "poster",
               "icon": "globe",
+              "filters": true,
               "groups": [
                 {
                   "name": "",
                   "images": [
                     {
-                      "src": "Open Drive/AirBus.jpg",
-                      "label": "Airbus",
-                      "w": 2048,
-                      "h": 1152
-                    },
-                    {
-                      "src": "Open Drive/Airbus1.jpg",
-                      "label": "Airbus",
-                      "w": 800,
-                      "h": 800
-                    },
-                    {
-                      "src": "Open Drive/Airbus2.jpg",
-                      "label": "Airbus",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Open Drive/Amazon.jpg",
-                      "label": "Amazon",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Open Drive/Amazon1.jpg",
-                      "label": "Amazon",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Campus Placements\\ball.jpg",
-                      "label": "Ball",
-                      "w": 800,
-                      "h": 800
-                    },
-                    {
-                      "src": "Open Drive/cisco.jpg",
-                      "label": "Cisco",
-                      "w": 800,
-                      "h": 800
-                    },
-                    {
-                      "src": "Open Drive/Flipkart.jpg",
-                      "label": "Flipkart",
-                      "w": 2000,
-                      "h": 2000
-                    },
-                    {
-                      "src": "Open Drive/Flipkart1.jpg",
-                      "label": "Flipkart",
-                      "w": 800,
-                      "h": 800
-                    },
-                    {
-                      "src": "Campus Placements\\FreshBus.jpg",
-                      "label": "FreshBus",
-                      "w": 800,
-                      "h": 800
-                    },
-                    {
-                      "src": "Campus Placements\\ISRO Intern.jpg",
-                      "label": "ISRO Intern",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Open Drive/LLoyds.jpg",
-                      "label": "Lloyds",
-                      "w": 800,
-                      "h": 450
-                    },
-                    {
-                      "src": "Open Drive/Myntra.jpg",
-                      "label": "Myntra",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Campus Placements\\NorthernArc.jpg",
-                      "label": "Northern Arc",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Campus Placements\\Redhat.jpg",
-                      "label": "Red Hat",
-                      "w": 800,
-                      "h": 800
-                    },
-                    {
                       "src": "Open Drive/Shinsei.jpg",
-                      "label": "Shinsei",
+                      "label": "Shinsei Electronics",
                       "w": 1536,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [
+                        "Shinsei Electronics"
+                      ],
+                      "pkg": 27.81,
+                      "pkgText": "27.81 LPA",
+                      "intern": false
                     },
                     {
-                      "src": "Open Drive/thoughtworks.jpg",
-                      "label": "Thoughtworks",
+                      "src": "Open Drive/Japan.jpg",
+                      "label": "Nagano Sankoh · Japan",
                       "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Open Drive/ubona.jpg",
-                      "label": "Ubona",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Campus Placements\\UIPath.jpg",
-                      "label": "UiPath",
-                      "w": 1536,
-                      "h": 1536
-                    },
-                    {
-                      "src": "Open Drive/VISA.jpg",
-                      "label": "VISA",
-                      "w": 800,
-                      "h": 800
+                      "h": 1536,
+                      "companies": [
+                        "Nagano Sankoh"
+                      ],
+                      "pkg": 26.31,
+                      "pkgText": "26.31 LPA",
+                      "intern": false
                     },
                     {
                       "src": "Open Drive/Walmart.jpg",
                       "label": "Walmart",
                       "w": 800,
-                      "h": 450
+                      "h": 450,
+                      "companies": [
+                        "Walmart"
+                      ],
+                      "pkg": 22.6,
+                      "pkgText": "22.6 LPA",
+                      "intern": false
                     },
                     {
-                      "src": "Open Drive/walmart1.jpg",
-                      "label": "Walmart",
+                      "src": "Open Drive/cisco.jpg",
+                      "label": "Cisco",
                       "w": 800,
-                      "h": 800
+                      "h": 800,
+                      "companies": [
+                        "Cisco"
+                      ],
+                      "pkg": 16,
+                      "pkgText": "16 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Open Drive/thoughtworks.jpg",
+                      "label": "Thoughtworks · Infosys",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "Thoughtworks",
+                        "Infosys"
+                      ],
+                      "pkg": 11.1,
+                      "pkgText": "9.5–11.10 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Open Drive/maersk.jpg",
+                      "label": "Maersk",
+                      "w": 800,
+                      "h": 450,
+                      "companies": [
+                        "Maersk"
+                      ],
+                      "pkg": 10.83,
+                      "pkgText": "10.83 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Open Drive/LLoyds.jpg",
+                      "label": "Lloyds",
+                      "w": 800,
+                      "h": 450,
+                      "companies": [
+                        "Lloyds"
+                      ],
+                      "pkg": 10.71,
+                      "pkgText": "10.71 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Open Drive/O9.jpg",
+                      "label": "o9 Solutions",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "o9 Solutions"
+                      ],
+                      "pkg": 9,
+                      "pkgText": "9 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Open Drive/ubona.jpg",
+                      "label": "Ubona",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "Ubona"
+                      ],
+                      "pkg": 8.5,
+                      "pkgText": "8.5 LPA",
+                      "intern": true
+                    },
+                    {
+                      "src": "Open Drive/Congolmerate.jpg",
+                      "label": "Conglomerate",
+                      "w": 2048,
+                      "h": 1152,
+                      "companies": [
+                        "Conglomerate IT"
+                      ],
+                      "pkg": 8,
+                      "pkgText": "8 LPA +",
+                      "intern": false
+                    },
+                    {
+                      "src": "Open Drive/LG.jpg",
+                      "label": "LG",
+                      "w": 2048,
+                      "h": 1152,
+                      "companies": [
+                        "LG"
+                      ],
+                      "pkg": 7.5,
+                      "pkgText": "7.50 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Open Drive/Amazon.jpg",
+                      "label": "Amazon",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "Amazon"
+                      ],
+                      "pkg": 7.5,
+                      "pkgText": "7.5 LPA",
+                      "intern": false
+                    },
+                    {
+                      "src": "Open Drive/AirBus.jpg",
+                      "label": "Airbus",
+                      "w": 2048,
+                      "h": 1152,
+                      "companies": [
+                        "Airbus"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹30,000 / month",
+                      "intern": true
+                    },
+                    {
+                      "src": "Open Drive/Airbus1.jpg",
+                      "label": "Airbus",
+                      "w": 800,
+                      "h": 800,
+                      "companies": [
+                        "Airbus"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹30,000 / month",
+                      "intern": true
+                    },
+                    {
+                      "src": "Open Drive/Airbus2.jpg",
+                      "label": "Airbus",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "Airbus"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹30,000 / month",
+                      "intern": true
+                    },
+                    {
+                      "src": "Open Drive/Amazon1.jpg",
+                      "label": "Amazon",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "Amazon"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹1,10,000 / month",
+                      "intern": true
+                    },
+                    {
+                      "src": "Open Drive/Flipkart.jpg",
+                      "label": "Flipkart",
+                      "w": 2000,
+                      "h": 2000,
+                      "companies": [
+                        "Flipkart"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹50,000 / month",
+                      "intern": true
+                    },
+                    {
+                      "src": "Open Drive/Flipkart1.jpg",
+                      "label": "Flipkart",
+                      "w": 800,
+                      "h": 800,
+                      "companies": [
+                        "Flipkart"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹50,000 / month",
+                      "intern": true
+                    },
+                    {
+                      "src": "Open Drive/Myntra.jpg",
+                      "label": "Myntra",
+                      "w": 1536,
+                      "h": 1536,
+                      "companies": [
+                        "Myntra"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹40,000 / month",
+                      "intern": true
+                    },
+                    {
+                      "src": "Open Drive/VISA.jpg",
+                      "label": "VISA",
+                      "w": 800,
+                      "h": 800,
+                      "companies": [
+                        "VISA"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹90,000 / month",
+                      "intern": true
                     },
                     {
                       "src": "Open Drive/walmart2.jpg",
                       "label": "Walmart",
                       "w": 2048,
-                      "h": 1152
+                      "h": 1152,
+                      "companies": [
+                        "Walmart"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹1,00,000 / month",
+                      "intern": true
                     },
                     {
                       "src": "Open Drive/walmart3.jpg",
                       "label": "Walmart",
                       "w": 800,
-                      "h": 800
+                      "h": 800,
+                      "companies": [
+                        "Walmart"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹1,00,000 / month",
+                      "intern": true
                     },
                     {
                       "src": "Open Drive/walmart4.jpg",
                       "label": "Walmart",
                       "w": 800,
-                      "h": 800
+                      "h": 800,
+                      "companies": [
+                        "Walmart"
+                      ],
+                      "pkg": null,
+                      "pkgText": "₹1,00,000 / month",
+                      "intern": true
                     },
                     {
-                      "src": "Campus Placements\\Wissada.jpg",
-                      "label": "Wissada",
+                      "src": "Open Drive/Autodesk.jpg",
+                      "label": "Autodesk",
                       "w": 1536,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [
+                        "Autodesk"
+                      ],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
-                      "src": "Campus Placements\\Wissda.jpg",
-                      "label": "Wissda",
-                      "w": 2000,
-                      "h": 2000
+                      "src": "Open Drive/walmart1.jpg",
+                      "label": "Walmart · Google · Flipkart · Airbus",
+                      "w": 800,
+                      "h": 800,
+                      "companies": [
+                        "Walmart",
+                        "Google",
+                        "Flipkart",
+                        "Airbus"
+                      ],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 }
@@ -2136,6 +2515,7 @@
               "blurb": "Photographs sent back from the offices they joined.",
               "kind": "photo",
               "icon": "briefcase",
+              "filters": false,
               "groups": [
                 {
                   "name": "ServiceNow",
@@ -2144,43 +2524,71 @@
                       "src": "Placement Success Stories/servicenow/1.jpg",
                       "label": "ServiceNow",
                       "w": 2048,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/servicenow/2.jpg",
                       "label": "ServiceNow",
                       "w": 1280,
-                      "h": 1975
+                      "h": 1975,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/servicenow/3.jpg",
                       "label": "ServiceNow",
                       "w": 1280,
-                      "h": 1635
+                      "h": 1635,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/servicenow/4.jpg",
                       "label": "ServiceNow",
                       "w": 899,
-                      "h": 1599
+                      "h": 1599,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/servicenow/5.jpg",
                       "label": "ServiceNow",
                       "w": 1600,
-                      "h": 1204
+                      "h": 1204,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/servicenow/6.jpg",
                       "label": "ServiceNow",
                       "w": 1600,
-                      "h": 1204
+                      "h": 1204,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/servicenow/7.jpg",
                       "label": "ServiceNow",
                       "w": 1600,
-                      "h": 1241
+                      "h": 1241,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 },
@@ -2191,37 +2599,61 @@
                       "src": "Placement Success Stories/Flipkart/1.jpg",
                       "label": "Flipkart",
                       "w": 1600,
-                      "h": 1200
+                      "h": 1200,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Flipkart/2.jpg",
                       "label": "Flipkart",
                       "w": 1600,
-                      "h": 900
+                      "h": 900,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Flipkart/3.jpg",
                       "label": "Flipkart",
                       "w": 800,
-                      "h": 450
+                      "h": 450,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Flipkart/4.jpg",
                       "label": "Flipkart",
                       "w": 1280,
-                      "h": 1706
+                      "h": 1706,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Flipkart/5.jpg",
                       "label": "Flipkart",
                       "w": 1280,
-                      "h": 960
+                      "h": 960,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Flipkart/6.jpg",
                       "label": "Flipkart",
                       "w": 1280,
-                      "h": 1047
+                      "h": 1047,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 },
@@ -2232,37 +2664,61 @@
                       "src": "Placement Success Stories/Wipro_servicenow/1.jpg",
                       "label": "Wipro + ServiceNow",
                       "w": 1080,
-                      "h": 1920
+                      "h": 1920,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Wipro_servicenow/2.jpg",
                       "label": "Wipro + ServiceNow",
                       "w": 720,
-                      "h": 1280
+                      "h": 1280,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Wipro_servicenow/3.jpg",
                       "label": "Wipro + ServiceNow",
                       "w": 1080,
-                      "h": 1920
+                      "h": 1920,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Wipro_servicenow/4.jpg",
                       "label": "Wipro + ServiceNow",
                       "w": 1280,
-                      "h": 1706
+                      "h": 1706,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Wipro_servicenow/5.jpg",
                       "label": "Wipro + ServiceNow",
                       "w": 1280,
-                      "h": 1706
+                      "h": 1706,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Wipro_servicenow/6.jpg",
                       "label": "Wipro + ServiceNow",
                       "w": 1080,
-                      "h": 1920
+                      "h": 1920,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 },
@@ -2273,25 +2729,41 @@
                       "src": "Placement Success Stories/drawinbox/1.jpg",
                       "label": "DrawInBox",
                       "w": 1200,
-                      "h": 1600
+                      "h": 1600,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/drawinbox/2.jpg",
                       "label": "DrawInBox",
                       "w": 1280,
-                      "h": 1706
+                      "h": 1706,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/drawinbox/3.jpg",
                       "label": "DrawInBox",
                       "w": 2048,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/drawinbox/4.jpg",
                       "label": "DrawInBox",
                       "w": 1280,
-                      "h": 1706
+                      "h": 1706,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 },
@@ -2302,19 +2774,31 @@
                       "src": "Placement Success Stories/Google/1.jpg",
                       "label": "Google",
                       "w": 2048,
-                      "h": 920
+                      "h": 920,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Google/2.jpg",
                       "label": "Google",
                       "w": 2048,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Google/3.jpg",
                       "label": "Google",
                       "w": 2048,
-                      "h": 1536
+                      "h": 1536,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 },
@@ -2325,19 +2809,31 @@
                       "src": "Placement Success Stories/Hitachi/1.jpg",
                       "label": "Hitachi",
                       "w": 2000,
-                      "h": 1500
+                      "h": 1500,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Hitachi/2.jpg",
                       "label": "Hitachi",
                       "w": 960,
-                      "h": 1280
+                      "h": 1280,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Hitachi/3.jpg",
                       "label": "Hitachi",
                       "w": 1280,
-                      "h": 1706
+                      "h": 1706,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 },
@@ -2348,13 +2844,21 @@
                       "src": "Placement Success Stories/GE/1.jpg",
                       "label": "GE",
                       "w": 1280,
-                      "h": 679
+                      "h": 679,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/GE/2.jpg",
                       "label": "GE",
                       "w": 773,
-                      "h": 1280
+                      "h": 1280,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 },
@@ -2365,13 +2869,21 @@
                       "src": "Placement Success Stories/Verixzo/1.jpg",
                       "label": "Verixzo",
                       "w": 1024,
-                      "h": 896
+                      "h": 896,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     },
                     {
                       "src": "Placement Success Stories/Verixzo/2.jpg",
                       "label": "Verixzo",
                       "w": 768,
-                      "h": 1024
+                      "h": 1024,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 },
@@ -2382,7 +2894,11 @@
                       "src": "Pega/1.jpg",
                       "label": "Pega",
                       "w": 2048,
-                      "h": 1152
+                      "h": 1152,
+                      "companies": [],
+                      "pkg": null,
+                      "pkgText": "",
+                      "intern": false
                     }
                   ]
                 }
@@ -2392,7 +2908,7 @@
         }
       ],
       "createdAt": "2026-07-30T05:29:38.088Z",
-      "updatedAt": "2026-08-19T06:48:39.402Z",
+      "updatedAt": "2026-10-09T07:51:55.227Z",
       "iconKey": "job-pin"
     },
     {
@@ -2402,7 +2918,7 @@
       "title": "Events",
       "subtitle": "",
       "icon": "✧",
-      "order": 11,
+      "order": 17,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -3257,7 +3773,7 @@
       "title": "Video Resumes",
       "subtitle": "",
       "icon": "❞",
-      "order": 12,
+      "order": 16,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -4125,7 +4641,7 @@
       "icon": "",
       "iconKey": "rosette",
       "iconAssetId": null,
-      "order": 6,
+      "order": 5,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -5450,7 +5966,7 @@
       "icon": "",
       "iconKey": "ai-figure",
       "iconAssetId": null,
-      "order": 13,
+      "order": 8,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -6091,7 +6607,7 @@
       "icon": "",
       "iconKey": "tap-network",
       "iconAssetId": null,
-      "order": 17,
+      "order": 10,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -7927,7 +8443,7 @@
       "icon": "",
       "iconKey": "brain",
       "iconAssetId": null,
-      "order": 14,
+      "order": 13,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -8353,7 +8869,7 @@
       "icon": "",
       "iconKey": "link",
       "iconAssetId": null,
-      "order": 15,
+      "order": 14,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9125,7 +9641,7 @@
       "icon": "",
       "iconKey": "users",
       "iconAssetId": null,
-      "order": 5,
+      "order": 6,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9356,12 +9872,12 @@
       "icon": "",
       "iconKey": "partners",
       "iconAssetId": null,
-      "order": 16,
+      "order": 15,
       "hidden": false,
       "status": "published",
       "blocks": [
         {
-          "id": "blk_e45293ce3a5541d9",
+          "id": "blk_86b60940fa504106",
           "type": "collab-wall",
           "layout": {
             "x": 0,
@@ -9376,7 +9892,7 @@
             "lead": "The colleges, companies and AI platforms that work with Technical Hub — each one an MoU or a partnership, signed and running.",
             "goLabel": "Explore every collaboration",
             "bandLabel": "Collaborations",
-            "hold": 9000,
+            "hold": 5000,
             "wallHold": 5200,
             "partners": [
               {
@@ -9738,7 +10254,7 @@
         }
       ],
       "createdAt": "2026-10-08T05:35:38.780Z",
-      "updatedAt": "2026-10-09T04:56:33.626Z"
+      "updatedAt": "2026-10-09T06:41:55.153Z"
     }
   ],
   "assets": [

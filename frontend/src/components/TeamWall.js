@@ -1,6 +1,7 @@
 import { h, svg } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * Team — the whole team as one loose network round Babji Neelam.
@@ -97,7 +98,7 @@ function curve(p, q, bend) {
   return `M${p.x.toFixed(1)} ${p.y.toFixed(1)}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${q.x.toFixed(1)} ${q.y.toFixed(1)}`;
 }
 
-export function TeamWall(block) {
+export function TeamWall(block, { editing = false } = {}) {
   const members = (block.members || []).filter((m) => m.photo);
   const root = h('div', { class: 'tw3-root ph-root' });
   if (!members.length) { root.append(h('p', { class: 'tw3-empty' }, 'No team photographs yet.')); return root; }
@@ -359,14 +360,7 @@ export function TeamWall(block) {
   /* ------------------------------------------------------------ the switch */
   const tab = (key, label, count, ic) => h('button', {
     class: `tw3-tab${key === view ? ' is-on' : ''}`, type: 'button', 'data-view': key,
-    onclick: () => {
-      if (view === key) return;
-      view = key;
-      root.querySelectorAll('.tw3-tab').forEach((b) => b.classList.toggle('is-on', b.dataset.view === key));
-      root.classList.toggle('is-architects', key === 'architects');
-      hot(-1);
-      layout(true);
-    },
+    onclick: () => setView(key),
   }, icon(ic, { class: 'ic ic--sm' }), h('span', {}, label), h('b', {}, String(count)));
 
   const head = h('header', { class: 'tw3-head' },
@@ -380,6 +374,30 @@ export function TeamWall(block) {
       architects.length ? tab('architects', block.architectsLabel || 'Claude-certified architects', architects.length, 'seal-check') : null));
 
   root.append(head, stage);
+
+  function setView(key) {
+    if (view === key) return;
+    view = key;
+    root.querySelectorAll('.tw3-tab').forEach((b) => b.classList.toggle('is-on', b.dataset.view === key));
+    root.classList.toggle('is-architects', key === 'architects');
+    hot(-1);
+    layout(true);
+  }
+
+  /* The switch turns on its own while the deck plays — the whole team holds longer than the ten
+     architects, since there are more faces to take in — and Next steps it while paused. */
+  const VIEWS = ['all', ...(architects.length ? ['architects'] : [])];
+  if (!editing && VIEWS.length > 1) {
+    registerStepper((delta) => {
+      const i = VIEWS.indexOf(view) + (delta > 0 ? 1 : -1);
+      if (i < 0 || i >= VIEWS.length) return false;
+      setView(VIEWS[i]);
+      return true;
+    }, {
+      auto: () => 5000 + Math.min(2000, (view === 'all' ? members.length : architects.length) * 80),
+      next: () => { setView(VIEWS[(VIEWS.indexOf(view) + 1) % VIEWS.length]); return true; },
+    });
+  }
 
   // The stage's size settles after FitSlide scales the slide; solve again whenever it moves.
   if (typeof ResizeObserver === 'function') new ResizeObserver(() => layout(false)).observe(stage);

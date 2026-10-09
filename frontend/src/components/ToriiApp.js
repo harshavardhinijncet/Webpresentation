@@ -413,7 +413,7 @@ export function ToriiApp(block, { editing = false } = {}) {
       if (j < 0 || j >= VIEWS.length) return false;
       go(VIEWS[j][0]);
       return true;
-    });
+    }, { auto: () => 5000 + Math.min(2000, (root.querySelector('.ta-view.is-on')?.querySelectorAll('.ta-card, .ta-mou, .ta-logos span').length || 0) * 120) });
     svAuto.start();
     labAuto.start();
     hrAuto.start();

@@ -1,7 +1,8 @@
-import { h } from '../utils/dom.js';
+import { h, wheelScroll, moreStrip } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
-import { autoSlide, slideIn } from '../utils/autoSlide.js';
+import { autoSlide, slideIn, resetAutoSlides } from '../utils/autoSlide.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * Placements: four chapters of evidence, and a gallery that never distorts one
@@ -80,9 +81,21 @@ export function justifyRows(items, width, targetH, gap = GAP, maxH = Infinity) {
       arSum = 0;
     }
   });
+  /* The leftover tail never fills the width on its own: solved to fit it, one square poster stands
+     as tall as the whole gallery. It keeps the row height of the rows above (or the target, alone)
+     and sits centred, short of the edges. */
   if (row.length) {
     const res = solveRow(row);
-    if (res) rows.push(res);
+    if (res) {
+      const cap = Math.min(maxH > 0 ? maxH : Infinity, rows.length ? rows[rows.length - 1].height : targetH * 1.25);
+      if (res.height > cap) {
+        res.height = cap;
+        res.full = false;
+        res.tail = true;
+        res.items = res.items.map((it) => ({ ...it, dw: cap * (it.w / it.h || 1), dh: cap }));
+      }
+      rows.push(res);
+    }
   }
 
   return rows;
@@ -276,18 +289,7 @@ export function PlacementWall(block, { editing = false } = {}) {
   /* --------------------------------------------------------------- header */
   const stage = h('div', { class: 'pw-stage' });
 
-  // Direct wheel scrolling for smooth, reliable trackpad/mouse scroll across all 3 tabs
-  stage.addEventListener('wheel', (e) => {
-    if (stage.scrollHeight > stage.clientHeight) {
-      const canScrollUp = stage.scrollTop > 0;
-      const canScrollDown = stage.scrollTop + stage.clientHeight < stage.scrollHeight - 1;
-      if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
-        e.preventDefault();
-        e.stopPropagation();
-        stage.scrollTop += e.deltaY;
-      }
-    }
-  }, { passive: false });
+  wheelScroll(stage);
 
   // Touch drag scrolling for touchpads and touchscreens
   let touchStartY = 0;
@@ -309,6 +311,70 @@ export function PlacementWall(block, { editing = false } = {}) {
 
   let activeChapter = chapters[0];
   let activeGroup = null; // null means every group in the chapter
+  /* Poster chapters tagged with package and company get a filter panel down the left: one package
+     and one company may be chosen (choosing another replaces it, choosing it again clears it), and
+     the two combine. With nothing chosen, every poster shows. */
+  let band = null;
+  let company = null;
+  const BANDS = [
+    { key: 'u5', label: 'Up to 5', unit: 'LPA', tone: '#cdeedd', ink: '#1f7a52', test: (p) => !p.intern && p.pkg !== null && p.pkg <= 5 },
+    { key: '5-10', label: '5 – 10', unit: 'LPA', tone: '#fbecc0', ink: '#8a6400', test: (p) => !p.intern && p.pkg > 5 && p.pkg <= 10 },
+    { key: '10-20', label: '10 – 20', unit: 'LPA', tone: '#d6eafb', ink: '#2463a6', test: (p) => !p.intern && p.pkg > 10 && p.pkg <= 20 },
+    { key: '20+', label: '20 +', unit: 'LPA', tone: '#fbdcd0', ink: '#a8452a', test: (p) => !p.intern && p.pkg > 20 },
+    { key: 'intern', label: 'Internships', unit: 'stipend', tone: '#e6dcfb', ink: '#5b3fa3', test: (p) => p.intern },
+  ];
+  const side = h('aside', { class: 'pw-side', hidden: true });
+  const filtering = () => !!activeChapter?.filters;
+  const allIn = () => activeChapter.groups.flatMap((g) => g.images.map((im) => ({ ...im, group: g })));
+  const inBand = (p, b = band) => !b || BANDS.find((x) => x.key === b).test(p);
+  const inCo = (p, c = company) => !c || (p.companies || []).includes(c);
+  const passes = (p) => inBand(p) && inCo(p);
+
+  function drawSide() {
+    root.classList.toggle('is-filtered', filtering());
+    side.hidden = !filtering();
+    if (!filtering()) { side.replaceChildren(); return; }
+    const all = allIn();
+    const counts = new Map();
+    all.forEach((p) => (p.companies || []).forEach((c) => counts.set(c, (counts.get(c) || 0) + 1)));
+    const names = [...counts.keys()].sort((a, b) => counts.get(b) - counts.get(a) || a.localeCompare(b));
+    let k = 0;
+    const bandCard = (b) => {
+      const n = all.filter((p) => b.test(p) && inCo(p)).length;
+      const share = all.length ? all.filter(b.test).length / all.length : 0;
+      return h('button', {
+        class: `pw-bcard${band === b.key ? ' is-on' : ''}${b.key === 'intern' ? ' pw-bcard--wide' : ''}`, type: 'button',
+        disabled: !n && band !== b.key, style: { '--tone': b.tone, '--ink': b.ink, '--share': String(share), '--i': String(k++) },
+        onclick: () => { band = band === b.key ? null : b.key; refilter(); },
+      },
+        h('span', { class: 'pw-bcard__dot', 'aria-hidden': 'true' }),
+        h('span', { class: 'pw-bcard__text' }, h('b', {}, b.label), h('small', {}, b.unit)),
+        h('em', { class: 'pw-bcard__n' }, String(n)),
+        h('i', { class: 'pw-bcard__bar', 'aria-hidden': 'true' }));
+    };
+    side.replaceChildren(
+      h('div', { class: 'pw-side__row' },
+        h('p', { class: 'pw-side__h' }, 'Package'),
+        band || company ? h('button', { class: 'pw-side__clear', type: 'button', onclick: () => { band = null; company = null; refilter(); } },
+          icon('close', { class: 'ic ic--xs' }), 'Clear') : null),
+      h('div', { class: 'pw-bcards' }, ...BANDS.map(bandCard)),
+      h('p', { class: 'pw-side__h' }, 'Company'),
+      h('div', { class: 'pw-coswrap' }, h('div', { class: 'pw-cos' }, ...names.map((c) => {
+        const n = all.filter((p) => (p.companies || []).includes(c) && inBand(p)).length;
+        return h('button', {
+          class: `pw-cchip${company === c ? ' is-on' : ''}`, type: 'button', disabled: !n && company !== c,
+          style: { '--i': String(k++) },
+          onclick: () => { company = company === c ? null : c; refilter(); },
+        }, h('span', {}, c), h('em', {}, String(n)));
+      }))));
+    moreStrip(side.querySelector('.pw-cos'), { label: 'More companies' });
+  }
+  // Using a filter restarts the tab's hold, so the wall does not move on under the presenter.
+  function refilter() { drawSide(); drawStage(); resetAutoSlides(); }
+  // The company list fades at its foot only when there is more below.
+  const markMore = () => { const co = side.querySelector('.pw-cos'); if (co) co.classList.toggle('is-more', co.scrollHeight > co.clientHeight + 2 && co.scrollTop + co.clientHeight < co.scrollHeight - 2); };
+  side.addEventListener('scroll', markMore, true);
+  if (typeof ResizeObserver === 'function') new ResizeObserver(markMore).observe(side);
   let lastStageH = 0;     // the stage height the current rows were solved against
 
   /* --------------------------------------------------------------- render */
@@ -319,14 +385,9 @@ export function PlacementWall(block, { editing = false } = {}) {
     tiles.forEach((tile, i) => {
       tile.style.transitionDelay = `${Math.min(i, 20) * 26}ms`;
     });
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
-        io.unobserve(entry.target);
-      });
-    }, { root: stage, rootMargin: '80px 0px' });
-    tiles.forEach((t) => io.observe(t));
+    /* Every tile is revealed on the stagger, not when it scrolls into view: an observer rooted
+       in the stage misses intersections inside the scaled slide and left tiles invisible. */
+    requestAnimationFrame(() => tiles.forEach((t) => t.classList.add('is-in')));
   };
 
   function drawStage() {
@@ -337,8 +398,10 @@ export function PlacementWall(block, { editing = false } = {}) {
       ? activeChapter.groups.filter((g) => g.name === activeGroup)
       : activeChapter.groups;
 
-    const flat = groups.flatMap((g) => g.images.map((im) => ({ ...im, group: g })));
-    const width = CANVAS - EDGE * 2;
+    const flat = groups.flatMap((g) => g.images.map((im) => ({ ...im, group: g })))
+      .filter((p) => !filtering() || passes(p));
+    // Beside the filter rail the stage is narrower than the canvas; solve against what it has.
+    const width = filtering() && stage.clientWidth ? stage.clientWidth - EDGE * 2 : CANVAS - EDGE * 2;
     const target = targetHeightFor(activeChapter.kind, flat.length);
     /* clientHeight is layout, not post-transform, so it is safe to solve rows
        against — unlike a bounding rect, which comes back scaled by FitSlide.
@@ -376,7 +439,7 @@ export function PlacementWall(block, { editing = false } = {}) {
     let ordinal = 0;
     rows.forEach((row) => {
       const rowEl = h('div', {
-        class: `pw-row${row.full ? '' : ' pw-row--short'}`,
+        class: `pw-row${row.full ? '' : ' pw-row--short'}${row.tail ? ' pw-row--tail' : ''}`,
         style: { gap: `${GAP}px`, height: `${Math.round(row.height)}px` },
       });
       row.items.forEach((it) => {
@@ -392,10 +455,11 @@ export function PlacementWall(block, { editing = false } = {}) {
             alt: it.label || it.group?.name || '',
             // The intrinsic size, so the browser reserves the right box.
             width: it.w, height: it.h,
-            loading: 'lazy', decoding: 'async',
+            loading: 'eager', decoding: 'async',   // lazy never fires for tiles inside the scaled slide
             onerror: (e) => { e.target.closest('.pw-tile')?.remove(); },
           }),
           it.label ? h('span', { class: 'pw-tile__tag' }, it.label) : null,
+          filtering() && it.pkgText ? h('span', { class: `pw-tile__pkg${it.intern ? ' is-intern' : ''}` }, it.pkgText) : null,
         );
         tiles.push(figure);
         rowEl.appendChild(figure);
@@ -430,12 +494,7 @@ export function PlacementWall(block, { editing = false } = {}) {
         class: `pw-tab${c === activeChapter ? ' is-on' : ''}`,
         type: 'button',
         style: REDUCED?.matches ? {} : { 'animation-delay': `${i * 70}ms` },
-        onclick: () => {
-          if (c === activeChapter) return;
-          activeChapter = c;
-          activeGroup = null;
-          drawRail(); drawChips(); drawStage();
-        },
+        onclick: () => pickChapter(c),
       },
         icon(c.icon || 'images', { class: 'ic ic--sm' }),
         h('span', { class: 'pw-tab__name' }, (c.name || '').toUpperCase()),
@@ -452,10 +511,36 @@ export function PlacementWall(block, { editing = false } = {}) {
   );
 
   root.appendChild(head);
-  root.appendChild(stage);
+  root.appendChild(h('div', { class: 'pw-body' }, side, stage));
+
+  function pickChapter(c) {
+    if (c === activeChapter) return;
+    activeChapter = c;
+    activeGroup = null;
+    band = null;
+    company = null;
+    drawRail(); drawChips(); drawSide(); drawStage();
+  }
+
+  /* The chapters turn on their own while the deck plays — a fuller chapter holds a little
+     longer — and Next / Prev step through them while it is paused. */
+  if (!editing && chapters.length > 1) {
+    registerStepper((delta) => {
+      const i = chapters.indexOf(activeChapter) + (delta > 0 ? 1 : -1);
+      if (i < 0 || i >= chapters.length) return false;
+      pickChapter(chapters[i]);
+      return true;
+    }, {
+      /* Poster walls with a filter hold 15 s, while one is in use 20 s; the journeys and the
+         company photographs 8 s. */
+      auto: () => (activeChapter.filters ? (band || company ? 20000 : 15000) : 8000),
+      next: () => { pickChapter(chapters[(chapters.indexOf(activeChapter) + 1) % chapters.length]); return true; },
+    });
+  }
 
   drawRail();
   drawChips();
+  drawSide();
   drawStage();
 
   /* The first pass ran before the slide was in the document, so it solved

@@ -1,4 +1,4 @@
-import { h, render, clear } from '../utils/dom.js';
+import { h, render, clear, moreStrip } from '../utils/dom.js';
 import { initials } from '../utils/format.js';
 import { state, isAdmin, visibleSections, childSections, sectionById, sectionOrdinal, setSections } from '../context/appStore.js';
 import { navigate, refresh } from '../utils/router.js';
@@ -43,19 +43,19 @@ const NAVIGATION_GROUPS = [
   ['history-milestones', 'History & Milestones', 'roadmap', []],
   ['ceo-profile', 'CEO Profile', 'ceo-podium', []],
   ['leadership-journey', 'Leadership Journey', 'climb-steps', []],
-  ['trainers', 'Team', 'users', []],
   ['success-stories', 'Success Stories', 'rosette', []],
+  ['trainers', 'Team', 'users', []],
   ['programs', 'Programs', 'www-globe', []],
-  ['team', 'Centers of Excellence', 'handshake-check', []],
-  ['certifications', 'Certifications', 'seal-check', []],
-  ['placements', 'Placements', 'job-pin', []],
-  ['achievements', 'Events', 'event-sign', []],
-  ['testimonials', 'Video Resumes', 'clapper', []],
   ['ai-ready-engineer', 'AI Ready Engineer', 'ai-figure', []],
+  ['certifications', 'Certifications', 'seal-check', []],
+  ['platforms', 'Platforms', 'tap-network', []],
+  ['placements', 'Placements', 'job-pin', []],
+  ['team', 'Centers of Excellence', 'handshake-check', []],
   ['ai-partners', 'AI Partners', 'brain', []],
   ['torii', 'Technical Hub × Torii', 'link', []],
   ['collaborations', 'Collaborations', 'partners', []],
-  ['platforms', 'Platforms', 'tap-network', []],
+  ['testimonials', 'Video Resumes', 'clapper', []],
+  ['achievements', 'Events', 'event-sign', []],
 ];
 
 /**
@@ -329,7 +329,7 @@ function navigationState(orgId, activeIndex) {
 }
 
 /** A section's own mark wins over the curated one — admins can restyle any row. */
-function sectionGlyph(section, fallbackKey, { class: className = 'nav-tree__icon' } = {}) {
+export function sectionGlyph(section, fallbackKey, { class: className = 'nav-tree__icon' } = {}) {
   if (section?.iconAsset?.url) return SectionIconGlyph(section, { class: className });
   const art = NAV_ARTWORK[section?.key];
   if (art) return artworkGlyph(art, { class: className });
@@ -627,6 +627,9 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
     { class: 'sidenav__scroll', 'aria-label': 'Organization guide' },
     h('div', { class: 'nav-tree' }, ...tree),
   );
+  /* No scrollbar: when rows are hidden below, a strip with a bouncing arrow brings them up. */
+  const guideWrap = h('div', { class: 'sidenav__scrollwrap' }, guide);
+  moreStrip(guide, { host: guideWrap, label: 'More sections' });
 
   /* -------------------------------------------------------------- shell */
   const collapse = h(
@@ -685,7 +688,7 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
       signOut,
       collapse,
     ),
-    guide,
+    guideWrap,
     railTree,
     flyout,
     railTip,

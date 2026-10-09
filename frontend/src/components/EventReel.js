@@ -1,5 +1,6 @@
-import { h } from '../utils/dom.js';
+import { h, wheelScroll } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { registerStepper } from '../utils/slideSteps.js';
 import { filmStage, posterImg, bindStageLifetime } from '../utils/filmStage.js';
 
 /**
@@ -134,17 +135,7 @@ export function EventReel(block, { editing = false } = {}) {
   /* ------------------------------------------------------------------ grid */
   const grid = h('div', { class: 'ev-grid' });
 
-  grid.addEventListener('wheel', (e) => {
-    if (grid.scrollHeight > grid.clientHeight) {
-      const canScrollUp = grid.scrollTop > 0;
-      const canScrollDown = grid.scrollTop + grid.clientHeight < grid.scrollHeight - 1;
-      if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
-        e.preventDefault();
-        e.stopPropagation();
-        grid.scrollTop += e.deltaY;
-      }
-    }
-  }, { passive: false });
+  wheelScroll(grid);
 
   function drawGrid() {
     grid.textContent = '';
@@ -213,11 +204,7 @@ export function EventReel(block, { editing = false } = {}) {
       class: `ev-tab${c === chapter ? ' is-on' : ''}`,
       type: 'button', role: 'tab', 'aria-selected': String(c === chapter),
       style: REDUCED?.matches ? {} : { 'animation-delay': `${i * 60}ms` },
-      onclick: () => {
-        if (c === chapter) return;
-        chapter = c;
-        drawTabs(); drawGrid();
-      },
+      onclick: () => pickChapter(c),
     },
       icon(c.icon || 'calendar', { class: 'ic ic--sm' }),
       h('span', { class: 'ev-tab__name' }, (c.name || '').toUpperCase()),
@@ -232,6 +219,26 @@ export function EventReel(block, { editing = false } = {}) {
   root.appendChild(head);
   root.appendChild(tabs);
   root.appendChild(grid);
+
+  function pickChapter(c) {
+    if (c === chapter) return;
+    chapter = c;
+    drawTabs(); drawGrid();
+  }
+
+  /* The chapters turn on their own while the deck plays — a fuller chapter holds a little
+     longer — and Next / Prev step through them while it is paused. */
+  if (!editing && chapters.length > 1) {
+    registerStepper((delta) => {
+      const i = chapters.indexOf(chapter) + (delta > 0 ? 1 : -1);
+      if (i < 0 || i >= chapters.length) return false;
+      pickChapter(chapters[i]);
+      return true;
+    }, {
+      auto: () => 5000 + Math.min(2000, filmsIn(chapter) * 120),
+      next: () => { pickChapter(chapters[(chapters.indexOf(chapter) + 1) % chapters.length]); return true; },
+    });
+  }
 
   drawTabs();
   drawGrid();

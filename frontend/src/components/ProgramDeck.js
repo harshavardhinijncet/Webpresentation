@@ -1,6 +1,7 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
-import { autoSlide, slideIn, slideArrows } from '../utils/autoSlide.js';
+import { autoSlide, slideIn, slideArrows, isDeckPaused } from '../utils/autoSlide.js';
+import { registerStepper } from '../utils/slideSteps.js';
 import { media } from '../utils/media.js';
 import { videoControls } from '../utils/videoControls.js';
 
@@ -347,6 +348,22 @@ export function ProgramDeck(block, { editing = false } = {}) {
 
   // Measure after the row has a layout, or every offset is zero.
   requestAnimationFrame(() => requestAnimationFrame(stack));
+
+  /* The cover opens itself: it stands for a moment as the slide arrives, then fans out into the
+     row of programmes (waiting while the deck is paused). Paused, Next opens it straight away. */
+  if (!editing) {
+    let waited = 0;
+    const tick = setInterval(() => {
+      if (!root.isConnected || root.classList.contains('is-fanned')) { clearInterval(tick); return; }
+      if (isDeckPaused()) return;
+      waited += 300;
+      if (waited >= 2400) { clearInterval(tick); fan(); }
+    }, 300);
+    registerStepper((delta) => {
+      if (delta > 0 && !root.classList.contains('is-fanned')) { fan(); return true; }
+      return false;
+    });
+  }
 
   root.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;

@@ -17,7 +17,64 @@ import { icon } from './icons.js';
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
 /** How long one photograph holds before the next arrives. */
-export const AUTO_SLIDE_MS = 3000;
+export const AUTO_SLIDE_MS = 5000;
+
+/* One even pace across the deck: photographs hold for five seconds; a tab or page may ask for
+   longer when it carries more to read — a wall of posters with a filter up to twenty. Nothing
+   is quicker than five. */
+const MIN_MS = 5000;
+const MAX_MS = 20000;
+
+/* ------------------------------------------------------------------ the pause
+   Space pauses the whole deck. Every auto-slide holds where it is, and the looping motion
+   on the slide (drifting walls, turning rings, flowing lines) freezes with it; Space again
+   lets it all run on. While paused, Next steps through what is on the slide instead of
+   turning it — see PresentPage. */
+let paused = false;
+const listeners = new Set();
+const sliders = new Set();
+
+export const isDeckPaused = () => paused;
+
+/** A presenter has just used something on the slide: every timer starts its hold again. */
+export function resetAutoSlides() { sliders.forEach((s) => s.reset()); }
+export function onDeckPause(fn) { listeners.add(fn); return () => listeners.delete(fn); }
+
+/** Looping animations only: an entrance caught mid-way would freeze half-faded. */
+function loops() {
+  return (document.getAnimations?.() || []).filter((a) => {
+    const t = a.effect?.getTiming?.();
+    return t && t.iterations === Infinity && !a.effect?.target?.closest?.('.deck-bar, .deck-paused');
+  });
+}
+
+let settleTimer = null;
+export function setDeckPaused(on) {
+  const was = paused;
+  paused = Boolean(on);
+  document.body.classList.toggle('is-deck-paused', paused);
+  // The notice shows in full for a moment, then settles into a small badge in the corner.
+  if (paused !== was) {
+    clearTimeout(settleTimer);
+    document.body.classList.remove('is-deck-settled');
+    if (paused) settleTimer = setTimeout(() => { if (paused) document.body.classList.add('is-deck-settled'); }, 2600);
+  }
+  loops().forEach((a) => { try { if (paused) a.pause(); else a.play(); } catch { /* finished */ } });
+  if (!paused) sliders.forEach((s) => s.reset());
+  listeners.forEach((fn) => { try { fn(paused); } catch { /* ignore */ } });
+}
+
+/**
+ * While paused, Next moves the pictures on by hand: every auto-slide that is on screen and
+ * would have run takes one step. Returns true when anything moved.
+ */
+export function stepVisibleSlides() {
+  let moved = false;
+  sliders.forEach((s) => {
+    if (s.manual && s.live() && !document.hidden && s.canRun()) { s.advance(); s.reset(); moved = true; }
+  });
+  return moved;
+}
 
 /**
  * A timer that calls `advance()` every `interval` while it runs.
@@ -31,11 +88,15 @@ export const AUTO_SLIDE_MS = 3000;
  * `canRun()` is asked on every tick; returning false skips that tick without
  * stopping, for states such as "the deck is folded" that come and go.
  */
-export function autoSlide(advance, { host, interval = AUTO_SLIDE_MS, canRun = () => true } = {}) {
+export function autoSlide(advance, { host, interval = AUTO_SLIDE_MS, canRun = () => true, manual = true } = {}) {
   let timer = null;
   let on = false;
+  /* `interval` may be a function, asked afresh for every hold, so a tab carrying more content
+     can hold longer than a light one. */
+  const wait = () => Math.min(MAX_MS, Math.max(MIN_MS, Number(typeof interval === 'function' ? interval() : interval) || AUTO_SLIDE_MS));
 
   const live = () => !host || (host.isConnected && !host.hidden);
+  const self = { advance, canRun, live, manual, reset: () => reset() };
 
   function arm() {
     clearTimeout(timer);
@@ -44,13 +105,13 @@ export function autoSlide(advance, { host, interval = AUTO_SLIDE_MS, canRun = ()
     timer = setTimeout(() => {
       if (!on) return;
       if (!live()) { stop(); return; }
-      if (!document.hidden && canRun()) advance();
+      if (!document.hidden && !paused && canRun()) advance();
       arm();
-    }, interval);
+    }, wait());
   }
 
-  function start() { on = true; arm(); }
-  function stop() { on = false; clearTimeout(timer); timer = null; }
+  function start() { on = true; sliders.add(self); arm(); }
+  function stop() { on = false; sliders.delete(self); clearTimeout(timer); timer = null; }
   /** After a manual step: the picture just chosen gets its full hold. */
   function reset() { if (on) arm(); }
 

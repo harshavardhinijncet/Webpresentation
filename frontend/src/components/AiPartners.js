@@ -28,7 +28,7 @@ export function AiPartners(block, { editing = false } = {}) {
     return h('div', { class: 'apx-root apx-root--empty ph-root' }, 'No AI partners yet.');
   }
   const n = partners.length;
-  const hold = Number(block.hold) || 9000;
+  const hold = 5000;   // the deck-wide pace (utils/autoSlide.js)
 
   const root = h('div', { class: 'apx-root ph-root', style: { '--apx-hold': `${hold}ms`, '--apx-ring': String(RING) } });
   let active = 0;

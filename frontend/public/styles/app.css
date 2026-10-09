@@ -17878,7 +17878,7 @@ body.is-presenting .fit-slide__inner .are-root {
 
 .are-xc__cap { transition: opacity 0.8s ease, transform 0.8s ease; }
 .are-xc__panel.is-open .are-xc__cap { transition-delay: 1s; }
-.are-root .are-cf__bar.is-run { animation-duration: 5.5s; }
+.are-root .are-cf__bar.is-run { animation-duration: 5s; }
 
 @media (prefers-reduced-motion: reduce) {
   .are-ring, .are-tr__inset, .are-tr__go .ic, .are-xc__panel.is-open img { animation: none !important; }
@@ -19683,3 +19683,587 @@ button.ta-card { cursor: pointer; }
 .ta-view--hr .ta-lab__img.is-on { transform: scale(1); }
 .ta-view--hr .ta-lab__copy { gap: 14px; }
 .ta-view--hr .ta-ticks li { font-size: 15px; }
+
+/* ==========================================================================
+   Deck pause — Space holds every auto-slide and looping motion. The notice is
+   a quiet glass card at the top of the screen: a breathing pause mark in the
+   accent, the state in plain words, and the two keys that matter as keycaps.
+   ========================================================================== */
+.deck-paused {
+  position: fixed;
+  left: 50%;
+  top: 20px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 20px 10px 10px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 18px;
+  background: rgb(14 20 17 / 0.78);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 22px 48px -22px rgb(0 0 0 / 0.65), inset 0 1px 0 rgb(255 255 255 / 0.08);
+  color: #ffffff;
+  font-family: var(--font);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -18px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 0.9, 0.16, 1);
+}
+
+body.is-deck-paused .deck-paused { opacity: 1; transform: translate(-50%, 0) scale(1); }
+
+/* The mark: two bars on an accent disc, with a soft ring that breathes while paused. */
+.deck-paused__mark {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--brand-accent, #ffbb00);
+}
+
+.deck-paused__mark i { width: 4px; height: 14px; border-radius: 2px; background: #1c1600; }
+.deck-paused__mark::after { content: ''; position: absolute; inset: -4px; border-radius: 15px; border: 1.5px solid var(--brand-accent, #ffbb00); opacity: 0; }
+body.is-deck-paused .deck-paused__mark::after { animation: deck-breathe 2.4s ease-in-out infinite; }
+
+@keyframes deck-breathe { 0%, 100% { opacity: 0; transform: scale(0.94); } 50% { opacity: 0.55; transform: scale(1.04); } }
+
+.deck-paused__text { display: flex; flex-direction: column; gap: 3px; }
+.deck-paused__text b { font-size: 14px; font-weight: 700; letter-spacing: 0.01em; }
+.deck-paused__keys { display: flex; align-items: center; gap: 5px; color: rgb(255 255 255 / 0.62); font-size: 12px; font-weight: 500; }
+.deck-paused__keys em { margin: 0 4px; font-style: normal; color: rgb(255 255 255 / 0.3); }
+
+.deck-paused kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 0.08);
+  color: #ffffff;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deck-paused { transition: none; }
+  body.is-deck-paused .deck-paused__mark::after { animation: none; }
+}
+/* With the controls, not over a slide's own top bar: just above the deck bar, rising into place. */
+.deck-paused { top: auto; bottom: 108px; transform: translate(-50%, 18px) scale(0.98); }
+body.is-deck-paused .deck-paused { transform: translate(-50%, 0) scale(1); }
+body:not(.is-presenting) .deck-paused { bottom: 28px; }
+/* Settled: the notice glides into the empty corner beside the deck bar and becomes a badge. */
+.deck-paused { transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 0.9, 0.16, 1), left 0.7s cubic-bezier(0.22, 0.9, 0.16, 1), bottom 0.7s cubic-bezier(0.22, 0.9, 0.16, 1), padding 0.5s ease, gap 0.5s ease; }
+.deck-paused__short { display: none; }
+.deck-paused__keys { max-height: 22px; overflow: hidden; transition: max-height 0.45s ease, opacity 0.3s ease; }
+body.is-deck-settled .deck-paused { left: 24px; bottom: 30px; transform: translate(0, 0) scale(1); gap: 10px; padding: 7px 16px 7px 7px; }
+body.is-deck-settled .deck-paused__mark { width: 30px; height: 30px; border-radius: 10px; }
+body.is-deck-settled .deck-paused__mark i { height: 11px; width: 3px; }
+body.is-deck-settled .deck-paused__keys { max-height: 0; opacity: 0; }
+body.is-deck-settled .deck-paused__full { display: none; }
+body.is-deck-settled .deck-paused__short { display: inline; }
+body:not(.is-presenting).is-deck-settled .deck-paused { bottom: 24px; }
+body.is-deck-settled .deck-paused__keys { display: none; }
+
+/* ==========================================================================
+   Placements — Campus and Open Drives with a filter rail: the count, package
+   bands with how much of the wall each holds, and the companies. The gallery
+   beside it shows what passes, each poster carrying its package.
+   ========================================================================== */
+.pw-body { flex: 1 1 auto; min-height: 0; display: flex; }
+.pw-body > .pw-stage { flex: 1 1 auto; min-width: 0; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px var(--border, #e5e7eb);
+  color: var(--ink, #111827);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease, color 0.25s ease, background 0.25s ease;
+}
+
+
+
+/* Each poster carries its package as a pill on its foot. */
+.pw-tile__pkg { position: absolute; right: 8px; bottom: 8px; z-index: 2; padding: 4px 10px; border-radius: 999px; background: var(--brand-accent, #ffbb00); color: #1c1600; font-size: 12px; font-weight: 800; box-shadow: 0 6px 14px -6px rgb(0 0 0 / 0.5); }
+.pw-tile__pkg.is-intern { background: #ffffff; color: #111827; }
+.pw-root.is-filtered .pw-tile__tag { right: auto; max-width: 60%; }
+
+@media (prefers-reduced-motion: reduce) { .pw-side { animation: none; } }
+/* Compact company chips, so a whole tab's companies fit the rail; a soft fade marks any overflow. */
+
+
+
+
+/* The bands two to a row (the internship band across both), leaving the companies more height. */
+/* Placements is one slide tall in every view, not only while presenting: with the filter rail the
+   gallery sits in a row, and a root sized by its content let the last poster grow to the whole
+   gallery's height — the slide then measured 2,160 rows and was shrunk to fit. */
+.pw-root { flex: 0 0 auto; height: var(--slide-h, 860px); max-height: var(--slide-h, 860px); }
+.pw-body { flex: 1 1 0; min-height: 0; }
+
+/* Filter rail — groups of check pills after the reference: a bold heading over a hairline, then
+   pills with a check circle on the left that fills with a tick in the brand colour when chosen. */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Scrolling galleries scroll natively and keep the gesture to themselves. */
+.pw-stage, .ev-grid, .vr-wall { overscroll-behavior: contain; scroll-behavior: auto; }
+/* A short last row sits centred at the row height rather than stretching. */
+.pw-row--tail { justify-content: center; }
+.pw-row--tail .pw-tile { flex: 0 0 auto; }
+
+/* ==========================================================================
+   Placements filter panel — a deep-green column, edge to edge down the left
+   of the slide: the count, five package cards each in its own colour with a
+   bar for its share of the tab, and the companies as a two-column grid
+   filling the rest. One package and one company at a time. Everything
+   enters in sequence and every choice animates.
+   ========================================================================== */
+.pw-root.is-filtered { position: relative; }
+.pw-root.is-filtered .pw-head { padding-left: 312px; }
+.pw-root.is-filtered .pw-body { margin-left: 300px; }
+.pw-root.is-filtered .pw-stage { padding-left: 16px; }
+
+.pw-side {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 18px;
+  background: color-mix(in srgb, var(--brand-primary, #008638) 72%, #000000);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.pw-side[hidden] { display: none; }
+body.is-presenting .pw-side { padding-bottom: var(--deck-bar-clear, 96px); }
+
+/* A soft gold light in the corner, so the panel reads as a surface rather than a slab. */
+.pw-side::before { content: ''; position: absolute; right: -90px; top: -90px; width: 220px; height: 220px; border-radius: 50%; background: var(--brand-accent, #ffbb00); opacity: 0.14; filter: blur(30px); pointer-events: none; }
+
+.pw-side__head { position: relative; display: flex; flex-direction: column; gap: 6px; padding-bottom: 14px; border-bottom: 1px solid rgb(255 255 255 / 0.14); animation: pw-in 0.5s cubic-bezier(0.22, 0.9, 0.16, 1) both; }
+.pw-side__k { display: inline-flex; align-items: center; gap: 6px; color: var(--brand-accent, #ffbb00); font-size: 11.5px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; }
+.pw-side__count { display: flex; align-items: baseline; gap: 10px; }
+.pw-side__count b { color: #ffffff; font-family: var(--display); font-size: 48px; font-weight: 600; line-height: 1; }
+.pw-side__count span { color: rgb(255 255 255 / 0.72); font-size: 13px; font-weight: 600; }
+.pw-side__clear { position: absolute; right: 0; top: 0; display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border: 0; border-radius: 999px; background: var(--brand-accent, #ffbb00); color: #1c1600; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; animation: pw-pop 0.4s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+
+.pw-side__h { margin: 4px 2px 0; color: rgb(255 255 255 / 0.6); font-size: 11.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; }
+
+/* Package cards: two across (internships across both), each its own colour. */
+.pw-bcards { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pw-bcard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  overflow: hidden;
+  padding: 10px 10px 13px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.07);
+  color: #ffffff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  animation: pw-in 0.5s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+  animation-delay: calc(0.08s + var(--i) * 0.05s);
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+}
+
+.pw-bcard--wide { grid-column: 1 / -1; }
+.pw-bcard__dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--tone); box-shadow: 0 0 0 4px color-mix(in srgb, var(--tone) 25%, transparent); }
+.pw-bcard__text { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
+.pw-bcard__text b { font-size: 15px; font-weight: 800; white-space: nowrap; }
+.pw-bcard__text small { color: rgb(255 255 255 / 0.6); font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.pw-bcard__n { margin-left: auto; color: var(--tone); font-family: var(--display); font-size: 20px; font-style: normal; font-weight: 600; }
+.pw-bcard__bar { position: absolute; left: 0; bottom: 0; height: 3px; width: calc(var(--share) * 100%); background: var(--tone); transform-origin: left; animation: pw-bar 0.9s cubic-bezier(0.22, 0.9, 0.16, 1) both; animation-delay: calc(0.3s + var(--i) * 0.05s); }
+.pw-bcard:hover:not(:disabled) { transform: translateY(-2px); border-color: color-mix(in srgb, var(--tone) 60%, transparent); }
+.pw-bcard.is-on { background: var(--tone); border-color: var(--tone); color: #13201a; box-shadow: 0 12px 24px -12px var(--tone); }
+.pw-bcard.is-on .pw-bcard__text small, .pw-bcard.is-on .pw-bcard__n { color: #13201a; }
+.pw-bcard.is-on .pw-bcard__dot { background: #13201a; box-shadow: 0 0 0 4px rgb(19 32 26 / 0.18); }
+.pw-bcard.is-on .pw-bcard__bar { background: #13201a; opacity: 0.35; }
+.pw-bcard:disabled { opacity: 0.32; cursor: default; }
+
+/* Companies: a two-column grid that fills the rest of the panel. */
+.pw-cos { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: min-content; align-content: start; gap: 6px; overflow-y: auto; padding: 1px; scrollbar-width: none; }
+.pw-cos::-webkit-scrollbar { width: 0; }
+.pw-cos.is-more { -webkit-mask-image: linear-gradient(#000 85%, transparent); mask-image: linear-gradient(#000 85%, transparent); }
+
+.pw-cchip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.05);
+  color: #ffffff;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  animation: pw-in 0.45s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+  animation-delay: calc(0.12s + var(--i) * 0.018s);
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+}
+
+.pw-cchip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pw-cchip em { flex: none; min-width: 20px; padding: 1px 6px; border-radius: 999px; background: rgb(255 255 255 / 0.12); color: rgb(255 255 255 / 0.85); font-size: 10.5px; font-style: normal; font-weight: 800; text-align: center; }
+.pw-cchip:hover:not(:disabled) { border-color: rgb(255 255 255 / 0.4); transform: translateX(2px); }
+.pw-cchip.is-on { background: #ffffff; border-color: #ffffff; color: var(--brand-primary, #008638); }
+.pw-cchip.is-on em { background: var(--brand-accent, #ffbb00); color: #1c1600; }
+.pw-cchip:disabled { opacity: 0.3; cursor: default; }
+
+@keyframes pw-in { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+@keyframes pw-pop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: none; } }
+@keyframes pw-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-side__head, .pw-bcard, .pw-bcard__bar, .pw-cchip, .pw-side__clear { animation: none !important; }
+}
+
+/* Filter panel, light: a pale mint ground with a hairline against the gallery, square to the
+   slide's edge; package cards in soft pastels, each with a deeper ink of its own colour for the
+   label, count and share bar; companies as white tiles. Corners are tight, not pillowy. */
+.pw-root.is-filtered { border-radius: 0; }
+.pw-side {
+  background: #f4f8f5;
+  color: #1d2b24;
+  border-right: 1px solid #e3ebe6;
+  border-radius: 0;
+}
+.pw-side::before { display: none; }
+.pw-side__head { border-bottom-color: #e3ebe6; }
+.pw-side__k { color: var(--brand-primary, #008638); }
+.pw-side__count b { color: #1d2b24; }
+.pw-side__count span { color: #5e6e66; }
+.pw-side__clear { border-radius: 6px; background: #1d2b24; color: #ffffff; }
+.pw-side__h { color: #7a8a82; }
+
+.pw-bcard { border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); border-radius: 8px; background: var(--tone); color: #1d2b24; box-shadow: none; }
+.pw-bcard__dot { background: var(--ink); box-shadow: 0 0 0 3px rgb(255 255 255 / 0.7); }
+.pw-bcard__text b { color: #1d2b24; }
+.pw-bcard__text small { color: color-mix(in srgb, var(--ink) 70%, #ffffff); }
+.pw-bcard__n { color: var(--ink); }
+.pw-bcard__bar { background: var(--ink); opacity: 0.55; }
+.pw-bcard:hover:not(:disabled) { border-color: var(--ink); }
+.pw-bcard.is-on { background: #ffffff; border-color: var(--ink); color: #1d2b24; box-shadow: inset 0 0 0 1.5px var(--ink), 0 10px 22px -16px var(--ink); }
+.pw-bcard.is-on .pw-bcard__n, .pw-bcard.is-on .pw-bcard__text small { color: var(--ink); }
+.pw-bcard.is-on .pw-bcard__dot { background: var(--ink); box-shadow: 0 0 0 3px var(--tone); }
+.pw-bcard.is-on .pw-bcard__bar { background: var(--ink); opacity: 1; height: 4px; }
+.pw-bcard:disabled { opacity: 0.45; }
+
+.pw-cchip { border: 1px solid #e3ebe6; border-radius: 6px; background: #ffffff; color: #1d2b24; }
+.pw-cchip em { background: #eef3f0; color: #5e6e66; }
+.pw-cchip:hover:not(:disabled) { border-color: color-mix(in srgb, var(--brand-primary, #008638) 50%, #ffffff); }
+.pw-cchip.is-on { background: color-mix(in srgb, var(--brand-primary, #008638) 10%, #ffffff); border-color: var(--brand-primary, #008638); color: var(--brand-primary, #008638); box-shadow: inset 0 0 0 1px var(--brand-primary, #008638); }
+.pw-cchip.is-on em { background: var(--brand-primary, #008638); color: #ffffff; }
+.pw-cchip:disabled { opacity: 0.4; }
+
+/* ==========================================================================
+   "More below" strip — no scrollbars on the filter's companies or the main
+   navigation: a band in the brand colour along the foot with an arrow that
+   bounces, which brings the hidden rows up (and, at the end, back to the top).
+   ========================================================================== */
+.more-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--brand-primary, #008638) 30%, transparent);
+  background: color-mix(in srgb, var(--brand-primary, #008638) 12%, #ffffff);
+  color: var(--brand-primary, #008638);
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+.more-strip[hidden] { display: none; }
+.more-strip:hover { background: color-mix(in srgb, var(--brand-primary, #008638) 20%, #ffffff); }
+.more-strip__ic { width: 20px; height: 20px; animation: more-bounce 1.3s ease-in-out infinite; }
+.more-strip.is-up .more-strip__ic { transform: rotate(180deg); animation-name: more-bounce-up; }
+@keyframes more-bounce { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(4px); } }
+@keyframes more-bounce-up { 0%, 100% { transform: rotate(180deg) translateY(-2px); } 50% { transform: rotate(180deg) translateY(4px); } }
+
+.sidenav__scrollwrap { position: relative; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
+.sidenav__scrollwrap > .sidenav__scroll { padding-bottom: 34px; }
+.sidenav--rail .more-strip { background: color-mix(in srgb, var(--brand-primary, #008638) 60%, #000000); color: #ffffff; }
+
+.pw-coswrap { position: relative; flex: 1 1 auto; min-height: 0; display: flex; overflow: hidden; border-radius: 6px; }
+.pw-coswrap > .pw-cos { flex: 1 1 auto; padding-bottom: 34px; }
+.pw-cos.is-more { -webkit-mask-image: none; mask-image: none; }
+
+/* The panel opens straight on the options: the heading row carries Clear when something is chosen. */
+.pw-side { gap: 12px; padding-top: 20px; }
+.pw-side__row { display: flex; align-items: center; justify-content: space-between; min-height: 26px; }
+.pw-side__row .pw-side__h { margin: 0; }
+.pw-side__clear { position: static; padding: 4px 10px; font-size: 11.5px; }
+
+/* Unselected: white, with a thin border and a soft glow in the option's own colour.
+   Selected: a light shade of that colour fills it. */
+.pw-bcard { background: #ffffff; border: 1px solid color-mix(in srgb, var(--ink) 35%, #ffffff); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tone) 55%, transparent), 0 6px 16px -10px var(--ink); }
+.pw-bcard:hover:not(:disabled) { border-color: var(--ink); box-shadow: 0 0 0 4px var(--tone), 0 8px 18px -10px var(--ink); }
+.pw-bcard.is-on { background: var(--tone); border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink), 0 10px 22px -14px var(--ink); }
+.pw-bcard.is-on .pw-bcard__dot { box-shadow: 0 0 0 3px #ffffff; }
+
+.pw-cchip { background: #ffffff; border: 1px solid color-mix(in srgb, var(--brand-primary, #008638) 22%, #ffffff); box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-primary, #008638) 7%, transparent); }
+.pw-cchip:hover:not(:disabled) { border-color: color-mix(in srgb, var(--brand-primary, #008638) 60%, #ffffff); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary, #008638) 14%, transparent); }
+.pw-cchip.is-on { background: color-mix(in srgb, var(--brand-primary, #008638) 14%, #ffffff); border-color: var(--brand-primary, #008638); color: color-mix(in srgb, var(--brand-primary, #008638) 80%, #000000); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary, #008638) 14%, transparent); }
+.pw-cchip.is-on em { background: var(--brand-primary, #008638); color: #ffffff; }
+
+/* The pause notice as a line icon: an outlined mark in the theme green on a light glass card. */
+.deck-paused { background: rgb(255 255 255 / 0.9); border: 1px solid color-mix(in srgb, var(--brand-primary, #008638) 30%, transparent); color: #1d2b24; box-shadow: 0 16px 34px -20px rgb(10 40 22 / 0.5); }
+.deck-paused__mark { background: transparent; border: 2px solid var(--brand-primary, #008638); }
+.deck-paused__mark i { background: var(--brand-primary, #008638); width: 3px; }
+.deck-paused__mark::after { border-color: var(--brand-primary, #008638); }
+.deck-paused__keys { color: #5e6e66; }
+.deck-paused__keys em { color: #b6c2bb; }
+.deck-paused kbd { border-color: color-mix(in srgb, var(--brand-primary, #008638) 35%, #ffffff); background: color-mix(in srgb, var(--brand-primary, #008638) 8%, #ffffff); color: var(--brand-primary, #008638); }
+body.is-deck-settled .deck-paused__mark { border-width: 1.75px; }
+body.is-deck-settled .deck-paused__short { color: var(--brand-primary, #008638); }
+@media (prefers-reduced-motion: reduce) { .more-strip__ic { animation: none; } }
+
+/* Deck bar — each section carries the same mark as its row in the navigation pane, at a size
+   that reads on a projector; the current one sits in a green pill with a gold mark, the rest
+   brighten and lift on hover. */
+.deck-dot__glyph { flex: 0 0 auto; width: 21px; height: 21px; }
+.deck-dot { color: rgb(255 255 255 / 0.7); }
+.deck-dot.is-on { background: var(--brand-primary, #008638); box-shadow: 0 8px 18px -10px var(--brand-primary, #008638), inset 0 0 0 1px rgb(255 255 255 / 0.18); }
+.deck-dot.is-on .deck-dot__glyph { color: var(--brand-accent, #ffbb00); }
+.deck-cell:hover .deck-dot .deck-dot__glyph { color: var(--brand-accent, #ffbb00); }
+/* All eighteen sections fit the bar: icons sit tighter, the bar may span the screen, and the
+   neighbour buttons name only the next and previous section. Nothing scrolls out of sight. */
+.deck-bar { max-width: calc(100vw - 32px); }
+.deck-dots { gap: 1px; padding: 0 2px; overflow: visible; }
+.deck-dot { padding: 8px 8px; gap: 7px; }
+.deck-dot.is-on { padding: 8px 14px 8px 11px; }
+.deck-step { padding: 6px 10px; }
+.deck-step strong, .deck-step b, .deck-step__name { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* On a laptop-sized screen the neighbour buttons give up their names and keep the arrows, so
+   every section icon stays in view. */
+@media (max-width: 1500px) {
+  .deck-step__text { display: none; }
+  .deck-step { padding: 8px 10px; }
+  .deck-dot { padding: 8px 7px; }
+}
+/* With the deck bar now spanning the screen, a film's controls rise above it while presenting. */
+body.is-presenting .vc { bottom: calc(var(--deck-bar-clear, 96px) + 4px); }
+
+/* ==========================================================================
+   Platforms — a quiet list down the left, and the page lit in the product's colour
+   The list sat hard against the window stack with the white on its left unused.
+   It moves out to the gutter and narrows, and a clear channel opens between the
+   two. Each row is its mark and its name on the page itself, no box; the open
+   one takes a faint wash of the product's colour, an edge bar, and a thin line
+   that runs out with the hold before the stack turns. Behind everything, two
+   soft lights and a few twinkling points in that same colour follow the stack.
+   ========================================================================== */
+.pf-root { --pf-tint: var(--brand-primary, #008638); }
+.pf-wall {
+  grid-template-columns: 300px minmax(0, 1fr);
+  column-gap: 56px;
+  padding-left: 0;
+}
+.pf-intro { padding-left: 48px; }
+.pf-railrow { padding: 26px 0 0 36px; }
+.pf-stagearea { padding-right: 40px; transform: none; }
+.pf-wall, .pf-stage { z-index: 1; }
+
+/* --- the glow ------------------------------------------------------------- */
+.pf-glow { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.pf-glow__a, .pf-glow__b {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--pf-tint);
+  filter: blur(90px);
+  transition: background-color 1.1s ease;
+}
+.pf-glow__a { left: -140px; top: 18%; width: 520px; height: 520px; opacity: 0.11; animation: pf-drift 16s ease-in-out infinite alternate; }
+.pf-glow__b { right: -120px; bottom: -160px; width: 620px; height: 480px; opacity: 0.09; animation: pf-drift 20s ease-in-out infinite alternate-reverse; }
+.pf-spark {
+  position: absolute;
+  width: 10px; height: 10px;
+  background: var(--pf-tint);
+  /* A four-point star, cut rather than drawn. */
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  opacity: 0;
+  transition: background-color 1.1s ease;
+  animation: pf-twinkle 4.8s ease-in-out infinite;
+  animation-delay: calc(var(--k) * -0.53s);
+}
+.pf-spark:nth-child(3n) { width: 7px; height: 7px; }
+.pf-spark:nth-child(4n) { width: 13px; height: 13px; }
+@keyframes pf-twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+  50% { opacity: 0.32; transform: scale(1) rotate(45deg); }
+}
+@keyframes pf-drift { from { transform: translate(0, 0); } to { transform: translate(40px, -30px); } }
+
+/* --- the list ------------------------------------------------------------- */
+.pf-chips { gap: 4px; padding: 0; background: transparent; border: 0; box-shadow: none; }
+.pf-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 11px 14px 11px 16px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink, #111827);
+  text-align: left;
+  animation: pf-row-in 0.55s cubic-bezier(0.22, 0.9, 0.16, 1) both;
+  animation-delay: calc(0.15s + var(--i, 0) * 0.07s);
+  transition: background-color 0.35s ease, transform 0.25s ease;
+}
+@keyframes pf-row-in { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
+
+/* The edge bar, drawn in from the middle when the row opens. */
+.pf-row::before {
+  content: '';
+  position: absolute; left: 0; top: 14px; bottom: 14px;
+  width: 3px; border-radius: 3px;
+  background: var(--tint, var(--brand-primary));
+  transform: scaleY(0);
+  transition: transform 0.35s cubic-bezier(0.22, 0.9, 0.16, 1);
+}
+.pf-row__tile {
+  width: 44px; height: 44px;
+  opacity: 1;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid color-mix(in srgb, var(--tint, #94a3b8) 22%, #e5e7eb);
+  box-shadow: none;
+  transform: none;
+  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.pf-row.is-on .pf-row__tile { width: 44px; }
+.pf-row__tile img { padding: 6px; }
+.pf-row__tip { gap: 3px; }
+.pf-row__tip b, .pf-row.is-on .pf-row__tip b { white-space: normal; overflow: visible; line-height: 1.2; }
+.pf-row__tip b { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink, #111827); transition: color 0.3s ease; }
+.pf-row__meta { display: flex; align-items: center; gap: 8px; min-width: 0; white-space: nowrap; }
+.pf-row__meta i {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tint, #64748b) 10%, #ffffff);
+  color: color-mix(in srgb, var(--tint, #64748b) 64%, #000000);
+  font-size: 9.5px; font-style: normal; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.pf-row__meta em { display: inline; font-size: 12px; font-style: normal; font-weight: 600; color: var(--muted); }
+.pf-row__go {
+  width: 16px; height: 16px;
+  color: color-mix(in srgb, var(--tint, #64748b) 64%, #000000);
+  opacity: 0; transform: translateX(-6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+/* Runs out across the foot of the open row over the hold. */
+.pf-row__time {
+  position: absolute; left: 16px; right: 14px; bottom: 5px;
+  height: 2px; border-radius: 2px;
+  background: color-mix(in srgb, var(--tint, #64748b) 45%, transparent);
+  transform: scaleX(0); transform-origin: left;
+  opacity: 0;
+}
+.pf-row.is-on.is-run .pf-row__time { opacity: 1; animation: pf-hold var(--pf-hold, 5200ms) linear both; }
+body.is-deck-paused .pf-row__time { opacity: 0 !important; animation: none !important; }
+@keyframes pf-hold { to { transform: scaleX(1); } }
+
+.pf-row:hover:not(.is-on) { background: color-mix(in srgb, var(--tint, #64748b) 5%, transparent); border-color: transparent; }
+.pf-row:hover .pf-row__tile { transform: translateY(-2px); }
+.pf-row.is-on {
+  padding: 11px 14px 11px 16px;
+  background: color-mix(in srgb, var(--tint, #64748b) 9%, #ffffff);
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--ink, #111827);
+}
+.pf-row.is-on::before { transform: scaleY(1); }
+.pf-row.is-on .pf-row__tip b { font-size: 15.5px; color: color-mix(in srgb, var(--tint, #111827) 64%, #000000); }
+.pf-row.is-on .pf-row__tip i { color: color-mix(in srgb, var(--tint, #64748b) 64%, #000000); }
+.pf-row.is-on .pf-row__tip em { color: var(--muted); }
+.pf-row.is-on .pf-row__tile {
+  border-color: color-mix(in srgb, var(--tint) 40%, #ffffff);
+  box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--tint) 70%, transparent);
+  transform: scale(1.06);
+}
+.pf-row.is-on .pf-row__go, .pf-row:hover .pf-row__go { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-glow__a, .pf-glow__b, .pf-spark, .pf-row, .pf-row__time { animation: none !important; }
+  .pf-spark { opacity: 0.2; }
+}

@@ -165,7 +165,7 @@ export function CourseDeck(block, { editing = false } = {}) {
       if (next < 0 || next >= built.length) return false;
       show(next);
       return true;
-    });
+    }, { auto: 6000 });
   }
 
   show(0);

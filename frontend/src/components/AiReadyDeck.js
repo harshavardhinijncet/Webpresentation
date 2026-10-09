@@ -190,7 +190,7 @@ export function AiReadyDeck(block, { editing = false } = {}) {
     cfCount.replaceChildren(h('b', {}, pad(cur + 1)), ` / ${pad(n)}`);
     cfBar.classList.remove('is-run'); void cfBar.offsetWidth; cfBar.classList.add('is-run');
   };
-  const cfAuto = autoSlide(() => { cur = (cur + 1) % shots.length; cfPlace(); }, { host: root, interval: 5500, canRun: () => at === 2 });
+  const cfAuto = autoSlide(() => { cur = (cur + 1) % shots.length; cfPlace(); }, { host: root, interval: 5000, canRun: () => at === 2 });
   function cfGo(k) { cur = ((k % shots.length) + shots.length) % shots.length; cfPlace(); cfAuto.reset(); }
 
   const ring = h('span', { class: 'are-ring', 'aria-hidden': 'true' });
@@ -282,7 +282,7 @@ export function AiReadyDeck(block, { editing = false } = {}) {
       if (t < 0 || t >= PAGES.length) return false;
       go(t);
       return true;
-    });
+    }, { auto: 6000 });
   }
   if (typeof ResizeObserver === 'function') new ResizeObserver(placeLine).observe(top);
 

@@ -937,6 +937,8 @@ function normalizeBlock(raw, index = 0, depth = 0) {
           // a photograph; 'journey' is a tall infographic read on its own.
           kind: oneOf(text(c?.kind, 12), ['poster', 'photo', 'journey'], 'photo'),
           icon: iconKey(c?.icon),
+          // A chapter of posters tagged with package and company gets the filter rail.
+          filters: c?.filters === true,
           groups: (Array.isArray(c?.groups) ? c.groups : [])
             .map((g) => ({
               name: text(g?.name, 80),
@@ -946,6 +948,10 @@ function normalizeBlock(raw, index = 0, depth = 0) {
                   label: text(im?.label, 80),
                   w: clampInt(im?.w, 1, 20000, 0),
                   h: clampInt(im?.h, 1, 20000, 0),
+                  companies: (Array.isArray(im?.companies) ? im.companies : []).map((x) => text(x, 60)).filter(Boolean).slice(0, 8),
+                  pkg: Number.isFinite(Number(im?.pkg)) && im?.pkg !== null && im?.pkg !== '' ? Math.max(0, Math.min(200, Number(im.pkg))) : null,
+                  pkgText: text(im?.pkgText, 40),
+                  intern: im?.intern === true,
                 }))
                 // No dimensions means no row height can be computed for it.
                 .filter((im) => im.src && im.w && im.h)

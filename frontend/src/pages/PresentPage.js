@@ -10,9 +10,12 @@ import { navigate, refresh } from '../utils/router.js';
 import { useShortcuts } from '../hooks/useShortcuts.js';
 import { reorderSections } from '../services/contentService.js';
 import { toastError, toastSuccess } from '../components/Toast.js';
-import { clearSteppers, stepSlide } from '../utils/slideSteps.js';
+import { clearSteppers, stepSlide, autoStep, autoStepMs } from '../utils/slideSteps.js';
+import { autoSlide, isDeckPaused, setDeckPaused, stepVisibleSlides } from '../utils/autoSlide.js';
 
 let disposeShortcuts = null;
+/** The timer that walks a slide's own tabs or pages while the deck plays. */
+let sectionAuto = null;
 /** True only while the whole deck is fullscreen — a video going fullscreen
  *  must not be mistaken for it, or exiting the video would re-render the page
  *  and lose the presenter's place. */
@@ -29,19 +32,31 @@ export function PresentPage(container, { org, section, onLogout }) {
   const deck = state.presenting ? deckSections() : visibleSections();
   const index = deck.findIndex((item) => item.id === section?.id);
 
-  // A slide may be more than one beat: a block that steps through content of its
-  // own gets first refusal on the press, and the deck only turns once it is
-  // spent. Same key, same button — the presenter learns one control.
-  const go = (delta) => {
-    if (stepSlide(delta)) return;
+  // Playing, everything on a slide advances on its own and Next / Prev turn the deck.
+  // Paused (Space), the slide holds still and Next / Prev step through it instead — its
+  // tabs or pages first, then its pictures — and the deck turns only once it is spent.
+  const turn = (delta) => {
     if (!deck.length) return;
     const next = deck[(Math.max(0, index) + delta + deck.length) % deck.length];
     navigate(`/o/${org.id}/${next.id}`);
   };
+  // Motion that starts while paused (a new tab's drifting wall) is frozen as it begins.
+  const holdNewMotion = () => [80, 900].forEach((ms) => setTimeout(() => { if (isDeckPaused()) setDeckPaused(true); }, ms));
+  const go = (delta) => {
+    if (isDeckPaused()) {
+      holdNewMotion();
+      if (stepSlide(delta)) { sectionAuto?.reset(); return; }
+      if (delta > 0 && stepVisibleSlides()) return;
+    }
+    turn(delta);
+  };
+  const togglePause = () => setDeckPaused(!isDeckPaused());
 
   // Cleared before the slide is built, so the blocks constructed below are the
   // only ones registered. Stale steppers would hold a deck that had moved on.
   clearSteppers();
+  sectionAuto?.stop();
+  sectionAuto = null;
 
   const enterPresenting = async () => {
     state.presenting = true;
@@ -68,7 +83,7 @@ export function PresentPage(container, { org, section, onLogout }) {
   disposeShortcuts = useShortcuts({
     ArrowRight: () => go(1),
     ArrowLeft: () => go(-1),
-    Space: () => go(1),
+    Space: () => togglePause(),
     Escape: () => state.presenting && exitPresenting(),
     f: () => (state.presenting ? exitPresenting() : enterPresenting()),
   });
@@ -151,6 +166,27 @@ export function PresentPage(container, { org, section, onLogout }) {
   );
 
   render(container, shell);
+
+  // A slide whose blocks step through tabs or pages of their own is walked through on a
+  // timer while the deck plays, at the pace the block asked for; it stops at the last step
+  // rather than turning the deck, which stays the presenter's call.
+  requestAnimationFrame(() => {
+    const ms = autoStepMs();
+    if (!ms) return;
+    sectionAuto = autoSlide(() => { if (!autoStep()) sectionAuto?.stop(); }, { host: stage, interval: ms, manual: false });
+    sectionAuto.start();
+  });
+
+  if (isDeckPaused()) holdNewMotion();
+
+  // Paused, a pill says so and how to resume.
+  append(container, [h('div', { class: 'deck-paused', role: 'status', 'aria-live': 'polite' },
+    h('span', { class: 'deck-paused__mark', 'aria-hidden': 'true' }, h('i'), h('i')),
+    h('span', { class: 'deck-paused__text' },
+      h('b', {}, h('span', { class: 'deck-paused__full' }, 'Presentation paused'), h('span', { class: 'deck-paused__short' }, 'Paused')),
+      h('span', { class: 'deck-paused__keys' },
+        h('kbd', {}, 'Space'), ' resume', h('em', { 'aria-hidden': 'true' }, '·'),
+        h('kbd', {}, '←'), h('kbd', {}, '→'), ' step through this slide')))]);
 
   if (state.presenting) {
     append(

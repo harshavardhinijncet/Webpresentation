@@ -1,4 +1,4 @@
-import { h } from '../utils/dom.js';
+import { h, wheelScroll } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { filmStage, posterImg, bindStageLifetime } from '../utils/filmStage.js';
 
@@ -76,17 +76,7 @@ export function VideoResumes(block, { editing = false } = {}) {
   const wall = h('div', { class: 'vr-wall' });
   let currentScrollLetter = null;
 
-  wall.addEventListener('wheel', (e) => {
-    if (wall.scrollHeight > wall.clientHeight) {
-      const canScrollUp = wall.scrollTop > 0;
-      const canScrollDown = wall.scrollTop + wall.clientHeight < wall.scrollHeight - 1;
-      if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
-        e.preventDefault();
-        e.stopPropagation();
-        wall.scrollTop += e.deltaY;
-      }
-    }
-  }, { passive: false });
+  wheelScroll(wall);
 
   wall.addEventListener('scroll', () => {
     if (letter !== null) return;
