@@ -148,20 +148,34 @@ const BLOCK = {
       {
         name: 'SRKR Engineering College',
         theme: { primary: '#861818', accent: '#e8913a', ink: '#861818' },
-        kind: 'Collaboration · Industry Technology Partner',
+        kind: 'SkillUp Coder 2029',
         icon: 'handshake-check',
         logo: `${TB}srkr-engineering-college.png`,
-        images: [`${C}srkr.jpg`],
-        /* No post for SRKR yet: these points are drafted from what Technical Hub's other college
-           MoUs (NCET, Geeta, YCCE) cover. Replace them with SRKR's own when its post comes in. */
-        summary: 'Technical Hub with SRKR Engineering College — bringing industry technology, Claude AI and industry-ready skills onto the campus.',
+        /* The collaboration, then the programme's launch in the order it happened: orientation,
+           registrations, the assessment round, and the cohorts taking off. */
+        images: [
+          `${C}srkr.jpg`,
+          `${C}srkr/01-orientation.jpg`,
+          `${C}srkr/02-registrations.jpg`,
+          `${C}srkr/03-assessment.jpg`,
+          `${C}srkr/04-take-off.jpg`,
+          `${C}srkr/07-coding-lab.jpg`,
+          `${C}srkr/08-attendance-check-in.jpg`,
+          `${C}srkr/09-lab-session.jpg`,
+          `${C}srkr/10-assessment-lab.jpg`,
+          `${C}srkr/11-coding-floor.jpg`,
+          `${C}srkr/12-assessment-round.jpg`,
+        ],
+        /* From the programme's own posts: SkillUp Coder 2029 at SRKR, run by Torii Minds in
+           association with Technical Hub. */
+        summary: 'SkillUp Coder 2029 at SRKR — run with Torii Minds, in association with Technical Hub, exclusively for the 2029 batch.',
         points: [
-          { icon: 'chip', title: 'AI-ready learning', body: 'Hands-on labs where students build with AI.' },
-          { icon: 'sparkles', title: 'Claude on campus', body: 'Claude-certified engineers supporting students and faculty.' },
-          { icon: 'book', title: 'Industry-aligned curriculum', body: 'Courses shaped by what industry expects.' },
-          { icon: 'seal-check', title: 'Global certifications', body: 'Credentials students carry into interviews.' },
-          { icon: 'rocket', title: 'Projects & hackathons', body: 'Real builds, defended in the open.' },
-          { icon: 'briefcase', title: 'Placement readiness', body: 'Training that ends in industry roles.' },
+          { icon: 'rocket', title: 'SkillUp Coder 2029', body: 'A coding programme for the 2029 batch.' },
+          { icon: 'users', title: '1000+ registrations', body: 'A strong start to the coding journey.' },
+          { icon: 'message', title: 'Orientation session', body: 'The whole batch, briefed in the auditorium.' },
+          { icon: 'clipboard-check', title: 'Assessment rounds', body: 'Round 2, taken in the labs.' },
+          { icon: 'graduation', title: 'Cohorts take off', body: 'Cohorts 1 to 4, coding hands-on.' },
+          { icon: 'handshake-check', title: 'With Torii Minds', body: 'Delivered by Torii, with Technical Hub.' },
         ],
       },
       {

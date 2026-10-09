@@ -94,6 +94,7 @@ export function CollabWall(block, { editing = false } = {}) {
   const info = h('div', { class: 'cw-info' }, kind, name, summary, cards);
 
   let shotTimer = null;
+  let dwellUntil = 0;
 
   /* Each announcement is laid as large as the left of the card allows at its own shape — no
      plate behind it, nothing cropped. The image element itself is sized (not object-fit), so its
@@ -117,7 +118,7 @@ export function CollabWall(block, { editing = false } = {}) {
     const hgt = w / r;
     Object.assign(img.style, { width: `${w}px`, height: `${hgt}px`, left: `${(W - w) / 2}px`, top: `${(H - hgt) / 2}px` });
   }
-  if (typeof ResizeObserver === 'function') new ResizeObserver(() => shots.querySelectorAll('img').forEach(sizeShot)).observe(shots);
+  if (typeof ResizeObserver === 'function') new ResizeObserver(() => shots.querySelectorAll('.cw-shot').forEach(sizeShot)).observe(shots);
   function paint() {
     const p = partners[at];
     // The card takes the partner's own colours: everything inside it reads the brand variables,
@@ -141,23 +142,32 @@ export function CollabWall(block, { editing = false } = {}) {
       h('span', { class: 'cw-card__ic' }, icon(pt.icon || 'check', { class: 'ic ic--sm' })),
       h('span', {}, h('b', {}, pt.title), pt.body ? h('small', {}, pt.body) : null))));
     cards.dataset.n = String((p.points || []).length);
-    // The announcement images: one stands; two take turns.
+    // The announcement images: one stands; several play in order, and the partner stays up
+    // until every one of them has been seen — its time is rounded to whole holds, so the
+    // deck's own timer lands exactly on it. The ring round its logo runs for the same time.
     clearInterval(shotTimer);
     const imgs = (p.images || []).filter(Boolean);
+    const dwell = Math.ceil(Math.max(hold, imgs.length * 3200) / hold) * hold;
+    dwellUntil = Date.now() + dwell - 600;
+    dots[at].style.setProperty('--cw-hold', `${dwell}ms`);
     shots.replaceChildren(...imgs.map((im, k) => {
       const img = h('img', { class: `cw-shot${k === 0 ? ' is-on' : ''}`, src: src(im), alt: `${p.name} — announcement`, draggable: 'false' });
       img.addEventListener('load', () => sizeShot(img));
       if (img.complete) sizeShot(img);
       return img;
     }));
+    const pips = imgs.length > 1 ? h('span', { class: 'cw-pips', 'aria-hidden': 'true' }, ...imgs.map((_, k) => h('i', { class: k === 0 ? 'is-on' : '' }))) : null;
+    if (pips) shots.append(pips);
     if (imgs.length > 1 && !REDUCED) {
       let s = 0;
       shotTimer = setInterval(() => {
-        const els = shots.children;
+        const els = shots.querySelectorAll('.cw-shot');
         els[s].classList.remove('is-on');
+        pips.children[s].classList.remove('is-on');
         s = (s + 1) % els.length;
         els[s].classList.add('is-on');
-      }, Math.max(2600, hold / imgs.length));
+        pips.children[s].classList.add('is-on');
+      }, dwell / imgs.length);
     }
     count.replaceChildren(h('b', {}, pad(at + 1)), ` / ${pad(partners.length)}`);
     [info, shots].forEach((el) => { el.classList.remove('is-in'); void el.offsetWidth; el.classList.add('is-in'); });
@@ -197,7 +207,7 @@ export function CollabWall(block, { editing = false } = {}) {
 
   /* ------------------------------------------------------------ behaviour */
   const auto = autoSlide(() => select(at + 1, false), {
-    host: root, interval: hold, canRun: () => scene === 'card' && !paused,
+    host: root, interval: hold, canRun: () => scene === 'card' && !paused && Date.now() >= dwellUntil,
   });
   let wallTimer = null;
 

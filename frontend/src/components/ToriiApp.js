@@ -33,6 +33,7 @@ const VIEWS = [
   ['trainings', 'Trainings', 'graduation'],
   ['lab', 'AI Lab', 'chip'],
   ['campus', 'Campus', 'building'],
+  ['hr', 'HR Conclave', 'briefcase'],
   ['products', 'Products', 'cube'],
   ['partners', 'Partners', 'partners'],
 ];
@@ -266,7 +267,12 @@ export function ToriiApp(block, { editing = false } = {}) {
         h('h4', { class: 'ta-h4' }, pa.aiTitle || 'AI partners'),
         ...(pa.ai || []).map((a) => h('article', { class: 'ta-card ta-ai' },
           h('span', { class: 'ta-ai__logo' }, h('img', { src: src(a.logo), alt: a.name })),
-          h('span', {}, h('b', {}, a.name), h('small', {}, a.tier), a.note ? h('span', { class: 'ta-ai__note' }, a.note) : null)))),
+          h('span', { class: 'ta-ai__text' }, h('b', {}, a.name), h('small', {}, a.tier), a.note ? h('span', { class: 'ta-ai__note' }, a.note) : null),
+          /* The programme Torii was selected for, beside the partner it belongs to. */
+          a.selection?.image ? h('button', {
+            class: 'ta-ai__pick', type: 'button', 'aria-label': a.selection.label || a.name,
+            onclick: () => openViewer(a.selection.label || a.name, [a.selection.image], 0),
+          }, h('img', { src: src(a.selection.thumb || a.selection.image), alt: '' }), h('em', {}, a.selection.badge || 'Selected')) : null))),
       h('div', { class: 'ta-pa__col' },
         h('h4', { class: 'ta-h4' }, pa.coeTitle || 'Tied up with'),
         h('div', { class: 'ta-cloud' }, ...(pa.coe || []).map((x) => h('span', {}, x))),
@@ -277,6 +283,37 @@ export function ToriiApp(block, { editing = false } = {}) {
         h('div', { class: 'ta-mous' }, ...(pa.mous || []).map((m, k) => h('button', {
           class: 'ta-mou', type: 'button', onclick: () => openViewer(m.name, (pa.mous || []).map((x) => x.image), k),
         }, h('img', { src: src(m.image), alt: '', loading: 'lazy' }), h('span', {}, h('b', {}, m.name), m.kind ? h('small', {}, m.kind) : null)))))));
+
+  /* -------------------------------------------------------- HR conclave
+     The lab's pattern: the photographs playing large on the left, the story on the right, and
+     every photograph as a thumbnail that opens the viewer. */
+  const hr = c.hr || {};
+  const hrShots = (hr.photos || []).filter((p) => p.src);
+  const hrImgs = hrShots.map((p, k) => h('img', { class: `ta-lab__img${k === 0 ? ' is-on' : ''}`, src: src(p.src), alt: p.caption || '', loading: k < 2 ? 'eager' : 'lazy', draggable: 'false' }));
+  const hrCap = h('span', { class: 'ta-hr__cap' }, hrShots[0]?.caption || '');
+  const hrThumbs = hrShots.map((p, k) => h('button', {
+    class: `ta-hr__thumb${k === 0 ? ' is-on' : ''}`, type: 'button', 'aria-label': p.caption || '',
+    onclick: () => openViewer(hr.title || 'HR Conclave', hrShots.map((x) => x.src), k),
+  }, h('img', { src: src(p.src), alt: '', loading: 'lazy' })));
+  let hi = 0;
+  const hrAuto = autoSlide(() => {
+    if (hrImgs.length < 2) return;
+    hrImgs[hi].classList.remove('is-on'); hrThumbs[hi].classList.remove('is-on');
+    hi = (hi + 1) % hrImgs.length;
+    hrImgs[hi].classList.add('is-on'); hrThumbs[hi].classList.add('is-on');
+    hrCap.textContent = hrShots[hi].caption || '';
+  }, { host: root, interval: 3800, canRun: () => view === 'hr' });
+  const hrView = h('section', { class: 'ta-view ta-view--lab ta-view--hr', 'data-view': 'hr' },
+    h('figure', { class: 'ta-lab__show' }, ...hrImgs, h('figcaption', {}, hrCap)),
+    h('div', { class: 'ta-lab__copy' },
+      h('span', { class: 'ta-kicker' }, hr.kicker || 'HR Conclave'),
+      h('h3', { class: 'ta-h2' }, hr.title || 'HR Conclave'),
+      hr.lead ? h('p', { class: 'ta-lead' }, hr.lead) : null,
+      hr.points?.length ? h('ul', { class: 'ta-ticks' }, ...hr.points.map((p) => h('li', {}, icon('check', { class: 'ic ic--xs', strokeWidth: 2.6 }), p))) : null,
+      hr.speaker ? h('div', { class: 'ta-hr__speaker' },
+        h('img', { src: src(hr.speaker.photo), alt: '' }),
+        h('span', {}, h('b', {}, hr.speaker.name), h('small', {}, hr.speaker.role))) : null,
+      hrThumbs.length ? h('div', { class: 'ta-hr__strip' }, ...hrThumbs) : null));
 
   function head(kicker, title, lead) {
     return h('header', { class: 'ta-head' },
@@ -343,7 +380,7 @@ export function ToriiApp(block, { editing = false } = {}) {
   }
 
   /* ------------------------------------------------------------ assembly */
-  const views = [home, trainings, labView, campus, products, partners];
+  const views = [home, trainings, labView, campus, hrView, products, partners];
   root.append(
     h('div', { class: 'ta-ground', 'aria-hidden': 'true' }, h('span'), h('span'), h('span')),
     bar,
@@ -365,6 +402,7 @@ export function ToriiApp(block, { editing = false } = {}) {
     });
     if (key === 'home') { paintServices(); svAuto.reset(); }
     if (key === 'lab') labAuto.reset();
+    if (key === 'hr') hrAuto.reset();
   }
 
   if (!editing) {
@@ -378,6 +416,7 @@ export function ToriiApp(block, { editing = false } = {}) {
     });
     svAuto.start();
     labAuto.start();
+    hrAuto.start();
     vAuto.start();
   }
 

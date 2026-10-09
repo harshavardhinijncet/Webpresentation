@@ -19632,3 +19632,54 @@ button.ta-card { cursor: pointer; }
 .ta-root.has-sheet .ta-sheet__list li { animation: ta-rise 0.45s cubic-bezier(0.22, 0.9, 0.16, 1) both; animation-delay: calc(var(--i) * 0.03s); }
 @media (prefers-reduced-motion: reduce) { .ta-track__art, .ta-sheet, .ta-sheet__panel { transition: none; } .ta-root.has-sheet .ta-sheet__list li { animation: none; } }
 .ta-sheet__title { font-family: var(--display); font-weight: 600; text-transform: uppercase; }
+
+/* Collaborations — a partner with several photographs plays them in order; the pips count them. */
+.cw-pips { position: absolute; left: 50%; bottom: -26px; z-index: 2; display: flex; gap: 6px; transform: translateX(-50%); }
+.cw-pips i { width: 7px; height: 7px; border-radius: 999px; background: color-mix(in srgb, var(--brand-primary, #008638) 25%, #ffffff); transition: width 0.35s ease, background 0.35s ease; }
+.cw-pips i.is-on { width: 22px; background: var(--brand-primary, #008638); }
+.cw-detail { padding-bottom: 34px; }
+
+/* Torii — the programme each AI partner selected Torii for, as a poster beside its card. */
+.ta-ai__text { flex: 1 1 auto; min-width: 0; }
+.ta-ai__pick { position: relative; flex: none; align-self: stretch; width: 78px; padding: 0; overflow: hidden; border: 0; border-radius: 12px; background: #f3f3f3; box-shadow: 0 0 0 1px var(--ta-line), 0 12px 22px -14px rgb(16 32 24 / 0.5); cursor: pointer; transition: transform 0.3s ease; }
+.ta-ai__pick:hover { transform: translateY(-3px) rotate(-1.5deg); }
+.ta-ai__pick img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.ta-ai__pick em { position: absolute; left: 4px; right: 4px; bottom: 4px; padding: 2px 0; border-radius: 6px; background: rgb(16 32 24 / 0.78); color: #ffffff; font-size: 9.5px; font-style: normal; font-weight: 800; letter-spacing: 0.08em; text-align: center; text-transform: uppercase; }
+
+/* Torii — HR Conclave, in the AI Lab's pattern. */
+.ta-hr__cap { padding: 8px 14px; border-radius: 999px; background: rgb(255 255 255 / 0.94); font-size: 13px; font-weight: 800; }
+.ta-hr__speaker { display: flex; align-items: center; gap: 14px; padding: 12px 16px 12px 12px; border-radius: 20px; background: #ffffff; box-shadow: 0 18px 34px -26px rgb(16 32 24 / 0.5), 0 0 0 1px var(--ta-line); }
+.ta-hr__speaker img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; object-position: 40% 20%; }
+.ta-hr__speaker b { display: block; font-size: 17px; }
+.ta-hr__speaker small { display: block; color: var(--brand-primary, #008638); font-size: 13.5px; font-weight: 700; }
+.ta-hr__strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: 100%; }
+.ta-hr__thumb { height: 92px; padding: 0; overflow: hidden; border: 0; border-radius: 14px; opacity: 0.6; cursor: pointer; box-shadow: 0 0 0 1px var(--ta-line); transition: opacity 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
+.ta-hr__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.ta-hr__thumb.is-on, .ta-hr__thumb:hover { opacity: 1; box-shadow: 0 0 0 3px var(--brand-primary, #008638); }
+.ta-hr__thumb:hover { transform: translateY(-3px); }
+
+/* The selection poster, cropped to its lockup so it reads at card size. */
+.ta-ai__pick { width: 168px; align-self: center; height: auto; aspect-ratio: 640 / 500; border-radius: 14px; background: #ffffff; }
+.ta-ai__pick img { object-fit: contain; }
+.ta-ai__pick em { left: auto; right: 6px; top: 6px; bottom: auto; padding: 3px 8px; border-radius: 999px; font-size: 9px; }
+/* A card carrying a selection poster gives the text room: a smaller logo tile, shorter note. */
+.ta-ai:has(.ta-ai__pick) { gap: 14px; padding: 14px 16px; }
+.ta-ai:has(.ta-ai__pick) .ta-ai__logo { width: 84px; height: 56px; }
+.ta-ai:has(.ta-ai__pick) .ta-ai__note { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ta-ai__pick { width: 150px; }
+.ta-ai__pick em { top: auto; bottom: 6px; left: 50%; right: auto; transform: translateX(-50%); }
+.ta-ai__pick em { display: none; }
+/* HR Conclave — eight photographs: the strip runs two rows of four. */
+.ta-hr__thumb { height: 64px; }
+/* HR Conclave — eight photographs: the strip runs two rows of four. */
+.ta-hr__thumb { height: 64px; }
+
+/* HR Conclave — the photographs are 16:9 and are shown whole: the frame takes their shape and
+   the column most of the width, each picture contained in it. They crossfade slowly with a
+   gentle drift rather than cropping to a tall box. */
+.ta-view--hr { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: center; gap: 36px; }
+.ta-view--hr .ta-lab__show { align-self: center; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #0f1a14; }
+.ta-view--hr .ta-lab__img { object-fit: contain; transform: scale(1.025); transition: opacity 1.4s ease, transform 6s ease-out; }
+.ta-view--hr .ta-lab__img.is-on { transform: scale(1); }
+.ta-view--hr .ta-lab__copy { gap: 14px; }
+.ta-view--hr .ta-ticks li { font-size: 15px; }

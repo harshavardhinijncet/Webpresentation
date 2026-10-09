@@ -8358,7 +8358,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_032c122346244bc6",
+          "id": "blk_d81368132d864370",
           "type": "torii-app",
           "layout": {
             "x": 0,
@@ -8818,6 +8818,55 @@
                 }
               ]
             },
+            "hr": {
+              "kicker": "HR Conclave · NCMS",
+              "title": "HR Conclave",
+              "lead": "Torii Minds at the HR Conclave at Nagarjuna College of Management Studies — Babji Neelam on stage, the Torii team on the floor.",
+              "points": [
+                "Babji Neelam presented Torii Minds — the gateway between classroom and career.",
+                "A panel of HR leaders on the conclave’s theme: connecting people, creating futures.",
+                "The Torii team at the conclave with the Nagarjuna Group of Institutions and NHRD Bangalore."
+              ],
+              "speaker": {
+                "photo": "th-torii/hr-conclave/01-babji-on-stage.jpg",
+                "name": "Babji Neelam",
+                "role": "Founder & CEO, Torii Minds"
+              },
+              "photos": [
+                {
+                  "src": "th-torii/hr-conclave/01-babji-on-stage.jpg",
+                  "caption": "Babji Neelam on stage"
+                },
+                {
+                  "src": "th-torii/hr-conclave/02-presenting-the-ceo-profile.jpg",
+                  "caption": "Presenting the CEO profile"
+                },
+                {
+                  "src": "th-torii/hr-conclave/03-babji-speaking.jpg",
+                  "caption": "Babji Neelam speaking"
+                },
+                {
+                  "src": "th-torii/hr-conclave/06-panel-discussion.jpg",
+                  "caption": "The panel discussion"
+                },
+                {
+                  "src": "th-torii/hr-conclave/07-the-panel.jpg",
+                  "caption": "The panel"
+                },
+                {
+                  "src": "th-torii/hr-conclave/04-torii-team-at-the-arch.jpg",
+                  "caption": "The Torii team at the conclave"
+                },
+                {
+                  "src": "th-torii/hr-conclave/05-torii-team-with-ngi.jpg",
+                  "caption": "The Torii team with NGI"
+                },
+                {
+                  "src": "th-torii/hr-conclave/08-full-auditorium.jpg",
+                  "caption": "A full auditorium"
+                }
+              ]
+            },
             "products": {
               "kicker": "Products",
               "title": "Built and run by Torii",
@@ -8938,7 +8987,13 @@
                   "name": "Claude",
                   "tier": "Claude Partner Network · Member",
                   "logo": "collaborations/logos/claude-partner-network.png",
-                  "note": "Ten Claude Certified Architect trainers; students earn the Claude Certified Associate."
+                  "note": "Selected for Claude for Startups by Anthropic.",
+                  "selection": {
+                    "thumb": "th-torii/partners/claude-for-startups-lockup.jpg",
+                    "image": "th-torii/partners/claude-for-startups.jpg",
+                    "label": "Selected — Claude for Startups",
+                    "badge": "Startups"
+                  }
                 },
                 {
                   "name": "OpenAI",
@@ -8950,7 +9005,13 @@
                   "name": "Sarvam AI",
                   "tier": "Partnership",
                   "logo": "ai-partners/sarvam-ai.jpeg",
-                  "note": "Indian-language foundation models, made in India."
+                  "note": "Selected for the Sarvam Startup Program.",
+                  "selection": {
+                    "thumb": "th-torii/partners/sarvam-startup-program-lockup.jpg",
+                    "image": "th-torii/partners/sarvam-startup-program.jpg",
+                    "label": "Selected — Sarvam Startup Program",
+                    "badge": "Startups"
+                  }
                 }
               ],
               "coeTitle": "Tied up with",
@@ -9052,7 +9113,7 @@
         }
       ],
       "createdAt": "2026-10-06T05:19:15.596Z",
-      "updatedAt": "2026-10-08T10:25:22.118Z"
+      "updatedAt": "2026-10-09T04:57:34.751Z"
     },
     {
       "id": "sec_2f4a9acc0626415d",
@@ -9300,7 +9361,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_8c01137e1f7b4d30",
+          "id": "blk_e45293ce3a5541d9",
           "type": "collab-wall",
           "layout": {
             "x": 0,
@@ -9584,43 +9645,53 @@
                   "accent": "#e8913a",
                   "ink": "#861818"
                 },
-                "kind": "Collaboration · Industry Technology Partner",
+                "kind": "SkillUp Coder 2029",
                 "icon": "handshake-check",
                 "logo": "th-torii/trusted-by/srkr-engineering-college.png",
                 "images": [
-                  "collaborations/srkr.jpg"
+                  "collaborations/srkr.jpg",
+                  "collaborations/srkr/01-orientation.jpg",
+                  "collaborations/srkr/02-registrations.jpg",
+                  "collaborations/srkr/03-assessment.jpg",
+                  "collaborations/srkr/04-take-off.jpg",
+                  "collaborations/srkr/07-coding-lab.jpg",
+                  "collaborations/srkr/08-attendance-check-in.jpg",
+                  "collaborations/srkr/09-lab-session.jpg",
+                  "collaborations/srkr/10-assessment-lab.jpg",
+                  "collaborations/srkr/11-coding-floor.jpg",
+                  "collaborations/srkr/12-assessment-round.jpg"
                 ],
-                "summary": "Technical Hub with SRKR Engineering College — bringing industry technology, Claude AI and industry-ready skills onto the campus.",
+                "summary": "SkillUp Coder 2029 at SRKR — run with Torii Minds, in association with Technical Hub, exclusively for the 2029 batch.",
                 "points": [
                   {
-                    "icon": "chip",
-                    "title": "AI-ready learning",
-                    "body": "Hands-on labs where students build with AI."
-                  },
-                  {
-                    "icon": "sparkles",
-                    "title": "Claude on campus",
-                    "body": "Claude-certified engineers supporting students and faculty."
-                  },
-                  {
-                    "icon": "book",
-                    "title": "Industry-aligned curriculum",
-                    "body": "Courses shaped by what industry expects."
-                  },
-                  {
-                    "icon": "seal-check",
-                    "title": "Global certifications",
-                    "body": "Credentials students carry into interviews."
-                  },
-                  {
                     "icon": "rocket",
-                    "title": "Projects & hackathons",
-                    "body": "Real builds, defended in the open."
+                    "title": "SkillUp Coder 2029",
+                    "body": "A coding programme for the 2029 batch."
                   },
                   {
-                    "icon": "briefcase",
-                    "title": "Placement readiness",
-                    "body": "Training that ends in industry roles."
+                    "icon": "users",
+                    "title": "1000+ registrations",
+                    "body": "A strong start to the coding journey."
+                  },
+                  {
+                    "icon": "message",
+                    "title": "Orientation session",
+                    "body": "The whole batch, briefed in the auditorium."
+                  },
+                  {
+                    "icon": "clipboard-check",
+                    "title": "Assessment rounds",
+                    "body": "Round 2, taken in the labs."
+                  },
+                  {
+                    "icon": "graduation",
+                    "title": "Cohorts take off",
+                    "body": "Cohorts 1 to 4, coding hands-on."
+                  },
+                  {
+                    "icon": "handshake-check",
+                    "title": "With Torii Minds",
+                    "body": "Delivered by Torii, with Technical Hub."
                   }
                 ]
               },
@@ -9667,7 +9738,7 @@
         }
       ],
       "createdAt": "2026-10-08T05:35:38.780Z",
-      "updatedAt": "2026-10-08T08:27:32.799Z"
+      "updatedAt": "2026-10-09T04:56:33.626Z"
     }
   ],
   "assets": [
