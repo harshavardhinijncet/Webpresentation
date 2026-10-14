@@ -9,6 +9,7 @@ import { migrateLayouts } from './services/section.service.js';
 import { logMediaCapabilities } from './utils/media.js';
 import { buildRouter } from './routes/index.js';
 import { serveStatic } from './middleware/static.middleware.js';
+import { serveRoadmapApi } from './middleware/roadmap.middleware.js';
 import { resolveUser, enforce } from './middleware/auth.middleware.js';
 import { handleError } from './middleware/error.middleware.js';
 import { HttpError, readJsonBody, sendJson } from './utils/http.js';
@@ -20,6 +21,7 @@ const router = buildRouter();
 async function handle(req, res) {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
 
+  if (await serveRoadmapApi(req, res, url.pathname)) return;
   if (await serveStatic(req, res, url.pathname)) return;
 
   const match = router.match(req.method, url.pathname);

@@ -148,6 +148,10 @@ export function OrgSelectPage(container, { onLogout }) {
           onclick: () => (hub ? navigate(`/o/${hub.id}`) : null),
         }, isAdmin() ? 'Open the deck' : 'Start the presentation',
           icon('arrow-right', { class: 'ic ic--xs' })),
+        /* The University Technology Engine (the Engineer Roadmap) is its own application (Downloads/Road Map), served here as
+           built at /roadmap; browser Back returns to this page. */
+        h('a', { class: 'lp-cta lp-cta--outline', href: '/roadmap' },
+          icon('roadmap', { class: 'ic ic--xs' }), 'University Technology Engine'),
         h('button', { class: 'lp-ghost', type: 'button', onclick: onLogout }, 'Sign out'),
       ),
     ),

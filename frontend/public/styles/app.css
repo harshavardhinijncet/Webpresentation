@@ -11384,6 +11384,19 @@ body.is-presenting .pg-player { z-index: 30; }
 .lp-cta:hover .ic { transform: translateX(4px); }
 .lp-cta:focus-visible { outline: 2px solid var(--lp-ink); outline-offset: 3px; }
 
+/* The Engineer Roadmap: a second way in, white with the green ring, so the deck stays the one filled button. */
+.lp-cta--outline {
+  background: #fff;
+  color: var(--lp-green);
+  text-decoration: none;
+  box-shadow: inset 0 0 0 1.5px var(--lp-green), 0 14px 30px -20px color-mix(in srgb, var(--lp-green) 60%, transparent);
+}
+.lp-cta--outline:hover {
+  background: color-mix(in srgb, var(--lp-green) 7%, #fff);
+  box-shadow: inset 0 0 0 1.5px var(--lp-green), 0 20px 40px -18px color-mix(in srgb, var(--lp-green) 70%, transparent);
+}
+.lp-cta--outline:hover .ic { transform: none; }
+
 .lp-ghost {
   padding: 13px 20px;
   border: 1px solid rgb(11 18 32 / 0.12);

@@ -19,6 +19,9 @@ export const FRONTEND_DIR = path.join(PROJECT_ROOT, 'frontend');
 export const PUBLIC_DIR = path.join(FRONTEND_DIR, 'public');
 export const FRONTEND_SRC_DIR = path.join(FRONTEND_DIR, 'src');
 
+/** The Engineer Roadmap app, copied in as built by tools/sync-roadmap.cjs. */
+export const ROADMAP_DIR = path.join(PROJECT_ROOT, 'roadmap');
+
 export function ensureDirs() {
   for (const dir of [DATA_DIR, UPLOADS_DIR, SEED_UPLOADS_DIR, ORIGINALS_DIR]) {
     fs.mkdirSync(dir, { recursive: true });

@@ -1,6 +1,6 @@
 import { promises as fsp, createReadStream } from 'node:fs';
 import path from 'node:path';
-import { PUBLIC_DIR, FRONTEND_SRC_DIR, UPLOADS_DIR } from '../config/paths.js';
+import { PUBLIC_DIR, FRONTEND_SRC_DIR, UPLOADS_DIR, ROADMAP_DIR } from '../config/paths.js';
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -30,14 +30,22 @@ const MIME = {
   '.woff': 'font/woff',
   '.ttf': 'font/ttf',
   '.txt': 'text/plain; charset=utf-8',
+  '.pdf': 'application/pdf',
 };
 
 const RANGE_TYPES = /^(video|audio)\//;
+
+/* The Engineer Roadmap runs here as it was built: it asks for its bundle at /assets and its
+   photographs and films at /media, absolute paths the portal itself never uses. Its page is
+   served at /roadmap (see ROADMAP_PAGE); its fonts at /fonts are the files public/ already has. */
+const ROADMAP_PAGE = path.join(ROADMAP_DIR, 'dist', 'index.html');
 
 // Longest prefix wins, so '/src' is checked before the '/' catch-all.
 const MOUNTS = [
   { prefix: '/uploads', dir: UPLOADS_DIR, cache: 'public, max-age=3600' },
   { prefix: '/src', dir: FRONTEND_SRC_DIR, cache: 'no-cache' },
+  { prefix: '/assets', dir: path.join(ROADMAP_DIR, 'dist', 'assets'), cache: 'public, max-age=3600' },
+  { prefix: '/media', dir: path.join(ROADMAP_DIR, 'media'), cache: 'public, max-age=604800' },
   { prefix: '/', dir: PUBLIC_DIR, cache: 'no-cache' },
 ];
 
@@ -58,7 +66,9 @@ export async function serveStatic(req, res, pathname) {
   if (req.method !== 'GET' && req.method !== 'HEAD') return false;
   if (pathname.startsWith('/api/')) return false;
 
-  let target = resolveTarget(pathname === '/' ? '/index.html' : pathname);
+  let target = pathname === '/roadmap' || pathname === '/roadmap/'
+    ? { filePath: ROADMAP_PAGE, cache: 'no-cache' }
+    : resolveTarget(pathname === '/' ? '/index.html' : pathname);
   if (!target) return false;
 
   let stat = await fsp.stat(target.filePath).catch(() => null);

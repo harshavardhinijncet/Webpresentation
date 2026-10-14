@@ -239,6 +239,7 @@ still publishable only by hand.
 | `publish-success-stories.cjs` | Success Stories — the story list, titles in the script |
 | `publish-placements.cjs` | Placements — re-sorts Campus / Open Drives by poster colour; the company and package of every poster are in the script, keyed by file name |
 | `publish-stories-published.cjs` | Stories Published — the one slide and its three embedded stories, all copy and figures restated from the published sites; checks every file before sending and deletes any old child pages |
+| `sync-roadmap.cjs` | the University Technology Engine (Engineer Roadmap) — a separate React app whose source lives in `Downloads/Road Map`. Build it there, then this copies `dist`, `server/data` and `server/media` into `roadmap/`. The portal serves it unchanged: page at `/roadmap` (the landing's outline button), bundle at `/assets`, media at `/media`, and `/api/roadmap` from `roadmap/data` (`middleware/roadmap.middleware.js`; restart after a sync). Its `/fonts` are the files `public/fonts` already has |
 | `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
 
 The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it
