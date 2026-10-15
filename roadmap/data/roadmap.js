@@ -267,7 +267,7 @@ export const semesters = [
       technology: [L('DBMS', 'dbms'), L('Moon Coder', 'moon-coder')],
       ai: [L('AI-Assisted Development', 'ai-application')],
       certification: [L('Certification', 'certification'), L('Project', 'project'), L('Internship', 'internship')],
-      exposure: [L('Parent Meet', 'parent-meet'), L('Pro Project Talk', 'project-talk')],
+      exposure: [L('Parent Meet', 'parent-meet'), L('Project Talk', 'project-talk')],
       industry: INDUSTRY,
       contest: [L('SCINOVA 2026', 'scinova'), L('iShip', 'iship'), MONTHLY, L('Hackathon', 'hackathon')],
       tools: TOOLS_AI,
@@ -289,7 +289,7 @@ export const semesters = [
         { ...L('AI Engineering', 'ai-engineering'), path: 'ai' }, { ...L('AI Product & Industry Readiness', 'ai-product'), path: 'ai' },
       ],
       certification: [L('Certifications', 'certification'), L('Projects', 'project'), L('Internship', 'internship-y3'), L('Placement Readiness', 'placement-readiness')],
-      exposure: [L('Project Talks', 'project-talk'), L('Project Week', 'project-week'), L('Project Space', 'project-space'), L('Project Street', 'project-street'), L('IKYA 2026', 'ikya')],
+      exposure: [L('Project Talk', 'project-talk'), L('Project Week', 'project-week'), L('Project Space', 'project-space'), L('Project Street', 'project-street'), L('IKYA 2026', 'ikya')],
       industry: INDUSTRY,
       contest: [L('Monthly Coding Contest', 'monthly-contest-y3'), L('Red Hat Academy Challenge', 'redhat-challenge'), L('Bootcamps', 'bootcamp')],
       tools: TOOLS_FULL,
@@ -701,6 +701,10 @@ for (const sem of semesters) if (sem.stages.contest) sem.stages.contest = sem.st
 }
 
 library['ats-engine'].logo = 'added7/ats-engine-logo.png';
+
+// Project Street carries its own mark, as on the What changes page; the title is "Project Talk"
+library['project-street'].logo = 'cards/pstreet.png';
+library['project-talk'].title = 'Project Talk';
 
 // Contests, every semester: Typing Assessment, Communication Assessment and the Monthly Coding
 // Contest lead, then that semester's own contests.
