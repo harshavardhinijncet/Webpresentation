@@ -380,3 +380,7 @@ slide doubled every pass until it hit the browser's 2^25px layout limit.
 Related: a box sized by `aspect-ratio` off a percentage width contributes *nothing*
 to intrinsic height, so `grid-auto-rows: auto` sizes to the rest of the card and
 the picture overflows. Hand the row an explicit height.
+
+## Sessions
+
+Live login sessions are saved to `backend/data/sessions.local.json` (git-ignored), never to `db.json`, so a server restart does not sign the presenter out. Restarting used to drop every session, which is why the roadmap's Back to presentation button landed on the login page.

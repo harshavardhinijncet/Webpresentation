@@ -69,3 +69,7 @@ backend/uploads/originals/
 
 # Sessions are runtime state and do not belong in the repo, but they live
 # inside db.json, so they are simply short-lived — a deploy signs people out.
+
+# Live login sessions: bearer tokens, never committed
+backend/data/sessions.local.json
+backend/data/*.tmp

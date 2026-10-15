@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { promises as fsp } from 'node:fs';
 import path from 'node:path';
-import { DB_FILE, ensureDirs } from '../config/paths.js';
+import { DB_FILE, SESSIONS_FILE, ensureDirs } from '../config/paths.js';
 import { logger } from '../utils/logger.js';
 
 const EMPTY = {
@@ -28,7 +28,7 @@ export function load() {
   try {
     const parsed = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
     state = { ...structuredClone(EMPTY), ...parsed };
-    /* Sessions never come back off disk. They are bearer tokens, and this file
+    /* Sessions never come back off db.json. They are bearer tokens, and this file
        is committed to a public repository — an old commit carrying an unexpired
        token would otherwise still sign somebody in as admin. Dropping them at
        load makes every historical token in git dead on arrival. */
@@ -36,6 +36,16 @@ export function load() {
   } catch (err) {
     logger.error('database file unreadable, starting empty:', err.message);
     state = structuredClone(EMPTY);
+  }
+  /* Live sessions come back from their own git-ignored file, so restarting the server does not
+     sign the presenter out mid-presentation. Expired ones are dropped as they load. */
+  try {
+    if (fs.existsSync(SESSIONS_FILE)) {
+      const now = Date.now();
+      state.sessions = JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8')).filter((s) => new Date(s.expiresAt).getTime() > now);
+    }
+  } catch (err) {
+    logger.error('sessions file unreadable, starting signed out:', err.message);
   }
   return state;
 }
@@ -61,6 +71,10 @@ export function persist() {
     }
     await fsp.writeFile(tmp, JSON.stringify(snapshot, null, 2), 'utf8');
     await fsp.rename(tmp, DB_FILE);
+    // the sessions to their own file, never into db.json
+    const stmp = `${SESSIONS_FILE}.${process.pid}.tmp`;
+    await fsp.writeFile(stmp, JSON.stringify(data().sessions), 'utf8');
+    await fsp.rename(stmp, SESSIONS_FILE);
   }).catch((err) => {
     logger.error('failed to persist database:', err.message);
   });

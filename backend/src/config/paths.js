@@ -10,6 +10,8 @@ export const PROJECT_ROOT = path.resolve(BACKEND_ROOT, '..');
 
 export const DATA_DIR = path.join(BACKEND_ROOT, 'data');
 export const DB_FILE = path.join(DATA_DIR, 'db.json');
+/** Live sessions, kept apart from db.json and out of git (see .gitignore). */
+export const SESSIONS_FILE = path.join(DATA_DIR, 'sessions.local.json');
 export const UPLOADS_DIR = path.join(BACKEND_ROOT, 'uploads');
 export const SEED_UPLOADS_DIR = path.join(UPLOADS_DIR, 'seed');
 /** Untouched source files: PSDs and pre-transcode video. */

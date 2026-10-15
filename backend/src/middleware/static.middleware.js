@@ -46,6 +46,8 @@ const MOUNTS = [
   { prefix: '/src', dir: FRONTEND_SRC_DIR, cache: 'no-cache' },
   { prefix: '/assets', dir: path.join(ROADMAP_DIR, 'dist', 'assets'), cache: 'public, max-age=3600' },
   { prefix: '/media', dir: path.join(ROADMAP_DIR, 'media'), cache: 'public, max-age=604800' },
+  // the APT Logic application, shown inside the roadmap's APT Logic tab
+  { prefix: '/apt-logic', dir: path.join(ROADMAP_DIR, 'dist', 'apt-logic'), cache: 'no-cache' },
   { prefix: '/', dir: PUBLIC_DIR, cache: 'no-cache' },
 ];
 

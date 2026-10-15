@@ -209,7 +209,7 @@ export const library = {
     media: [vid('platforms/owlcoder-demo.mp4', 'Owl Coder walkthrough'), pdf('platforms/owlcoder-brochure.pdf', 'Owl Coder brochure'), vid('platforms/owlcoder.mp4', 'Owl Coder'), img('platforms/owlcoder-screen.png', 'Owl Coder')] },
   jpath: { title: 'J-Path', tag: 'Journey to placement', logo: 'logos/jpath.png',
     about: 'The learning path end to end — journey tracking from the first module to placement.', media: [img('events/jpath-1.jpg', 'J-Path Connect'), img('events/jpath-2.jpg', 'J-Path Connect'), img('events/jpath-3.jpg', 'J-Path Connect'), img('events/jpath-4.jpg', 'J-Path Connect'), img('events/jpath-5.jpg', 'J-Path Connect'), img('events/jpath-6.jpg', 'J-Path Connect'), img('events/jpath-7.jpg', 'J-Path Connect')] },
-  tag: { title: 'TAG', tag: 'Task and activity system', logo: 'logos/tag.png', media: [vid('platforms/tag.mp4', 'TAG')] },
+  tag: { title: 'TAG', tag: 'Task and activity system', logo: 'logos/tag.png', media: [vid('platforms/tag-v4.mp4', 'TAG'), vid('platforms/tag.mp4', 'TAG')] },
   'apt-logic': { title: 'Apt Logic', tag: 'Aptitude & logical reasoning practice', logo: 'logos/apt-logic.png', media: [img('rm/aptlogic1.jpg', 'Apt Logic'), img('rm/aptlogic2.jpg', 'Apt Logic'), img('rm/aptlogic3.jpg', 'Apt Logic')] },
   'beyond-boundaries': { title: 'Beyond Boundaries', tag: 'Beyond the classroom', media: [img('class/beyond-1.jpg', 'Beyond Boundaries'), img('class/beyond-2.jpg', 'Beyond Boundaries'), img('class/beyond-3.jpg', 'Beyond Boundaries')] },
   'redhat-challenge': { title: 'Red Hat Academy Challenge', tag: 'Red Hat Academy, 2025', logo: 'coe/logos/redhat.png', media: [img('rm/coeredhat.jpg', 'Red Hat Academy Challenge 2025'), img('rm/coeredhat1.jpg', 'Red Hat Academy Challenge 2025'), img('rm/contest3.jpg', 'Red Hat Academy Challenge 2025')] },
@@ -224,9 +224,9 @@ const L = (label, ref) => ({ label, ref });
 const TOOLS_BASE = [L('Torii App', 'torii-app'), L('Myna', 'myna'), L('Owl Coder', 'owlcoder-app')];
 const TOOLS_APT = [...TOOLS_BASE, L('Apt Logic', 'apt-logic')];
 const TOOLS_AI = [...TOOLS_APT, L('AI Interview', 'ai-interview')];
-const TOOLS_ATS = [...TOOLS_AI, L('ATS Engine', 'ats-engine')];   // the ATS Engine, from 3-1 to 4-2
-const TOOLS_FULL = [...TOOLS_ATS, L('J-Path', 'jpath')];
-const INDUSTRY = [L('Apt Logic', 'apt-logic'), L('Communication', 'industry-skills'), L('Typing', 'typing')];
+// the ATS Engine joins in 3-1 and always sits last in the tools
+const TOOLS_FULL = [...TOOLS_AI, L('J-Path', 'jpath'), L('ATS Engine', 'ats-engine')];
+const INDUSTRY = [L('Apt Logic', 'apt-logic'), L('Communication', 'industry-skills'), L('Coding', 'coding')];
 const INDUSTRY_Y4 = [...INDUSTRY, L('Placement-oriented Training', 'placement-training'), L('Portfolio Building', 'portfolio')];
 const MONTHLY = L('Monthly Coding Contest', 'monthly-contest');
 
@@ -235,10 +235,10 @@ export const semesters = [
     stages: {
       technology: [L('C Language', 'c-language')],
       ai: [L('AI Literacy', 'ai-literacy')],
-      certification: [],
+      certification: [L('Cisco Centre of Excellence Course Completion Certification / Badge', 'cisco-c-cert')],
       exposure: [L('T-Connect', 't-connect')],
       industry: INDUSTRY,
-      contest: [L('Spreadsheet Bootcamp', 'spreadsheet-bootcamp')],
+      contest: [],
       tools: TOOLS_BASE,
     } },
   { id: '1-2', phase: 'bamboo', year: 1, sem: 2, headline: 'First certification, first capstone',
@@ -248,7 +248,7 @@ export const semesters = [
       certification: [L('Certification', 'certification'), L('Capstone Project', 'capstone-project')],
       exposure: [L('Parent Meet', 'parent-meet'), L('Hub Hopper Ceremony', 'hub-hopper')],
       industry: INDUSTRY,
-      contest: [L('Hub Hoppers', 'hub-hoppers'), L('Typing Contest', 'typing-contest'), MONTHLY, L('Spreadsheet Bootcamp', 'spreadsheet-bootcamp')],
+      contest: [L('Hub Hoppers', 'hub-hoppers'), L('Typing Contest', 'typing-contest'), MONTHLY],
       tools: TOOLS_APT,
     } },
   { id: '2-1', phase: 'skillup', year: 2, sem: 1, headline: 'Core CS and the first project week',
@@ -269,7 +269,7 @@ export const semesters = [
       certification: [L('Certification', 'certification'), L('Project', 'project'), L('Internship', 'internship')],
       exposure: [L('Parent Meet', 'parent-meet'), L('Pro Project Talk', 'project-talk')],
       industry: INDUSTRY,
-      contest: [L('SCINOVA 2026', 'scinova'), MONTHLY, L('Hackathon', 'hackathon')],
+      contest: [L('SCINOVA 2026', 'scinova'), L('iShip', 'iship'), MONTHLY, L('Hackathon', 'hackathon')],
       tools: TOOLS_AI,
     } },
   // Year 3 is one page: the class splits into Drive Ready and the AI Ready Engineer for the
@@ -288,7 +288,7 @@ export const semesters = [
       ai: [
         { ...L('AI Engineering', 'ai-engineering'), path: 'ai' }, { ...L('AI Product & Industry Readiness', 'ai-product'), path: 'ai' },
       ],
-      certification: [L('Certifications', 'certification'), L('Projects', 'project'), L('Placement Readiness', 'placement-readiness')],
+      certification: [L('Certifications', 'certification'), L('Projects', 'project'), L('Internship', 'internship-y3'), L('Placement Readiness', 'placement-readiness')],
       exposure: [L('Project Talks', 'project-talk'), L('Project Week', 'project-week'), L('Project Space', 'project-space'), L('Project Street', 'project-street'), L('IKYA 2026', 'ikya')],
       industry: INDUSTRY,
       contest: [L('Monthly Coding Contest', 'monthly-contest-y3'), L('Red Hat Academy Challenge', 'redhat-challenge'), L('Bootcamps', 'bootcamp')],
@@ -299,12 +299,12 @@ export const semesters = [
       technology: [L('Owl Coder', 'owl-coder')],
       ai: [L('Building & Deploying a Live Project', 'ai-live')],
       certification: [L('Projects', 'project')],
-      exposure: [L('Video Resumes', 'video-resumes'), L('Mock Interviews', 'mock-interviews'), L('Mock Drive', 'mock-drive'), L('Placement Assistance', 'placement-assistance')],
+      exposure: [L('Video Resumes', 'video-resumes'), L('Resume Building', 'resume-building'), L('Mock Interviews', 'mock-interviews'), L('Mock Drive', 'mock-drive'), L('Placement Assistance', 'placement-assistance')],
       industry: INDUSTRY_Y4,
       contest: [L('Live Project Deployment', 'live-deployment')],
       tools: TOOLS_FULL,
     } },
-  { id: '4-2', skip: ['technology', 'contest'], phase: 'owl', year: 4, sem: 2, headline: 'Ship a live campus project, graduate placed',
+  { id: '4-2', skip: ['technology'], phase: 'owl', year: 4, sem: 2, headline: 'Ship a live campus project, graduate placed',
     stages: {
       technology: [],
       ai: [L('Building & Deploying a Live Project', 'ai-live')],
@@ -498,11 +498,249 @@ for (const [k, e] of Object.entries(library)) {
   library['hackathon'].media = library['hackathon'].media.filter((m) => m.type === 'image');
 }
 library['jpath'].media = [vid('platforms/torii-minds.mp4', 'J-Path on the Torii Minds platform'), ...library['jpath'].media];
+// 1-1 Technology Track: only the Skill Up Coder coding-test photos (heading and footer cropped off)
+library['c-language'].media = [img('added4/skillup-test-1.jpg', 'Skill Up Coder coding test'), img('added4/skillup-test-2.jpg', 'Skill Up Coder coding test')];
+// The AI Engineer track shows its own classrooms — the NT Square / Skill Edge stall photos are not part of it
+library['ai-literacy'].media = library['ai-literacy'].media.filter((m) => !String(m.src || '').startsWith('added4/skilledge-'));
+
+// The Snowflake Academia orientation at Aditya University leads the Snowflake centre. Cut from the
+// supplied collages: dividers, the support-email footer and the burned-in watermark removed.
+library['coe-snowflake'].media = [
+  ...['01-stage-talk', '02-session', '03-full-hall', '04-address', '05-address', '06-felicitation', '07-felicitation']
+    .map((f) => img(`coe/snowflake-orientation/${f}.jpg`, 'Snowflake orientation session · Aditya University')),
+  ...library['coe-snowflake'].media,
+];
+
+// Internships, sorted by the poster: 2-2 leads with the Visa, Myntra, Flipkart and Airbus offers,
+// then the other internships; the Walmart internships (₹1,00,000-a-month stipends) are Year 3's.
+// walmart1 and placed-walmart226 are 22.6 LPA placements, so they stay in Placement Assistance.
+library['internship'].media = [
+  img('rm/internship5.jpg', 'Visa internship'),
+  img('placements/myntra-internship.jpg', 'Myntra internship'),
+  img('rm/internship1.jpg', 'Flipkart internship'),
+  img('rm/internship12.jpg', 'Flipkart internship'),
+  img('rm/internship7.jpg', 'Airbus internships'),
+  img('rm/internship9.jpg', 'Airbus internship'),
+  img('rm/internship17.jpg', 'Airbus internship'),
+  img('rm/internship11.jpg', 'Google · Flipkart · Walmart · Airbus internships'),
+  img('added3/internships-3000.jpg', '3,000+ internships'),
+  yt('IW3DYR2Nr2o', '3000+ internships'),
+  img('placements/amazon-internship.jpg', 'Amazon internship'),
+  img('rm/internship13.jpg', 'Google internship'),
+  img('rm/internship4.jpg', 'Unlox internship'),
+  img('rm/internship3.jpg', 'ISRO internship'),
+  img('rm/internship10.jpg', 'Ubona internship'),
+  img('rm/redhatintern1.jpg', 'Red Hat apprenticeship'),
+];
+library['internship-y3'] = { title: 'Internship', tag: 'Walmart internships · ₹1,00,000 a month stipend',
+  media: [img('rm/internship14.jpg', 'Walmart internship'), img('rm/internship15.jpg', 'Walmart internship'),
+    img('rm/internship16.jpg', 'Walmart internship'), img('rm/walmart2.jpg', 'Walmart internships')] };
+library['placement-assistance'].media = library['placement-assistance'].media.filter((m) => m.src !== 'rm/walmart2.jpg');
+
+// Classroom photos (titles and footers cropped off), one gallery each so none repeats: Year 2's
+// two technology tracks and two of Year 3's. Event photos go where their titles say.
+{
+  const A = (f, cap = '') => img(`added5/${f}`, cap);
+  const lead = (k, ...xs) => { library[k].media = [...xs, ...library[k].media]; };
+  lead('ads-java', A('class-eligibility-1.jpg', 'Classroom'), A('class-eligibility-2.jpg', 'Classroom'));
+  lead('dbms', A('class-ceo-talk-1.jpg', 'Classroom'), A('class-eligibility-3.jpg', 'Classroom'));
+  lead('fullstack', A('class-ceo-talk-2.jpg', 'Classroom'));
+  lead('data-eng', A('class-placement-opps.jpg', 'Classroom'));
+  lead('apt-logic', A('apt-logic-submissions.jpg', '18,00,000+ test submissions on APT Logic'));
+  lead('mpod', A('mpod-milestone.jpg', '10,000+ AI interviews on mPod'));
+  lead('redhat-challenge', A('redhat-challenge-2025.jpg', 'Red Hat Academy Challenge 2025'));
+  lead('placement-readiness', A('placement-eligibility-2.jpg', 'Placement eligibility test'));
+  lead('moon-coder', A('moon-coders-class.jpg', 'Moon Coders'));
+  // iShip Season 3, in Year 3's contests, with no caption
+  lead('bootcamp', A('iship-s3-1.jpg'), A('iship-s3-2.jpg'));
+  lead('mock-drive', A('mock-drive-booths.jpg', 'Mock drive · interview booths'));
+  lead('legacy-global', A('gaisa-global-ai-summit.jpg', 'GAISA · AICRA Global AI Summit & Awards 5.0'));
+}
+
+// One line under each item on the semester timeline: what the program delivers and the skill it
+// builds. Two lines at most. The 1-1 and 1-2 AI items (AI Literacy, AI Exposure) show their titles only.
+{
+  const LINE = {
+    'c-language': 'Problem solving for coding rounds',
+    'python-ds': 'Python and DSA for online coding tests',
+    't-connect': 'Industry experts meet first-years',
+    'apt-logic': 'Aptitude and reasoning practice',
+    'industry-skills': 'Spoken English for interviews',
+    typing: 'Typing speed and accuracy',
+    'spreadsheet-bootcamp': 'Hands-on Excel training',
+    certification: 'Industry certifications',
+    'capstone-project': 'A first complete project',
+    'parent-meet': 'Parents see progress first-hand',
+    'hub-hopper': 'Achievers honoured on stage',
+    'hub-hoppers': 'The first-year contest of 1-2',
+    'typing-contest': 'A typing speed and accuracy contest',
+    'monthly-contest': 'A coding contest every month',
+    'ads-java': 'Java and DSA for interviews',
+    'ai-foundations': 'How models learn; AI from code',
+    project: 'Built, presented and reviewed',
+    'nt-square': 'The GitHub Experience Center',
+    'project-week': 'Teams build and present in one week',
+    'skill-contests': 'Quiz and speed contests all semester',
+    dbms: 'SQL and database design for interviews',
+    'moon-coder': 'Extra coding hours for contest speed',
+    'ai-application': 'Coding with Claude, Codex and Copilot',
+    internship: 'Visa, Myntra, Flipkart and Airbus',
+    'project-talk': 'Industry experts on real projects',
+    scinova: 'Science and innovation exhibition',
+    hackathon: 'Build a product against the clock',
+    aws: 'Cloud skills with AWS certification',
+    fullstack: 'Web applications end to end, with AI',
+    servicenow: 'Certified enterprise-platform roles',
+    pega: 'Pega certification for partner jobs',
+    'data-eng': 'Data pipelines and Snowflake',
+    flutter: 'Mobile apps from one codebase',
+    'owl-coder': 'Placement problem solving to the offer',
+    'ai-engineering': 'AI systems, agents and apps',
+    'ai-product': 'AI products and a project portfolio',
+    'internship-y3': 'Walmart internships, ₹1,00,000 a month',
+    'placement-readiness': 'Eligibility tests and training',
+    'project-space': 'Identify a problem, solve it, deploy it',
+    'project-street': 'Projects shown to the whole campus',
+    ikya: 'Project stalls at IKYA 2026',
+    'redhat-challenge': 'A Red Hat Academy contest on campus',
+    bootcamp: 'Intensive, vendor-led training camps',
+    'ai-live': 'Build and deploy a live AI project',
+    'video-resumes': 'An intro recruiters watch first',
+    'mock-interviews': 'Practice interviews, with feedback',
+    'mock-drive': 'A full placement drive, rehearsed',
+    'placement-assistance': 'Drives, preparation and offers',
+    'placement-training': 'Aptitude, coding and interviews',
+    portfolio: 'Projects, résumé and profile, ready',
+    'live-deployment': 'Ship a project to real users',
+    'campus-live-project': 'A live campus project with real users',
+  };
+  for (const [k, line] of Object.entries(LINE)) if (library[k]) library[k].line = line;
+}
+
+// Latest batch (added6), placed by each poster's title; none repeats.
+{
+  const A = (f, cap = '') => img(`added6/${f}`, cap);
+  const lead = (k, ...xs) => { library[k].media = [...xs, ...(library[k].media || [])]; };
+  // 1-1 AI Literacy: the three photographs only, no film
+  library['ai-literacy'].media = library['ai-literacy'].media.filter((m) => m.type === 'image');
+  // 1-1 certification: the Cisco Centre of Excellence C Essentials certificate and badge
+  library['cisco-c-cert'] = { title: 'Cisco C Essentials', tag: 'Cisco Networking Academy · certificate & badge', logo: 'coe/logos/cisco.png',
+    media: [img('added4/cisco-c-essentials-302.jpg', ''), img('added3/cisco-academy-certified.jpg', '')] };
+  // Communication: its own icon, photographs to come; Typing: icon and the Type photographs
+  library['industry-skills'].logo = 'added6/icon-communication.png';
+  library['industry-skills'].media = [];
+  library['typing'].media = [A('type-1.jpg'), A('type-2.jpg'), A('type-3.jpg'), A('type-4.jpg'), ...library['typing'].media];
+  lead('typing-contest', A('type-winners.jpg'));
+  lead('parent-meet', A('parents-meet-night.jpg'));
+  lead('coe-mile2', A('mile2-atc-award.jpg'));
+  lead('apt-logic', A('apt-logic-750k.jpg'), A('apt-logic-300k.jpg'));
+  lead('hub-hopper', A('hub-hoppers-1.jpg'), A('hub-hoppers-2.jpg'), A('hub-hoppers-3.jpg'), A('hub-hoppers-4.jpg'));
+  lead('owl-coder', ...[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => A(`owl-coder-${n}.jpg`)));
+  lead('pega', A('pega-73-trainees.jpg'));
+  library['iship'] = { title: 'iShip', tag: 'Team contest · 180 teams',
+    media: ['iship-180-teams-1', 'iship-180-teams-2', 'iship-s2-1st', 'iship-s2-2nd', 'iship-s2-3rd', 'iship-s1-1st', 'iship-s1-2nd', 'iship-s1-3rd'].map((f) => A(`${f}.jpg`)) };
+  // the panel shows one line, not a list of topics
+  for (const e of Object.values(library)) delete e.topics;
+  library['cisco-c-cert'].line = 'Cisco C Essentials certificate and badge';
+  library['cisco-c-cert'].title = 'Cisco Centre of Excellence Course Completion Certification / Badge';
+  // the official Cisco Networking Academy badges for the course (from Credly), then the C Essentials photos
+  library['cisco-c-cert'].media = [img('added7/cisco-c-essentials-1-badge.png', ''), img('added7/cisco-c-essentials-2-badge.png', ''), ...library['cisco-c-cert'].media];
+  library['iship'].line = 'A team contest, 180 teams strong';
+}
+
+// Resume Building, under Video Resumes in 4-1: the placement-training sessions from the Torii Minds post
+library['resume-building'] = { title: 'Resume Building', tag: 'Placement training · phase II', line: 'Résumés that make a strong first impression',
+  media: [1, 2, 3, 4].map((n) => img(`added7/resume-building-${n}.jpg`, '')) };
+
+// Technology Contests, Year 3 (3-1 · 3-2): the iShip photographs, on their own. The iShip
+// posters come out of the Monthly Coding Contest, and the iShip Season-3 photos out of Bootcamps.
+{
+  const ISHIP = ['rm/contest7.jpg', 'rm/contest8.jpg', 'rm/contest9.jpg'];
+  library['monthly-contest'].media = library['monthly-contest'].media.filter((m) => !ISHIP.includes(m.src));
+  library['bootcamp'].media = library['bootcamp'].media.filter((m) => !String(m.src || '').startsWith('added5/iship-'));
+  library['tech-contests'] = { title: 'Technology Contests', tag: 'iShip', line: 'iShip and team technology contests',
+    media: [img('added5/iship-s3-1.jpg', ''), img('added5/iship-s3-2.jpg', '')] };
+  const y3 = semesters.find((x) => x.year === 3);
+  y3.stages.contest = [...y3.stages.contest, L('Technology Contests', 'tech-contests')];
+}
+
+// Technology tracks, Years 1–2: big-hall classrooms only, titles cropped off, and no photograph
+// in more than one track. No Pega classroom in a technology track — those stay with Pega.
+{
+  const X = (src) => img(src, '');
+  library['c-language'].media = [X('added4/skillup-test-1.jpg'), X('added4/skillup-test-2.jpg')];
+  library['python-ds'].media = [X('added7/class-hall-1.jpg'), X('added7/class-hall-2.jpg'), X('added5/class-eligibility-1.jpg')];
+  library['ads-java'].media = [X('added5/class-eligibility-2.jpg'), X('added5/class-eligibility-3.jpg'), X('added4/class-ncet-1.jpg')];
+  library['dbms'].media = [X('added5/class-ceo-talk-1.jpg'), X('added7/class-hall-3.jpg'), X('added4/class-ncet-2.jpg')];
+}
+
+// Parents Meet: without the parents-meet film and the 1.04.40 photograph (asked to remove)
+library['parent-meet'].media = library['parent-meet'].media.filter((m) => m.src !== 'added3/parents-meet.mp4' && m.src !== 'added2/whatsapp-image-2026-10-14-at-1-04-40-pm-jpeg.jpg' && m.src !== 'added2/whatsapp-image-2026-10-14-at-1-04-41-pm-jpeg.jpg');
+
+// Hub Hoppers is the first-year contest: 1-1 and 1-2 only. Typing appears once, as Typing Assessment
+// (it takes the Type winners poster from the Typing Contest it replaces).
+library['typing'].media = [...library['typing'].media, ...library['typing-contest'].media.filter((m) => m.src === 'added6/type-winners.jpg')];
+library['hub-hoppers'].line = 'The first-year coding contest';
+for (const sem of semesters) {
+  if (!sem.stages.contest) continue;
+  sem.stages.contest = sem.stages.contest.filter((i) => i.ref !== 'typing-contest' && !(i.ref === 'hub-hoppers' && sem.year !== 1));
+  if (sem.year === 1 && !sem.stages.contest.some((i) => i.ref === 'hub-hoppers')) sem.stages.contest.push(L('Hub Hoppers', 'hub-hoppers'));
+}
+
+// Skill Grid · Ctrl Quiz · Rapid Executor: removed from the roadmap (asked to remove)
+for (const sem of semesters) if (sem.stages.contest) sem.stages.contest = sem.stages.contest.filter((i) => i.ref !== 'skill-contests');
+
+// Year 3 internships: Walmart, Google and Amazon (the Google and Amazon posters move up from 2-2)
+{
+  const MOVE = ['rm/internship13.jpg', 'placements/amazon-internship.jpg'];
+  const moved = library['internship'].media.filter((m) => MOVE.includes(m.src));
+  library['internship'].media = library['internship'].media.filter((m) => !MOVE.includes(m.src));
+  library['internship-y3'].media = [...library['internship-y3'].media, ...moved];
+  library['internship-y3'].tag = 'Walmart, Google and Amazon internships';
+  library['internship-y3'].line = 'Walmart, Google and Amazon internships';
+}
+
+library['ats-engine'].logo = 'added7/ats-engine-logo.png';
+
+// Contests, every semester: Typing Assessment, Communication Assessment and the Monthly Coding
+// Contest lead, then that semester's own contests.
+{
+  library['communication-assessment'] = { title: 'Communication Assessment', tag: 'Spoken and written English, assessed', media: [],
+    line: 'Spoken and written English, assessed' };
+  library['coding'] = { title: 'Coding', tag: 'Coding practice for placement rounds', logo: 'added6/icon-coding.png', media: [], line: 'Coding practice for placement rounds' };
+  library['typing'].title = 'Typing Assessment';
+  library['typing'].line = 'Typing speed and accuracy, assessed';
+  for (const sem of semesters) {
+    const monthly = sem.year === 3 ? 'monthly-contest-y3' : 'monthly-contest';
+    const own = (sem.stages.contest || []).filter((i) => !['monthly-contest', 'monthly-contest-y3', 'typing', 'communication-assessment'].includes(i.ref));
+    sem.stages.contest = [L('Typing Assessment', 'typing'), L('Communication Assessment', 'communication-assessment'), L('Monthly Coding Contest', monthly), ...own];
+  }
+}
+
+// Technical Hub first, Torii after, in every gallery. A photograph is Torii's when its file or
+// caption names Torii or NCET, or it is from the Achievers Day or NT Square / Skill Edge sets.
+// Only photographs move: films and brochures keep the places they were given.
+{
+  const isTorii = (m) => /torii|ncet|achievers-day|skilledge|ntsquare|nt-square|nt square/i.test(`${m.src || ''} ${m.caption || ''}`);
+  for (const e of Object.values(library)) {
+    if (!e.media) continue;
+    const photos = e.media.filter((m) => m.type === 'image');
+    const ordered = [...photos.filter((m) => !isTorii(m)), ...photos.filter(isTorii)];
+    let i = 0;
+    e.media = e.media.map((m) => (m.type === 'image' ? ordered[i++] : m));
+  }
+  // Parents Meet opens on Technical Hub's own parents-meet film.
+  const pm = library['parent-meet'].media;
+  library['parent-meet'].media = [...pm.filter((m) => m.type === 'video'), ...pm.filter((m) => m.type !== 'video')];
+}
 // one line each on how the placement run works
 library['video-resumes'].tag = 'A short recorded intro that recruiters watch before the interview';
 library['mock-interviews'].tag = 'Practice interviews with feedback, before the real ones';
 library['mock-drive'].tag = 'A full placement drive rehearsed: test, coding round and interview';
 library['placement-assistance'].tag = 'We bring the drives, prepare every student and follow through to the offer';
+
+// J-Path: only its own film (replaces the Torii platform film and the photos)
+library['jpath'].media = [vid('platforms/jpath.mp4', 'J-Path')];
 
 // The Platforms page shows only films and brochures for each application, never photos.
 for (const k of ['torii-app', 'myna', 'owlcoder-app', 'apt-logic', 'jpath', 'mpod', 'tag', 'ats-engine']) {
