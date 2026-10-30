@@ -49,20 +49,34 @@ const PARTNERS = [
 ];
 
 /* Where each orbiting mark sits: which ring, and how far round it.
- *
- * All of them are on the flanks — roughly east and west — and none near the
- * top or bottom of the circle. That is not decoration: the copy runs straight
- * down the middle, and angles near 0 or 180 degrees put a logo squarely on the
- * headline, which is exactly what the first attempt did to Microsoft and
- * Snowflake. The reference keeps its centre column clear for the same reason.
+ * 18 partners distributed across 3 concentric revolving orbits.
+ * Radii are sized to ensure marks revolve smoothly without ever touching
+ * the central headline, badge, copy, or action buttons.
  */
 const ORBIT = [
-  { i: 0, ring: 1, deg: 70 },  { i: 1, ring: 1, deg: 92 },
-  { i: 2, ring: 1, deg: 114 }, { i: 3, ring: 1, deg: 248 },
-  { i: 4, ring: 1, deg: 270 }, { i: 5, ring: 1, deg: 292 },
-  { i: 6, ring: 2, deg: 56 },  { i: 7, ring: 2, deg: 82 },
-  { i: 8, ring: 2, deg: 104 }, { i: 9, ring: 2, deg: 236 },
-  { i: 10, ring: 2, deg: 262 }, { i: 11, ring: 2, deg: 300 },
+  // Ring 1 (6 partners, spaced 60°)
+  { i: 0, ring: 1, deg: 30 },
+  { i: 1, ring: 1, deg: 90 },
+  { i: 2, ring: 1, deg: 150 },
+  { i: 3, ring: 1, deg: 210 },
+  { i: 4, ring: 1, deg: 270 },
+  { i: 5, ring: 1, deg: 330 },
+
+  // Ring 2 (6 partners, spaced 60°, staggered by 30°)
+  { i: 6, ring: 2, deg: 0 },
+  { i: 7, ring: 2, deg: 60 },
+  { i: 8, ring: 2, deg: 120 },
+  { i: 9, ring: 2, deg: 180 },
+  { i: 10, ring: 2, deg: 240 },
+  { i: 11, ring: 2, deg: 300 },
+
+  // Ring 3 (6 partners, spaced 60°, staggered by 15°)
+  { i: 12, ring: 3, deg: 15 },
+  { i: 13, ring: 3, deg: 75 },
+  { i: 14, ring: 3, deg: 135 },
+  { i: 15, ring: 3, deg: 195 },
+  { i: 16, ring: 3, deg: 255 },
+  { i: 17, ring: 3, deg: 315 },
 ];
 
 export function OrgSelectPage(container, { onLogout }) {
@@ -73,8 +87,9 @@ export function OrgSelectPage(container, { onLogout }) {
 
   const partnerSrc = (file) => media(`/uploads/coe/${encodeURIComponent(file)}`);
 
-  /* A mark on an orbit. The ring and the angle are custom properties so the
-     stylesheet does the trigonometry — the element only says where it belongs. */
+  /* A mark on an orbit. The ring and angle are CSS custom properties.
+     The outer track revolves, while the inner span counter-rotates so logos
+     stay upright and crisp at every second of the revolution. */
   const orbitMark = ({ i, ring, deg }) => {
     const p = PARTNERS[i];
     if (!p) return null;
@@ -82,17 +97,19 @@ export function OrgSelectPage(container, { onLogout }) {
       class: `lp-orb lp-orb--r${ring}`,
       style: {
         '--deg': `${deg}deg`,
-        ...(REDUCED?.matches ? {} : {
-          // Primes, so no two marks bob in step.
-          'animation-duration': `${5200 + ((i * 730) % 3400)}ms`,
-          'animation-delay': `-${(i * 470) % 3000}ms`,
-        }),
       },
       title: p.name,
-    }, h('img', {
-      src: partnerSrc(p.file), alt: '', loading: 'lazy', decoding: 'async',
-      onerror: (e) => e.currentTarget.closest('.lp-orb')?.remove(),
-    }));
+    },
+      h('span', { class: 'lp-orb__inner' },
+        h('img', {
+          src: partnerSrc(p.file),
+          alt: p.name,
+          loading: 'lazy',
+          decoding: 'async',
+          onerror: (e) => e.currentTarget.closest('.lp-orb')?.remove(),
+        }),
+      ),
+    );
   };
 
   /* The stagger is set per word in script, so the line can be reworded without
@@ -111,12 +128,20 @@ export function OrgSelectPage(container, { onLogout }) {
   );
 
   render(container, h('div', { class: 'lp' },
-    // The orbits, and the marks riding them.
+    // The revolving orbits, and the marks riding them
     h('div', { class: 'lp__field', 'aria-hidden': 'true' },
-      h('span', { class: 'lp__ring lp__ring--1' }),
-      h('span', { class: 'lp__ring lp__ring--2' }),
-      h('span', { class: 'lp__ring lp__ring--3' }),
-      ...ORBIT.map(orbitMark),
+      h('div', { class: 'lp__orbit-track lp__orbit-track--1' },
+        h('span', { class: 'lp__ring lp__ring--1' }),
+        ...ORBIT.filter((o) => o.ring === 1).map(orbitMark),
+      ),
+      h('div', { class: 'lp__orbit-track lp__orbit-track--2' },
+        h('span', { class: 'lp__ring lp__ring--2' }),
+        ...ORBIT.filter((o) => o.ring === 2).map(orbitMark),
+      ),
+      h('div', { class: 'lp__orbit-track lp__orbit-track--3' },
+        h('span', { class: 'lp__ring lp__ring--3' }),
+        ...ORBIT.filter((o) => o.ring === 3).map(orbitMark),
+      ),
     ),
 
     h('div', { class: 'lp__inner' },
@@ -148,10 +173,9 @@ export function OrgSelectPage(container, { onLogout }) {
           onclick: () => (hub ? navigate(`/o/${hub.id}`) : null),
         }, isAdmin() ? 'Open the deck' : 'Start the presentation',
           icon('arrow-right', { class: 'ic ic--xs' })),
-        /* The University Technology Engine (the Engineer Roadmap) is its own application (Downloads/Road Map), served here as
-           built at /roadmap; browser Back returns to this page. */
+        /* The University Technology Engine (the Engineer Roadmap) - icon removed per user request */
         h('a', { class: 'lp-cta lp-cta--outline', href: '/roadmap' },
-          icon('roadmap', { class: 'ic ic--xs' }), 'University Technology Engine'),
+          'University Technology Engine'),
         h('button', { class: 'lp-ghost', type: 'button', onclick: onLogout }, 'Sign out'),
       ),
     ),

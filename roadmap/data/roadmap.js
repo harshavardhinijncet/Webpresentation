@@ -393,6 +393,7 @@ export const coe = {
 };
 
 import { why as legacyWhy, legacyLibrary } from './legacy.js';
+import { certs } from './certifications.js';
 Object.assign(library, legacyLibrary);
 export const legacy = { why: legacyWhy };
 
@@ -759,4 +760,4 @@ export const brand = {
   heroFilm: 'programs/torii-brand-film.mp4',
 };
 
-export default { brand, phases, tracks, semesters, library, coe, legacy };
+export default { brand, phases, tracks, semesters, library, coe, legacy, certs };
