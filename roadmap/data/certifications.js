@@ -129,7 +129,7 @@ export const certs = {
   {
    "key": "dell",
    "name": "Dell Technologies",
-   "logo": null
+   "logo": "certs/vendor-dell.png"
   }
  ],
  "certs": [
@@ -535,7 +535,7 @@ export const certs = {
   {
    "name": "Dell GenAI Foundations",
    "vendor": "dell",
-   "badge": null,
+   "badge": "certs/dell-genai-foundations.png",
    "total": 8,
    "byYear": {
     "2019": 0,
