@@ -136,7 +136,7 @@ export const certs = {
   {
    "name": "Adobe Certified Professional Graphic Design & Illustration using Adobe Illustrator",
    "vendor": "adobe",
-   "badge": null,
+   "badge": "certs/adobe-graphic-design-illustration.png",
    "total": 9,
    "byYear": {
     "2019": 0,
@@ -155,7 +155,7 @@ export const certs = {
   {
    "name": "Adobe Certified Professional Visual design",
    "vendor": "adobe",
-   "badge": null,
+   "badge": "certs/adobe-visual-design.png",
    "total": 9,
    "byYear": {
     "2019": 0,
@@ -402,7 +402,7 @@ export const certs = {
   {
    "name": "Certified Secure Computer User Specialist",
    "vendor": "eccouncil",
-   "badge": null,
+   "badge": "certs/eccouncil-ecss.png",
    "total": 42,
    "byYear": {
     "2019": 7,
@@ -516,7 +516,7 @@ export const certs = {
   {
    "name": "CPEH",
    "vendor": "mile2",
-   "badge": null,
+   "badge": "certs/mile2-cpeh.png",
    "total": 6,
    "byYear": {
     "2019": 0,
