@@ -241,6 +241,7 @@ still publishable only by hand.
 | `publish-stories-published.cjs` | Stories Published — the one slide and its three embedded stories, all copy and figures restated from the published sites; checks every file before sending and deletes any old child pages |
 | `sync-roadmap.cjs` | the University Technology Engine (Engineer Roadmap) — a separate React app whose source lives in `Downloads/Road Map`. Build it there, then this copies `dist`, `server/data` and `server/media` into `roadmap/`. The portal serves it unchanged: page at `/roadmap` (the landing's outline button), bundle at `/assets`, media at `/media`, and `/api/roadmap` from `roadmap/data` (`middleware/roadmap.middleware.js`; restart after a sync). Its `/fonts` are the files `public/fonts` already has |
 | `Road Map/tools/fetch-certifications.cjs` | the roadmap's Certifications page (after Curriculum): logs in to apps.technicalhub.io/certifications with `CERTS_USER` / `CERTS_PASS` from the environment (never in code — the repo is public), reads the summary table (57 certifications × pass-out year, counts only, never the student list) into `server/data/certifications.js`, groups them by vendor and copies badges and vendor logos into `server/media/certs/`. Run with `node --use-system-ca` (the site's certificate chain is incomplete), then build and `sync-roadmap.cjs` |
+| `Road Map` Centres page | the roadmap's Centre of Excellence page scrolls through four views (the centres → how it works → on campus → every centre as a card). How it works' photographs live in `Road Map/server/media/coe-steps/`: each is cropped, and every logo but the centre's own (Torii, Technical Hub, Aditya…) painted out. The roadmap serves media with a 7-day cache, so a re-cut photo gets a new name, never the old one. Several are 206px thumbnails awaiting originals |
 | `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
 
 The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it
@@ -251,8 +252,11 @@ rather than writing a third one.
 - **Playing** (the default): every auto-slide runs (`utils/autoSlide.js`) — photographs hold 5 s, and
   sections with tabs, chapters or pages advance through them on their own, 5–7 s by how much the
   view carries. A stepper opts in with `registerStepper(fn, { auto: ms | () => ms, next })`; `next`
-  wraps a short toggle (Team, Events, Placements, Certifications acts), without it the walk stops at
+  wraps a short toggle (Team, Events, Placements), without it the walk stops at
   the end (Torii app, AI Ready). Next / Prev / arrows turn the deck.
+- **Certifications never auto-slides** (the user's call): its acts and its picture viewer hold until
+  stepped. Its stepper registers `{ manual: true }`, so Next / Prev walk the three acts even while
+  the deck plays, then turn the page.
 - **Space** toggles a deck-wide pause: auto-slides hold, looping CSS animations freeze, a pill says
   so. **Paused**, Next / Prev step through the slide first (its stepper, then its visible
   auto-slides) and turn the deck only once it is spent.

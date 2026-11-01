@@ -1,5 +1,5 @@
 import { h, svg } from '../utils/dom.js';
-import { autoSlide, slideIn } from '../utils/autoSlide.js';
+import { slideIn } from '../utils/autoSlide.js';
 import { icon } from '../utils/icons.js';
 import { registerStepper } from '../utils/slideSteps.js';
 import { upload } from '../utils/media.js';
@@ -204,16 +204,13 @@ export function CertificationWall(block, { editing = false } = {}) {
   );
   document.body.appendChild(light);
 
-  /* Each card holds for a moment and the next slides in on its own; the arrows
-     still step, and restart the hold from wherever they land. */
-  const lightAuto = autoSlide(() => step(1), { host: light });
+  /* The viewer never advances on its own (asked for: this page does not auto-slide); the
+     arrows and keys step. */
   function manual(d) {
     step(d);
-    lightAuto.reset();
   }
 
   function shut() {
-    lightAuto.stop();
     light.hidden = true;
     light.classList.remove('is-on');
     document.removeEventListener('keydown', onKey, true);
@@ -247,7 +244,6 @@ export function CertificationWall(block, { editing = false } = {}) {
     light.hidden = false;
     requestAnimationFrame(() => light.classList.add('is-on'));
     document.addEventListener('keydown', onKey, true);
-    if (shown.length > 1) lightAuto.start();
   }
 
   /* ============================================================== 01 REGISTER */
@@ -721,8 +717,8 @@ export function CertificationWall(block, { editing = false } = {}) {
   });
   watch.observe(document.body, { childList: true, subtree: true });
 
-  /* The three acts turn on their own while the deck plays and step with Next / Prev while it is
-     paused. Behaviour only — the acts themselves are unchanged. */
+  /* The three acts never turn on their own — this page alone opts out of the deck's auto-slide,
+     as asked. Next / Prev still step through them. Behaviour only — the acts are unchanged. */
   if (!editing) {
     const KEYS = ACTS.map((a) => a.key);
     const goAct = (k) => { if (k !== act) { act = k; drawSteps(); showAct(); } };
@@ -731,10 +727,7 @@ export function CertificationWall(block, { editing = false } = {}) {
       if (i < 0 || i >= KEYS.length) return false;
       goAct(KEYS[i]);
       return true;
-    }, {
-      auto: () => (act === 'register' ? 6000 : 7000),
-      next: () => { goAct(KEYS[(KEYS.indexOf(act) + 1) % KEYS.length]); return true; },
-    });
+    }, { manual: true });
   }
 
   return root;

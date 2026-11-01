@@ -10,7 +10,7 @@ import { navigate, refresh } from '../utils/router.js';
 import { useShortcuts } from '../hooks/useShortcuts.js';
 import { reorderSections } from '../services/contentService.js';
 import { toastError, toastSuccess } from '../components/Toast.js';
-import { clearSteppers, stepSlide, autoStep, autoStepMs } from '../utils/slideSteps.js';
+import { clearSteppers, stepSlide, stepManual, autoStep, autoStepMs } from '../utils/slideSteps.js';
 import { autoSlide, isDeckPaused, setDeckPaused, stepVisibleSlides } from '../utils/autoSlide.js';
 
 let disposeShortcuts = null;
@@ -47,7 +47,7 @@ export function PresentPage(container, { org, section, onLogout }) {
       holdNewMotion();
       if (stepSlide(delta)) { sectionAuto?.reset(); return; }
       if (delta > 0 && stepVisibleSlides()) return;
-    }
+    } else if (stepManual(delta)) { sectionAuto?.reset(); return; }
     turn(delta);
   };
   const togglePause = () => setDeckPaused(!isDeckPaused());

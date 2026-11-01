@@ -19,14 +19,26 @@ const steppers = new Set();
    that wraps round. */
 const autoMs = new Map();
 const autoNext = new Map();
+/* Steppers that never move on their own and so take Next / Prev even while the deck plays —
+   otherwise a playing deck would turn the page past steps nothing else would ever show. */
+const manualSteppers = new Set();
 
 /** Called by a block as it is built. Returns a disposer for symmetry. */
-export function registerStepper(fn, { auto = 0, next = null } = {}) {
+export function registerStepper(fn, { auto = 0, next = null, manual = false } = {}) {
   if (typeof fn !== 'function') return () => {};
   steppers.add(fn);
   if (auto) autoMs.set(fn, auto);
   if (auto && next) autoNext.set(fn, next);
-  return () => { steppers.delete(fn); autoMs.delete(fn); autoNext.delete(fn); };
+  if (manual) manualSteppers.add(fn);
+  return () => { steppers.delete(fn); autoMs.delete(fn); autoNext.delete(fn); manualSteppers.delete(fn); };
+}
+
+/** Offers a press to the manual steppers alone — the ones a playing deck still defers to. */
+export function stepManual(delta) {
+  for (const fn of manualSteppers) {
+    try { if (fn(delta) === true) return true; } catch { /* declined */ }
+  }
+  return false;
 }
 
 /** The hold the slide's self-advancing steppers ask for now, as a function; null for none. */
@@ -52,6 +64,7 @@ export function clearSteppers() {
   steppers.clear();
   autoMs.clear();
   autoNext.clear();
+  manualSteppers.clear();
 }
 
 /**
