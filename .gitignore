@@ -72,4 +72,5 @@ backend/uploads/originals/
 
 # Live login sessions: bearer tokens, never committed
 backend/data/sessions.local.json
+backend/data/*.local.json
 backend/data/*.tmp

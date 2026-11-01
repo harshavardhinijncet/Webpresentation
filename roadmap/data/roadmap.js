@@ -380,6 +380,7 @@ const CENTRES = [
   ['paloalto', 'Palo Alto', 'Network & cloud security'], ['splunk', 'Splunk', 'Observability & security analytics'],
   ['mile2', 'Mile2', 'Cybersecurity certifications'], ['hubspot', 'HubSpot', 'CRM & marketing operations'],
   ['cadence', 'Cadence', 'Electronic design automation'], ['o9', 'o9 Solutions', 'Planning & supply-chain AI'],
+  ['salesforce', 'Salesforce', 'CRM & the Trailhead platform'], ['juniper', 'Juniper Networks', 'Networking & automation'],
 ];
 library['coe-torii-ai'] = { title: 'AI Centre of Excellence', tag: 'Torii Minds · with Claude, OpenAI and Sarvam', logo: 'brand/torii-logo.png',
   media: seq(19, (n) => img(`coe/torii-ai/${n}.jpg`, 'Torii AI Centre of Excellence')) };
@@ -478,6 +479,26 @@ for (const [k, xs] of Object.entries({
   'project-street': [img('added4/project-street-aerial.jpg', 'Project Street'), img('added4/project-street-growhive.jpg', 'Project Street · GrowHive'), img('added4/project-street-2.jpg', 'Project Street'), img('added4/project-street-team.jpg', 'Project Street team')],
 })) if (library[k]) library[k].media = [...xs, ...(library[k].media || [])];
 for (const k of ['mpod', 'ai-interview']) library[k].media = [yt('lfQFKSmsC3w', 'mPod · AI interviews'), ...(library[k].media || [])];
+
+// Photos from the centre round (coe-added5, coe-steps): first in each centre's gallery
+for (const [k, xs] of Object.entries({
+  'coe-o9': [img('coe-added5/o9-office.jpg', 'At o9 Solutions'), img('coe-added5/o9-welcome-kit.jpg', 'Welcome kit from o9 Solutions')],
+  'coe-aa': [img('coe-added5/aa-imagine-babji.jpg', 'Babji Neelam at Automation Anywhere Imagine ’26'), img('coe-added5/aa-partner-summit.jpg', 'The Partner Summit at Imagine ’26'), img('coe-added5/aa-imagine-backdrop.jpg', 'Imagine ’26'), img('coe-added5/aa-enterpriseclaw.jpg', 'EnterpriseClaw keynote at Imagine ’26'), img('coe-added5/aa-imagine-keynote.jpg', 'Imagine ’26 keynote'), img('coe-added5/aa-imagine-stage.jpg', 'Imagine ’26 main stage')],
+  'coe-claude': [img('coe-added5/claude-10-architects.jpg', '10 Claude Certified Architects'), img('coe-added5/claude-900-anthropic.jpg', '900+ students completed Anthropic courses'), img('coe-added5/claude-partner-network.jpg', 'Claude Partner Network · one certified team, every step'), img('coe-added5/claude-team-torii.jpg', 'A Claude-certified team at Torii'), img('coe-added5/claude-ps-stadium.jpg', 'Project Space · the whole cohort'), img('coe-added5/claude-ps-babji.jpg', 'Project Space · building with Claude'), img('coe-added5/claude-ps-amphitheatre.jpg', 'Project Space · DeepShield AI on stage'), img('coe-added5/claude-ps-lab.jpg', 'Project Space · the build hall'), img('coe-added5/claude-ps-winners-2.jpg', 'AI Excellence Cap · Anthropic API credits'), img('coe-added5/claude-ps-winners-1.jpg', 'Project Space winners'), img('coe-added5/claude-ps-cap-night.jpg', 'AI Excellence Cap night'), img('coe-added5/claude-ps-crowd.jpg', 'Project Space'), img('coe-added5/claude-ps-cohort-walk.jpg', 'Project Space cohort')],
+  'coe-oracle': [img('coe-added5/oracle-sql-winners.jpg', 'Oracle SQL Competition · the winners'), img('coe-added5/oracle-sql-prizes-1.jpg', 'Oracle SQL Competition · prize distribution'), img('coe-added5/oracle-sql-prizes-2.jpg', 'Oracle SQL Competition · prizes'), img('coe-added5/oracle-sql-online.jpg', 'Oracle Academy joins online'), img('coe-added5/oracle-sql-hall.jpg', 'Oracle SQL Competition · the hall')],
+  'coe-salesforce': [img('coe-added5/salesforce-dreamforce.jpg', 'At Dreamforce'), img('coe-added5/salesforce-stall.jpg', 'Salesforce Trailblazer Community stall')],
+  'coe-cadence': [img('coe-added5/cadence-57.jpg', '57 Cadence certified'), img('coe-added5/cadence-vlsi-completion.jpg', 'VLSI course completion'), img('coe-steps/vlsi-expert-session.jpg', 'Industry expert session · VLSI')],
+  'coe-microsoft': [img('coe-added5/microsoft-pp-121-v2.jpg', '121 Power Platform Solutions Architect certified'), img('coe-added5/microsoft-pp-85-v2.jpg', '85 Power Platform Developer certified')],
+  'coe-mongodb': [img('coe-added5/mongodb-135-v2.jpg', '135 MongoDB Associate Developer certified'), img('coe-added5/mongodb-61-v2.jpg', '61 MongoDB Associate Developer certified'), img('coe-steps/cohort-mongodb.jpg', 'MongoDB Associate Developer cohort')],
+  'coe-github': [img('coe-added5/github-121-v2.jpg', '121 GitHub Foundations certified')],
+  'coe-servicenow': [img('coe-steps/servicenow-office.jpg', 'Placed at ServiceNow'), img('coe-steps/servicenow-innovation.jpg', 'ServiceNow Innovation Center'), img('coe-steps/servicenow-desk.jpg', 'At work at ServiceNow'), img('coe-steps/servicenow-kit.jpg', 'The ServiceNow welcome kit'), img('coe-steps/cohort-servicenow.jpg', 'ServiceNow Developer cohort')],
+  'coe-pega': [img('coe-steps/cohort-pega-cssa.jpg', '68 Pega Certified Senior System Architects'), img('coe-steps/pega-lab-hall.jpg', 'Pega lab hall'), img('coe-steps/pega-bootcamp-hall.jpg', 'Pega GenAI Blueprint Boot Camp')],
+  'coe-gcp': [img('coe-steps/visit-google.jpg', 'At Google')],
+  'coe-juniper': [img('coe-steps/visit-juniper.jpg', 'At Juniper Networks')],
+  'coe-snowflake': [img('coe-steps/snowflake-handover.jpg', 'Snowflake Academia Program'), img('coe-steps/mou-snowflake.jpg', 'MoU with Snowflake'), img('coe-steps/cohort-snowflake.jpg', 'SnowPro Associate cohort'), img('coe-steps/snowflake-auditorium.jpg', 'Snowflake session · a full auditorium')],
+  'coe-redhat': [img('coe-steps/redhat-expert-talk.jpg', 'Red Hat industry expert talk'), img('coe-steps/redhat-ambassador.jpg', 'Red Hat Academy student ambassador'), img('coe-steps/stall-redhat-1.jpg', 'Red Hat Academy stall')],
+  'coe-mile2': [img('coe-steps/mile2-atc-award.jpg', 'ATC of the Year award from Mile2')],
+})) if (library[k]) library[k].media = [...xs, ...(library[k].media || [])];
 
 // One copy of each photo per gallery: exact repeats and look-alike copies are dropped
 const DUP = {"c-language": ["class/c-3.jpg"], "servicenow": ["certifications/servicenow.jpg"], "certification": ["rm/certi3.jpg"], "nt-square": ["exposure/nt-square-02.jpg"], "coe-github": ["coe/github/02.jpg", "coe/github/03.jpg", "coe/github/04.jpg", "coe/github/07.jpg", "coe/github/08.jpg", "coe/github/10.jpg"], "coe-cisco": ["coe/cisco/03.jpg"], "coe-mile2": ["coe/mile2/01.jpg"], "coe-o9": ["coe/o9/02.jpg", "coe/o9/03.jpg"], "legacy-certs": ["rm/certi3.jpg"], "ads-java": ["added2/class2-1-jpg.jpg"]};
