@@ -366,7 +366,7 @@ for (const [k, t] of Object.entries(TOPICS)) library[k].topics = t;
 const PHOTOS = { aa: 5, aws: 11, oracle: 3, pega: 10, redhat: 24, snowflake: 16, claude: 15, github: 10, mile2: 4, o9: 5, servicenow: 1, cisco: 5 };
 const FILMS = {
   redhat: [yt('QRYe7MaEqdU', 'Red Hat Academy')],
-  pega: [yt('asLTQ9V4kOI', 'Pega — part 1'), yt('ygsE4YAC1yk', 'Pega — part 2'), yt('ljYucKe7ZEc', 'Pega Project Space')],
+  pega: [vid('coe-steps/pega-genai.mp4', 'Pega GenAI Blueprint Boot Camp'), yt('asLTQ9V4kOI', 'Pega — part 1'), yt('ygsE4YAC1yk', 'Pega — part 2'), yt('ljYucKe7ZEc', 'Pega Project Space')],
   mile2: [yt('nL4bXn93yOM', 'Mile2')],
 };
 const CENTRES = [
