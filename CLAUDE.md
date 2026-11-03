@@ -244,6 +244,34 @@ still publishable only by hand.
 | `Road Map` Centres page | the roadmap's Centre of Excellence page scrolls through four views (the centres → how it works → on campus → every centre as a card). How it works' photographs live in `Road Map/server/media/coe-steps/`: each is cropped, and every logo but the centre's own (Torii, Technical Hub, Aditya…) painted out. The roadmap serves media with a 7-day cache, so a re-cut photo gets a new name, never the old one. Several are 206px thumbnails awaiting originals |
 | Roadmap Certifications login | the page's Username / Password buttons copy the certifications site's login without showing it. The portal answers `/api/cert-access` (signed-in only) from `backend/data/cert-access.local.json`, which is git-ignored: on a new machine or the deployed server, fill that file in by hand. `fetch-certifications.cjs --survey` prints the dashboard's filters and links only (tables stripped) |
 | `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
+| `build-company-profile-pdf.cjs` | the printed brochure offered on the sign-in page — see below |
+
+## The printed brochure
+
+  wrote frontendpublicTechnical-Hub-Company-Profile.pdf — 12387 kB, 16 pages, 74 images lays the whole profile out as sixteen A4 pages and has headless
+Chrome print them to . The sign-in page offers it under the
+Sign in button (), before authentication, so a college contact can take the profile away
+without an account. Every figure comes out of  and the Executive Summary drop, so re-running it after a
+section changes republishes a brochure that agrees with the slides.  reads AI Ready
+Engineer as either  or .   page 01  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 02  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 03  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 04  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 05  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 06  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 07  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 08  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 09  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 10  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 11  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 12  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 13  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 14  h=1123/1123  pastTrim=0px  pastColumn=0px
+  page 15  h=1123/1123  pastTrim=0px  pastColumn=1px
+  page 16  h=1123/1123  pastTrim=0px  pastColumn=0px
+  16 shots in C:UsersHARSHAVARDHINIAppDataLocalTemp	h-profile-pdfshots
+  no page overflows the trim measures and screenshots
+all sixteen pages — run it before calling the brochure done.
 
 The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it
 rather than writing a third one.

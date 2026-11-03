@@ -6,6 +6,10 @@ import { toastError } from '../components/Toast.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
 
+/* The printed brochure, built by tools/build-company-profile-pdf.cjs and served from
+   frontend/public. Offered before sign-in so a college contact can take the profile away. */
+const PROFILE_PDF = '/Technical-Hub-Company-Profile.pdf';
+
 /**
  * Login: one white field. Three green semicircles rise from the left edge, top-left corner to
  * bottom-left corner, turning slowly with the marks of the technologies Technical Hub works with;
@@ -268,6 +272,20 @@ export function LoginPage(container) {
                 ),
               ),
               submit,
+            ),
+
+            // The brochure: one alternative to signing in, not a second primary action
+            h(
+              'div',
+              { class: 'login__brochure login-in', style: { '--in': '1.17s' } },
+              h('div', { class: 'login__or' }, h('span', {}, 'or')),
+              h(
+                'a',
+                { class: 'login__download', href: PROFILE_PDF, download: 'Technical Hub — Company Profile.pdf' },
+                icon('download', { class: 'ic ic--xs' }),
+                h('span', {}, 'Download the company profile'),
+              ),
+              h('p', { class: 'login__download-note' }, 'A 16-page PDF brochure · no sign-in needed'),
             ),
 
             h(
