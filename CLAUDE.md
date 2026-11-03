@@ -248,29 +248,12 @@ still publishable only by hand.
 
 ## The printed brochure
 
-  wrote frontendpublicTechnical-Hub-Company-Profile.pdf — 12387 kB, 16 pages, 74 images lays the whole profile out as sixteen A4 pages and has headless
-Chrome print them to . The sign-in page offers it under the
-Sign in button (), before authentication, so a college contact can take the profile away
-without an account. Every figure comes out of  and the Executive Summary drop, so re-running it after a
-section changes republishes a brochure that agrees with the slides.  reads AI Ready
-Engineer as either  or .   page 01  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 02  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 03  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 04  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 05  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 06  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 07  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 08  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 09  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 10  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 11  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 12  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 13  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 14  h=1123/1123  pastTrim=0px  pastColumn=0px
-  page 15  h=1123/1123  pastTrim=0px  pastColumn=1px
-  page 16  h=1123/1123  pastTrim=0px  pastColumn=0px
-  16 shots in C:UsersHARSHAVARDHINIAppDataLocalTemp	h-profile-pdfshots
-  no page overflows the trim measures and screenshots
+`node tools/build-company-profile-pdf.cjs` lays the whole profile out as sixteen A4 pages and has headless
+Chrome print them to `frontend/public/Technical-Hub-Company-Profile.pdf`. The sign-in page offers it under the
+Sign in button (`.login__download`), before authentication, so a college contact can take the profile away
+without an account. Every figure comes out of `db.json` and the Executive Summary drop, so re-running it after a
+section changes republishes a brochure that agrees with the slides. `tools/profile-pdf/content.cjs` reads AI Ready
+Engineer as either `course-deck` or `ai-ready-deck`. `node tools/profile-pdf/verify.cjs` measures and screenshots
 all sixteen pages — run it before calling the brochure done.
 
 The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it
